@@ -20,10 +20,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class SonarHelper {
 
 	/**
-	 * @param tile
-	 *            Tile Entity you're checking from
-	 * @param side
-	 *            side to find IEnergyHandler
+	 * @param tile Tile Entity you're checking from
+	 * @param side side to find IEnergyHandler
 	 * @return if there is an adjacent Energy Hander
 	 */
 	public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, int side) {
@@ -32,26 +30,21 @@ public class SonarHelper {
 	}
 
 	/**
-	 * @param tile
-	 *            Tile Entity you want to check
-	 * @param from
-	 *            direction your adding from
+	 * @param tile Tile Entity you want to check
+	 * @param from direction your adding from
 	 * @return if Handler can connect
 	 */
 	public static boolean isEnergyHandlerFromSide(TileEntity tile, ForgeDirection from) {
 		if (tile instanceof IEnergyHandler) {
 			IEnergyHandler handler = (IEnergyHandler) tile;
 			return handler.canConnectEnergy(from);
-
 		}
 		return false;
 	}
 
 	/**
-	 * @param tile
-	 *            Tile Entity you're checking from
-	 * @param side
-	 *            direction from Tile Entity your checking from
+	 * @param tile Tile Entity you're checking from
+	 * @param side direction from Tile Entity your checking from
 	 * @return adjacent Tile Entity
 	 */
 	public static TileEntity getAdjacentTileEntity(TileEntity tile, ForgeDirection side) {
@@ -60,8 +53,7 @@ public class SonarHelper {
 	}
 
 	/**
-	 * @param tile
-	 *            Tile Entity you are checking
+	 * @param tile Tile Entity you are checking
 	 * @return if the Tile is an Energy Handler
 	 */
 	public static boolean isEnergyHandler(TileEntity tile) {
@@ -78,12 +70,9 @@ public class SonarHelper {
 	/**
 	 * Add energy to an IEnergyReciever, internal distribution is left entirely to the IEnergyReciever.
 	 * 
-	 * @param from
-	 *            Orientation the energy is received from.
-	 * @param maxReceive
-	 *            Maximum amount of energy to receive.
-	 * @param simulate
-	 *            If TRUE, the charge will only be simulated.
+	 * @param from Orientation the energy is received from.
+	 * @param maxReceive Maximum amount of energy to receive.
+	 * @param simulate If TRUE, the charge will only be simulated.
 	 * @return Amount of energy that was (or would have been, if simulated) received.
 	 */
 	public static int pushEnergy(TileEntity tile, ForgeDirection dir, int amount, boolean simulate) {
@@ -98,12 +87,9 @@ public class SonarHelper {
 	/**
 	 * Remove energy from an IEnergyProvider, internal distribution is left entirely to the IEnergyProvider.
 	 * 
-	 * @param from
-	 *            Orientation the energy is extracted from.
-	 * @param maxExtract
-	 *            Maximum amount of energy to extract.
-	 * @param simulate
-	 *            If TRUE, the extraction will only be simulated.
+	 * @param from Orientation the energy is extracted from.
+	 * @param maxExtract Maximum amount of energy to extract.
+	 * @param simulate If TRUE, the extraction will only be simulated.
 	 * @return Amount of energy that was (or would have been, if simulated) extracted.
 	 */
 	public static int pullEnergy(TileEntity tile, ForgeDirection dir, int amount, boolean simulate) {
@@ -118,10 +104,8 @@ public class SonarHelper {
 	/**
 	 * checks if the two itemstacks are equial
 	 * 
-	 * @param stack1
-	 *            first stack your checking
-	 * @param stack2
-	 *            second stack your checking
+	 * @param stack1 first stack your checking
+	 * @param stack2 second stack your checking
 	 * @return if they are equal
 	 */
 	public static boolean equalStacks(ItemStack stack1, ItemStack stack2) {
@@ -129,14 +113,14 @@ public class SonarHelper {
 			if (isCircuit(stack1.getItem())) {
 				return false;
 			}
-			return stack1.getItem() != stack2.getItem() ? false : (stack1.getItemDamage() != stack2.getItemDamage() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
+			return stack1.getItem() != stack2.getItem() ? false : (stack1.getItemDamage() != stack2.getItemDamage() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack
+					.areItemStackTagsEqual(stack1, stack2)));
 		}
 		return false;
 	}
 
 	/**
-	 * @param item
-	 *            Item you are checking
+	 * @param item Item you are checking
 	 * @return if the stack is an circuit
 	 */
 	public static boolean isCircuit(Item item) {
