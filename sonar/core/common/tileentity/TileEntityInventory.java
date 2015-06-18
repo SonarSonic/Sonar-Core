@@ -10,20 +10,10 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityInventory extends TileEntity implements IInventory {
-	
-	protected boolean load;
+public class TileEntityInventory extends TileEntitySonar implements IInventory {
+
 	public ItemStack[] slots;
-	
-	public void updateEntity(){
-		if(load){
-			load=false;
-			this.onLoaded();
-		}
-	}
-	public void onLoaded(){
-		
-	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -36,7 +26,6 @@ public class TileEntityInventory extends TileEntity implements IInventory {
 				this.slots[b] = ItemStack.loadItemStackFromNBT(compound);
 			}
 		}
-		this.load = nbt.getBoolean("loaded");
 	}
 
 	@Override
@@ -52,22 +41,7 @@ public class TileEntityInventory extends TileEntity implements IInventory {
 			}
 		}
 		nbt.setTag("Items", list);
-		nbt.setBoolean("loaded", this.load);
 	}
-
-	@Override
-	public Packet getDescriptionPacket() {
-		NBTTagCompound nbtTag = new NBTTagCompound();
-		writeToNBT(nbtTag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord,
-				this.zCoord, 0, nbtTag);
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net,
-			S35PacketUpdateTileEntity packet) {
-		readFromNBT(packet.func_148857_g());
-	}	
 
 	@Override
 	public int getSizeInventory() {
@@ -114,7 +88,7 @@ public class TileEntityInventory extends TileEntity implements IInventory {
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
 		this.slots[i] = itemstack;
 
-		if ((itemstack != null)	&& (itemstack.stackSize > getInventoryStackLimit())) {
+		if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit())) {
 			itemstack.stackSize = getInventoryStackLimit();
 		}
 	}
@@ -126,15 +100,9 @@ public class TileEntityInventory extends TileEntity implements IInventory {
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return this.worldObj.getTileEntity(this.xCoord, this.yCoord,
-				this.zCoord) != this ? false
-				: player.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D,
-						this.zCoord + 0.5D) <= 64.0D;
+		return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : player.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64.0D;
 	}
-	public void validate(){
-		super.validate();
-		this.load=true;
-	}
+
 	@Override
 	public void openInventory() {
 	}
@@ -147,10 +115,12 @@ public class TileEntityInventory extends TileEntity implements IInventory {
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return true;
 	}
+
 	@Override
 	public String getInventoryName() {
 		return this.blockType.getLocalizedName();
 	}
+
 	@Override
 	public boolean hasCustomInventoryName() {
 		return false;

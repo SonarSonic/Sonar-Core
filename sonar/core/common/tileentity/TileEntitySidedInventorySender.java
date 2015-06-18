@@ -24,21 +24,20 @@ import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.Optional.Method;
 
-@Optional.InterfaceList(value = {
-		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2", striprefs = true),
+@Optional.InterfaceList(value = { @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2", striprefs = true),
 		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergyEmitter", modid = "IC2", striprefs = true),
 		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "IC2", striprefs = true) })
-public abstract class TileEntitySidedInventorySender extends TileEntitySidedInventory
-		implements IEnergyHandler, IDropTile, IEnergySource, ISyncTile {
+public abstract class TileEntitySidedInventorySender extends TileEntitySidedInventory implements IEnergyHandler, IDropTile, IEnergySource, ISyncTile {
 
 	public EnergyStorage storage;
 	public int maxTransfer = 5000;
 
-	public void onLoaded(){
-		if (!this.worldObj.isRemote &&SonarAPI.ic2Loaded()) {
-			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));	
+	public void onLoaded() {
+		if (!this.worldObj.isRemote && SonarAPI.ic2Loaded()) {
+			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 		}
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -59,21 +58,18 @@ public abstract class TileEntitySidedInventorySender extends TileEntitySidedInve
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		writeToNBT(nbtTag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord,
-				this.zCoord, 0, nbtTag);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbtTag);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net,
-			S35PacketUpdateTileEntity packet) {
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
 		readFromNBT(packet.func_148857_g());
 	}
-
 
 	public void discharge(int id) {
 		if (ChargingUtils.canDischarge(slots[id], this.storage)) {
 			EnergyCharge discharge = ChargingUtils.discharge(slots[id], storage);
-			if (discharge.getEnergyStack() != null&& discharge.getEnergyUsage() != 0) {
+			if (discharge.getEnergyStack() != null && discharge.getEnergyUsage() != 0) {
 				slots[id] = discharge.getEnergyStack();
 				this.storage.modifyEnergyStored(discharge.getEnergyUsage());
 				if (discharge.stackUsed()) {
@@ -89,7 +85,7 @@ public abstract class TileEntitySidedInventorySender extends TileEntitySidedInve
 	public void charge(int id) {
 		if (ChargingUtils.canCharge(slots[id], this.storage)) {
 			EnergyCharge charge = ChargingUtils.charge(slots[id], storage, maxTransfer);
-			if (charge.getEnergyStack() != null&& charge.getEnergyUsage() != 0) {
+			if (charge.getEnergyStack() != null && charge.getEnergyUsage() != 0) {
 				slots[id] = charge.getEnergyStack();
 				this.storage.modifyEnergyStored(charge.getEnergyUsage());
 			}
@@ -98,17 +94,15 @@ public abstract class TileEntitySidedInventorySender extends TileEntitySidedInve
 
 	// CoFH Energy Methods
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive,
-			boolean simulate) {
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
 
 		return 0;
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract,
-			boolean simulate) {
+	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
 
-		return 0;
+		return storage.extractEnergy(maxExtract, simulate);
 	}
 
 	@Override
@@ -153,14 +147,14 @@ public abstract class TileEntitySidedInventorySender extends TileEntitySidedInve
 	@Method(modid = "IC2")
 	@Override
 	public double getOfferedEnergy() {
-		return this.storage.extractEnergy(maxTransfer, true)/4;
+		return this.storage.extractEnergy(maxTransfer, true) / 4;
 	}
 
 	@Method(modid = "IC2")
 	@Override
 	public void drawEnergy(double amount) {
-		this.storage.extractEnergy((int) (amount*4), false);
-		
+		this.storage.extractEnergy((int) (amount * 4), false);
+
 	}
 
 	@Method(modid = "IC2")
@@ -168,7 +162,7 @@ public abstract class TileEntitySidedInventorySender extends TileEntitySidedInve
 	public int getSourceTier() {
 		return 4;
 	}
-	
+
 	@Override
 	public void readInfo(NBTTagCompound tag) {
 		this.storage.setEnergyStored(tag.getInteger("energy"));
@@ -178,18 +172,21 @@ public abstract class TileEntitySidedInventorySender extends TileEntitySidedInve
 	public void writeInfo(NBTTagCompound tag) {
 		tag.setInteger("energy", this.storage.getEnergyStored());
 	}
+
 	@Override
 	public void onSync(int data, int id) {
-		switch(id){
-		case SyncType.ENERGY: this.storage.setEnergyStored(data);
+		switch (id) {
+		case SyncType.ENERGY:
+			this.storage.setEnergyStored(data);
 		}
 	}
 
 	@Override
 	public SyncData getSyncData(int id) {
-		switch(id){
-		case SyncType.ENERGY: return new SyncData(true,storage.getEnergyStored());
+		switch (id) {
+		case SyncType.ENERGY:
+			return new SyncData(true, storage.getEnergyStored());
 		}
-		return new SyncData(false,0);
+		return new SyncData(false, 0);
 	}
-	}
+}

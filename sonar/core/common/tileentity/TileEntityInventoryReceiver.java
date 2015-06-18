@@ -110,7 +110,7 @@ public class TileEntityInventoryReceiver extends TileEntityInventory implements
 	public int extractEnergy(ForgeDirection from, int maxExtract,
 			boolean simulate) {
 
-		return 0;
+		return this.storage.extractEnergy(maxExtract, simulate);
 	}
 
 	@Override

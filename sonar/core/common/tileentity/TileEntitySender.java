@@ -22,21 +22,20 @@ import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.Optional.Method;
 
-@Optional.InterfaceList(value={
-@Optional.Interface(iface="ic2.api.energy.tile.IEnergySource", modid="IC2", striprefs=true),
-@Optional.Interface(iface="ic2.api.energy.tile.IEnergyEmitter", modid="IC2", striprefs=true),
-@Optional.Interface(iface="ic2.api.energy.tile.IEnergyTile", modid="IC2", striprefs=true)
-})
-public class TileEntitySender extends TileEntity implements IEnergyHandler, IDropTile, IEnergySource, ISyncTile {
+@Optional.InterfaceList(value = { @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2", striprefs = true),
+		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergyEmitter", modid = "IC2", striprefs = true),
+		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "IC2", striprefs = true) })
+public class TileEntitySender extends TileEntitySonar implements IEnergyHandler, IDropTile, IEnergySource, ISyncTile {
 
 	public EnergyStorage storage;
 	public int maxTransfer;
 
-	public void onLoaded(){
-		if (!this.worldObj.isRemote &&SonarAPI.ic2Loaded()) {
-			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));	
+	public void onLoaded() {
+		if (!this.worldObj.isRemote && SonarAPI.ic2Loaded()) {
+			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 		}
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -52,33 +51,29 @@ public class TileEntitySender extends TileEntity implements IEnergyHandler, IDro
 		this.storage.writeToNBT(energyTag);
 		nbt.setTag("energyStorage", energyTag);
 	}
+
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		writeToNBT(nbtTag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord,
-				this.zCoord, 0, nbtTag);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbtTag);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net,
-			S35PacketUpdateTileEntity packet) {
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
 		readFromNBT(packet.func_148857_g());
 	}
-		
-	//CoFH Energy Methods
+
+	// CoFH Energy Methods
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive,
-			boolean simulate) {
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
 		return 0;
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract,
-			boolean simulate) {
-		return 0;
+	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+		return storage.extractEnergy(maxExtract, simulate);
 	}
-
 
 	@Override
 	public int getEnergyStored(ForgeDirection from) {
@@ -97,14 +92,13 @@ public class TileEntitySender extends TileEntity implements IEnergyHandler, IDro
 
 		return true;
 	}
-	
-	
+
 	@Method(modid = "IC2")
 	@Override
-	public void invalidate(){
+	public void invalidate() {
 		super.invalidate();
-		if(!this.worldObj.isRemote){
-			if(SonarAPI.ic2Loaded()){
+		if (!this.worldObj.isRemote) {
+			if (SonarAPI.ic2Loaded()) {
 				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 			}
 		}
@@ -119,14 +113,14 @@ public class TileEntitySender extends TileEntity implements IEnergyHandler, IDro
 	@Method(modid = "IC2")
 	@Override
 	public double getOfferedEnergy() {
-		return this.storage.extractEnergy(maxTransfer, true)/4;
+		return this.storage.extractEnergy(maxTransfer, true) / 4;
 	}
 
 	@Method(modid = "IC2")
 	@Override
 	public void drawEnergy(double amount) {
-		this.storage.extractEnergy((int) (amount*4), false);
-		
+		this.storage.extractEnergy((int) (amount * 4), false);
+
 	}
 
 	@Method(modid = "IC2")
@@ -144,19 +138,21 @@ public class TileEntitySender extends TileEntity implements IEnergyHandler, IDro
 	public void writeInfo(NBTTagCompound tag) {
 		tag.setInteger("energy", this.storage.getEnergyStored());
 	}
-	
+
 	@Override
 	public void onSync(int data, int id) {
-		switch(id){
-		case SyncType.ENERGY: this.storage.setEnergyStored(data);
+		switch (id) {
+		case SyncType.ENERGY:
+			this.storage.setEnergyStored(data);
 		}
 	}
 
 	@Override
 	public SyncData getSyncData(int id) {
-		switch(id){
-		case SyncType.ENERGY: return new SyncData(true,storage.getEnergyStored());
+		switch (id) {
+		case SyncType.ENERGY:
+			return new SyncData(true, storage.getEnergyStored());
 		}
-		return new SyncData(false,0);
+		return new SyncData(false, 0);
 	}
 }

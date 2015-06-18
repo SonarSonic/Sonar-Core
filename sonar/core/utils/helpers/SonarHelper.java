@@ -1,7 +1,9 @@
 package sonar.core.utils.helpers;
 
 import ic2.api.energy.tile.IEnergyAcceptor;
+import ic2.api.energy.tile.IEnergyConductor;
 import ic2.api.energy.tile.IEnergySink;
+import ic2.api.energy.tile.IEnergyTile;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -28,7 +30,11 @@ public class SonarHelper {
 		TileEntity handler = getAdjacentTileEntity(tile, ForgeDirection.getOrientation(side));
 		return isEnergyHandlerFromSide(handler, ForgeDirection.VALID_DIRECTIONS[side ^ 1]);
 	}
-
+	
+	public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, ForgeDirection side) {
+		TileEntity handler = getAdjacentTileEntity(tile, side);
+		return isEnergyHandlerFromSide(handler, side.getOpposite());
+	}
 	/**
 	 * @param tile Tile Entity you want to check
 	 * @param from direction your adding from
@@ -38,6 +44,10 @@ public class SonarHelper {
 		if (tile instanceof IEnergyHandler) {
 			IEnergyHandler handler = (IEnergyHandler) tile;
 			return handler.canConnectEnergy(from);
+		}
+		if (tile instanceof IEnergySink) {
+			IEnergySink handler = (IEnergySink) tile;
+			return handler.acceptsEnergyFrom(tile, from);
 		}
 		return false;
 	}
@@ -59,11 +69,9 @@ public class SonarHelper {
 	public static boolean isEnergyHandler(TileEntity tile) {
 		if (tile instanceof IEnergyHandler) {
 			return true;
-		} else if (SonarAPI.ic2Loaded() && tile instanceof IEnergyAcceptor) {
+		} else if (SonarAPI.ic2Loaded() && tile instanceof IEnergyTile) {
 			return true;
-		} else if (SonarAPI.ic2Loaded() && tile instanceof IEnergySink) {
-			return true;
-		}
+		} 
 		return false;
 	}
 
