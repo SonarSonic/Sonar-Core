@@ -27,6 +27,9 @@ public class FontHelper {
 		case 2:
 			render.drawString(info, x, y, -1);
 			break;
+		default:
+			render.drawString(info, x, y, colour);
+			break;
 		}
 	}
 
@@ -44,6 +47,9 @@ public class FontHelper {
 			break;
 		case 2:
 			render.drawString(info, xSize / 2 - width(info) / 2, y, -1);
+			break;
+		default:
+			render.drawString(info, xSize / 2 - width(info) / 2, y, colour);
 			break;
 		}
 	}
@@ -70,6 +76,9 @@ public class FontHelper {
 			break;
 		case 2:
 			render.drawString(info, xCentre - width(info) / 2, y, -1);
+			break;
+		default:
+			render.drawString(info, xCentre - width(info) / 2, y, colour);
 			break;
 		}
 	}

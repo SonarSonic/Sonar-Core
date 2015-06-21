@@ -140,10 +140,10 @@ public class TileEntitySender extends TileEntitySonar implements IEnergyHandler,
 	}
 
 	@Override
-	public void onSync(int data, int id) {
+	public void onSync(Object data, int id) {
 		switch (id) {
 		case SyncType.ENERGY:
-			this.storage.setEnergyStored(data);
+			this.storage.setEnergyStored((Integer) data);
 		}
 	}
 

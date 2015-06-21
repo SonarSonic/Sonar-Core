@@ -181,9 +181,9 @@ public class TileEntityInventoryReceiver extends TileEntityInventory implements
 		tag.setInteger("energy", this.storage.getEnergyStored());
 	}
 	@Override
-	public void onSync(int data, int id) {
+	public void onSync(Object data, int id) {
 		switch(id){
-		case SyncType.ENERGY: this.storage.setEnergyStored(data);
+		case SyncType.ENERGY: this.storage.setEnergyStored((Integer)data);
 		}
 	}
 
