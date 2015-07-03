@@ -6,12 +6,12 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
+import sonar.core.utils.helpers.FontHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -32,18 +32,18 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
 		super.addInformation(stack, player, list, par4);
 
-		String mode = StatCollector.translateToLocal("calculator.tools.calculator.greenhouse");
+		String mode = FontHelper.translate("calculator.tools.calculator.greenhouse");
 		switch (greenhouseTier) {
 		case 0:
 			break;
 		case 1:
-			list.add(StatCollector.translateToLocalFormatted("Planted with Basic Greenhouse or Higher", new Object[] { mode }));
+			list.add(FontHelper.translate("Planted with Basic Greenhouse or Higher"));
 			break;
 		case 2:
-			list.add(StatCollector.translateToLocalFormatted("Planted with Advanced Greenhouse or Higher", new Object[] { mode }));
+			list.add(FontHelper.translate("Planted with Advanced Greenhouse or Higher"));
 			break;
 		case 3:
-			list.add(StatCollector.translateToLocalFormatted("Planted with Flawless Greenhouse", new Object[] { mode }));
+			list.add(FontHelper.translate("Planted with Flawless Greenhouse"));
 			break;
 		}
 	}

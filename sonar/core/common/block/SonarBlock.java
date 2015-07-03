@@ -41,6 +41,7 @@ public abstract class SonarBlock extends Block implements IWrench {
 
 	@Override
 	public final boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitx, float hity, float hitz) {
+		super.onBlockActivated(world, x, y, z, player, side, hitx, hity, hitz);
 		if (player != null) {
 			if (wrenchable && SonarAPI.calculatorLoaded() && player.getHeldItem() != null && player.getHeldItem().getItem() == GameRegistry.findItem("Calculator", "Wrench")) {
 				return false;

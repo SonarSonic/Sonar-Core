@@ -31,9 +31,6 @@ public class ChargingUtils {
 			if (energy.getItem() instanceof IElectricItem) {
 				return true;
 			}
-			if (energy.getItem() instanceof ISpecialElectricItem) {
-				return true;
-			}
 		}
 		if (DischargeValues.discharge().value(energy) > 0) {
 			return true;
@@ -60,9 +57,6 @@ public class ChargingUtils {
 		
 		if (SonarAPI.ic2Loaded()) {
 			if (energy.getItem() instanceof IElectricItem) {
-				return true;
-			}
-			if (energy.getItem() instanceof ISpecialElectricItem) {
 				return true;
 			}
 		}

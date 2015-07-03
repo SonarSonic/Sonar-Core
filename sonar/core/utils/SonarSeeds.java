@@ -8,12 +8,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
+import sonar.core.utils.helpers.FontHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -38,9 +38,9 @@ public class SonarSeeds extends Item implements IPlantable
       
       switch(greenhouseTier){
       case 0: break;
-      case 1: list.add(StatCollector.translateToLocal("planting.basic"));break;
-      case 2: list.add(StatCollector.translateToLocal("planting.advanced"));break;
-      case 3: list.add(StatCollector.translateToLocal("planting.flawless"));break;
+      case 1: list.add(FontHelper.translate("planting.basic"));break;
+      case 2: list.add(FontHelper.translate("planting.advanced"));break;
+      case 3: list.add(FontHelper.translate("planting.flawless"));break;
       }
       }
     

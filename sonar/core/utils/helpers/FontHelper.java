@@ -6,8 +6,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public class FontHelper {
@@ -117,4 +119,45 @@ public class FontHelper {
 		bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
 		return bd.floatValue();
 	}
+
+	public static boolean addDigitsToString(GuiTextField box, char c, int i) {
+		switch (c) {
+		case '\001':
+			return box.textboxKeyTyped(c, i);
+		case '\003':
+			return box.textboxKeyTyped(c, i);
+		case '\026':
+			return false;
+		case '\030':
+			return box.textboxKeyTyped(c, i);
+		}
+		switch (i) {
+		case 14:
+			return box.textboxKeyTyped(c, i);
+		case 199:
+			return box.textboxKeyTyped(c, i);
+		case 203:
+			return box.textboxKeyTyped(c, i);
+		case 205:
+			return box.textboxKeyTyped(c, i);
+		case 207:
+			return box.textboxKeyTyped(c, i);
+		case 211:
+			return box.textboxKeyTyped(c, i);
+		}
+		if (Character.isDigit(c)) {
+			return box.textboxKeyTyped(c, i);
+		}
+		return false;
+	}
+	
+	public static String translate(String string){
+		String local = StatCollector.translateToLocal(string);
+		if(!local.equals(string)){
+			return local;
+		}else{
+			return StatCollector.translateToFallback(string);
+		}
+	}
+	
 }
