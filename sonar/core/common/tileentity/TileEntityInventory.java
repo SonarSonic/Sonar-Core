@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntityInventory extends TileEntitySonar implements IInventory {
 
 	public ItemStack[] slots;
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);

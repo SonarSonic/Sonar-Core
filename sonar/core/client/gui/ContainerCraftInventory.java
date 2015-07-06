@@ -11,17 +11,17 @@ import net.minecraft.world.World;
 import sonar.core.common.item.InventoryItem;
 import sonar.core.utils.SlotLimiter;
 
-/**used by Calculators and other Hand-Held items with Inventories*/
+/** used by Calculators and other Hand-Held items with Inventories */
 public abstract class ContainerCraftInventory extends Container {
 
-    public final EntityPlayer player;
-	public InventoryItem inventory;
-    protected World worldObj;
-    
-	public ContainerCraftInventory(EntityPlayer player,InventoryPlayer inv, InventoryItem inventory) {
-	    this.worldObj = player.worldObj;
+	public final EntityPlayer player;
+	protected final InventoryItem inventory;
+	protected World worldObj;
+
+	public ContainerCraftInventory(EntityPlayer player, InventoryPlayer inv, InventoryItem inventory) {
+		this.worldObj = player.worldObj;
 		this.inventory = inventory;
-		this.player = player;			
+		this.player = player;
 	}
 
 	public boolean checkEmptySlot(int i) {
@@ -31,5 +31,5 @@ public abstract class ContainerCraftInventory extends Container {
 		}
 		return true;
 	}
-	
+
 }

@@ -10,15 +10,15 @@ public class InventoryContainerItem extends Item {
 
 	@Override
 	public boolean onDroppedByPlayer(ItemStack itemstack, EntityPlayer player) {
-		if (itemstack != null && player instanceof EntityPlayerMP
-				&& player.openContainer instanceof ContainerCraftInventory) {
+		if (itemstack != null && player instanceof EntityPlayerMP && player.openContainer instanceof ContainerCraftInventory) {
 			player.closeScreen();
 		}
 
 		return super.onDroppedByPlayer(itemstack, player);
 	}
+
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack) {
-	return 1;
+		return 1;
 	}
 }

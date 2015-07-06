@@ -5,43 +5,35 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
 
+/** coolAlias <3 */
 public class InventoryItem implements IInventory {
-	private String name = "Calculator Inventory Item";
-	private ItemStack[] slots;
-	private final ItemStack invStack;
-	public String tag;
-
-	public InventoryItem(ItemStack stack, int size) {
-		slots = new ItemStack[size];
-		this.invStack = stack;
-		if (!invStack.hasTagCompound()) {
-			invStack.setTagCompound(new NBTTagCompound());
-		}
-		readFromNBT(invStack.getTagCompound());
-	}
-
+	private String name = "Inventory Item";
+	private final ItemStack invItem;
+	private ItemStack[] inventory;
+	private String tag;
+	public int size;
+	
 	public InventoryItem(ItemStack stack, int size, String tag) {
-		slots = new ItemStack[size];
+		inventory = new ItemStack[size];
+		invItem = stack;
 		this.tag = tag;
-		this.invStack = stack;
-		if (!invStack.hasTagCompound()) {
-			invStack.setTagCompound(new NBTTagCompound());
+
+		if (!stack.hasTagCompound()) {
+			stack.setTagCompound(new NBTTagCompound());
 		}
-		readFromNBT(invStack.getTagCompound());
+		readFromNBT(stack.getTagCompound());
 	}
 
 	@Override
 	public int getSizeInventory() {
-		return slots.length;
+		return inventory.length;
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return slots[slot];
+		return inventory[slot];
 	}
 
 	@Override
@@ -55,14 +47,6 @@ public class InventoryItem implements IInventory {
 				setInventorySlotContents(slot, null);
 			}
 		}
-
-		return stack;
-	}
-
-	public ItemStack incrStackSize(int slot, int amount) {
-		ItemStack stack = getStackInSlot(slot);
-		stack.stackSize += amount;
-		markDirty();
 		return stack;
 	}
 
@@ -75,10 +59,12 @@ public class InventoryItem implements IInventory {
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		slots[slot] = stack;
+		inventory[slot] = stack;
+
 		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
 			stack.stackSize = getInventoryStackLimit();
 		}
+
 		markDirty();
 	}
 
@@ -100,15 +86,17 @@ public class InventoryItem implements IInventory {
 	@Override
 	public void markDirty() {
 		for (int i = 0; i < getSizeInventory(); ++i) {
-			if (getStackInSlot(i) != null && getStackInSlot(i).stackSize == 0)
-				slots[i] = null;
+			if (getStackInSlot(i) != null && getStackInSlot(i).stackSize == 0) {
+				inventory[i] = null;
+			}
 		}
-		writeToNBT(invStack.getTagCompound());
+
+		writeToNBT(invItem.getTagCompound());
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return player.getHeldItem() == invStack;
+	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
+		return true;
 	}
 
 	@Override
@@ -120,57 +108,45 @@ public class InventoryItem implements IInventory {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return !(stack.getItem() instanceof InventoryContainerItem);
+	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
+		return !(itemstack.getItem() instanceof InventoryContainerItem);
 	}
 
 	public void readFromNBT(NBTTagCompound compound) {
-		NBTTagList items = null;
-		if (tag == null) {
-			items = compound.getTagList("ItemInventory",
-					Constants.NBT.TAG_COMPOUND);
-		} else {
-			items = compound.getTagList(tag, Constants.NBT.TAG_COMPOUND);
-		}
+		NBTTagList items = compound.getTagList(tag, Constants.NBT.TAG_COMPOUND);
+
 		for (int i = 0; i < items.tagCount(); ++i) {
-			NBTTagCompound item = items.getCompoundTagAt(i);
-			byte slot = item.getByte("Slot");
+			NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
+			int slot = item.getInteger("Slot");
 			if (slot >= 0 && slot < getSizeInventory()) {
-				slots[slot] = ItemStack.loadItemStackFromNBT(item);
+				inventory[slot] = ItemStack.loadItemStackFromNBT(item);
 			}
 		}
-
 	}
 
+	/**
+	 * A custom method to write our inventory to an ItemStack's NBT compound
+	 */
 	public void writeToNBT(NBTTagCompound compound) {
 		NBTTagList items = new NBTTagList();
+
 		int size = 0;
 		for (int i = 0; i < getSizeInventory(); ++i) {
 			if (getStackInSlot(i) != null) {
 				NBTTagCompound item = new NBTTagCompound();
-				item.setByte("Slot", (byte) i);
+				item.setInteger("Slot", i);
 				getStackInSlot(i).writeToNBT(item);
 				items.appendTag(item);
 				size++;
 			}
 		}
-		if (tag == null) {
-			compound.setTag("ItemInventory", items);
-			compound.setInteger("ItemInventory" + "size", size);
-		} else {
-			compound.setTag(tag, items);
-			compound.setInteger(tag + "size", size);
-		}
+		compound.setTag(tag, items);
+		compound.setInteger(tag + "size", size);
 	}
 
 	public int getItemsStored(ItemStack stack) {
 		if (stack.hasTagCompound()) {
-
-			if (tag == null) {
-				return stack.stackTagCompound.getInteger("ItemInventory"+ "size");
-			} else {
-				return stack.stackTagCompound.getInteger(tag + "size");
-			}
+			return stack.stackTagCompound.getInteger(tag + "size");
 		} else {
 			return 0;
 		}
