@@ -30,6 +30,7 @@ public class SonarSeeds extends Item implements IPlantable
         this.setCreativeTab(CreativeTabs.tabMaterials);
         this.greenhouseTier=tier;
     }
+    
     @Override
 	@SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)

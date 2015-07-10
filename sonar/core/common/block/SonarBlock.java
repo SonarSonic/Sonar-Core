@@ -15,8 +15,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import sonar.calculator.mod.api.IUpgradeCircuits;
 import sonar.calculator.mod.api.IWrench;
-import sonar.core.utils.IDropTile;
+import sonar.core.utils.ISyncTile;
 import sonar.core.utils.SonarAPI;
+import sonar.core.utils.helpers.NBTHelper.SyncType;
 
 import com.google.common.collect.Lists;
 
@@ -86,9 +87,9 @@ public abstract class SonarBlock extends Block implements IWrench {
 
 	public final ItemStack getSpecialDrop(World world, int x, int y, int z) {
 
-		if (world.getTileEntity(x, y, z) != null && world.getTileEntity(x, y, z) instanceof IDropTile) {
+		if (world.getTileEntity(x, y, z) != null && world.getTileEntity(x, y, z) instanceof ISyncTile) {
 			ItemStack itemStack = new ItemStack(this, 1);
-			processDrop(world, x, y, z, (IDropTile) world.getTileEntity(x, y, z), itemStack);
+			processDrop(world, x, y, z, (ISyncTile) world.getTileEntity(x, y, z), itemStack);
 			return itemStack;
 		} else {
 			ItemStack itemStack = new ItemStack(this, 1);
@@ -98,11 +99,11 @@ public abstract class SonarBlock extends Block implements IWrench {
 
 	}
 
-	public void processDrop(World world, int x, int y, int z, IDropTile te, ItemStack drop) {
+	public void processDrop(World world, int x, int y, int z, ISyncTile te, ItemStack drop) {
 		if (te != null) {
-			IDropTile handler = (IDropTile) te;
+			ISyncTile handler = (ISyncTile) te;
 			NBTTagCompound tag = new NBTTagCompound();
-			handler.writeInfo(tag);
+			handler.writeData(tag, SyncType.DROP);
 			drop.setTagCompound(tag);
 		}
 	}
@@ -168,9 +169,9 @@ public abstract class SonarBlock extends Block implements IWrench {
 		}
 		if (itemstack.hasTagCompound()) {
 			TileEntity entity = world.getTileEntity(x, y, z);
-			if (entity != null && entity instanceof IDropTile) {
-				IDropTile handler = (IDropTile) entity;
-				handler.readInfo(itemstack.getTagCompound());
+			if (entity != null && entity instanceof ISyncTile) {
+				ISyncTile handler = (ISyncTile) entity;
+				handler.readData(itemstack.getTagCompound(), SyncType.DROP);
 			}
 		}
 	}

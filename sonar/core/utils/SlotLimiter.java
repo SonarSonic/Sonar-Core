@@ -23,7 +23,7 @@ public class SlotLimiter extends Slot {
 	}
 
 	public boolean isItemValid(ItemStack stack) {
-		if (stack.getItem() == item) {
+		if (stack ==null || stack.getItem() == item) {
 			return false;
 		}
 		return true;

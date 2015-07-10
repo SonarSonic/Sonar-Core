@@ -1,12 +1,5 @@
 package sonar.core.common.tileentity;
 
-import sonar.calculator.mod.api.ISyncTile;
-import sonar.calculator.mod.api.SyncData;
-import sonar.calculator.mod.api.SyncType;
-import sonar.core.utils.ChargingUtils;
-import sonar.core.utils.EnergyCharge;
-import sonar.core.utils.IDropTile;
-import sonar.core.utils.SonarAPI;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySource;
@@ -17,6 +10,12 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
+import sonar.core.utils.ChargingUtils;
+import sonar.core.utils.EnergyCharge;
+import sonar.core.utils.ISyncTile;
+import sonar.core.utils.SonarAPI;
+import sonar.core.utils.helpers.NBTHelper;
+import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.Optional;
@@ -25,7 +24,7 @@ import cpw.mods.fml.common.Optional.Method;
 @Optional.InterfaceList(value = { @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2", striprefs = true),
 		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergyEmitter", modid = "IC2", striprefs = true),
 		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "IC2", striprefs = true) })
-public class TileEntityInventorySender extends TileEntityInventory implements IEnergyHandler, IDropTile, IEnergySource, ISyncTile {
+public class TileEntityInventorySender extends TileEntityInventory implements IEnergyHandler, IEnergySource, ISyncTile {
 
 	public EnergyStorage storage;
 	public int maxTransfer = 5000;
@@ -36,21 +35,26 @@ public class TileEntityInventorySender extends TileEntityInventory implements IE
 		}
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		if (nbt.hasKey("energyStorage")) {
-			this.storage.readFromNBT(nbt.getCompoundTag("energyStorage"));
+	public void readData(NBTTagCompound nbt, SyncType type) {
+		super.readData(nbt, type);
+		if (type == SyncType.SAVE || type == SyncType.SYNC) {
+			NBTHelper.readEnergyStorage(storage, nbt);
 		}
 
+		if (type == SyncType.DROP) {
+			this.storage.setEnergyStored(nbt.getInteger("energy"));
+		}
 	}
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		NBTTagCompound energyTag = new NBTTagCompound();
-		this.storage.writeToNBT(energyTag);
-		nbt.setTag("energyStorage", energyTag);
+	public void writeData(NBTTagCompound nbt, SyncType type) {
+		super.writeData(nbt, type);
+		if (type == SyncType.SAVE || type == SyncType.SYNC) {
+			NBTHelper.writeEnergyStorage(storage, nbt);
+		}
+		if (type == SyncType.DROP) {
+			nbt.setInteger("energy", this.storage.getEnergyStored());
+
+		}
 	}
 
 	@Override
@@ -140,34 +144,6 @@ public class TileEntityInventorySender extends TileEntityInventory implements IE
 	@Override
 	public int getSourceTier() {
 		return 4;
-	}
-
-	@Override
-	public void readInfo(NBTTagCompound tag) {
-		this.storage.setEnergyStored(tag.getInteger("energy"));
-	}
-
-	@Override
-	public void writeInfo(NBTTagCompound tag) {
-		tag.setInteger("energy", this.storage.getEnergyStored());
-	}
-
-	@Override
-	public void onSync(Object data, int id) {
-		switch (id) {
-		case SyncType.ENERGY:
-			this.storage.setEnergyStored((Integer)data);
-			break;
-		}
-	}
-
-	@Override
-	public SyncData getSyncData(int id) {
-		switch (id) {
-		case SyncType.ENERGY:
-			return new SyncData(true, storage.getEnergyStored());
-		}
-		return new SyncData(false, 0);
 	}
 
 }

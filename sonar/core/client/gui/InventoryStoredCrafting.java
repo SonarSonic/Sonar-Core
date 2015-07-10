@@ -94,7 +94,6 @@ public class InventoryStoredCrafting extends InventoryCrafting {
 
 	@Override
 	public void markDirty() {
-		inv.markDirty();
 	}
 
 	@Override
