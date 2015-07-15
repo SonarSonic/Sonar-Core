@@ -14,16 +14,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import sonar.calculator.mod.api.IUpgradeCircuits;
-import sonar.calculator.mod.api.IWrench;
 import sonar.core.utils.ISyncTile;
 import sonar.core.utils.SonarAPI;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
+import sonar.core.utils.helpers.SonarHelper;
+import cofh.api.block.IDismantleable;
+import cofh.api.item.IToolHammer;
+import cofh.api.tileentity.IReconfigurableSides;
 
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public abstract class SonarBlock extends Block implements IWrench {
+public abstract class SonarBlock extends Block implements IDismantleable {
 
 	protected Random rand = new Random();
 	public boolean orientation, wrenchable;
@@ -43,12 +46,22 @@ public abstract class SonarBlock extends Block implements IWrench {
 	@Override
 	public final boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitx, float hity, float hitz) {
 		super.onBlockActivated(world, x, y, z, player, side, hitx, hity, hitz);
-		if (player != null) {
-			if (wrenchable && SonarAPI.calculatorLoaded() && player.getHeldItem() != null && player.getHeldItem().getItem() == GameRegistry.findItem("Calculator", "Wrench")) {
+		if (player != null) {		
+			ItemStack heldItem = player.getHeldItem();
+			if(wrenchable && heldItem !=null && heldItem.getItem() instanceof IToolHammer){
+				if(!player.isSneaking()){
+					TileEntity target =world.getTileEntity(x, y, z);
+					if(target instanceof IReconfigurableSides){
+						((IReconfigurableSides)target).incrSide(side);
+					}
+				}
+				return false;
+			}
+			if (wrenchable && SonarAPI.calculatorLoaded() && heldItem != null && (heldItem.getItem() instanceof IToolHammer || heldItem.getItem() == GameRegistry.findItem("Calculator", "Wrench"))) {
 				return false;
 			} else {
 				return operateBlock(world, x, y, z, player, side, hitx, hity, hitz);
-			}
+			}			
 		}
 		return false;
 
@@ -177,11 +190,6 @@ public abstract class SonarBlock extends Block implements IWrench {
 	}
 
 	@Override
-	public final boolean canWrench() {
-		return wrenchable;
-	}
-
-	@Override
 	public void breakBlock(World world, int x, int y, int z, Block oldblock, int oldMetadata) {
 
 		TileEntity entity = world.getTileEntity(x, y, z);
@@ -242,4 +250,15 @@ public abstract class SonarBlock extends Block implements IWrench {
 
 	}
 
+	@Override
+	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnDrops) {
+		
+		SonarHelper.dropTile(player, world.getBlock(x, y, z), world, x, y, z);
+		return null;
+	}
+
+	@Override
+	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z) {
+		return true;
+	}
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import scala.actors.threadpool.Arrays;
 import sonar.calculator.mod.CalculatorConfig;
 import sonar.core.client.gui.InventoryStoredCrafting;
 import cpw.mods.fml.common.FMLLog;
@@ -23,11 +24,17 @@ public abstract class RecipeHelper {
 	public int outputSize, inputSize;
 	public boolean shapeless;
 
-	private Map<Object[], Object[]> recipeList = new HashMap();
+	protected Map<Object[], Object[]> recipeList = new HashMap();
 
 	/** add all your recipes here */
 	public abstract void addRecipes();
 
+	/**
+	 * 
+	 * @param inputSize number of stacks required in the input
+	 * @param outputSize number of stacks to be created
+	 * @param shapeless does the order matter?
+	 */
 	public RecipeHelper(int inputSize, int outputSize, boolean shapeless) {
 		this.inputSize = inputSize;
 		this.outputSize = outputSize;
@@ -106,7 +113,7 @@ public abstract class RecipeHelper {
 			} else if (!(i - inputSize > outputSize)) {
 				output[i - inputSize] = stacks[i];
 			} else {
-				throw new RuntimeException("Recipe is too big!");
+				throw new RuntimeException("Something went wrong! A recipe was too big");
 			}
 		}
 		addRecipe(input, output);
@@ -127,7 +134,7 @@ public abstract class RecipeHelper {
 	}
 
 	/** adds the two input and output lists */
-	private void addRecipe(Object[] input, Object[] output) {
+	public  void addRecipe(Object[] input, Object[] output) {
 		recipeList.put(convertToArrays(input), output);
 	}
 
@@ -150,7 +157,6 @@ public abstract class RecipeHelper {
 		}
 		for (int i = 0; i < input.length; i++) {
 			if (input[i] == null || !CalculatorConfig.isEnabled(input[i])) {
-				System.out.print("disabled");
 				return null;
 			}
 		}
@@ -275,7 +281,7 @@ public abstract class RecipeHelper {
 				sizes[i] = ((ItemStack) input[i]).stackSize;
 			} else if (input[i] instanceof ItemStack[]) {
 				sizes[i] = ((ItemStack[]) input[i])[0].stackSize;
-			} else if(input[i] instanceof OreStack){
+			} else if (input[i] instanceof OreStack) {
 				sizes[i] = ((OreStack) input[i]).stackSize;
 			}
 		}
@@ -304,24 +310,38 @@ public abstract class RecipeHelper {
 				}
 			}
 		} else {
-			for (int k = 0; k < inputSize; k++) {
-				boolean flag = false;
-				if (key[k] instanceof ItemStack) {
-					for (int i = 0; i < inputSize; i++) {
-						if (equalStack(input[i], (ItemStack) key[k], true)) {
-							flag = true;
+			ArrayList recipe = new ArrayList(Arrays.asList(key));
+			boolean[] used = new boolean[inputSize];
+			for (int i = 0; i < inputSize; i++) {
+				ItemStack target = input[i];
+
+				if (target != null) {
+					boolean flag = false;
+					Iterator iterator = recipe.iterator();
+
+					while (iterator.hasNext()) {
+						Object obj = (Object) iterator.next();
+						if (obj instanceof ItemStack) {
+							if (equalStack(target, (ItemStack) obj, true)) {
+								flag = true;
+								recipe.remove(obj);
+								break;
+							}
+						} else if (obj instanceof ItemStack[]) {
+							if (!(containsStack(input[i], (ItemStack[]) obj, true) == -1)) {
+								flag = true;
+								recipe.remove(obj);
+								break;
+							}
 						}
+
 					}
-				} else if (key[k] instanceof ItemStack[]) {
-					for (int i = 0; i < inputSize; i++) {
-						if (!(containsStack(input[i], (ItemStack[]) key[k], true) == -1)) {
-							flag = true;
-						}
+
+					if (!flag) {
+						return false;
 					}
 				}
-				if (!flag) {
-					return false;
-				}
+
 			}
 		}
 
@@ -464,7 +484,7 @@ public abstract class RecipeHelper {
 	}
 
 	/**
-	 * used for inputs/outputs using OreDict which require a custom stacksize to one.
+	 * used for inputs/outputs using OreDict which require a custom stack size instead of 1.
 	 */
 	private static class OreStack extends Object {
 		public String oreString;

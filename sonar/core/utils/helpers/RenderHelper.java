@@ -77,6 +77,7 @@ public class RenderHelper {
 			break;
 		}
 		GL11.glRotatef(j, 0.0F, 1.0F, 0.0F);
+		GL11.glRotated(-0.625, 0, 1, 0);
 	}
 
 	public static void finishRender() {
@@ -139,28 +140,33 @@ public class RenderHelper {
 	}
 
 	public static void renderItem(World world, ItemStack stack) {
-
-		if (stack != null) {
-			EntityItem entityitem = new EntityItem(world, 0.0D, 0.0D, 0.0D, stack);
+		ItemStack render = stack.copy();
+		if (render != null) {
+			if (render.getItem() instanceof ItemBlock) {
+				GL11.glRotated(-90, 1, 0, 0);
+				GL11.glTranslated(0, -0.22, 0.2);
+			}
+			EntityItem entityitem = new EntityItem(world, 0.0D, 0.0D, 0.0D, render);
 			Item item = entityitem.getEntityItem().getItem();
 			entityitem.getEntityItem().stackSize = 1;
 			entityitem.hoverStart = 0.0F;
-			GL11.glPushMatrix();
 
 			RenderItem.renderInFrame = true;
 			RenderManager.instance.renderEntityWithPosYaw(entityitem, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
 			RenderItem.renderInFrame = false;
 
 			if (item == Items.compass) {
-				TextureAtlasSprite textureatlassprite = ((TextureMap) Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.locationItemsTexture)).getAtlasSprite(Items.compass.getIconIndex(entityitem.getEntityItem()).getIconName());
+				TextureAtlasSprite textureatlassprite = ((TextureMap) Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.locationItemsTexture)).getAtlasSprite(Items.compass
+						.getIconIndex(entityitem.getEntityItem()).getIconName());
 
 				if (textureatlassprite.getFrameCount() > 0) {
 					textureatlassprite.updateAnimation();
 				}
 			}
+
 		}
-		GL11.glPopMatrix();
 	}
+
 
 	/** returns horizontal direction to the forward direction **/
 	public static ForgeDirection getHorizontal(ForgeDirection forward) {
@@ -179,4 +185,5 @@ public class RenderHelper {
 		return null;
 
 	}
+
 }

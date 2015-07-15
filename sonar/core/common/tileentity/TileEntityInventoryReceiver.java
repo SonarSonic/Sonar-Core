@@ -25,6 +25,7 @@ import cpw.mods.fml.common.Optional.Method;
 		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergyAcceptor", modid = "IC2", striprefs = true),
 		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "IC2", striprefs = true) })
 public class TileEntityInventoryReceiver extends TileEntityInventory implements IEnergyHandler, IEnergySink, ISyncTile {
+	
 	public int maxTransfer = 5000;
 	public EnergyStorage storage;
 

@@ -3,9 +3,9 @@ package sonar.core.common.tileentity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import sonar.core.utils.ISonarSides;
+import cofh.api.tileentity.IReconfigurableSides;
 
-public abstract class TileEntitySidedInventory extends TileEntityInventory implements ISonarSides, ISidedInventory {
+public abstract class TileEntitySidedInventory extends TileEntityInventory implements IReconfigurableSides, ISidedInventory {
 
 	public int[] sides = new int[6];
 	public int[] input, output;
@@ -31,31 +31,7 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 		if (side > sides.length) {
 			return true;
 		}
-		if (side == metadata) {
-			return sides[side] == 0;
-		}
-		if (metadata != side) {
-			return sides[side] == 0;
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean canBeConfigured() {
-		return true;
-	}
-
-	@Override
-	public void increaseSide(int side, int dimension) {
-		if (!this.worldObj.isRemote) {
-			if (sides[side] >= 1) {
-				sides[side] = 0;
-			} else {
-				sides[side] = 1;
-			}
-			sendPacket(dimension, side, sides[side]);
-		}
+		return sides[side] == 0;
 	}
 
 	public abstract void sendPacket(int dimension, int side, int value);
@@ -76,10 +52,46 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 	}
 
 	@Override
-	public void setSide(int side, int value) {
-		this.sides[side] = value;
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	public boolean decrSide(int side) {
+		if (!this.getWorldObj().isRemote) {
+			if (sides[side] >= 1) {
+				sides[side] = 0;
+			} else {
+				sides[side] = 1;
+			}
+			sendPacket(this.worldObj.provider.dimensionId, side, sides[side]);
+		}
+		return false;
+	}
 
+	@Override
+	public boolean incrSide(int side) {
+		if (!this.getWorldObj().isRemote) {
+			if (sides[side] >= 1) {
+				sides[side] = 0;
+			} else {
+				sides[side] = 1;
+			}
+			sendPacket(this.worldObj.provider.dimensionId, side, sides[side]);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean resetSides() {
+		return false;
+	}
+
+	@Override
+	public int getNumConfig(int side) {
+		return 2;
+	}
+
+	@Override
+	public boolean setSide(int side, int config) {
+		sides[side] = config;
+		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		return true;
 	}
 
 }

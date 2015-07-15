@@ -90,7 +90,6 @@ public class InventoryItem implements IInventory {
 				inventory[i] = null;
 			}
 		}
-
 		writeToNBT(invItem.getTagCompound());
 	}
 

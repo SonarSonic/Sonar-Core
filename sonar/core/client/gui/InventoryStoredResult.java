@@ -57,6 +57,7 @@ public class InventoryStoredResult extends InventoryCraftResult {
 
 	@Override
 	public void markDirty() {
+		module.markDirty();
 	}
 
 	@Override

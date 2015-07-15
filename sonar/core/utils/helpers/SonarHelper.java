@@ -1,7 +1,5 @@
 package sonar.core.utils.helpers;
 
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyConductor;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
 import net.minecraft.block.Block;
@@ -11,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import sonar.calculator.mod.api.IWrench;
 import sonar.core.utils.SonarAPI;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
@@ -30,11 +27,12 @@ public class SonarHelper {
 		TileEntity handler = getAdjacentTileEntity(tile, ForgeDirection.getOrientation(side));
 		return isEnergyHandlerFromSide(handler, ForgeDirection.VALID_DIRECTIONS[side ^ 1]);
 	}
-	
+
 	public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, ForgeDirection side) {
 		TileEntity handler = getAdjacentTileEntity(tile, side);
 		return isEnergyHandlerFromSide(handler, side.getOpposite());
 	}
+
 	/**
 	 * @param tile Tile Entity you want to check
 	 * @param from direction your adding from
@@ -71,7 +69,7 @@ public class SonarHelper {
 			return true;
 		} else if (SonarAPI.ic2Loaded() && tile instanceof IEnergyTile) {
 			return true;
-		} 
+		}
 		return false;
 	}
 
@@ -148,23 +146,20 @@ public class SonarHelper {
 	/**
 	 * checks if a tile implements IWrench and IDropTile and drops it accordingly
 	 */
-	public static void dropTile(TileEntity te, EntityPlayer player, Block block, World world, int x, int y, int z) {
-		IWrench wrench = (IWrench) block;
-		if (wrench.canWrench()) {
-			if (SonarAPI.calculatorLoaded() && block == GameRegistry.findBlock("Calculator", "ConductorMastBlock")) {
-				if (world.getBlock(x, y - 1, z) == GameRegistry.findBlock("Calculator", "ConductorMast")) {
-					block.harvestBlock(world, player, x, y - 1, z, world.getBlockMetadata(x, y - 1, z));
-				} else if (world.getBlock(x, y - 2, z) == GameRegistry.findBlock("Calculator", "ConductorMast")) {
+	public static void dropTile(EntityPlayer player, Block block, World world, int x, int y, int z) {
+		if (SonarAPI.calculatorLoaded() && block == GameRegistry.findBlock("Calculator", "ConductorMastBlock")) {
+			if (world.getBlock(x, y - 1, z) == GameRegistry.findBlock("Calculator", "ConductorMast")) {
+				block.harvestBlock(world, player, x, y - 1, z, world.getBlockMetadata(x, y - 1, z));
+			} else if (world.getBlock(x, y - 2, z) == GameRegistry.findBlock("Calculator", "ConductorMast")) {
 
-					block.harvestBlock(world, player, x, y - 2, z, world.getBlockMetadata(x, y - 2, z));
-				} else if (world.getBlock(x, y - 3, z) == GameRegistry.findBlock("Calculator", "ConductorMast")) {
+				block.harvestBlock(world, player, x, y - 2, z, world.getBlockMetadata(x, y - 2, z));
+			} else if (world.getBlock(x, y - 3, z) == GameRegistry.findBlock("Calculator", "ConductorMast")) {
 
-					block.harvestBlock(world, player, x, y - 3, z, world.getBlockMetadata(x, y - 3, z));
-				}
-			} else {
-				block.harvestBlock(world, player, x, y, z, world.getBlockMetadata(x, y, z));
+				block.harvestBlock(world, player, x, y - 3, z, world.getBlockMetadata(x, y - 3, z));
 			}
-
+		} else {
+			block.harvestBlock(world, player, x, y, z, world.getBlockMetadata(x, y, z));
 		}
+
 	}
 }

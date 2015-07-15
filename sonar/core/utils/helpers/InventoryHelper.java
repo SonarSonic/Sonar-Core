@@ -4,9 +4,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraftforge.common.IPlantable;
 
 public class InventoryHelper {
@@ -37,13 +39,13 @@ public class InventoryHelper {
 			if (push instanceof ISidedInventory) {
 				pushAccess = ((ISidedInventory) push).getAccessibleSlotsFromSide(pushSide);
 			}
-			extractItems(new InventoryOperation(start, pullAccess, filter), new InventoryOperation(stop, pushAccess, filter));
+			extractItems(new InventoryOperation(start, pullSide, pullAccess, filter), new InventoryOperation(stop, pushSide, pushAccess, filter));
 		}
 	}
 
 	public static ItemStack addItems(TileEntity push, ItemStack stack, int pushSide, IInventoryFilter filter) {
-		if (stack == null) {
-			return null;
+		if (stack == null || push == null) {
+			return stack;
 		}
 		if (filter == null || filter.matches(stack)) {
 			if (push instanceof IInventory) {
@@ -60,7 +62,9 @@ public class InventoryHelper {
 				if (push instanceof ISidedInventory) {
 					pushAccess = ((ISidedInventory) push).getAccessibleSlotsFromSide(pushSide);
 				}
-				return exportItems(new InventoryOperation(start, pushAccess, null), stack);
+
+				return exportItems(new InventoryOperation(start, pushSide, pushAccess, null), stack);
+
 			}
 		}
 		return stack;
@@ -68,51 +72,50 @@ public class InventoryHelper {
 
 	private static ItemStack exportItems(InventoryOperation push, ItemStack stack) {
 		ItemStack exported = stack.copy();
-		int insert = canInsert(push, exported);
-		if (insert != -999) {
+		while (exported != null && canInsert(push, exported) != -999) {
+			int insert = canInsert(push, exported);
 			ItemStack pushStack;
 			if (!push.hasAccess()) {
-				pushStack = push.inv.getStackInSlot(insert);
+				pushStack = push.getInv().getStackInSlot(insert);
 			} else {
-				pushStack = push.inv.getStackInSlot(push.access[insert]);
+				pushStack = push.getInv().getStackInSlot(push.access[insert]);
 			}
 
 			if (exported != null) {
 				if (pushStack == null) {
-					int max = Math.min(exported.getMaxStackSize(), push.inv.getInventoryStackLimit());
+					int max = Math.min(exported.getMaxStackSize(), push.getInv().getInventoryStackLimit());
 
 					if (max >= exported.stackSize) {
 						if (!push.hasAccess()) {
-							push.inv.setInventorySlotContents(insert, exported);
+							push.getInv().setInventorySlotContents(insert, exported);
 						} else {
-							push.inv.setInventorySlotContents(push.access[insert], exported);
+							push.getInv().setInventorySlotContents(push.access[insert], exported);
 						}
-						return null;
+						exported = null;
 					} else {
 						if (!push.hasAccess()) {
-							push.inv.setInventorySlotContents(insert, exported.splitStack(max));
+							push.getInv().setInventorySlotContents(insert, exported.splitStack(max));
 						} else {
-							push.inv.setInventorySlotContents(push.access[insert], exported.splitStack(max));
+							push.getInv().setInventorySlotContents(push.access[insert], exported.splitStack(max));
 						}
 					}
 				} else {
-					int max = Math.min(pushStack.getMaxStackSize(), push.inv.getInventoryStackLimit());
+					int max = Math.min(pushStack.getMaxStackSize(), push.getInv().getInventoryStackLimit());
 					if (max > pushStack.stackSize) {
 						int l = Math.min(exported.stackSize, max - pushStack.stackSize);
 
 						exported.stackSize -= l;
-						if (exported.stackSize - l <= 0) {
+						if (exported.stackSize <= 0) {
 							exported = null;
 						}
 						ItemStack moveStack = pushStack.copy();
 						moveStack.stackSize += l;
 						if (!push.hasAccess()) {
-							push.inv.setInventorySlotContents(insert, moveStack);
+							push.getInv().setInventorySlotContents(insert, moveStack);
 						} else {
-							push.inv.setInventorySlotContents(push.access[insert], moveStack);
+							push.getInv().setInventorySlotContents(push.access[insert], moveStack);
 
 						}
-						return exported;
 					}
 				}
 			}
@@ -123,7 +126,7 @@ public class InventoryHelper {
 
 	private static void extractItems(InventoryOperation pull, InventoryOperation push) {
 		if (pull.access == null) {
-			for (int j = 0; j < pull.inv.getSizeInventory(); j++) {
+			for (int j = 0; j < pull.getInv().getSizeInventory(); j++) {
 				int extract = canExtract(pull, push, j);
 				if (extract != -999) {
 					performExtract(pull, push, j, extract);
@@ -140,12 +143,14 @@ public class InventoryHelper {
 	}
 
 	private static int canExtract(InventoryOperation pull, InventoryOperation push, int slot) {
-		ItemStack target = pull.inv.getStackInSlot(slot);
-		if (target != null) {
-			int insert = canInsert(push, target);
-			if (insert != -999) {
-				if (!pull.hasFilter() || pull.filter.matches(target)) {
-					return insert;
+		ItemStack target = pull.getInv().getStackInSlot(slot);
+		if (!pull.hasAccess() || pull.hasAccess() && pull.getSidedInv().canExtractItem(slot, target, pull.side)) {
+			if (target != null) {
+				int insert = canInsert(push, target);
+				if (insert != -999) {
+					if (!pull.hasFilter() || pull.filter.matches(target)) {
+						return insert;
+					}
 				}
 			}
 		}
@@ -153,78 +158,80 @@ public class InventoryHelper {
 	}
 
 	private static int canInsert(InventoryOperation push, ItemStack stack) {
-		if (push.access == null) {
-			for (int j = 0; j < push.inv.getSizeInventory(); j++) {
-				ItemStack target = push.inv.getStackInSlot(j);
-				if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.inv.getInventoryStackLimit() && target.getItem() == stack.getItem() && target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
+		int emptySlot = -999;
+		if (push.access == null) {			
+			for (int j = 0; j < push.getInv().getSizeInventory(); j++) {
+				ItemStack target = push.getInv().getStackInSlot(j);
+				if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem()
+						&& target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
 					return j;
+				} else if (emptySlot == -999 && target == null) {
+					emptySlot = j;
 				}
 			}
-			for (int j = 0; j < push.inv.getSizeInventory(); j++) {
-				if (push.inv.getStackInSlot(j) == null) {
-					return j;
-				}
-			}
+			return emptySlot;
 		} else {
+			ISidedInventory inv = push.getSidedInv();
 			for (int j = 0; j < push.access.length; j++) {
-				ItemStack target = push.inv.getStackInSlot(push.access[j]);
-				if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.inv.getInventoryStackLimit() && target.getItem() == stack.getItem() && target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
-					return j;
-				}
-			}
-			for (int j = 0; j < push.access.length; j++) {
-				if (push.inv.getStackInSlot(push.access[j]) == null) {
-					return j;
+				if (inv.canInsertItem(push.access[j], stack, push.side)) {
+					ItemStack target = push.getInv().getStackInSlot(push.access[j]);
+					if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem()
+							&& target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
+						return j;
+					} else if (emptySlot == -999 && target == null) {
+						emptySlot = j;
+					}
 				}
 			}
 		}
-		return -999;
+
+		return emptySlot;
 
 	}
 
 	private static void performExtract(InventoryOperation pull, InventoryOperation push, int pullID, int pushID) {
-		ItemStack pullStack = pull.inv.getStackInSlot(pullID);
+		ItemStack pullStack = pull.getInv().getStackInSlot(pullID);
 		ItemStack pushStack;
 		if (!push.hasAccess()) {
-			pushStack = push.inv.getStackInSlot(pushID);
+			pushStack = push.getInv().getStackInSlot(pushID);
 		} else {
-			pushStack = push.inv.getStackInSlot(push.access[pushID]);
+			pushStack = push.getInv().getStackInSlot(push.access[pushID]);
 		}
 
 		if (pullStack != null) {
 			if (pushStack == null) {
-				int max = Math.min(pullStack.getMaxStackSize(), push.inv.getInventoryStackLimit());
+				int max = Math.min(pullStack.getMaxStackSize(), push.getInv().getInventoryStackLimit());
 
 				if (max >= pullStack.stackSize) {
 					if (!push.hasAccess()) {
-						push.inv.setInventorySlotContents(pushID, pullStack);
+						push.getInv().setInventorySlotContents(pushID, pullStack);
 					} else {
-						push.inv.setInventorySlotContents(push.access[pushID], pullStack);
+						push.getInv().setInventorySlotContents(push.access[pushID], pullStack);
 					}
-					pull.inv.setInventorySlotContents(pullID, null);
+					pull.getInv().setInventorySlotContents(pullID, null);
 				} else {
 					if (!push.hasAccess()) {
-						push.inv.setInventorySlotContents(pushID, pullStack.splitStack(max));
+						push.getInv().setInventorySlotContents(pushID, pullStack.splitStack(max));
 					} else {
-						push.inv.setInventorySlotContents(push.access[pushID], pullStack.splitStack(max));
+						push.getInv().setInventorySlotContents(push.access[pushID], pullStack.splitStack(max));
 					}
 				}
 			} else {
-				int max = Math.min(pushStack.getMaxStackSize(), push.inv.getInventoryStackLimit());
+				int max = Math.min(pushStack.getMaxStackSize(), push.getInv().getInventoryStackLimit());
 				if (max > pushStack.stackSize) {
 					int l = Math.min(pullStack.stackSize, max - pushStack.stackSize);
 
-					pull.inv.decrStackSize(pullID, l);
+					pull.getInv().decrStackSize(pullID, l);
 
 					if (pullStack.stackSize - l <= 0) {
-						pull.inv.setInventorySlotContents(pushID, null);
+						pull.getInv().setInventorySlotContents(pushID, null);
 					}
 					ItemStack moveStack = pushStack.copy();
 					moveStack.stackSize += l;
 					if (!push.hasAccess()) {
-						push.inv.setInventorySlotContents(pushID, moveStack);
+						push.getInv().setInventorySlotContents(pushID, moveStack);
 					} else {
-						push.inv.setInventorySlotContents(push.access[pushID], moveStack);
+						push.getInv().setInventorySlotContents(push.access[pushID], moveStack);
 
 					}
 				}
@@ -233,12 +240,14 @@ public class InventoryHelper {
 	}
 
 	private static class InventoryOperation {
-		public IInventory inv;
+		public Object inv;
+		public int side;
 		public int[] access;
 		public IInventoryFilter filter;
 
-		public InventoryOperation(IInventory inv, int[] access, IInventoryFilter filter) {
+		public InventoryOperation(Object inv, int side, int[] access, IInventoryFilter filter) {
 			this.inv = inv;
+			this.side = side;
 			this.access = access;
 			this.filter = filter;
 		}
@@ -255,6 +264,14 @@ public class InventoryHelper {
 				return false;
 			}
 			return true;
+		}
+
+		public IInventory getInv() {
+			return (IInventory) inv;
+		}
+
+		public ISidedInventory getSidedInv() {
+			return (ISidedInventory) inv;
 		}
 	}
 

@@ -4,10 +4,9 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import sonar.calculator.mod.api.IWrench;
 import sonar.core.utils.ISpecialTooltip;
 
-public abstract class SonarMachineBlock extends SonarBlock implements IWrench, ITileEntityProvider, ISpecialTooltip {
+public abstract class SonarMachineBlock extends SonarBlock implements ITileEntityProvider, ISpecialTooltip {
 
 	protected SonarMachineBlock(Material material) {
 		super(material, true);
