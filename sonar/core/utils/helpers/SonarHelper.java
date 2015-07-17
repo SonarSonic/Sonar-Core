@@ -162,4 +162,10 @@ public class SonarHelper {
 		}
 
 	}
+	
+	public static ForgeDirection getForward(int meta) {
+
+		return ForgeDirection.getOrientation(meta).getOpposite();
+
+	}
 }

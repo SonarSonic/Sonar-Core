@@ -46,13 +46,13 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 	@Override
 	public final boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitx, float hity, float hitz) {
 		super.onBlockActivated(world, x, y, z, player, side, hitx, hity, hitz);
-		if (player != null) {		
+		if (player != null) {
 			ItemStack heldItem = player.getHeldItem();
-			if(wrenchable && heldItem !=null && heldItem.getItem() instanceof IToolHammer){
-				if(!player.isSneaking()){
-					TileEntity target =world.getTileEntity(x, y, z);
-					if(target instanceof IReconfigurableSides){
-						((IReconfigurableSides)target).incrSide(side);
+			if (wrenchable && heldItem != null && heldItem.getItem() instanceof IToolHammer) {
+				if (!player.isSneaking()) {
+					TileEntity target = world.getTileEntity(x, y, z);
+					if (target instanceof IReconfigurableSides) {
+						((IReconfigurableSides) target).incrSide(side);
 					}
 				}
 				return false;
@@ -61,7 +61,7 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 				return false;
 			} else {
 				return operateBlock(world, x, y, z, player, side, hitx, hity, hitz);
-			}			
+			}
 		}
 		return false;
 
@@ -90,7 +90,6 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 
 	@Override
 	public final ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-
 		if (dropStandard(world, x, y, z)) {
 			return super.getDrops(world, x, y, z, metadata, fortune);
 		}
@@ -99,7 +98,6 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 	}
 
 	public final ItemStack getSpecialDrop(World world, int x, int y, int z) {
-
 		if (world.getTileEntity(x, y, z) != null && world.getTileEntity(x, y, z) instanceof ISyncTile) {
 			ItemStack itemStack = new ItemStack(this, 1);
 			processDrop(world, x, y, z, (ISyncTile) world.getTileEntity(x, y, z), itemStack);
@@ -124,9 +122,8 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z) {
 		super.onBlockAdded(world, x, y, z);
-		if (orientation) {
-			setDefaultDirection(world, x, y, z);
-		}
+		if (orientation)
+			setDefaultDirection(world, x, y, z);		
 	}
 
 	/** sets the direction the block is pointing */
@@ -252,7 +249,7 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 
 	@Override
 	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnDrops) {
-		
+
 		SonarHelper.dropTile(player, world.getBlock(x, y, z), world, x, y, z);
 		return null;
 	}
@@ -260,5 +257,24 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 	@Override
 	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z) {
 		return true;
+	}
+
+	public boolean hasSpecialRenderer() {
+		return false;
+	}
+
+	@Override
+	public int getRenderType() {
+		return hasSpecialRenderer() ? -1 : 0;
+	}
+
+	@Override
+	public boolean isOpaqueCube() {
+		return hasSpecialRenderer() ? false : true;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock() {
+		return hasSpecialRenderer() ? false : true;
 	}
 }

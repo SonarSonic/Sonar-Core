@@ -39,6 +39,7 @@ public class InventoryHelper {
 			if (push instanceof ISidedInventory) {
 				pushAccess = ((ISidedInventory) push).getAccessibleSlotsFromSide(pushSide);
 			}
+
 			extractItems(new InventoryOperation(start, pullSide, pullAccess, filter), new InventoryOperation(stop, pushSide, pushAccess, filter));
 		}
 	}
@@ -159,7 +160,7 @@ public class InventoryHelper {
 
 	private static int canInsert(InventoryOperation push, ItemStack stack) {
 		int emptySlot = -999;
-		if (push.access == null) {			
+		if (push.access == null) {		
 			for (int j = 0; j < push.getInv().getSizeInventory(); j++) {
 				ItemStack target = push.getInv().getStackInSlot(j);
 				if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem()
@@ -195,9 +196,8 @@ public class InventoryHelper {
 		if (!push.hasAccess()) {
 			pushStack = push.getInv().getStackInSlot(pushID);
 		} else {
-			pushStack = push.getInv().getStackInSlot(push.access[pushID]);
+			pushStack = push.getSidedInv().getStackInSlot(push.access[pushID]);
 		}
-
 		if (pullStack != null) {
 			if (pushStack == null) {
 				int max = Math.min(pullStack.getMaxStackSize(), push.getInv().getInventoryStackLimit());
