@@ -140,11 +140,14 @@ public class RenderHelper {
 	}
 
 	public static void renderItem(World world, ItemStack stack) {
+		if(stack==null){
+			return;
+		}
 		ItemStack render = stack.copy();
 		if (render != null) {
 			if (render.getItem() instanceof ItemBlock) {
-				GL11.glRotated(-90, 1, 0, 0);
-				GL11.glTranslated(0, -0.22, 0.2);
+				GL11.glRotated(90, 1, 0, 0);
+				GL11.glTranslated(0, -0.052, -0.2);
 			}
 			EntityItem entityitem = new EntityItem(world, 0.0D, 0.0D, 0.0D, render);
 			Item item = entityitem.getEntityItem().getItem();

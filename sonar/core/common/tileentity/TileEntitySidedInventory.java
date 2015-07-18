@@ -1,5 +1,6 @@
 package sonar.core.common.tileentity;
 
+import sonar.calculator.mod.common.tileentity.machines.TileEntityDockingStation;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -54,10 +55,10 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 	@Override
 	public boolean decrSide(int side) {
 		if (!this.getWorldObj().isRemote) {
-			if (sides[side] >= 1) {
+			if (sides[side] >= getNumConfig(side)-1) {
 				sides[side] = 0;
 			} else {
-				sides[side] = 1;
+				sides[side] = getNumConfig(side)-1;
 			}
 			sendPacket(this.worldObj.provider.dimensionId, side, sides[side]);
 		}
@@ -67,10 +68,10 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 	@Override
 	public boolean incrSide(int side) {
 		if (!this.getWorldObj().isRemote) {
-			if (sides[side] >= 1) {
+			if (sides[side] >= getNumConfig(side)-1) {
 				sides[side] = 0;
 			} else {
-				sides[side] = 1;
+				sides[side] = getNumConfig(side)-1;
 			}
 			sendPacket(this.worldObj.provider.dimensionId, side, sides[side]);
 		}

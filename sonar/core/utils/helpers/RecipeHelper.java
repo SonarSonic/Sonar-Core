@@ -152,10 +152,10 @@ public abstract class RecipeHelper {
 	 * @return full list of output stacks
 	 */
 	public ItemStack[] getOutput(ItemStack... input) {
-		if (input.length != inputSize) {
+		if (input==null || !(input.length >= inputSize)) {
 			return null;
 		}
-		for (int i = 0; i < input.length; i++) {
+		for (int i = 0; i < inputSize; i++) {
 			if (input[i] == null || !CalculatorConfig.isEnabled(input[i])) {
 				return null;
 			}
