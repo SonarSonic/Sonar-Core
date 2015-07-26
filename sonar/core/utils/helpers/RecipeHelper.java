@@ -1,11 +1,11 @@
 package sonar.core.utils.helpers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import scala.actors.threadpool.Arrays;
 import sonar.calculator.mod.CalculatorConfig;
 import sonar.core.client.gui.InventoryStoredCrafting;
 import cpw.mods.fml.common.FMLLog;

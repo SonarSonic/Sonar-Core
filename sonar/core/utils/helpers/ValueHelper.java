@@ -1,5 +1,6 @@
 package sonar.core.utils.helpers;
 
+import java.awt.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,7 +16,7 @@ import cpw.mods.fml.common.FMLLog;
 
 public abstract class ValueHelper {
 
-	protected Map<Object, Object> recipeList = new HashMap();
+	protected Map<Object, Integer> recipeList = new HashMap();
 
 	/** add all your recipes here */
 	public abstract void addRecipes();
@@ -30,7 +31,7 @@ public abstract class ValueHelper {
 	}
 
 	/** makes sure each item/block is an itemstack */
-	public void addRecipe(Object object, Object value) {
+	public void addRecipe(Object object, Integer value) {
 		Object stack = null;
 		if (object == null) {
 			return;
@@ -38,7 +39,9 @@ public abstract class ValueHelper {
 		if (object instanceof String) {
 			ArrayList<ItemStack> ores = OreDictionary.getOres((String) object);
 			if (ores.size() > 0) {
-				stack = ores;
+				ItemStack[] oreStacks = new ItemStack[ores.size()];
+				stack = ores.toArray(oreStacks);
+				
 			} else {
 				return;
 			}
@@ -75,7 +78,7 @@ public abstract class ValueHelper {
 	 * @param input full list of inputs
 	 * @return full list of output stacks
 	 */
-	public Object getOutput(ItemStack input) {
+	public Integer getOutput(ItemStack input) {
 		if (input == null || !CalculatorConfig.isEnabled(input)) {
 			return 0;
 		}
@@ -89,9 +92,9 @@ public abstract class ValueHelper {
 			}
 
 			entry = (Map.Entry) iterator.next();
-		} while (!checkInput(input, (Object) entry.getKey()));
-
-		return (Object)entry.getValue();
+		} while (!checkInput(input, entry.getKey()));
+		
+		return (Integer)entry.getValue();
 	}
 
 	/**
@@ -101,7 +104,7 @@ public abstract class ValueHelper {
 	 */
 	private boolean checkInput(ItemStack input, Object key) {
 		if (key instanceof ItemStack) {
-			if (!equalStack(input, (ItemStack) key, true)) {
+			if (!equalStack(input, ((ItemStack) key), true)) {
 				return false;
 			}
 		} else if (key instanceof ItemStack[]) {
@@ -109,7 +112,6 @@ public abstract class ValueHelper {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
