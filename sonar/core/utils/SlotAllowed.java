@@ -1,6 +1,5 @@
 package sonar.core.utils;
 
-import sonar.calculator.mod.common.tileentity.machines.TileEntityAtomicMultiplier;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

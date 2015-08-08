@@ -145,7 +145,7 @@ public class InventoryItem implements IInventory {
 
 	public int getItemsStored(ItemStack stack) {
 		if (stack.hasTagCompound()) {
-			return stack.stackTagCompound.getInteger(tag + "size");
+			return stack.getTagCompound().getInteger(tag + "size");
 		} else {
 			return 0;
 		}

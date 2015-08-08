@@ -1,6 +1,5 @@
 package sonar.core.common.tileentity;
 
-import sonar.calculator.mod.common.tileentity.machines.TileEntityDockingStation;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

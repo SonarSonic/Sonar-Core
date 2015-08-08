@@ -21,18 +21,18 @@ public class SonarElectricManager implements IElectricItemManager {
 		if (stack.getItem() instanceof IEnergyContainerItem) {
 			IEnergyContainerItem container = (IEnergyContainerItem) stack.getItem();
 
-			if (stack.stackTagCompound == null) {
+			if (stack.getTagCompound() == null) {
 				stack.stackTagCompound = new NBTTagCompound();
 			}
-			int energyEU = stack.stackTagCompound.getInteger("Energy") / 4;
-			int energyRF = stack.stackTagCompound.getInteger("Energy");
+			int energyEU = stack.getTagCompound().getInteger("Energy") / 4;
+			int energyRF = stack.getTagCompound().getInteger("Energy");
 			IElectricItem item = (IElectricItem) stack.getItem();
 			int newamount = (int) Math.min(item.getTransferLimit(stack), amount);
 			int energyReceived = (int) Math.min((container.getMaxEnergyStored(stack) / 4) - energyEU, Math.min(container.receiveEnergy(stack,(int) newamount * 4, true) / 4, newamount));
 
 			if (!simulate) {
 				energyRF += energyReceived * 4;
-				stack.stackTagCompound.setInteger("Energy", energyRF);
+				stack.getTagCompound().setInteger("Energy", energyRF);
 			}
 			return energyReceived;
 		}
@@ -45,11 +45,11 @@ public class SonarElectricManager implements IElectricItemManager {
 			boolean ignoreTransferLimit, boolean externally, boolean simulate) {
 		if (stack.getItem() instanceof IEnergyContainerItem) {
 			IEnergyContainerItem container = (IEnergyContainerItem) stack.getItem();
-			if ((stack.stackTagCompound == null)|| (!stack.stackTagCompound.hasKey("Energy"))) {
+			if ((stack.getTagCompound() == null)|| (!stack.getTagCompound().hasKey("Energy"))) {
 				return 0;
 			}
-			int energyEU = stack.stackTagCompound.getInteger("Energy") / 4;
-			int energyRF = stack.stackTagCompound.getInteger("Energy");
+			int energyEU = stack.getTagCompound().getInteger("Energy") / 4;
+			int energyRF = stack.getTagCompound().getInteger("Energy");
 			IElectricItem item = (IElectricItem) stack.getItem();
 			int newamount = (int) Math.min(item.getTransferLimit(stack), amount);
 
@@ -57,7 +57,7 @@ public class SonarElectricManager implements IElectricItemManager {
 
 			if (!simulate) {
 				energyRF -= energyExtracted * 4;
-				stack.stackTagCompound.setInteger("Energy", energyRF);
+				stack.getTagCompound().setInteger("Energy", energyRF);
 			}
 
 			return energyExtracted;

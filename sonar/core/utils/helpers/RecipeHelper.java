@@ -6,17 +6,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import sonar.calculator.mod.CalculatorConfig;
-import sonar.core.client.gui.InventoryStoredCrafting;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import sonar.calculator.mod.CalculatorConfig;
+import sonar.core.utils.SonarAPI;
+import cpw.mods.fml.common.FMLLog;
 
 /** Recipe Template allows gigantic recipes with full Ore Dict compatibility */
 public abstract class RecipeHelper {
@@ -156,9 +152,14 @@ public abstract class RecipeHelper {
 			return null;
 		}
 		for (int i = 0; i < inputSize; i++) {
-			if (input[i] == null || !CalculatorConfig.isEnabled(input[i])) {
+			
+			if (input[i] == null) {
 				return null;
 			}
+			if(SonarAPI.calculatorLoaded() &&!CalculatorConfig.isEnabled(input[i])){
+				return null;
+			}
+
 		}
 		Iterator iterator = this.recipeList.entrySet().iterator();
 

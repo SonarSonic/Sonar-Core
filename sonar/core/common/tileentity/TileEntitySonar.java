@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import sonar.calculator.mod.Calculator;
 import sonar.calculator.mod.network.packets.PacketRequestSync;
 import sonar.core.utils.ISyncTile;
+import sonar.core.utils.SonarAPI;
 import sonar.core.utils.helpers.NBTHelper;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import net.minecraft.nbt.NBTTagCompound;
@@ -78,6 +79,7 @@ public class TileEntitySonar extends TileEntity implements ISyncTile {
 	}
 
 	public void requestSyncPacket() {
+		if(SonarAPI.calculatorLoaded())
 		Calculator.network.sendToServer(new PacketRequestSync(xCoord, yCoord, zCoord));
 	}
 

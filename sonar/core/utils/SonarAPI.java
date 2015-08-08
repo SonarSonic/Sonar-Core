@@ -28,9 +28,9 @@ public class SonarAPI {
 		return Loader.isModLoaded("Optics");
 	}
 
-	/** @returns if Modular Desks is installed */
-	public static boolean modularLoaded() {
+	/** @returns if Statistical Energistics is installed */
+	public static boolean statisticalLoaded() {
 
-		return Loader.isModLoaded("ModularDesks");
+		return Loader.isModLoaded("StatisticalEnergistics");
 	}
 }

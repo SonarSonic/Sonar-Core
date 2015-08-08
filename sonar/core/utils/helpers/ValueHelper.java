@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import scala.actors.threadpool.Arrays;
 import sonar.calculator.mod.CalculatorConfig;
+import sonar.core.utils.SonarAPI;
 import cpw.mods.fml.common.FMLLog;
 
 public abstract class ValueHelper {
@@ -79,8 +80,11 @@ public abstract class ValueHelper {
 	 * @return full list of output stacks
 	 */
 	public Integer getOutput(ItemStack input) {
-		if (input == null || !CalculatorConfig.isEnabled(input)) {
-			return 0;
+		if (input == null) {
+			return null;
+		}
+		if(SonarAPI.calculatorLoaded() &&!CalculatorConfig.isEnabled(input)){
+			return null;
 		}
 
 		Iterator iterator = this.recipeList.entrySet().iterator();
