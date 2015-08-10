@@ -13,12 +13,11 @@ public class InventoryContainerItem extends Item {
 		if (itemstack != null && player instanceof EntityPlayerMP && player.openContainer instanceof ContainerCraftInventory) {
 			player.closeScreen();
 		}
-
 		return super.onDroppedByPlayer(itemstack, player);
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack stack) {
+	public int getMaxItemUseDuration(ItemStack stack) {		
 		return 1;
 	}
 }

@@ -1,5 +1,6 @@
 package sonar.core.common.item;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -14,7 +15,7 @@ public class InventoryItem implements IInventory {
 	private ItemStack[] inventory;
 	private String tag;
 	public int size;
-	
+
 	public InventoryItem(ItemStack stack, int size, String tag) {
 		inventory = new ItemStack[size];
 		invItem = stack;
@@ -59,13 +60,17 @@ public class InventoryItem implements IInventory {
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
+		setInventorySlotContents(slot, stack, false);
+	}
+
+	public void setInventorySlotContents(int slot, ItemStack stack, boolean isRemote) {
 		inventory[slot] = stack;
 
 		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
 			stack.stackSize = getInventoryStackLimit();
 		}
-
-		markDirty();
+		if (!isRemote){
+			markDirty();}
 	}
 
 	@Override
