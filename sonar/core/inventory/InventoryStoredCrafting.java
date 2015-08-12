@@ -1,4 +1,4 @@
-package sonar.core.client.gui;
+package sonar.core.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

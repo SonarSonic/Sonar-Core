@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import sonar.core.client.gui.ContainerCraftInventory;
+import sonar.core.inventory.ContainerCraftInventory;
 
 public class InventoryContainerItem extends Item {
 

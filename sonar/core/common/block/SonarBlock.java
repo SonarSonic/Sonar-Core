@@ -123,7 +123,7 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 	public void onBlockAdded(World world, int x, int y, int z) {
 		super.onBlockAdded(world, x, y, z);
 		if (orientation)
-			setDefaultDirection(world, x, y, z);		
+			setDefaultDirection(world, x, y, z);
 	}
 
 	/** sets the direction the block is pointing */

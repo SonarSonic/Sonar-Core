@@ -1,9 +1,13 @@
 package sonar.core.common.tileentity;
 
+import sonar.calculator.mod.Calculator;
+import sonar.core.network.PacketSonarSides;
+import sonar.core.utils.SonarAPI;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import cofh.api.tileentity.IReconfigurableSides;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
 public abstract class TileEntitySidedInventory extends TileEntityInventory implements IReconfigurableSides, ISidedInventory {
 
@@ -34,7 +38,10 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 		return sides[side] == 0;
 	}
 
-	public abstract void sendPacket(int dimension, int side, int value);
+	public final void sendPacket(int dimension, int side, int value) {
+		if (SonarAPI.calculatorLoaded())
+			Calculator.network.sendToAllAround(new PacketSonarSides(xCoord, yCoord, zCoord, side, value), new TargetPoint(dimension, xCoord, yCoord, zCoord, 32));
+	}
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int slot) {
@@ -54,10 +61,10 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 	@Override
 	public boolean decrSide(int side) {
 		if (!this.getWorldObj().isRemote) {
-			if (sides[side] >= getNumConfig(side)-1) {
+			if (sides[side] >= getNumConfig(side) - 1) {
 				sides[side] = 0;
 			} else {
-				sides[side] = getNumConfig(side)-1;
+				sides[side] = getNumConfig(side) - 1;
 			}
 			sendPacket(this.worldObj.provider.dimensionId, side, sides[side]);
 		}
@@ -67,10 +74,10 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 	@Override
 	public boolean incrSide(int side) {
 		if (!this.getWorldObj().isRemote) {
-			if (sides[side] >= getNumConfig(side)-1) {
+			if (sides[side] >= getNumConfig(side) - 1) {
 				sides[side] = 0;
 			} else {
-				sides[side] = getNumConfig(side)-1;
+				sides[side] = getNumConfig(side) - 1;
 			}
 			sendPacket(this.worldObj.provider.dimensionId, side, sides[side]);
 		}

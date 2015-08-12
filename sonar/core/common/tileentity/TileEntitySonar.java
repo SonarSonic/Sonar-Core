@@ -5,7 +5,7 @@ import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import sonar.calculator.mod.Calculator;
-import sonar.calculator.mod.network.packets.PacketRequestSync;
+import sonar.core.network.PacketRequestSync;
 import sonar.core.utils.ISyncTile;
 import sonar.core.utils.SonarAPI;
 import sonar.core.utils.helpers.NBTHelper;
