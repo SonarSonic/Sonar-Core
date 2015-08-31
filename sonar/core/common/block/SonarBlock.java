@@ -13,8 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import sonar.calculator.mod.api.IUpgradeCircuits;
 import sonar.core.utils.ISyncTile;
+import sonar.core.utils.IUpgradeCircuits;
 import sonar.core.utils.SonarAPI;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import sonar.core.utils.helpers.SonarHelper;
@@ -223,7 +223,7 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 
 			world.func_147453_f(x, y, z, oldblock);
 		}
-		if (SonarAPI.calculatorLoaded() && entity != null && entity instanceof IUpgradeCircuits) {
+		if (entity != null && entity instanceof IUpgradeCircuits) {
 			IUpgradeCircuits tileentity = (IUpgradeCircuits) entity;
 			float f = this.rand.nextFloat() * 0.8F + 0.1F;
 			float f1 = this.rand.nextFloat() * 0.8F + 0.1F;

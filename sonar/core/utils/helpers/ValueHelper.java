@@ -1,6 +1,5 @@
 package sonar.core.utils.helpers;
 
-import java.awt.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,10 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import scala.actors.threadpool.Arrays;
-import sonar.calculator.mod.CalculatorConfig;
 import sonar.core.utils.SonarAPI;
-import cpw.mods.fml.common.FMLLog;
 
 public abstract class ValueHelper {
 
@@ -42,7 +38,7 @@ public abstract class ValueHelper {
 			if (ores.size() > 0) {
 				ItemStack[] oreStacks = new ItemStack[ores.size()];
 				stack = ores.toArray(oreStacks);
-				
+
 			} else {
 				return;
 			}
@@ -83,7 +79,7 @@ public abstract class ValueHelper {
 		if (input == null) {
 			return null;
 		}
-		if(SonarAPI.calculatorLoaded() &&!CalculatorConfig.isEnabled(input)){
+		if (!SonarAPI.isEnabled(input)) {
 			return null;
 		}
 
@@ -97,8 +93,8 @@ public abstract class ValueHelper {
 
 			entry = (Map.Entry) iterator.next();
 		} while (!checkInput(input, entry.getKey()));
-		
-		return (Integer)entry.getValue();
+
+		return (Integer) entry.getValue();
 	}
 
 	/**
@@ -118,7 +114,6 @@ public abstract class ValueHelper {
 		}
 		return true;
 	}
-
 
 	/**
 	 * 

@@ -10,7 +10,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import sonar.calculator.mod.CalculatorConfig;
 import sonar.core.utils.SonarAPI;
 import cpw.mods.fml.common.FMLLog;
 
@@ -156,7 +155,7 @@ public abstract class RecipeHelper {
 			if (input[i] == null) {
 				return null;
 			}
-			if(SonarAPI.calculatorLoaded() &&!CalculatorConfig.isEnabled(input[i])){
+			if(!SonarAPI.isEnabled(input[i])){
 				return null;
 			}
 

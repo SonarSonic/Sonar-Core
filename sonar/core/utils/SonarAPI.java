@@ -1,5 +1,8 @@
 package sonar.core.utils;
 
+import java.lang.reflect.Method;
+
+import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.Loader;
 
 public class SonarAPI {
@@ -32,5 +35,19 @@ public class SonarAPI {
 	public static boolean statisticalLoaded() {
 
 		return Loader.isModLoaded("StatisticalEnergistics");
+	}
+
+	public static boolean isEnabled(ItemStack stack) {
+		if (calculatorLoaded()) {
+			try {
+				Class recipeClass = Class.forName("sonar.calculator.mod.CalculatorConfig");
+				Method method = recipeClass.getMethod("isEnabled", ItemStack.class);
+				return (Boolean) method.invoke(null, stack);
+			} catch (Exception exception) {
+				System.err.println("Sonar API: Calculator couldn't check if ItemStack was enabled " + exception.getMessage());
+			}
+		}
+		return true;
+
 	}
 }

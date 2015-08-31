@@ -2,19 +2,17 @@ package sonar.core.common.tileentity;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import sonar.calculator.mod.Calculator;
-import sonar.core.network.PacketRequestSync;
-import sonar.core.utils.ISyncTile;
-import sonar.core.utils.SonarAPI;
-import sonar.core.utils.helpers.NBTHelper;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import sonar.core.network.PacketRequestSync;
+import sonar.core.network.SonarPackets;
+import sonar.core.utils.ISyncTile;
+import sonar.core.utils.helpers.NBTHelper.SyncType;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntitySonar extends TileEntity implements ISyncTile {
 
@@ -79,8 +77,7 @@ public class TileEntitySonar extends TileEntity implements ISyncTile {
 	}
 
 	public void requestSyncPacket() {
-		if(SonarAPI.calculatorLoaded())
-		Calculator.network.sendToServer(new PacketRequestSync(xCoord, yCoord, zCoord));
+		SonarPackets.network.sendToServer(new PacketRequestSync(xCoord, yCoord, zCoord));
 	}
 
 }
