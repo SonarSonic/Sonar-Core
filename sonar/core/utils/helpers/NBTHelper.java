@@ -19,7 +19,8 @@ public class NBTHelper {
 	public static enum SyncType{
 		SAVE,
 		SYNC,
-		DROP;
+		DROP,
+		SPECIAL;
 	}
 	
 }

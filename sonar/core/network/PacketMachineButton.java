@@ -10,16 +10,17 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketMachineButton implements IMessage {
 
-	public int xCoord, yCoord, zCoord, id;
+	public int xCoord, yCoord, zCoord, id, value;
 
 	public PacketMachineButton() {
 	}
 
-	public PacketMachineButton(int id, int xCoord, int yCoord, int zCoord) {
+	public PacketMachineButton(int id, int value, int xCoord, int yCoord, int zCoord) {
 		this.xCoord = xCoord;
 		this.yCoord = yCoord;
 		this.zCoord = zCoord;
 		this.id = id;
+		this.value=value;
 	}
 
 	@Override
@@ -28,6 +29,8 @@ public class PacketMachineButton implements IMessage {
 		this.yCoord = buf.readInt();
 		this.zCoord = buf.readInt();
 		this.id = buf.readInt();
+		this.value = buf.readInt();
+
 
 	}
 
@@ -37,6 +40,7 @@ public class PacketMachineButton implements IMessage {
 		buf.writeInt(yCoord);
 		buf.writeInt(zCoord);
 		buf.writeInt(id);
+		buf.writeInt(value);
 	}
 
 	public static class Handler implements IMessageHandler<PacketMachineButton, IMessage> {
@@ -49,7 +53,7 @@ public class PacketMachineButton implements IMessage {
 				return null;
 			}
 			if (te instanceof IMachineButtons) {
-				((IMachineButtons) te).buttonPress(message.id);
+				((IMachineButtons) te).buttonPress(message.id, message.value);
 			}
 
 			return null;

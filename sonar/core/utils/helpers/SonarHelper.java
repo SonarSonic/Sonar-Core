@@ -164,8 +164,21 @@ public class SonarHelper {
 	}
 	
 	public static ForgeDirection getForward(int meta) {
-
 		return ForgeDirection.getOrientation(meta).getOpposite();
-
 	}
+	public static int getAngleFromMeta(int meta){
+		switch (meta) {
+		case 2:
+			return 180;
+		case 3:
+			return 0;
+		case 4:
+			return 90;
+		case 5:
+			return 270;
+		}
+		return 0;
+	
+	}
+	
 }

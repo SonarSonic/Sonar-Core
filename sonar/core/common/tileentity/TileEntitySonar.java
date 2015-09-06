@@ -58,18 +58,9 @@ public class TileEntitySonar extends TileEntity implements ISyncTile {
 		this.load = true;
 	}
 
-	public void readData(NBTTagCompound nbt, SyncType type) {
-		if (type == SyncType.SAVE) {
-			this.load = nbt.getBoolean("loaded");
-		}
+	public void readData(NBTTagCompound nbt, SyncType type) {}
 
-	}
-
-	public void writeData(NBTTagCompound nbt, SyncType type) {
-		if (type == SyncType.SAVE) {
-			nbt.setBoolean("loaded", this.load);
-		}
-	}
+	public void writeData(NBTTagCompound nbt, SyncType type) {}
 
 	@SideOnly(Side.CLIENT)
 	public List<String> getWailaInfo(List<String> currenttip) {

@@ -1,6 +1,9 @@
 package sonar.core.utils;
 
 public interface IMachineButtons {
-
-	public void buttonPress(int buttonID);
+	/**
+	 * @param buttonID ID of the button pressed
+	 * @param value additional integer if required
+	 */
+	public void buttonPress(int buttonID, int value);
 }
