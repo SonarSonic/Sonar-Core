@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import sonar.calculator.mod.api.CalculatorAPI;
 import sonar.core.utils.SonarAPI;
 import cpw.mods.fml.common.FMLLog;
 
@@ -24,6 +26,8 @@ public abstract class RecipeHelper {
 	/** add all your recipes here */
 	public abstract void addRecipes();
 
+	/** the recipe name used in the API */
+	public abstract String getRecipeID();
 	/**
 	 * 
 	 * @param inputSize number of stacks required in the input
@@ -34,10 +38,21 @@ public abstract class RecipeHelper {
 		this.inputSize = inputSize;
 		this.outputSize = outputSize;
 		this.shapeless = shapeless;
-
 		this.addRecipes();
+		this.addRegisteredRecipes();
 	}
 
+	public void addRegisteredRecipes(){
+		if(SonarAPI.calculatorLoaded()){
+			List<Object[]> recipes = CalculatorAPI.getRecipes(this.getRecipeID());
+			if(recipes!=null && recipes.size()!=0){
+				for(Object[] object : recipes){
+					this.addRecipe(object);
+				}
+			}
+		}
+	}
+	
 	/** get the full list of recipes */
 	public Map getRecipes() {
 		return this.recipeList;
