@@ -2,6 +2,7 @@ package sonar.core.utils.helpers;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryEnderChest;
@@ -12,6 +13,10 @@ import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraftforge.common.IPlantable;
 
 public class InventoryHelper {
+
+	public static boolean isPlayerInventoryFull(EntityPlayer player) {
+		return player.inventory.getFirstEmptyStack() == -1;
+	}
 
 	public static void extractItems(TileEntity pull, TileEntity push, int pullSide, int pushSide, IInventoryFilter filter) {
 		if (pull instanceof IInventory && push instanceof IInventory) {
@@ -160,11 +165,10 @@ public class InventoryHelper {
 
 	private static int canInsert(InventoryOperation push, ItemStack stack) {
 		int emptySlot = -999;
-		if (push.access == null) {		
+		if (push.access == null) {
 			for (int j = 0; j < push.getInv().getSizeInventory(); j++) {
 				ItemStack target = push.getInv().getStackInSlot(j);
-				if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem()
-						&& target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
+				if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem() && target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
 					return j;
 				} else if (emptySlot == -999 && target == null) {
 					emptySlot = j;
@@ -176,8 +180,7 @@ public class InventoryHelper {
 			for (int j = 0; j < push.access.length; j++) {
 				if (inv.canInsertItem(push.access[j], stack, push.side)) {
 					ItemStack target = push.getInv().getStackInSlot(push.access[j]);
-					if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem()
-							&& target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
+					if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem() && target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
 						return j;
 					} else if (emptySlot == -999 && target == null) {
 						emptySlot = j;

@@ -1,5 +1,9 @@
 package sonar.core.utils;
 
+import net.minecraft.block.Block;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+
 
 /**an object with a blocks x, y and z coordinates*/
 public class BlockCoords extends Object {
@@ -31,4 +35,11 @@ public class BlockCoords extends Object {
 		return this.zCoord;
 	}
 	
+	public Block getBlock(World world){
+		return world.getBlock(xCoord, yCoord, zCoord);
+	}
+	
+	public TileEntity getTileEntity(World world){
+		return world.getTileEntity(xCoord, yCoord, zCoord);
+	}
 }

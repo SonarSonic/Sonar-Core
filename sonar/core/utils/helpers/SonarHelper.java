@@ -124,7 +124,19 @@ public class SonarHelper {
 		}
 		return false;
 	}
+	/**
+	 *fixes the problem with ItemStacks having no stack size, and sets it to the inputted number
+	 */
+	public static ItemStack restoreItemStack(ItemStack stack, int size){
+		ItemStack result = stack.copy();
 
+		if (result != null && result.stackSize <= 0) {
+			result.stackSize = 1;
+
+		}
+		return result;
+	}
+	
 	/**
 	 * @param item Item you are checking
 	 * @return if the stack is an circuit
