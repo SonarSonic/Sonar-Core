@@ -108,15 +108,25 @@ public class SonarHelper {
 	}
 
 	/**
-	 * checks if the two itemstacks are equal
+	 * checks if the two itemstacks are equal and can be merged
 	 * 
 	 * @param stack1 first stack your checking
 	 * @param stack2 second stack your checking
-	 * @return if they are equal
+	 * @return if they are equal and can be merged
 	 */
 	public static boolean equalStacks(ItemStack stack1, ItemStack stack2) {
-		return stack1 != null && stack2 != null && !isCircuit(stack1.getItem()) && stack1.getItem() == stack2.getItem() &&
-				stack1.getItemDamage() == stack2.getItemDamage() && stack1.stackSize < stack1.getMaxStackSize() && ItemStack.areItemStackTagsEqual(stack1, stack2);
+		return equalStacksRegular(stack1, stack2) && !isCircuit(stack1.getItem()) && stack1.stackSize < stack1.getMaxStackSize();
+	}
+
+	/**
+	 * checks if two itemstacks are the same (and nothing more!)
+	 * @param stack1 first stack your checking
+	 * @param stack2 second stack your checking
+	 * @return if they are equal and can be merged
+	 */
+	public static boolean equalStacksRegular(ItemStack stack1, ItemStack stack2) {
+		return stack1 != null && stack2 != null && stack1.getItem() == stack2.getItem() &&
+				stack1.getItemDamage() == stack2.getItemDamage() && ItemStack.areItemStackTagsEqual(stack1, stack2);
 	}
 	/**
 	 *fixes the problem with ItemStacks having no stack size, and sets it to the inputted number
@@ -124,7 +134,7 @@ public class SonarHelper {
 	public static ItemStack restoreItemStack(ItemStack stack, int size){
 		ItemStack result = stack.copy();
 
-		if (result != null && result.stackSize <= 0) {
+		if (result.stackSize <= 0) {
 			result.stackSize = 1;
 
 		}

@@ -30,7 +30,7 @@ public abstract class RecipeHelper {
 	/** add all your recipes here */
 	public abstract void addRecipes();
 
-	/** the recipe name used in the API */
+	/** the recipeOutput name used in the API */
 	public abstract String getRecipeID();
 	/**
 	 *
@@ -65,8 +65,8 @@ public abstract class RecipeHelper {
 	/** makes sure each item/block is an itemstack */
 	public void addRecipe(Object... objects) {
 		Object[] stack = new Object[objects.length];
-		if (objects.length > this.inputSize + this.outputSize) {
-			FMLLog.warning("RecipeHelper - A recipe was removed because it was too long!");
+		if (objects.length != this.inputSize + this.outputSize) {
+			FMLLog.severe("RecipeHelper - A recipeOutput wasn't added because the size didn't match!");
 			return;
 		}
 		for (int i = 0; i < objects.length; i++) {
@@ -100,6 +100,8 @@ public abstract class RecipeHelper {
 					}
 				}
 				stack[i] = objects[i];
+			} else if(objects[i] instanceof Integer) {
+				stack[i] = objects[i];
 			} else {
 				stack[i] = fixedStack(objects[i]);
 			}
@@ -107,7 +109,7 @@ public abstract class RecipeHelper {
 		addFinal(stack);
 	}
 
-	/** separates the recipe into an input and output list */
+	/** separates the recipeOutput into an input and output list */
 	private void addFinal(Object[] stacks) {
 		Object[] input = new Object[inputSize], output = new Object[outputSize];
 
@@ -117,7 +119,7 @@ public abstract class RecipeHelper {
 			} else if (!(i - inputSize > outputSize)) {
 				output[i - inputSize] = stacks[i];
 			} else {
-				throw new RuntimeException("Something went wrong! A recipe was too big");
+				throw new RuntimeException("Something went wrong! A recipeOutput was too big");
 			}
 		}
 		addRecipe(input, output);
@@ -148,7 +150,10 @@ public abstract class RecipeHelper {
 	 * @return
 	 */
 	public ItemStack getOutput(int output, ItemStack... input) {
-		return getOutput(input)[output];
+		ItemStack[] objs = getOutput(input);
+		if (objs == null)
+			return null;
+		return objs[output];
 	}
 
 	/**
@@ -156,6 +161,10 @@ public abstract class RecipeHelper {
 	 * @return full list of output stacks
 	 */
 	public ItemStack[] getOutput(ItemStack... input) {
+		return convertOutput(getOutputRaw(input));
+	}
+
+	public Object[] getOutputRaw(ItemStack...input) {
 		if (input==null || !(input.length >= inputSize)) {
 			return null;
 		}
@@ -171,7 +180,7 @@ public abstract class RecipeHelper {
 		}
 		for (Map.Entry<Object[], Object[]> entry : recipeList.entrySet()) {
 			if (checkInput(input, entry.getKey())) {
-				return convertOutput(entry.getValue());
+				return entry.getValue();
 			}
 		}
 		return null;
@@ -216,7 +225,7 @@ public abstract class RecipeHelper {
 	}
 
 	/**
-	 * fixed check if the stack is used in any recipe ignoring its stack size
+	 * fixed check if the stack is used in any recipeOutput ignoring its stack size
 	 *
 	 * @param input stack to check
 	 * @return validity
@@ -240,7 +249,7 @@ public abstract class RecipeHelper {
 	}
 
 	/**
-	 * fixed check if the stack is used in any recipe ignoring its stack size
+	 * fixed check if the stack is used in any recipeOutput ignoring its stack size
 	 *
 	 * @param output stack to check
 	 * @return validity
@@ -264,6 +273,8 @@ public abstract class RecipeHelper {
 	}
 
 	private ItemStack[] convertOutput(Object[] output) {
+		if (output == null)
+			return new ItemStack[0];
 		ItemStack[] stack = new ItemStack[output.length];
 		for (int i = 0; i < output.length; i++) {
 			if (output[i] instanceof ItemStack) {
@@ -459,7 +470,7 @@ public abstract class RecipeHelper {
 	 */
 	public ItemStack getCraftingResult(ItemStack... inputs) {
 		ItemStack[] output = getOutput(inputs);
-		if (output == null) {
+		if (output == null || output[0] == null) {
 			return null;
 		}
 		ItemStack result = output[0].copy();
@@ -473,13 +484,13 @@ public abstract class RecipeHelper {
 	}
 
 	/**
-	 * Removes the recipe with the specified inputs
-	 * @param inputs inputs of the recipe to remove
-	 * @return if the recipe was found and removed
+	 * Removes the recipeOutput with the specified inputs
+	 * @param inputs inputs of the recipeOutput to remove
+	 * @return if the recipeOutput was found and removed
 	 */
 	public boolean removeRecipe(Object...inputs) {
 		if (inputs.length != inputSize) {
-			FMLLog.severe("Attempted to remove a recipe but input amount doesn't match recipe input");
+			FMLLog.severe("Attempted to remove a recipeOutput but input amount doesn't match recipeOutput input");
 			return false;
 		}
 		for (Map.Entry<Object[], Object[]> entry : recipeList.entrySet()) {
@@ -490,13 +501,16 @@ public abstract class RecipeHelper {
 				for (int ii = 0; ii < inputSize; ii++) {
 					Object recipeInput = entry.getKey()[ii];
 
-					if (input instanceof ItemStack && recipeInput instanceof ItemStack && SonarHelper.equalStacks((ItemStack) input, (ItemStack) recipeInput)) {
+					if (input instanceof ItemStack && recipeInput instanceof ItemStack && SonarHelper.equalStacksRegular((ItemStack) input, (ItemStack) recipeInput)) {
 						found[i] = true;
 					}
 
 					if (input instanceof OreStack && recipeInput instanceof OreStack && ((OreStack) input).oreString.equals(((OreStack) recipeInput).oreString)) {
 						found[i] = true;
 					}
+
+					if (input == recipeInput)
+						found[i] = true;
 				}
 			}
 
@@ -521,6 +535,7 @@ public abstract class RecipeHelper {
 	public static class OreStack {
 		public String oreString;
 		public int stackSize;
+		private List<ItemStack> stacks;
 
 		public OreStack(String oreString, int stackSize) {
 			this.oreString = oreString;
@@ -530,6 +545,13 @@ public abstract class RecipeHelper {
 		@Override
 		public String toString() {
 			return String.format("%dx%s", stackSize, oreString);
+		}
+
+		public List<ItemStack> getStacks() {
+			if (stacks == null) {
+				stacks = OreDictionary.getOres(oreString);
+			}
+			return stacks;
 		}
 	}
 }
