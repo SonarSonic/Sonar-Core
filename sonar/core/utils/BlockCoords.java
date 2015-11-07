@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 
 /**an object with a blocks x, y and z coordinates*/
-public class BlockCoords extends Object {
+public class BlockCoords {
 	private int xCoord;
 	private int yCoord;
 	private int zCoord;

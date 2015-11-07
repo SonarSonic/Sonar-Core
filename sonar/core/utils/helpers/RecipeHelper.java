@@ -526,5 +526,10 @@ public abstract class RecipeHelper {
 			this.oreString = oreString;
 			this.stackSize = stackSize;
 		}
+
+		@Override
+		public String toString() {
+			return String.format("%dx%s", stackSize, oreString);
+		}
 	}
 }
