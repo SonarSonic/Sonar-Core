@@ -470,7 +470,7 @@ public abstract class RecipeHelper {
 	 */
 	public ItemStack getCraftingResult(ItemStack... inputs) {
 		ItemStack[] output = getOutput(inputs);
-		if (output == null || output[0] == null) {
+		if (output == null || output.length == 0 || output[0] == null) {
 			return null;
 		}
 		ItemStack result = output[0].copy();
