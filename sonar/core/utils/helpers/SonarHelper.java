@@ -108,21 +108,15 @@ public class SonarHelper {
 	}
 
 	/**
-	 * checks if the two itemstacks are equial
+	 * checks if the two itemstacks are equal
 	 * 
 	 * @param stack1 first stack your checking
 	 * @param stack2 second stack your checking
 	 * @return if they are equal
 	 */
 	public static boolean equalStacks(ItemStack stack1, ItemStack stack2) {
-		if (stack1 != null && stack2 != null) {
-			if (isCircuit(stack1.getItem())) {
-				return false;
-			}
-			return stack1.getItem() != stack2.getItem() ? false : (stack1.getItemDamage() != stack2.getItemDamage() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack
-					.areItemStackTagsEqual(stack1, stack2)));
-		}
-		return false;
+		return stack1 != null && stack2 != null && !isCircuit(stack1.getItem()) && stack1.getItem() == stack2.getItem() &&
+				stack1.getItemDamage() == stack2.getItemDamage() && stack1.stackSize < stack1.getMaxStackSize() && ItemStack.areItemStackTagsEqual(stack1, stack2);
 	}
 	/**
 	 *fixes the problem with ItemStacks having no stack size, and sets it to the inputted number
