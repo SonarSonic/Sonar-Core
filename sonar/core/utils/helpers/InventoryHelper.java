@@ -19,6 +19,9 @@ public class InventoryHelper {
 	}
 
 	public static void extractItems(TileEntity pull, TileEntity push, int pullSide, int pushSide, IInventoryFilter filter) {
+		if(pull==null||push==null){
+			return ;
+		}
 		if (pull instanceof IInventory && push instanceof IInventory) {
 			IInventory start = (IInventory) pull;
 			IInventory stop = (IInventory) push;
@@ -80,32 +83,20 @@ public class InventoryHelper {
 		ItemStack exported = stack.copy();
 		while (exported != null && canInsert(push, exported) != -999) {
 			int insert = canInsert(push, exported);
-			ItemStack pushStack;
-			if (!push.hasAccess()) {
-				pushStack = push.getInv().getStackInSlot(insert);
-			} else {
-				pushStack = push.getInv().getStackInSlot(push.access[insert]);
-			}
-
+			ItemStack pushStack = push.getInv().getStackInSlot(insert);
+			
 			if (exported != null) {
 				if (pushStack == null) {
 					int max = Math.min(exported.getMaxStackSize(), push.getInv().getInventoryStackLimit());
 
 					if (max >= exported.stackSize) {
-						if (!push.hasAccess()) {
-							push.getInv().setInventorySlotContents(insert, exported);
-						} else {
-							push.getInv().setInventorySlotContents(push.access[insert], exported);
-						}
+						push.getInv().setInventorySlotContents(insert, exported);						
 						exported = null;
 					} else {
-						if (!push.hasAccess()) {
-							push.getInv().setInventorySlotContents(insert, exported.splitStack(max));
-						} else {
-							push.getInv().setInventorySlotContents(push.access[insert], exported.splitStack(max));
-						}
+						//push.getInv().setInventorySlotContents(insert, exported.splitStack(max));
+						//pull action????
 					}
-				} else {
+				} else if(stack.getItem() == pushStack.getItem()){
 					int max = Math.min(pushStack.getMaxStackSize(), push.getInv().getInventoryStackLimit());
 					if (max > pushStack.stackSize) {
 						int l = Math.min(exported.stackSize, max - pushStack.stackSize);
@@ -116,12 +107,8 @@ public class InventoryHelper {
 						}
 						ItemStack moveStack = pushStack.copy();
 						moveStack.stackSize += l;
-						if (!push.hasAccess()) {
-							push.getInv().setInventorySlotContents(insert, moveStack);
-						} else {
-							push.getInv().setInventorySlotContents(push.access[insert], moveStack);
+						push.getInv().setInventorySlotContents(insert, moveStack);
 
-						}
 					}
 				}
 			}
@@ -168,7 +155,7 @@ public class InventoryHelper {
 		if (push.access == null) {
 			for (int j = 0; j < push.getInv().getSizeInventory(); j++) {
 				ItemStack target = push.getInv().getStackInSlot(j);
-				if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem() && target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
+				if (target != null && target.stackSize < target.getMaxStackSize() && target.stackSize < push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem() && target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
 					return j;
 				} else if (emptySlot == -999 && target == null) {
 					emptySlot = j;
@@ -181,9 +168,9 @@ public class InventoryHelper {
 				if (inv.canInsertItem(push.access[j], stack, push.side)) {
 					ItemStack target = push.getInv().getStackInSlot(push.access[j]);
 					if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem() && target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
-						return j;
+						return push.access[j];
 					} else if (emptySlot == -999 && target == null) {
-						emptySlot = j;
+						emptySlot = push.access[j];
 					}
 				}
 			}
@@ -195,48 +182,34 @@ public class InventoryHelper {
 
 	private static void performExtract(InventoryOperation pull, InventoryOperation push, int pullID, int pushID) {
 		ItemStack pullStack = pull.getInv().getStackInSlot(pullID);
-		ItemStack pushStack;
-		if (!push.hasAccess()) {
-			pushStack = push.getInv().getStackInSlot(pushID);
-		} else {
-			pushStack = push.getSidedInv().getStackInSlot(push.access[pushID]);
-		}
-		if (pullStack != null) {
+		ItemStack pushStack= push.getSidedInv().getStackInSlot(pushID);
+		
+		if (pullStack != null && (!push.hasFilter()|| push.filter.matches(pullStack))) {
 			if (pushStack == null) {
 				int max = Math.min(pullStack.getMaxStackSize(), push.getInv().getInventoryStackLimit());
 
 				if (max >= pullStack.stackSize) {
-					if (!push.hasAccess()) {
-						push.getInv().setInventorySlotContents(pushID, pullStack);
-					} else {
-						push.getInv().setInventorySlotContents(push.access[pushID], pullStack);
-					}
+					push.getInv().setInventorySlotContents(pushID, pullStack);
 					pull.getInv().setInventorySlotContents(pullID, null);
-				} else {
-					if (!push.hasAccess()) {
-						push.getInv().setInventorySlotContents(pushID, pullStack.splitStack(max));
-					} else {
-						push.getInv().setInventorySlotContents(push.access[pushID], pullStack.splitStack(max));
-					}
+				} else {					
+					//push.getInv().setInventorySlotContents(pushID, pullStack.splitStack(max));
+					//pull change?
 				}
-			} else {
+			} else if(pullStack.getItem() == pushStack.getItem()){
 				int max = Math.min(pushStack.getMaxStackSize(), push.getInv().getInventoryStackLimit());
 				if (max > pushStack.stackSize) {
 					int l = Math.min(pullStack.stackSize, max - pushStack.stackSize);
 
-					pull.getInv().decrStackSize(pullID, l);
-
-					if (pullStack.stackSize - l <= 0) {
-						pull.getInv().setInventorySlotContents(pushID, null);
-					}
+					pull.getInv().decrStackSize(pullID, l);					
 					ItemStack moveStack = pushStack.copy();
-					moveStack.stackSize += l;
-					if (!push.hasAccess()) {
-						push.getInv().setInventorySlotContents(pushID, moveStack);
-					} else {
-						push.getInv().setInventorySlotContents(push.access[pushID], moveStack);
-
+					if (pullStack.stackSize - l <= 0) {
+						pull.getInv().setInventorySlotContents(pullID, null);
 					}
+					moveStack.stackSize += l;
+					push.getInv().setInventorySlotContents(pushID, moveStack);
+					
+
+					
 				}
 			}
 		}
@@ -245,7 +218,7 @@ public class InventoryHelper {
 	private static class InventoryOperation {
 		public Object inv;
 		public int side;
-		public int[] access;
+		private int[] access;
 		public IInventoryFilter filter;
 
 		public InventoryOperation(Object inv, int side, int[] access, IInventoryFilter filter) {

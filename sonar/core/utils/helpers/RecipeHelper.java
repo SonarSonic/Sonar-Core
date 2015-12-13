@@ -284,7 +284,6 @@ public abstract class RecipeHelper {
 				stack[i] = new ItemStack(ore.get(0).getItem(), ((OreStack) output[i]).stackSize, ore.get(0).getItemDamage());
 			}
 		}
-
 		return stack;
 	}
 
