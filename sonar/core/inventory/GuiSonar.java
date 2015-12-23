@@ -12,8 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import sonar.calculator.mod.client.gui.utils.CalculatorButtons;
-import sonar.calculator.mod.client.gui.utils.CalculatorButtons.ImageButton;
+import sonar.core.inventory.SonarButtons.ImageButton;
 import sonar.core.network.PacketMachineButton;
 import sonar.core.network.SonarPackets;
 import sonar.core.utils.helpers.FontHelper;
@@ -22,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class GuiSonar extends GuiContainer {
 
-	public int x, y, z;
+	public final int x, y, z;
 
 	public GuiSonar(Container container, TileEntity entity) {
 		super(container);
@@ -66,7 +65,7 @@ public abstract class GuiSonar extends GuiContainer {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public class PauseButton extends CalculatorButtons.ImageButton {
+	public class PauseButton extends SonarButtons.ImageButton {
 
 		boolean paused;
 		public int id;
@@ -95,7 +94,7 @@ public abstract class GuiSonar extends GuiContainer {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public class CircuitButton extends CalculatorButtons.ImageButton {
+	public class CircuitButton extends SonarButtons.ImageButton {
 		public int id;
 
 		public CircuitButton(int id, int x, int y) {

@@ -120,18 +120,19 @@ public class SonarHelper {
 
 	/**
 	 * checks if two itemstacks are the same (and nothing more!)
+	 * 
 	 * @param stack1 first stack your checking
 	 * @param stack2 second stack your checking
 	 * @return if they are equal and can be merged
 	 */
 	public static boolean equalStacksRegular(ItemStack stack1, ItemStack stack2) {
-		return stack1 != null && stack2 != null && stack1.getItem() == stack2.getItem() &&
-				stack1.getItemDamage() == stack2.getItemDamage() && ItemStack.areItemStackTagsEqual(stack1, stack2);
+		return stack1 != null && stack2 != null && stack1.getItem() == stack2.getItem() && stack1.getItemDamage() == stack2.getItemDamage() && ItemStack.areItemStackTagsEqual(stack1, stack2);
 	}
+
 	/**
-	 *fixes the problem with ItemStacks having no stack size, and sets it to the inputted number
+	 * fixes the problem with ItemStacks having no stack size, and sets it to the inputted number
 	 */
-	public static ItemStack restoreItemStack(ItemStack stack, int size){
+	public static ItemStack restoreItemStack(ItemStack stack, int size) {
 		ItemStack result = stack.copy();
 
 		if (result.stackSize <= 0) {
@@ -140,7 +141,7 @@ public class SonarHelper {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * @param item Item you are checking
 	 * @return if the stack is an circuit
@@ -178,11 +179,12 @@ public class SonarHelper {
 		}
 
 	}
-	
+
 	public static ForgeDirection getForward(int meta) {
 		return ForgeDirection.getOrientation(meta).getOpposite();
 	}
-	public static int getAngleFromMeta(int meta){
+
+	public static int getAngleFromMeta(int meta) {
 		switch (meta) {
 		case 2:
 			return 180;
@@ -194,7 +196,25 @@ public class SonarHelper {
 			return 270;
 		}
 		return 0;
-	
+
 	}
-	
+
+	public static int invertMetadata(int meta) {
+		switch (meta) {
+		case 0:
+			return 0;
+		case 1:
+			return 5;
+		case 2:
+			return 4;
+		case 3:
+			return 3;
+		case 4:
+			return 2;
+		case 5:
+			return 1;
+		default:
+			return -1;
+		}
+	}
 }

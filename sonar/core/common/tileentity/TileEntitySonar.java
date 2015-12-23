@@ -2,22 +2,34 @@ package sonar.core.common.tileentity;
 
 import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import sonar.core.network.PacketRequestSync;
+import sonar.core.network.PacketTileSync;
 import sonar.core.network.SonarPackets;
 import sonar.core.utils.ISyncTile;
+import sonar.core.utils.IWailaInfo;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntitySonar extends TileEntity implements ISyncTile {
+public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo {
 
 	protected boolean load;
 
+	public boolean isClient() {
+		return worldObj.isRemote;
+	}
+	public boolean isServer(){
+		return !worldObj.isRemote;
+	}
+	
 	public void onLoaded() {
 
 	}
@@ -58,9 +70,11 @@ public class TileEntitySonar extends TileEntity implements ISyncTile {
 		this.load = true;
 	}
 
-	public void readData(NBTTagCompound nbt, SyncType type) {}
+	public void readData(NBTTagCompound nbt, SyncType type) {
+	}
 
-	public void writeData(NBTTagCompound nbt, SyncType type) {}
+	public void writeData(NBTTagCompound nbt, SyncType type) {
+	}
 
 	@SideOnly(Side.CLIENT)
 	public List<String> getWailaInfo(List<String> currenttip) {
@@ -69,6 +83,33 @@ public class TileEntitySonar extends TileEntity implements ISyncTile {
 
 	public void requestSyncPacket() {
 		SonarPackets.network.sendToServer(new PacketRequestSync(xCoord, yCoord, zCoord));
+	}
+
+	public void sendSyncPacket(EntityPlayer player) {
+		if (worldObj.isRemote) {
+			return;
+		}
+		if (player != null && player instanceof EntityPlayerMP) {
+			NBTTagCompound tag = new NBTTagCompound();
+			writeData(tag, SyncType.SYNC);
+			SonarPackets.network.sendTo(new PacketTileSync(xCoord, yCoord, zCoord, tag), (EntityPlayerMP) player);
+		}
+	}
+
+	public boolean maxRender() {
+		return false;
+
+	}
+
+	@SideOnly(Side.CLIENT)
+	public double getMaxRenderDistanceSquared() {
+		return maxRender() ? 65536.0D : super.getMaxRenderDistanceSquared();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getRenderBoundingBox() {
+		return maxRender() ? INFINITE_EXTENT_AABB : super.getRenderBoundingBox();
 	}
 
 }

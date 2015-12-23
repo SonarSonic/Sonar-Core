@@ -119,7 +119,7 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 	@Override
 	public String getInventoryName() {
 		if(this.blockType==null){
-			return "Calculator Inventory";
+			return "Sonar Inventory";
 		}
 		return this.blockType.getLocalizedName();
 	}

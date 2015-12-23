@@ -2,6 +2,7 @@ package sonar.core.utils.helpers;
 
 import java.math.BigDecimal;
 
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
@@ -157,5 +158,15 @@ public class FontHelper {
 			return StatCollector.translateToFallback(string);
 		}
 	}
-	
+    public static String fullTranslate(String s)
+    {
+        String ret = LanguageRegistry.instance().getStringLocalization(s);
+        if(ret.length() == 0)
+            ret = LanguageRegistry.instance().getStringLocalization(s, "en_US");
+        if(ret.length() == 0)
+            ret = translate(s);
+        if(ret.length() == 0)
+            return s;
+        return ret;
+    }
 }

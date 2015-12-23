@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class SonarItemScreen extends SonarItem {
 
@@ -18,36 +19,26 @@ public abstract class SonarItemScreen extends SonarItem {
 		} else if (!world.getBlock(x, y, z).getMaterial().isSolid() || world.getBlock(x, y, z) == getScreenBlock() || !world.getBlock(x, y, z).hasTileEntity(world.getBlockMetadata(x, y, z))) {
 			return false;
 		} else {
-			switch (side) {
-			case 1:
-				++y;
-				break;
-			case 2:
-				--z;
-				break;
-			case 3:
-				++z;
-				break;
-			case 4:
-				--x;
-				break;
-			case 5:
-				++x;
-				break;
-			}
-
+			ForgeDirection dir = ForgeDirection.getOrientation(side);
+			x=x+dir.offsetX;
+			y=y+dir.offsetY;
+			z=z+dir.offsetZ;
+			
 			if (!player.canPlayerEdit(x, y, z, side, stack)) {
-
 				return false;
 			} else if (world.isRemote) {
 				return true;
 			} else {
-				if (side != 1) {
-					world.setBlock(x, y, z, getScreenBlock(), side, 3);
-					--stack.stackSize;
+				
+				if (world.isAirBlock(x, y, z)) {
+					if (side != 1) {
+						world.setBlock(x, y, z, getScreenBlock(), side, 3);
+						--stack.stackSize;
+					}
+					return true;
+				}else{
+					return false;
 				}
-
-				return true;
 			}
 		}
 	}

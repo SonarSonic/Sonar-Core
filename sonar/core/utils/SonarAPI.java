@@ -36,6 +36,12 @@ public class SonarAPI {
 
 		return Loader.isModLoaded("StatisticalEnergistics");
 	}
+	
+	/** @returns if Forge Multipart is installed */
+	public static boolean forgeMultipartLoaded() {
+
+		return Loader.isModLoaded("ForgeMultipart");
+	}
 
 	public static boolean isEnabled(ItemStack stack) {
 		if (calculatorLoaded()) {

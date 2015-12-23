@@ -1,10 +1,12 @@
 package sonar.core.common.block;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +14,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import sonar.core.utils.ISyncTile;
 import sonar.core.utils.IUpgradeCircuits;
@@ -25,6 +30,8 @@ import cofh.api.tileentity.IReconfigurableSides;
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class SonarBlock extends Block implements IDismantleable {
 
@@ -277,4 +284,37 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 	public boolean renderAsNormalBlock() {
 		return hasSpecialRenderer() ? false : true;
 	}
+
+	public List<AxisAlignedBB> getCollisionBoxes(World world, int x, int y, int z, List<AxisAlignedBB> list) {
+		list.add(AxisAlignedBB.getBoundingBox((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ));
+		return list;
+	}
+
+	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB axis, List list, Entity entity) {
+		if (hasSpecialCollisionBox()) {
+			List<AxisAlignedBB> collisionList = this.getCollisionBoxes(world, x, y, z, new ArrayList());
+			for (AxisAlignedBB collision : collisionList) {
+				collision.offset(x, y, z);
+				if (collision != null && collision.intersectsWith(axis)) {
+					list.add(collision);
+				}
+			}
+		}else{
+			super.addCollisionBoxesToList(world, x, y, z, axis, list, entity);
+		}
+	}
+
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+		return AxisAlignedBB.getBoundingBox((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
+		return AxisAlignedBB.getBoundingBox((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX, (double) y + this.maxY, (double) z + this.maxZ);
+	}
+
+	public boolean hasSpecialCollisionBox() {
+		return false;
+	}
+
 }

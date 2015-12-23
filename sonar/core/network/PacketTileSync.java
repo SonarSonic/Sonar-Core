@@ -3,8 +3,8 @@ package sonar.core.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import sonar.core.utils.ISyncTile;
+import sonar.core.utils.helpers.FMPHelper;
 import sonar.core.utils.helpers.NBTHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -32,11 +32,17 @@ public class PacketTileSync implements IMessage {
 		this.yCoord = buf.readInt();
 		this.zCoord = buf.readInt();
 		this.tag = ByteBufUtils.readTag(buf);
-		if (Minecraft.getMinecraft().thePlayer.worldObj != null) {
-			TileEntity tile = Minecraft.getMinecraft().thePlayer.worldObj.getTileEntity(xCoord, yCoord, zCoord);
-			if (tile != null && tile instanceof ISyncTile) {
-				ISyncTile sync = (ISyncTile) tile;
-				sync.readData(this.tag, NBTHelper.SyncType.SYNC);
+		if (Minecraft.getMinecraft() != null && Minecraft.getMinecraft().thePlayer != null) {
+			if (Minecraft.getMinecraft().thePlayer.worldObj != null) {
+				Object tile = Minecraft.getMinecraft().thePlayer.worldObj.getTileEntity(xCoord, yCoord, zCoord);
+				tile = FMPHelper.checkObject(tile);
+				if (tile == null) {
+					return;
+				}
+				if (tile instanceof ISyncTile) {
+					ISyncTile sync = (ISyncTile) tile;
+					sync.readData(this.tag, NBTHelper.SyncType.SYNC);
+				}
 			}
 		}
 	}
