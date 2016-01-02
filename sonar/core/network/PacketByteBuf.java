@@ -2,44 +2,29 @@ package sonar.core.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import sonar.core.utils.INBTPacket;
-import sonar.core.utils.ISyncTile;
-import sonar.core.utils.ITextField;
-import sonar.core.utils.helpers.FMPHelper;
-import sonar.core.utils.helpers.NBTHelper;
-import cpw.mods.fml.common.network.ByteBufUtils;
+import sonar.core.integration.fmp.FMPHelper;
+import sonar.core.network.utils.IByteBufTile;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 
-public class PacketNBT implements IMessage {
+public class PacketByteBuf implements IMessage {
 
 	public int xCoord, yCoord, zCoord, id;
-	public NBTTagCompound tag;
+	public IByteBufTile tile;
+	public ByteBuf buf;
 
-	public PacketNBT() {
+	public PacketByteBuf() {
 	}
 
-	public PacketNBT(TileEntity tile, int id) {
-		INBTPacket packet = (INBTPacket) tile;
+	public PacketByteBuf(TileEntity tile, int id) {
+		this.tile = (IByteBufTile) tile;
 		this.xCoord = tile.xCoord;
 		this.yCoord = tile.yCoord;
 		this.zCoord = tile.zCoord;
-		this.id = id;
-		NBTTagCompound tag = new NBTTagCompound();
-		packet.writePacket(tag, id);
-		this.tag = tag;
-	}
-
-	public PacketNBT(int xCoord, int yCoord, int zCoord, NBTTagCompound tag, int id) {
-		this.xCoord = xCoord;
-		this.yCoord = yCoord;
-		this.zCoord = zCoord;
-		this.tag = tag;
 		this.id = id;
 	}
 
@@ -49,8 +34,7 @@ public class PacketNBT implements IMessage {
 		this.yCoord = buf.readInt();
 		this.zCoord = buf.readInt();
 		this.id = buf.readInt();
-		this.tag = ByteBufUtils.readTag(buf);
-
+		this.buf = buf;
 	}
 
 	@Override
@@ -59,13 +43,13 @@ public class PacketNBT implements IMessage {
 		buf.writeInt(yCoord);
 		buf.writeInt(zCoord);
 		buf.writeInt(id);
-		ByteBufUtils.writeTag(buf, tag);
+		tile.writePacket(buf, id);
 	}
 
-	public static class Handler implements IMessageHandler<PacketNBT, IMessage> {
+	public static class Handler implements IMessageHandler<PacketByteBuf, IMessage> {
 
 		@Override
-		public IMessage onMessage(PacketNBT message, MessageContext ctx) {
+		public IMessage onMessage(PacketByteBuf message, MessageContext ctx) {
 			if (ctx.side == Side.SERVER) {
 				World world = ctx.getServerHandler().playerEntity.worldObj;
 				if (!world.isRemote) {
@@ -74,9 +58,9 @@ public class PacketNBT implements IMessage {
 						return null;
 					}
 
-					if (te instanceof INBTPacket) {
-						INBTPacket packet = (INBTPacket) te;
-						packet.readPacket(message.tag, message.id);
+					if (te instanceof IByteBufTile) {
+						IByteBufTile packet = (IByteBufTile) te;
+						packet.readPacket(message.buf, message.id);
 					}
 				}
 			} else {
@@ -87,9 +71,9 @@ public class PacketNBT implements IMessage {
 						if (tile == null) {
 							return null;
 						}
-						if (tile instanceof INBTPacket) {
-							INBTPacket packet = (INBTPacket) tile;
-							packet.readPacket(message.tag, message.id);
+						if (tile instanceof IByteBufTile) {
+							IByteBufTile packet = (IByteBufTile) tile;
+							packet.readPacket(message.buf, message.id);
 						}
 
 					}

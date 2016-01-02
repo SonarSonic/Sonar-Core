@@ -33,7 +33,6 @@ public class PacketSonarSides implements IMessage {
 		if (tile != null && tile instanceof IReconfigurableSides) {
 			IReconfigurableSides sides = (IReconfigurableSides) tile;
 			sides.setSide(buf.readInt(), buf.readInt());
-
 		}
 	}
 

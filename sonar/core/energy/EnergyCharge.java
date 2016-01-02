@@ -1,7 +1,6 @@
-package sonar.core.utils;
+package sonar.core.energy;
 
 import net.minecraft.item.ItemStack;
-import cofh.api.energy.EnergyStorage;
 
 /**an object with tile entitie's energy storage, an ItemStack to charge/discharge and if the stack was used up*/
 public class EnergyCharge extends Object {

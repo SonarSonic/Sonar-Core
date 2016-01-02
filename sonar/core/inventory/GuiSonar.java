@@ -12,7 +12,6 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import sonar.core.inventory.SonarButtons.ImageButton;
 import sonar.core.network.PacketMachineButton;
 import sonar.core.network.SonarPackets;
 import sonar.core.utils.helpers.FontHelper;

@@ -1,4 +1,4 @@
-package sonar.core.utils;
+package sonar.core.network.utils;
 
 public interface ITextField {
 

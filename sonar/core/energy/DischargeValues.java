@@ -1,15 +1,16 @@
-package sonar.core.utils;
+package sonar.core.energy;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import sonar.core.integration.SonarAPI;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 
 /**an Array List with the Discharge Values of specific Items*/

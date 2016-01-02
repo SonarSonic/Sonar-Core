@@ -15,12 +15,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import sonar.core.utils.ISyncTile;
+import sonar.core.integration.SonarAPI;
+import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.IUpgradeCircuits;
-import sonar.core.utils.SonarAPI;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import sonar.core.utils.helpers.SonarHelper;
 import cofh.api.block.IDismantleable;
@@ -166,7 +165,7 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack) {
 		if (orientation) {
-			int l = net.minecraft.util.MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
+			int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
 
 			if (l == 0) {
 				world.setBlockMetadataWithNotify(x, y, z, 2, 2);
@@ -250,7 +249,6 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 		}
 
 		super.breakBlock(world, x, y, z, oldblock, oldMetadata);
-		world.removeTileEntity(x, y, z);
 
 	}
 

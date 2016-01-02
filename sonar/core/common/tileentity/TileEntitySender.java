@@ -1,20 +1,9 @@
 package sonar.core.common.tileentity;
 
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySource;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
-import sonar.core.utils.ISyncTile;
-import sonar.core.utils.SonarAPI;
-import sonar.core.utils.helpers.NBTHelper;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
-import cofh.api.energy.EnergyStorage;
+import sonar.core.network.utils.ISyncTile;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.Optional.Method;

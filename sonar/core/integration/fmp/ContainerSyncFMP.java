@@ -1,14 +1,7 @@
 package sonar.core.integration.fmp;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import sonar.core.network.PacketTileSync;
-import sonar.core.network.SonarPackets;
-import sonar.core.utils.ISyncTile;
-import sonar.core.utils.helpers.NBTHelper;
 
 public abstract class ContainerSyncFMP extends Container {
 

@@ -2,7 +2,6 @@ package sonar.core.utils.helpers;
 
 import java.math.BigDecimal;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
@@ -10,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class FontHelper {
 
@@ -90,29 +90,40 @@ public class FontHelper {
 			player.addChatComponentMessage(new ChatComponentText(string));
 		}
 	}
-	public static String formatStorage(int power) {
-		if ((power <= 1000)) {
+	public static String formatStorage(long power) {
+		if ((power < 1000)) {
 			return power + " RF";
-		} else if ((power <= 1000000)) {
+		} else if ((power < 1000000)) {
 			return roundValue(1, (float) power / 1000) + " KRF";
-		} else if ((power <= 1000000000)) {
+		} else if ((power < 1000000000)) {
 			return roundValue(1, (float) power / 1000000) + " MRF";
 		}
 		return roundValue(2, (float) power / 1000000000) + " BRF";
 
 	}
-	public static String formatOutput(int power) {
-		if ((power <= 1000)) {
+	public static String formatOutput(long power) {
+		if ((power < 1000)) {
 			return power + " RF/T";
-		} else if ((power <= 1000000)) {
+		} else if ((power < 1000000)) {
 			return roundValue(1, (float) power / 1000) + " KRF/T";
-		} else if ((power <= 1000000000)) {
+		} else if ((power < 1000000000)) {
 			return roundValue(1, (float) power / 1000000) + " MRF/T";
 		}
 		return roundValue(2, (float) power / 1000000000) + " BRF/T";
 
 	}
 
+	public static String formatStackSize(long stackSize) {
+		if ((stackSize < 10000)) {
+			return " " + stackSize;
+		} else if ((stackSize < 1000000)) {
+			return roundValue(1, (float) stackSize / 1000) + " K";
+		} else if ((stackSize < 1000000000)) {
+			return roundValue(1, (float) stackSize / 1000000) + " M";
+		}
+		return roundValue(2, (float) stackSize / 1000000000) + " B";
+
+	}
 	public static Float roundValue(int decimalPlace, Float d) {
 		BigDecimal bd = new BigDecimal(Float.toString(d));
 		bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);

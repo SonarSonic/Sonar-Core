@@ -1,15 +1,21 @@
 package sonar.core.utils.helpers;
 
+import java.util.List;
+
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import sonar.core.utils.SonarAPI;
+import sonar.core.integration.SonarAPI;
+import sonar.core.utils.BlockCoords;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
@@ -177,6 +183,30 @@ public class SonarHelper {
 		} else {
 			block.harvestBlock(world, player, x, y, z, world.getBlockMetadata(x, y, z));
 		}
+
+	}
+
+	public static Entity getNearestEntity(Class entityClass, TileEntity tile, int range) {
+
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(tile.xCoord - range, tile.yCoord - range, tile.zCoord - range, tile.xCoord + range, tile.yCoord + range, tile.zCoord + range);
+
+		List<Entity> entities = tile.getWorldObj().getEntitiesWithinAABB(entityClass, aabb);
+		Entity entity = null;
+		double closest = Double.MAX_VALUE;
+		for (int i = 0; i < entities.size(); i++) {
+			Entity target = (Entity) entities.get(i);
+			double d0 = tile.xCoord - target.posX;
+			double d1 = tile.yCoord - target.posY;
+			double d2 = tile.zCoord - target.posZ;
+			double distance = d0 * d0 + d1 * d1 + d2 * d2;
+
+			if (distance < closest) {
+				entity = target;
+				closest = distance;
+			}
+
+		}
+		return entity;
 
 	}
 

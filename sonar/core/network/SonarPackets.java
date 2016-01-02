@@ -2,8 +2,9 @@ package sonar.core.network;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import sonar.core.utils.ISyncTile;
-import sonar.core.utils.helpers.FMPHelper;
+import sonar.core.integration.fmp.FMPHelper;
+import sonar.core.network.utils.IByteBufTile;
+import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -23,17 +24,31 @@ public class SonarPackets {
 			network.registerMessage(PacketInventorySync.Handler.class, PacketInventorySync.class, 3, Side.CLIENT);
 			network.registerMessage(PacketRequestSync.Handler.class, PacketRequestSync.class, 4, Side.SERVER);
 			network.registerMessage(PacketTextField.Handler.class, PacketTextField.class, 5, Side.SERVER);
-			network.registerMessage(PacketNBT.Handler.class, PacketNBT.class, 6, Side.CLIENT);
-			network.registerMessage(PacketNBT.Handler.class, PacketNBT.class, 7, Side.SERVER);
+			network.registerMessage(PacketByteBuf.Handler.class, PacketByteBuf.class, 6, Side.CLIENT);
+			network.registerMessage(PacketByteBuf.Handler.class, PacketByteBuf.class, 7, Side.SERVER);
 		}
 	}
 
-	public static void sendSyncAround(TileEntity tile, int spread) {
+	public static void sendPacketAround(TileEntity tile, int spread, int id) {
 		Object object = FMPHelper.checkObject(tile);
-		if (object!=null && object instanceof ISyncTile) {
+		if (object != null && object instanceof IByteBufTile) {
+			if (!tile.getWorldObj().isRemote)
+				SonarPackets.network.sendToAllAround(new PacketByteBuf(tile, id), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
+			else
+				SonarPackets.network.sendToServer(new PacketByteBuf(tile, id));
+
+		}
+	}
+
+	public static void sendFullSyncAround(TileEntity tile, int spread) {
+		Object object = FMPHelper.checkObject(tile);
+		if (object != null && object instanceof ISyncTile) {
 			NBTTagCompound tag = new NBTTagCompound();
-			((ISyncTile)object).writeData(tag, SyncType.SYNC);
-			SonarPackets.network.sendToAllAround(new PacketTileSync(tile.xCoord, tile.yCoord, tile.zCoord, tag), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
+			((ISyncTile) object).writeData(tag, SyncType.SYNC);
+
+			if (!tag.hasNoTags()) {
+				SonarPackets.network.sendToAllAround(new PacketTileSync(tile.xCoord, tile.yCoord, tile.zCoord, tag), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
+			}
 		}
 	}
 

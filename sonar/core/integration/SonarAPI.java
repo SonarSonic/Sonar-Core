@@ -1,4 +1,4 @@
-package sonar.core.utils;
+package sonar.core.integration;
 
 import java.lang.reflect.Method;
 
@@ -31,10 +31,10 @@ public class SonarAPI {
 		return Loader.isModLoaded("Optics");
 	}
 
-	/** @returns if Statistical Energistics is installed */
-	public static boolean statisticalLoaded() {
+	/** @returns if Practical Logistics is installed */
+	public static boolean logisticsLoaded() {
 
-		return Loader.isModLoaded("StatisticalEnergistics");
+		return Loader.isModLoaded("PracticalLogistics");
 	}
 	
 	/** @returns if Forge Multipart is installed */

@@ -3,13 +3,9 @@ package sonar.core.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import sonar.core.common.item.InventoryItem;
-import sonar.core.utils.SlotLimiter;
 
 /** used by Calculators and other Hand-Held items with Inventories */
 public abstract class ContainerCraftInventory extends Container {

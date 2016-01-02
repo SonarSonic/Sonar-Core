@@ -1,33 +1,13 @@
 package sonar.core.network;
 
-import sonar.calculator.mod.Calculator;
-import sonar.calculator.mod.api.IFlux;
-import sonar.calculator.mod.api.IPausable;
-import sonar.calculator.mod.common.item.misc.UpgradeCircuit;
-import sonar.calculator.mod.common.tileentity.TileEntityFlux;
-import sonar.calculator.mod.common.tileentity.generators.TileEntityConductorMast;
-import sonar.calculator.mod.common.tileentity.misc.TileEntityFluxController;
-import sonar.calculator.mod.common.tileentity.misc.TileEntityFluxPlug;
-import sonar.calculator.mod.common.tileentity.misc.TileEntityFluxPoint;
-import sonar.calculator.mod.network.CalculatorGui;
-import sonar.calculator.mod.utils.FluxRegistry;
-import sonar.core.inventory.SonarButtons;
-import sonar.core.inventory.GuiSonar;
-import sonar.core.utils.ITextField;
-import sonar.core.utils.IUpgradeCircuits;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.world.World;
+import sonar.core.integration.fmp.FMPHelper;
+import sonar.core.network.utils.ITextField;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class PacketTextField implements IMessage {
 
@@ -70,7 +50,8 @@ public class PacketTextField implements IMessage {
 		@Override
 		public IMessage onMessage(PacketTextField message, MessageContext ctx) {
 			World world = ctx.getServerHandler().playerEntity.worldObj;
-			TileEntity te = world.getTileEntity(message.xCoord, message.yCoord, message.zCoord);
+			Object te = world.getTileEntity(message.xCoord, message.yCoord, message.zCoord);
+			te = FMPHelper.checkObject(te);
 			if (te == null) {
 				return null;
 			}

@@ -9,46 +9,45 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-
-import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TileMultipart;
-import sonar.core.common.block.SonarBlock;
-import sonar.core.integration.fmp.SonarTilePart;
-import sonar.core.utils.SonarAPI;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureCompass;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Direction;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.MapData;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
+import sonar.core.common.block.SonarBlock;
+import sonar.core.integration.SonarAPI;
+import sonar.core.integration.fmp.SonarTilePart;
+import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 
 public class RenderHelper {
 
 	private static final ResourceLocation mapBackgroundTextures = new ResourceLocation("textures/map/map_background.png");
 	protected RenderManager renderManager;
+
+	private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
 
 	public static int setMetaData(TileEntity tileentity) {
 		int i;
@@ -231,4 +230,90 @@ public class RenderHelper {
 		}
 	}
 
+	public static void renderStoredItemStackOverlay(FontRenderer font, TextureManager tex, ItemStack stack, long stored, int x, int y, String string) {
+		if (stack != null) {
+			stack.stackSize = 1;
+			RenderItem.getInstance().renderItemOverlayIntoGUI(font, tex, stack, x, y);
+			if (stored > 0 || string != null) {
+				String s1 = string == null ? FontHelper.formatStackSize(stored) : string;
+
+				final float scaleFactor = 0.5F;
+				final float inverseScaleFactor = 1.0f / scaleFactor;
+				GL11.glDisable(GL11.GL_LIGHTING);
+				GL11.glDisable(GL11.GL_DEPTH_TEST);
+				GL11.glPushMatrix();
+				GL11.glScaled(scaleFactor, scaleFactor, scaleFactor);
+				final int X = (int) (((float) x + 15.0f - font.getStringWidth(s1) * scaleFactor) * inverseScaleFactor);
+				final int Y = (int) (((float) y + 15.0f - 7.0f * scaleFactor) * inverseScaleFactor);
+				font.drawStringWithShadow(s1, X, Y, 16777215);
+				GL11.glPopMatrix();
+				GL11.glEnable(GL11.GL_LIGHTING);
+				GL11.glEnable(GL11.GL_DEPTH_TEST);
+			}
+
+		}
+	}
+
+	/** AE2 Rendering Method - All credit goes to them, I don't understand it */
+	public static void doRenderItem(ItemStack itemstack, World world, boolean normalSize) {
+		if (itemstack != null) {
+			EntityItem entityitem = new EntityItem(world, 0.0D, 0.0D, 0.0D, itemstack);
+			entityitem.getEntityItem().stackSize = 1;
+
+			entityitem.hoverStart = 0;
+			entityitem.age = 0;
+			entityitem.rotationYaw = 0;
+
+			GL11.glPushMatrix();
+			GL11.glTranslatef(0, -0.04F, 0);
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+			if (itemstack.isItemEnchanted() || itemstack.getItem().requiresMultipleRenderPasses()) {
+				GL11.glTranslatef(0.0f, -0.05f, -0.25f);
+				GL11.glScalef(1.0f / 1.5f, 1.0f / 1.5f, 1.0f / 1.5f);
+				GL11.glScalef(1.0f, -1.0f, normalSize ? 1.0f : 0.005f);
+
+				Block block = Block.getBlockFromItem(itemstack.getItem());
+				if ((itemstack.getItemSpriteNumber() == 0 && block != null && RenderBlocks.renderItemIn3d(block.getRenderType()))) {
+					GL11.glRotatef(25.0f, 1.0f, 0.0f, 0.0f);
+					GL11.glRotatef(15.0f, 0.0f, 1.0f, 0.0f);
+					GL11.glRotatef(30.0f, 0.0f, 1.0f, 0.0f);
+				}
+
+				IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(itemstack, IItemRenderer.ItemRenderType.ENTITY);
+				if (customRenderer != null && !(itemstack.getItem() instanceof ItemBlock)) {
+					if (customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.ENTITY, itemstack, IItemRenderer.ItemRendererHelper.BLOCK_3D)) {
+						GL11.glTranslatef(0, -0.04F, 0);
+						GL11.glScalef(0.7f, 0.7f, 0.7f);
+						GL11.glRotatef(35, 1, 0, 0);
+						GL11.glRotatef(45, 0, 1, 0);
+						GL11.glRotatef(-90, 0, 1, 0);
+					}
+				} else if (itemstack.getItem() instanceof ItemBlock) {
+					GL11.glTranslatef(0, -0.04F, 0);
+					GL11.glScalef(1.1f, 1.1f, 1.1f);
+					GL11.glRotatef(-90, 0, 1, 0);
+				} else {
+					GL11.glTranslatef(0, -0.14F, 0);
+					GL11.glScalef(0.8f, 0.8f, 0.8f);
+				}
+
+				RenderItem.renderInFrame = true;
+				RenderManager.instance.renderEntityWithPosYaw(entityitem, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
+				RenderItem.renderInFrame = false;
+			} else {
+				GL11.glScalef(1.0f / 42.0f, 1.0f / 42.0f, 1.0f / 42.0f);
+				GL11.glTranslated(-8.0, -10.2, -10.4);
+				GL11.glScalef(1.0f, 1.0f, normalSize ? 1.0f : 0.01f);
+
+				RenderItem.renderInFrame = false;
+				final FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+				if (!ForgeHooksClient.renderInventoryItem(RenderBlocks.getInstance(), Minecraft.getMinecraft().renderEngine, itemstack, true, 0, 0, 0)) {
+					RenderItem.getInstance().renderItemIntoGUI(fr, Minecraft.getMinecraft().renderEngine, itemstack, 0, 0, false);
+				}
+			}
+
+			GL11.glPopMatrix();
+		}
+	}
 }

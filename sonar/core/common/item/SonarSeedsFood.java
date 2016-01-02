@@ -1,4 +1,4 @@
-package sonar.core.utils;
+package sonar.core.common.item;
 
 import java.util.List;
 

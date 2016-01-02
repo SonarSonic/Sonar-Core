@@ -1,7 +1,7 @@
 package sonar.core.utils;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
@@ -94,11 +94,22 @@ public class BlockCoords {
 		}
 	}
 
-	public String getRender(){
+	public String getRender() {
 		return "X: " + this.xCoord + " Y: " + this.yCoord + " Z: " + this.zCoord;
-		
+
 	}
-	
+
+	public static void writeToBuf(ByteBuf tag, BlockCoords coords) {
+		tag.writeInt(coords.xCoord);
+		tag.writeInt(coords.yCoord);
+		tag.writeInt(coords.zCoord);
+		tag.writeInt(coords.dimension);
+	}
+
+	public static BlockCoords readFromBuf(ByteBuf tag) {
+		return new BlockCoords(tag.readInt(), tag.readInt(), tag.readInt(), tag.readInt());
+	}
+
 	public static void writeToNBT(NBTTagCompound tag, BlockCoords coords) {
 		tag.setInteger("x", coords.xCoord);
 		tag.setInteger("y", coords.yCoord);
@@ -168,5 +179,5 @@ public class BlockCoords {
 		}
 		return true;
 	}
-	
+
 }

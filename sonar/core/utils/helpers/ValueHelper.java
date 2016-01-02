@@ -9,7 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import sonar.core.utils.SonarAPI;
+import sonar.core.integration.SonarAPI;
 
 public abstract class ValueHelper {
 

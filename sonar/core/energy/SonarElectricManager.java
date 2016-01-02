@@ -1,4 +1,4 @@
-package sonar.core.utils;
+package sonar.core.energy;
 
 import ic2.api.item.IElectricItem;
 import ic2.api.item.IElectricItemManager;

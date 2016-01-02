@@ -2,12 +2,9 @@ package sonar.core.utils.helpers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.block.Block;
@@ -15,8 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.calculator.mod.api.CalculatorAPI;
-import sonar.calculator.mod.common.recipes.RecipeRegistry;
-import sonar.core.utils.SonarAPI;
+import sonar.core.integration.SonarAPI;
 import cpw.mods.fml.common.FMLLog;
 
 /** Recipe Template allows gigantic recipes with full Ore Dict compatibility */
@@ -74,7 +70,7 @@ public abstract class RecipeHelper {
 				return;
 			}
 			if (objects[i] instanceof String) {
-				if (i < inputSize) {
+				if (i < inputSize) {					
 					stack[i] = new OreStack((String) objects[i], 1);
 				} else if (!(i - inputSize > outputSize)) {
 					ArrayList<ItemStack> ores = OreDictionary.getOres((String) objects[i]);

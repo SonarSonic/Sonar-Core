@@ -1,8 +1,8 @@
-package sonar.core.utils.helpers;
+package sonar.core.integration.fmp;
 
 import java.util.List;
 
-import sonar.core.utils.SonarAPI;
+import sonar.core.integration.SonarAPI;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 

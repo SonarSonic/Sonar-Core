@@ -1,10 +1,11 @@
-package sonar.core.utils;
+package sonar.core.energy;
 
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.api.item.IElectricItemManager;
 import ic2.api.item.ISpecialElectricItem;
 import net.minecraft.item.ItemStack;
+import sonar.core.integration.SonarAPI;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 

@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import sonar.core.utils.ISyncTile;
+import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -48,7 +48,10 @@ public class PacketRequestSync implements IMessage {
 					NBTTagCompound tag = new NBTTagCompound();
 					ISyncTile sync = (ISyncTile) tile;
 					sync.writeData(tag, SyncType.SYNC);
-					return new PacketTileSync(message.xCoord, message.yCoord, message.zCoord, tag);
+
+					if (!tag.hasNoTags()) {
+						return new PacketTileSync(message.xCoord, message.yCoord, message.zCoord, tag);
+					}
 				}
 			}
 			return null;

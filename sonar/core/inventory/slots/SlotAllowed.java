@@ -1,4 +1,4 @@
-package sonar.core.utils;
+package sonar.core.inventory.slots;
 
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
