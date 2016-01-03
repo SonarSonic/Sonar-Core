@@ -490,7 +490,7 @@ public abstract class RecipeHelper {
 				for (int ii = 0; ii < inputSize; ii++) {
 					Object recipeInput = entry.getKey()[ii];
 
-					if (input instanceof ItemStack && recipeInput instanceof ItemStack && SonarHelper.equalStacksRegular((ItemStack) input, (ItemStack) recipeInput)) {
+					if (input instanceof ItemStack && recipeInput instanceof ItemStack && ItemStackHelper.equalStacksRegular((ItemStack) input, (ItemStack) recipeInput)) {
 						found[i] = true;
 					}
 

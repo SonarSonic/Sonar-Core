@@ -1,5 +1,10 @@
 package sonar.core.integration.fmp;
 
+import java.util.Arrays;
+
+import org.lwjgl.opengl.GL11;
+
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,6 +13,7 @@ import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
+import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.minecraft.McMetaPart;
 
@@ -20,6 +26,11 @@ public abstract class SonarTilePart extends McMetaPart implements ISyncTile {
 
 	public SonarTilePart(int meta) {
 		this.meta = (byte) meta;
+	}
+
+	@Override
+	public Iterable<Cuboid6> getCollisionBoxes() {
+		return Arrays.asList(getBounds());
 	}
 
 	@Override
@@ -77,7 +88,7 @@ public abstract class SonarTilePart extends McMetaPart implements ISyncTile {
 	public void renderDynamic(Vector3 pos, float frame, int pass) {
 		if (world().isRemote && rend != null) {
 			if (rend instanceof TileEntitySpecialRenderer) {
-				((TileEntitySpecialRenderer)rend).renderTileEntityAt(tile(), pos.x, pos.y, pos.z, 0);
+				((TileEntitySpecialRenderer) rend).renderTileEntityAt(tile(), pos.x, pos.y, pos.z, 0);
 			}
 		}
 	}

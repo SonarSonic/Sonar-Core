@@ -7,7 +7,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-public class ItemModelRender implements net.minecraftforge.client.IItemRenderer {
+public class ItemModelRender implements IItemRenderer {
 
 	public TileEntitySpecialRenderer render;
 	public TileEntity entity;

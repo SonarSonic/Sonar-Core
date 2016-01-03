@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import sonar.core.integration.fmp.FMPHelper;
+import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.network.utils.IByteBufTile;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -20,11 +21,11 @@ public class PacketByteBuf implements IMessage {
 	public PacketByteBuf() {
 	}
 
-	public PacketByteBuf(TileEntity tile, int id) {
-		this.tile = (IByteBufTile) tile;
-		this.xCoord = tile.xCoord;
-		this.yCoord = tile.yCoord;
-		this.zCoord = tile.zCoord;
+	public PacketByteBuf(IByteBufTile tile, int x, int y, int z, int id) {
+		this.tile = tile;
+		this.xCoord = x;
+		this.yCoord = y;
+		this.zCoord = z;
 		this.id = id;
 	}
 
@@ -50,35 +51,25 @@ public class PacketByteBuf implements IMessage {
 
 		@Override
 		public IMessage onMessage(PacketByteBuf message, MessageContext ctx) {
-			if (ctx.side == Side.SERVER) {
-				World world = ctx.getServerHandler().playerEntity.worldObj;
-				if (!world.isRemote) {
-					TileEntity te = world.getTileEntity(message.xCoord, message.yCoord, message.zCoord);
-					if (te == null) {
-						return null;
-					}
-
-					if (te instanceof IByteBufTile) {
-						IByteBufTile packet = (IByteBufTile) te;
-						packet.readPacket(message.buf, message.id);
-					}
+			World world = ctx.side == Side.SERVER ? ctx.getServerHandler().playerEntity.worldObj : Minecraft.getMinecraft().thePlayer.worldObj;
+			if (world != null) {
+				Object tile = world.getTileEntity(message.xCoord, message.yCoord, message.zCoord);
+				tile = FMPHelper.checkObject(tile);
+				if (tile == null) {
+					return null;
 				}
-			} else {
-				if (Minecraft.getMinecraft().thePlayer.worldObj != null) {
-					if (Minecraft.getMinecraft().thePlayer.worldObj.isRemote) {
-						Object tile = Minecraft.getMinecraft().thePlayer.worldObj.getTileEntity(message.xCoord, message.yCoord, message.zCoord);
-						tile = FMPHelper.checkObject(tile);
-						if (tile == null) {
-							return null;
-						}
-						if (tile instanceof IByteBufTile) {
-							IByteBufTile packet = (IByteBufTile) tile;
-							packet.readPacket(message.buf, message.id);
-						}
 
+				if (tile instanceof IByteBufTile) {
+					IByteBufTile packet = (IByteBufTile) tile;
+					packet.readPacket(message.buf, message.id);
+				} else {
+					TileHandler handler = FMPHelper.getHandler(tile);
+					if (handler != null && handler instanceof IByteBufTile) {
+						((IByteBufTile) handler).readPacket(message.buf, message.id);
 					}
 				}
 			}
+
 			return null;
 		}
 	}

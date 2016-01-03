@@ -6,8 +6,12 @@ import net.minecraft.tileentity.TileEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import sonar.calculator.mod.CalculatorConfig;
 import sonar.core.energy.DischargeValues;
+import sonar.core.integration.SonarAPI;
+import sonar.core.integration.SonarWailaModule;
 import sonar.core.integration.fmp.FMPHelper;
+import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.network.PacketByteBuf;
 import sonar.core.network.PacketInventorySync;
 import sonar.core.network.PacketMachineButton;
@@ -32,9 +36,9 @@ public class SonarCore {
 
 	public static final String modid = "SonarCore";
 	public static final String version = "0.0.1a";
-	
+
 	@Instance(modid)
-	public static SonarCore instance;	
+	public static SonarCore instance;
 
 	public static SimpleNetworkWrapper network;
 
@@ -44,10 +48,17 @@ public class SonarCore {
 	public void preInit(FMLPreInitializationEvent event) {
 		logger.info("Registering Packets");
 		registerPackets();
-		logger.info("Register Packets");		
+		logger.info("Register Packets");
 
 		DischargeValues.addValues();
 		logger.info("Added Discharge Values");
+
+		if (SonarAPI.wailaLoaded()) {
+			SonarWailaModule.register();
+			logger.info("Integrated with WAILA");
+		} else {
+			logger.warn("'WAILA' - unavailable or disabled in config");
+		}
 	}
 
 	public static void registerPackets() {
@@ -66,12 +77,23 @@ public class SonarCore {
 
 	public static void sendPacketAround(TileEntity tile, int spread, int id) {
 		Object object = FMPHelper.checkObject(tile);
-		if (object != null && object instanceof IByteBufTile) {
-			if (!tile.getWorldObj().isRemote)
-				SonarCore.network.sendToAllAround(new PacketByteBuf(tile, id), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
-			else
-				SonarCore.network.sendToServer(new PacketByteBuf(tile, id));
 
+		if (object != null && object instanceof IByteBufTile) {
+			if (!tile.getWorldObj().isRemote) {
+				SonarCore.network.sendToAllAround(new PacketByteBuf((IByteBufTile) object, tile.xCoord, tile.yCoord, tile.zCoord, id), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
+			} else {
+				SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) object, tile.xCoord, tile.yCoord, tile.zCoord, id));
+			}
+		} else {
+			TileHandler handler = FMPHelper.getHandler(object);
+			if (handler != null && handler instanceof IByteBufTile) {
+
+				if (!tile.getWorldObj().isRemote) {
+					SonarCore.network.sendToAllAround(new PacketByteBuf((IByteBufTile) handler, tile.xCoord, tile.yCoord, tile.zCoord, id), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
+				} else {
+					SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) handler, tile.xCoord, tile.yCoord, tile.zCoord, id));
+				}
+			}
 		}
 	}
 

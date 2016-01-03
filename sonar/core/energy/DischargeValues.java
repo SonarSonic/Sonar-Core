@@ -42,7 +42,7 @@ public class DischargeValues {
 				return 0;
 			}
 			entry = (Map.Entry) iterator.next();
-		} while (!SonarHelper.equalStacksRegular(stack, (ItemStack) entry.getKey()));
+		} while (!ItemStackHelper.equalStacksRegular(stack, (ItemStack) entry.getKey()));
 
 		return (Integer) entry.getValue();
 	}
