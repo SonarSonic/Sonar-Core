@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
+import sonar.core.integration.SonarAPI;
 import sonar.core.utils.helpers.FontHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -32,26 +33,28 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
 		super.addInformation(stack, player, list, par4);
 
-		String mode = FontHelper.translate("calculator.tools.calculator.greenhouse");
-		switch (greenhouseTier) {
-		case 0:
-			break;
-		case 1:
-			list.add(FontHelper.translate("Planted with Basic Greenhouse or Higher"));
-			break;
-		case 2:
-			list.add(FontHelper.translate("Planted with Advanced Greenhouse or Higher"));
-			break;
-		case 3:
-			list.add(FontHelper.translate("Planted with Flawless Greenhouse"));
-			break;
+		if (SonarAPI.calculatorLoaded()) {
+			String mode = FontHelper.translate("calculator.tools.calculator.greenhouse");
+			switch (greenhouseTier) {
+			case 0:
+				break;
+			case 1:
+				list.add(FontHelper.translate("Planted with Basic Greenhouse or Higher"));
+				break;
+			case 2:
+				list.add(FontHelper.translate("Planted with Advanced Greenhouse or Higher"));
+				break;
+			case 3:
+				list.add(FontHelper.translate("Planted with Flawless Greenhouse"));
+				break;
+			}
 		}
 	}
 
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par, float f1, float f2, float f3) {
 
-		if (this.greenhouseTier == 0) {
+		if (this.greenhouseTier == 0 || !SonarAPI.calculatorLoaded()) {
 			if (par != 1) {
 				return false;
 			} else if (player.canPlayerEdit(x, y, z, par, stack) && player.canPlayerEdit(x, y + 1, z, par, stack)) {

@@ -1,9 +1,9 @@
 package sonar.core.network.sync;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
+import cpw.mods.fml.common.network.ByteBufUtils;
 
 public class SyncString implements ISyncPart {
 	private String c = "";

@@ -1,19 +1,54 @@
-package sonar.core.network;
+package sonar.core;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import sonar.core.energy.DischargeValues;
 import sonar.core.integration.fmp.FMPHelper;
+import sonar.core.network.PacketByteBuf;
+import sonar.core.network.PacketInventorySync;
+import sonar.core.network.PacketMachineButton;
+import sonar.core.network.PacketRequestSync;
+import sonar.core.network.PacketSonarSides;
+import sonar.core.network.PacketTextField;
+import sonar.core.network.PacketTileSync;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 
-public class SonarPackets {
+@Mod(modid = SonarCore.modid, name = "SonarCore", version = SonarCore.version)
+public class SonarCore {
+
+	public static final String modid = "SonarCore";
+	public static final String version = "0.0.1a";
+	
+	@Instance(modid)
+	public static SonarCore instance;	
 
 	public static SimpleNetworkWrapper network;
+
+	public static Logger logger = (Logger) LogManager.getLogger(modid);
+
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+		logger.info("Registering Packets");
+		registerPackets();
+		logger.info("Register Packets");		
+
+		DischargeValues.addValues();
+		logger.info("Added Discharge Values");
+	}
 
 	public static void registerPackets() {
 		if (network == null) {
@@ -33,9 +68,9 @@ public class SonarPackets {
 		Object object = FMPHelper.checkObject(tile);
 		if (object != null && object instanceof IByteBufTile) {
 			if (!tile.getWorldObj().isRemote)
-				SonarPackets.network.sendToAllAround(new PacketByteBuf(tile, id), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
+				SonarCore.network.sendToAllAround(new PacketByteBuf(tile, id), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
 			else
-				SonarPackets.network.sendToServer(new PacketByteBuf(tile, id));
+				SonarCore.network.sendToServer(new PacketByteBuf(tile, id));
 
 		}
 	}
@@ -45,9 +80,8 @@ public class SonarPackets {
 		if (object != null && object instanceof ISyncTile) {
 			NBTTagCompound tag = new NBTTagCompound();
 			((ISyncTile) object).writeData(tag, SyncType.SYNC);
-
 			if (!tag.hasNoTags()) {
-				SonarPackets.network.sendToAllAround(new PacketTileSync(tile.xCoord, tile.yCoord, tile.zCoord, tag), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
+				SonarCore.network.sendToAllAround(new PacketTileSync(tile.xCoord, tile.yCoord, tile.zCoord, tag), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
 			}
 		}
 	}

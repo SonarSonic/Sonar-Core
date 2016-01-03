@@ -4,8 +4,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import sonar.core.SonarCore;
 import sonar.core.network.PacketTileSync;
-import sonar.core.network.SonarPackets;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper;
 
@@ -36,7 +36,7 @@ public abstract class ContainerSync extends Container {
 				if (!syncData.hasNoTags()) {
 					for (Object o : crafters) {
 						if (o != null && o instanceof EntityPlayerMP) {
-							SonarPackets.network.sendTo(new PacketTileSync(tile.xCoord, tile.yCoord, tile.zCoord, syncData), (EntityPlayerMP) o);
+							SonarCore.network.sendTo(new PacketTileSync(tile.xCoord, tile.yCoord, tile.zCoord, syncData), (EntityPlayerMP) o);
 						}
 					}
 				}

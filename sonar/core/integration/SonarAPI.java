@@ -50,7 +50,16 @@ public class SonarAPI {
 				Method method = recipeClass.getMethod("isEnabled", ItemStack.class);
 				return (Boolean) method.invoke(null, stack);
 			} catch (Exception exception) {
-				System.err.println("Sonar API: Calculator couldn't check if ItemStack was enabled " + exception.getMessage());
+				System.err.println("SonarCore: Calculator couldn't check if ItemStack was enabled " + exception.getMessage());
+			}
+		}
+		if (logisticsLoaded()) {
+			try {
+				Class recipeClass = Class.forName("sonar.logistics.LogisticsConfig");
+				Method method = recipeClass.getMethod("isEnabled", ItemStack.class);
+				return (Boolean) method.invoke(null, stack);
+			} catch (Exception exception) {
+				System.err.println("SonarCore: PracticalLogistics couldn't check if ItemStack was enabled " + exception.getMessage());
 			}
 		}
 		return true;

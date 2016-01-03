@@ -12,8 +12,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import sonar.core.SonarCore;
 import sonar.core.network.PacketMachineButton;
-import sonar.core.network.SonarPackets;
 import sonar.core.utils.helpers.FontHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -85,7 +85,7 @@ public abstract class GuiSonar extends GuiContainer {
 
 		@Override
 		public void onClicked() {
-			SonarPackets.network.sendToServer(new PacketMachineButton(id, 0, x, y, z));
+			SonarCore.network.sendToServer(new PacketMachineButton(id, 0, x, y, z));
 			buttonList.clear();
 			initGui(!paused);
 			updateScreen();
@@ -107,7 +107,7 @@ public abstract class GuiSonar extends GuiContainer {
 
 		@Override
 		public void onClicked() {
-			SonarPackets.network.sendToServer(new PacketMachineButton(id, 0, x, y, z));
+			SonarCore.network.sendToServer(new PacketMachineButton(id, 0, x, y, z));
 		}
 	}
 

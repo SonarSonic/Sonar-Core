@@ -9,7 +9,6 @@ import sonar.core.integration.SonarAPI;
 import sonar.core.utils.helpers.NBTHelper;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cofh.api.energy.EnergyStorage;
-import cpw.mods.fml.common.Optional.Method;
 
 public class TileEntityEnergy extends TileEntitySonar implements IEnergyTile {
 
@@ -44,7 +43,6 @@ public class TileEntityEnergy extends TileEntitySonar implements IEnergyTile {
 		}
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public void invalidate() {
 		super.invalidate();

@@ -3,8 +3,8 @@ package sonar.core.common.tileentity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import sonar.core.SonarCore;
 import sonar.core.network.PacketSonarSides;
-import sonar.core.network.SonarPackets;
 import cofh.api.tileentity.IReconfigurableSides;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -38,7 +38,7 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 	}
 
 	public final void sendPacket(int dimension, int side, int value) {
-		SonarPackets.network.sendToAllAround(new PacketSonarSides(xCoord, yCoord, zCoord, side, value), new TargetPoint(dimension, xCoord, yCoord, zCoord, 32));
+		SonarCore.network.sendToAllAround(new PacketSonarSides(xCoord, yCoord, zCoord, side, value), new TargetPoint(dimension, xCoord, yCoord, zCoord, 32));
 	}
 
 	@Override

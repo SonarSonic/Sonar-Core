@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.calculator.mod.api.CalculatorAPI;
@@ -99,7 +97,7 @@ public abstract class RecipeHelper {
 			} else if (objects[i] instanceof Integer) {
 				stack[i] = objects[i];
 			} else {
-				stack[i] = fixedStack(objects[i]);
+				stack[i] = ItemStackHelper.createStack(objects[i]);
 			}
 		}
 		addFinal(stack);
@@ -121,19 +119,6 @@ public abstract class RecipeHelper {
 		addRecipe(input, output);
 	}
 
-	/** turns blocks/items into ItemStacks */
-	private ItemStack fixedStack(Object obj) {
-		if (obj instanceof ItemStack) {
-			return ((ItemStack) obj).copy();
-		} else if (obj instanceof Item) {
-			return new ItemStack((Item) obj, 1);
-		} else {
-			if (!(obj instanceof Block)) {
-				throw new RuntimeException("Invalid Recipe!");
-			}
-			return new ItemStack((Block) obj, 1);
-		}
-	}
 
 	/** adds the two input and output lists */
 	public void addRecipe(Object[] input, Object[] output) {

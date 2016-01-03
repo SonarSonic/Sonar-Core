@@ -34,7 +34,7 @@ public class ChargingUtils {
 				return true;
 			}
 		}
-		if (DischargeValues.discharge().value(energy) > 0) {
+		if (DischargeValues.getValueOf(energy) > 0) {
 			return true;
 		}
 
@@ -97,8 +97,8 @@ public class ChargingUtils {
 				int itemEnergyRF = (int) manager.getCharge(energy) * 4;
 				int toTransferRF = Math.round(Math.min(itemEnergyRF, ((energyStorage.getMaxEnergyStored() - stored))));
 				return new EnergyCharge((int) (manager.discharge(energy, toTransferRF, 4, false, false, false) * 4), energy, false);
-			} else if (stored + DischargeValues.discharge().value(energy) <= energyStorage.getMaxEnergyStored()) {
-				return new EnergyCharge(+DischargeValues.discharge().value(energy), energy, true);
+			} else if (stored + DischargeValues.getValueOf(energy) <= energyStorage.getMaxEnergyStored()) {
+				return new EnergyCharge(+DischargeValues.getValueOf(energy), energy, true);
 			}
 		}
 		return new EnergyCharge(0, energy, false);

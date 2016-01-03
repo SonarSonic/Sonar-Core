@@ -17,23 +17,23 @@ public abstract class SonarItemScreen extends SonarItem {
 			return false;
 		} else {
 			ForgeDirection dir = ForgeDirection.getOrientation(side);
-			x=x+dir.offsetX;
-			y=y+dir.offsetY;
-			z=z+dir.offsetZ;
-			
+			x = x + dir.offsetX;
+			y = y + dir.offsetY;
+			z = z + dir.offsetZ;
+
 			if (!player.canPlayerEdit(x, y, z, side, stack)) {
 				return false;
 			} else if (world.isRemote) {
 				return true;
 			} else {
-				
+
 				if (world.isAirBlock(x, y, z)) {
 					if (side != 1) {
 						world.setBlock(x, y, z, getScreenBlock(), side, 3);
 						--stack.stackSize;
 					}
 					return true;
-				}else{
+				} else {
 					return false;
 				}
 			}

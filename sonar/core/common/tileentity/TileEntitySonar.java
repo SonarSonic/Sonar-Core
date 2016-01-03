@@ -10,10 +10,10 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import sonar.core.SonarCore;
 import sonar.core.integration.IWailaInfo;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketTileSync;
-import sonar.core.network.SonarPackets;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cpw.mods.fml.relauncher.Side;
@@ -83,7 +83,7 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 	}
 
 	public void requestSyncPacket() {
-		SonarPackets.network.sendToServer(new PacketRequestSync(xCoord, yCoord, zCoord));
+		SonarCore.network.sendToServer(new PacketRequestSync(xCoord, yCoord, zCoord));
 	}
 
 	public void sendSyncPacket(EntityPlayer player) {
@@ -94,7 +94,7 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 			NBTTagCompound tag = new NBTTagCompound();
 			writeData(tag, SyncType.SYNC);
 			if (!tag.hasNoTags()) {
-				SonarPackets.network.sendTo(new PacketTileSync(xCoord, yCoord, zCoord, tag), (EntityPlayerMP) player);
+				SonarCore.network.sendTo(new PacketTileSync(xCoord, yCoord, zCoord, tag), (EntityPlayerMP) player);
 			}
 		}
 	}

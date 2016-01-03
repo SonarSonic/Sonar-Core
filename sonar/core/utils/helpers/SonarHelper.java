@@ -1,12 +1,12 @@
 package sonar.core.utils.helpers;
 
-import java.util.List;
-
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
+
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,7 +15,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import sonar.core.integration.SonarAPI;
-import sonar.core.utils.BlockCoords;
+import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
@@ -45,10 +45,11 @@ public class SonarHelper {
 	 * @return if Handler can connect
 	 */
 	public static boolean isEnergyHandlerFromSide(TileEntity tile, ForgeDirection from) {
-		if (tile instanceof IEnergyHandler) {
-			IEnergyHandler handler = (IEnergyHandler) tile;
+		if (tile instanceof IEnergyProvider || tile instanceof IEnergyReceiver) {
+			IEnergyConnection handler = (IEnergyConnection) tile;
 			return handler.canConnectEnergy(from);
 		}
+
 		if (tile instanceof IEnergySink) {
 			IEnergySink handler = (IEnergySink) tile;
 			return handler.acceptsEnergyFrom(tile, from);
