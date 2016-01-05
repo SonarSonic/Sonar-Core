@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.integration.fmp.FMPHelper;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper;
+import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -15,6 +16,7 @@ public class PacketTileSync implements IMessage {
 
 	public int xCoord, yCoord, zCoord;
 	public NBTTagCompound tag;
+	public SyncType type;
 
 	public PacketTileSync() {
 	}
@@ -24,6 +26,14 @@ public class PacketTileSync implements IMessage {
 		this.yCoord = yCoord;
 		this.zCoord = zCoord;
 		this.tag = tag;
+	}
+
+	public PacketTileSync(int xCoord, int yCoord, int zCoord, NBTTagCompound tag, SyncType type) {
+		this.xCoord = xCoord;
+		this.yCoord = yCoord;
+		this.zCoord = zCoord;
+		this.tag = tag;
+		this.type = type;
 	}
 
 	@Override
@@ -39,9 +49,13 @@ public class PacketTileSync implements IMessage {
 				if (tile == null) {
 					return;
 				}
+				SyncType type = NBTHelper.SyncType.SYNC;
+				if (buf.readBoolean()) {
+					type = SyncType.getType(buf.readByte());
+				}
 				if (tile instanceof ISyncTile) {
 					ISyncTile sync = (ISyncTile) tile;
-					sync.readData(this.tag, NBTHelper.SyncType.SYNC);
+					sync.readData(this.tag, type);
 				}
 			}
 		}
@@ -53,6 +67,12 @@ public class PacketTileSync implements IMessage {
 		buf.writeInt(yCoord);
 		buf.writeInt(zCoord);
 		ByteBufUtils.writeTag(buf, tag);
+		if (type == null) {
+			buf.writeBoolean(false);
+		} else {
+			buf.writeBoolean(true);
+			buf.writeByte(SyncType.getID(type));
+		}
 	}
 
 	public static class Handler implements IMessageHandler<PacketTileSync, IMessage> {

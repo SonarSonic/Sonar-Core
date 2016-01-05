@@ -7,8 +7,11 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import sonar.core.SonarCore;
+import sonar.core.network.PacketTileSync;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import codechicken.lib.data.MCDataInput;
@@ -63,6 +66,19 @@ public abstract class SonarTilePart extends McMetaPart implements ISyncTile {
 	public final void readDesc(MCDataInput packet) {
 		super.readDesc(packet);
 		readData(packet.readNBTTagCompound(), SyncType.SAVE);
+	}
+
+	public void sendSyncPacket(EntityPlayer player) {
+		if (world().isRemote) {
+			return;
+		}
+		if (player != null && player instanceof EntityPlayerMP) {
+			NBTTagCompound tag = new NBTTagCompound();
+			writeData(tag, SyncType.SYNC);
+			if (!tag.hasNoTags()) {
+				SonarCore.network.sendTo(new PacketTileSync(x(), y(), z(), tag), (EntityPlayerMP) player);
+			}
+		}
 	}
 
 	@Override
