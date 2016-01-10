@@ -10,7 +10,7 @@ public abstract class SonarItemScreen extends SonarItem {
 
 	public abstract Block getScreenBlock();
 
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float p_77648_8_, float p_77648_9_, float p_77648_10_) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitx, float hity, float hitz) {
 		if (side == 0) {
 			return false;
 		} else if (!world.getBlock(x, y, z).getMaterial().isSolid() || world.getBlock(x, y, z) == getScreenBlock() || !world.getBlock(x, y, z).hasTileEntity(world.getBlockMetadata(x, y, z))) {

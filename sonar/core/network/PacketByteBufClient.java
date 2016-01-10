@@ -12,16 +12,16 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 
-public class PacketByteBuf implements IMessage {
+public class PacketByteBufClient implements IMessage {
 
 	public int xCoord, yCoord, zCoord, id;
 	public IByteBufTile tile;
 	public ByteBuf buf;
 
-	public PacketByteBuf() {
+	public PacketByteBufClient() {
 	}
 
-	public PacketByteBuf(IByteBufTile tile, int x, int y, int z, int id) {
+	public PacketByteBufClient(IByteBufTile tile, int x, int y, int z, int id) {
 		this.tile = tile;
 		this.xCoord = x;
 		this.yCoord = y;
@@ -36,6 +36,23 @@ public class PacketByteBuf implements IMessage {
 		this.zCoord = buf.readInt();
 		this.id = buf.readInt();
 		this.buf = buf;
+		if (Minecraft.getMinecraft() != null && Minecraft.getMinecraft().thePlayer != null) {
+			if (Minecraft.getMinecraft().thePlayer.worldObj != null) {
+				Object tile = Minecraft.getMinecraft().thePlayer.worldObj.getTileEntity(xCoord, yCoord, zCoord);
+				if (tile != null) {
+					if (tile instanceof IByteBufTile) {
+						IByteBufTile packet = (IByteBufTile) tile;
+						packet.readPacket(buf, id);
+					} else {
+						TileHandler handler = FMPHelper.getHandler(tile);
+						if (handler != null && handler instanceof IByteBufTile) {
+							((IByteBufTile) handler).readPacket(buf, id);
+						}
+					}
+				}
+			}
+		}
+
 	}
 
 	@Override
@@ -47,28 +64,10 @@ public class PacketByteBuf implements IMessage {
 		tile.writePacket(buf, id);
 	}
 
-	public static class Handler implements IMessageHandler<PacketByteBuf, IMessage> {
+	public static class HandlerClient implements IMessageHandler<PacketByteBufClient, IMessage> {
 
 		@Override
-		public IMessage onMessage(PacketByteBuf message, MessageContext ctx) {
-			World world = ctx.side == Side.SERVER ? ctx.getServerHandler().playerEntity.worldObj : Minecraft.getMinecraft().thePlayer.worldObj;
-			if (world != null) {
-				Object tile = world.getTileEntity(message.xCoord, message.yCoord, message.zCoord);
-				tile = FMPHelper.checkObject(tile);
-				if (tile == null) {
-					return null;
-				}
-
-				if (tile instanceof IByteBufTile) {
-					IByteBufTile packet = (IByteBufTile) tile;
-					packet.readPacket(message.buf, message.id);
-				} else {
-					TileHandler handler = FMPHelper.getHandler(tile);
-					if (handler != null && handler instanceof IByteBufTile) {
-						((IByteBufTile) handler).readPacket(message.buf, message.id);
-					}
-				}
-			}
+		public IMessage onMessage(PacketByteBufClient message, MessageContext ctx) {
 
 			return null;
 		}

@@ -1,6 +1,12 @@
 package sonar.core.utils.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import sonar.core.inventory.StoredItemStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import cofh.api.energy.EnergyStorage;
 
 public class NBTHelper {
@@ -17,9 +23,10 @@ public class NBTHelper {
 		}
 	}
 
+
 	public static enum SyncType {
 		SAVE, SYNC, DROP, SPECIAL;
-		
+
 		public static byte getID(SyncType type) {
 			switch (type) {
 			case SYNC:
