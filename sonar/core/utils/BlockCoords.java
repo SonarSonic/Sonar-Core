@@ -1,5 +1,8 @@
 package sonar.core.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,9 +20,12 @@ public class BlockCoords {
 	private boolean hasDimension;
 
 	/**
-	 * @param x block x coordinate
-	 * @param y block y coordinate
-	 * @param z block z coordinate
+	 * @param x
+	 *            block x coordinate
+	 * @param y
+	 *            block y coordinate
+	 * @param z
+	 *            block z coordinate
 	 */
 	public BlockCoords(int x, int y, int z) {
 		this.xCoord = x;
@@ -125,6 +131,20 @@ public class BlockCoords {
 		return new BlockCoords(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z"));
 	}
 
+	public static void writeBlockCoords(NBTTagCompound tag, List<BlockCoords> coords, String tagName) {
+		NBTTagList list = new NBTTagList();
+		if (coords != null) {
+			for (int i = 0; i < coords.size(); i++) {
+				if (coords.get(i) != null) {
+					NBTTagCompound compound = new NBTTagCompound();
+					writeToNBT(compound, coords.get(i));
+					list.appendTag(compound);
+				}
+			}
+		}
+		tag.setTag(tagName, list);
+	}
+
 	public static void writeBlockCoords(NBTTagCompound tag, BlockCoords[] coords) {
 		NBTTagList list = new NBTTagList();
 		if (coords != null) {
@@ -139,6 +159,18 @@ public class BlockCoords {
 		}
 		tag.setTag("BlockCoords", list);
 
+	}
+
+	public static List<BlockCoords> readBlockCoords(NBTTagCompound tag, String tagName) {
+		List<BlockCoords> coords = new ArrayList();
+		if (tag.hasKey(tagName)) {
+			NBTTagList list = tag.getTagList(tagName, 10);
+			for (int i = 0; i < list.tagCount(); i++) {
+				NBTTagCompound compound = list.getCompoundTagAt(i);
+				coords.add(readFromNBT(compound));
+			}
+		}
+		return coords;
 	}
 
 	public static BlockCoords[] readBlockCoords(NBTTagCompound tag, int listSize) {

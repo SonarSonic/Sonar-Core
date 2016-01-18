@@ -33,6 +33,7 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
@@ -250,7 +251,28 @@ public class RenderHelper {
 				GL11.glEnable(GL11.GL_LIGHTING);
 				GL11.glEnable(GL11.GL_DEPTH_TEST);
 			}
+		}
+	}
 
+	public static void renderFluidInGUI(FontRenderer font, TextureManager tex, FluidStack stack, long stored, int x, int y, String string) {
+		if (stack != null) {
+			RenderItem.getInstance().renderIcon(x, y, stack.getFluid().getIcon(), 16, 16);
+			if (stored > 0 || string != null) {
+				String s1 = string == null ? FontHelper.formatFluidSize(stored) : string;
+
+				final float scaleFactor = 0.5F;
+				final float inverseScaleFactor = 1.0f / scaleFactor;
+				GL11.glDisable(GL11.GL_LIGHTING);
+				GL11.glDisable(GL11.GL_DEPTH_TEST);
+				GL11.glPushMatrix();
+				GL11.glScaled(scaleFactor, scaleFactor, scaleFactor);
+				final int X = (int) (((float) x + 15.0f - font.getStringWidth(s1) * scaleFactor) * inverseScaleFactor);
+				final int Y = (int) (((float) y + 15.0f - 7.0f * scaleFactor) * inverseScaleFactor);
+				font.drawStringWithShadow(s1, X, Y, 16777215);
+				GL11.glPopMatrix();
+				GL11.glEnable(GL11.GL_LIGHTING);
+				GL11.glEnable(GL11.GL_DEPTH_TEST);
+			}
 		}
 	}
 

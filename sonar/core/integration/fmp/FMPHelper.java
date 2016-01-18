@@ -30,7 +30,7 @@ public class FMPHelper {
 	}
 
 	public static Object getTile(World world, int x, int y, int z) {
-		return world != null ? world.getTileEntity(x, y, z) : null;
+		return world != null ? checkObject(world.getTileEntity(x, y, z)) : null;
 	}
 
 	public static Object checkObject(Object object) {

@@ -6,7 +6,6 @@ import net.minecraft.tileentity.TileEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import sonar.calculator.mod.CalculatorConfig;
 import sonar.core.energy.DischargeValues;
 import sonar.core.integration.SonarAPI;
 import sonar.core.integration.SonarWailaModule;
@@ -26,6 +25,7 @@ import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -54,6 +54,10 @@ public class SonarCore {
 		DischargeValues.addValues();
 		logger.info("Added Discharge Values");
 
+	}
+
+	@EventHandler
+	public void init(FMLInitializationEvent event) {
 		if (SonarAPI.wailaLoaded()) {
 			SonarWailaModule.register();
 			logger.info("Integrated with WAILA");

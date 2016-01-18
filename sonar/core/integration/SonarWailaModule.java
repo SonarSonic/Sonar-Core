@@ -1,5 +1,6 @@
 package sonar.core.integration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -16,12 +17,25 @@ import net.minecraft.world.World;
 import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.integration.fmp.FMPHelper;
 import sonar.core.integration.fmp.SonarTilePart;
+import sonar.core.integration.fmp.handlers.TileHandler;
 
 /** Integrations with WAILA - Registers all HUDs */
 public class SonarWailaModule {
 
+	public static List<String> FMPProviders = new ArrayList();
+
 	public static void register() {
 		ModuleRegistrar.instance().registerBodyProvider(new HUDSonar(), TileEntitySonar.class);
+
+		for (String fmpPart : FMPProviders) {
+			if (fmpPart != null && !fmpPart.isEmpty()) {
+				ModuleRegistrar.instance().registerBodyProvider(new HUDSonarFMP(), fmpPart);
+			}
+		}
+	}
+
+	public static void addFMPProvider(String string) {
+		FMPProviders.add(string);
 	}
 
 	public static class HUDSonar implements IWailaDataProvider {
@@ -32,14 +46,19 @@ public class SonarWailaModule {
 		}
 
 		public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-			TileEntity handler = accessor.getTileEntity();
-			if (handler == null)
+			TileEntity te = accessor.getTileEntity();
+			if (te == null)
 				return currenttip;
-
-			if (accessor.getTileEntity() instanceof TileEntitySonar) {
-				TileEntitySonar tile = (TileEntitySonar) handler;
+			TileHandler handler = FMPHelper.getHandler(te);
+			if (handler != null && handler instanceof IWailaInfo) {
+				IWailaInfo tile = (IWailaInfo) handler;
 				tile.getWailaInfo(currenttip);
 			}
+			if (te instanceof IWailaInfo) {
+				IWailaInfo tile = (IWailaInfo) te;
+				tile.getWailaInfo(currenttip);
+			}
+
 			return currenttip;
 		}
 
@@ -73,7 +92,7 @@ public class SonarWailaModule {
 				IWailaInfo tile = (IWailaInfo) handler;
 				tile.getWailaInfo(currenttip);
 			}
-			
+
 			return currenttip;
 		}
 

@@ -124,6 +124,17 @@ public class FontHelper {
 		return roundValue(2, (float) stackSize / 1000000000) + " B";
 
 	}
+	public static String formatFluidSize(long fluidSize) {
+		if ((fluidSize < 10000)) {
+			return " " + fluidSize;
+		} else if ((fluidSize < 1000000)) {
+			return roundValue(1, (float) fluidSize / 1000) + " K";
+		} else if ((fluidSize < 1000000000)) {
+			return roundValue(1, (float) fluidSize / 1000000) + " M";
+		}
+		return roundValue(2, (float) fluidSize / 1000000000) + " B";
+
+	}
 	public static Float roundValue(int decimalPlace, Float d) {
 		BigDecimal bd = new BigDecimal(Float.toString(d));
 		bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
