@@ -14,7 +14,6 @@ public abstract class InventoryTileHandler extends TileHandler implements IInven
 	public InventoryTileHandler(boolean isMultipart) {
 		super(isMultipart);
 	}
-
 	public ItemStack[] slots;
 	
 	public void readData(NBTTagCompound nbt, SyncType type){

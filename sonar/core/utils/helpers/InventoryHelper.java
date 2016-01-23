@@ -1,5 +1,6 @@
 package sonar.core.utils.helpers;
 
+import sonar.core.inventory.IFilteredInventory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,8 +17,8 @@ public class InventoryHelper {
 	}
 
 	public static void extractItems(TileEntity pull, TileEntity push, int pullSide, int pushSide, IInventoryFilter filter) {
-		if(pull==null||push==null){
-			return ;
+		if (pull == null || push == null) {
+			return;
 		}
 		if (pull instanceof IInventory && push instanceof IInventory) {
 			IInventory start = (IInventory) pull;
@@ -81,19 +82,20 @@ public class InventoryHelper {
 		while (exported != null && canInsert(push, exported) != -999) {
 			int insert = canInsert(push, exported);
 			ItemStack pushStack = push.getInv().getStackInSlot(insert);
-			
+
 			if (exported != null) {
 				if (pushStack == null) {
 					int max = Math.min(exported.getMaxStackSize(), push.getInv().getInventoryStackLimit());
 
 					if (max >= exported.stackSize) {
-						push.getInv().setInventorySlotContents(insert, exported);						
+						push.getInv().setInventorySlotContents(insert, exported);
 						exported = null;
 					} else {
-						//push.getInv().setInventorySlotContents(insert, exported.splitStack(max));
-						//pull action????
+						// push.getInv().setInventorySlotContents(insert,
+						// exported.splitStack(max));
+						// pull action????
 					}
-				} else if(stack.getItem() == pushStack.getItem()){
+				} else if (stack.getItem() == pushStack.getItem()) {
 					int max = Math.min(pushStack.getMaxStackSize(), push.getInv().getInventoryStackLimit());
 					if (max > pushStack.stackSize) {
 						int l = Math.min(exported.stackSize, max - pushStack.stackSize);
@@ -134,20 +136,43 @@ public class InventoryHelper {
 
 	private static int canExtract(InventoryOperation pull, InventoryOperation push, int slot) {
 		ItemStack target = pull.getInv().getStackInSlot(slot);
-		if (!pull.hasAccess() || pull.hasAccess() && pull.getSidedInv().canExtractItem(slot, target, pull.side)) {
+		boolean check = false;
+		if (pull.getInv() instanceof IFilteredInventory) {
+			IFilteredInventory inv = (IFilteredInventory) pull.getInv();
+			if (!inv.canPullItem(target, pull.side)) {
+				return -999;
+			} else {
+				check = true;
+			}
+		}
+		if (!pull.hasAccess() || pull.hasAccess() && (check || pull.getSidedInv().canExtractItem(slot, target, pull.side))) {
+
 			if (target != null) {
 				int insert = canInsert(push, target);
+
 				if (insert != -999) {
 					if (!pull.hasFilter() || pull.filter.matches(target)) {
 						return insert;
 					}
 				}
+
 			}
+
 		}
+
 		return -999;
 	}
 
 	private static int canInsert(InventoryOperation push, ItemStack stack) {
+		boolean check = false;
+		if (push.getInv() instanceof IFilteredInventory) {
+			IFilteredInventory inv = (IFilteredInventory) push.getInv();
+			if (!inv.canPushItem(stack, push.side)) {
+				return -999;
+			} else {
+				check = true;
+			}
+		}
 		int emptySlot = -999;
 		if (push.access == null) {
 			for (int j = 0; j < push.getInv().getSizeInventory(); j++) {
@@ -162,7 +187,7 @@ public class InventoryHelper {
 		} else {
 			ISidedInventory inv = push.getSidedInv();
 			for (int j = 0; j < push.access.length; j++) {
-				if (inv.canInsertItem(push.access[j], stack, push.side)) {
+				if (check || inv.canInsertItem(push.access[j], stack, push.side)) {
 					ItemStack target = push.getInv().getStackInSlot(push.access[j]);
 					if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem() && target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
 						return push.access[j];
@@ -170,6 +195,7 @@ public class InventoryHelper {
 						emptySlot = push.access[j];
 					}
 				}
+
 			}
 		}
 
@@ -179,34 +205,33 @@ public class InventoryHelper {
 
 	private static void performExtract(InventoryOperation pull, InventoryOperation push, int pullID, int pushID) {
 		ItemStack pullStack = pull.getInv().getStackInSlot(pullID);
-		ItemStack pushStack= push.getSidedInv().getStackInSlot(pushID);
-		
-		if (pullStack != null && (!push.hasFilter()|| push.filter.matches(pullStack))) {
+		ItemStack pushStack = push.getSidedInv().getStackInSlot(pushID);
+
+		if (pullStack != null && (!push.hasFilter() || push.filter.matches(pullStack))) {
 			if (pushStack == null) {
 				int max = Math.min(pullStack.getMaxStackSize(), push.getInv().getInventoryStackLimit());
 
 				if (max >= pullStack.stackSize) {
 					push.getInv().setInventorySlotContents(pushID, pullStack);
 					pull.getInv().setInventorySlotContents(pullID, null);
-				} else {					
-					//push.getInv().setInventorySlotContents(pushID, pullStack.splitStack(max));
-					//pull change?
+				} else {
+					// push.getInv().setInventorySlotContents(pushID,
+					// pullStack.splitStack(max));
+					// pull change?
 				}
-			} else if(pullStack.getItem() == pushStack.getItem()){
+			} else if (pullStack.getItem() == pushStack.getItem()) {
 				int max = Math.min(pushStack.getMaxStackSize(), push.getInv().getInventoryStackLimit());
 				if (max > pushStack.stackSize) {
 					int l = Math.min(pullStack.stackSize, max - pushStack.stackSize);
 
-					pull.getInv().decrStackSize(pullID, l);					
+					pull.getInv().decrStackSize(pullID, l);
 					ItemStack moveStack = pushStack.copy();
 					if (pullStack.stackSize - l <= 0) {
 						pull.getInv().setInventorySlotContents(pullID, null);
 					}
 					moveStack.stackSize += l;
 					push.getInv().setInventorySlotContents(pushID, moveStack);
-					
 
-					
 				}
 			}
 		}

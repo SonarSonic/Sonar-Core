@@ -205,7 +205,6 @@ public class RenderHelper {
 
 	public static void renderBlockCollisions(World world, int x, int y, int z) {
 		if (world != null) {
-			System.out.print(world.getBlock(x, y, z));
 			if (world.getBlock(x, y, z) instanceof SonarBlock) {
 				SonarBlock block = (SonarBlock) world.getBlock(x, y, z);
 				if (block.hasSpecialCollisionBox()) {

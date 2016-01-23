@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.SonarCore;
+import sonar.core.utils.INBTObject;
 import sonar.core.utils.IRegistryObject;
 
 public abstract class RegistryHelper<T extends IRegistryObject> {
 
+	
 	private List<T> objects = new ArrayList();
 	private Map<String, Byte> objectIDs = new THashMap<String, Byte>();
 	private Map<Byte, String> objectNames = new THashMap<Byte, String>();
@@ -74,4 +77,5 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 		byte id = objectIDs.get(name);
 		return id;
 	}
+	
 }
