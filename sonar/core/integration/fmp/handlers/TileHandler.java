@@ -13,10 +13,12 @@ import sonar.core.utils.helpers.NBTHelper.SyncType;
  */
 public abstract class TileHandler implements ISyncTile {
 
+	public TileEntity tile;
 	public SyncBoolean isMultipart = new SyncBoolean(0);
 
-	public TileHandler(boolean isMultipart) {
+	public TileHandler(boolean isMultipart, TileEntity tile) {
 		this.isMultipart.setBoolean(isMultipart);
+		this.tile = tile;
 	}
 
 	public abstract void update(TileEntity te);
@@ -29,6 +31,7 @@ public abstract class TileHandler implements ISyncTile {
 		isMultipart.writeToNBT(nbt, type);
 	}
 
-	public abstract void removed(World world, int x, int y, int z, int meta);
+	public void removed(World world, int x, int y, int z, int meta) {
+	}
 
 }

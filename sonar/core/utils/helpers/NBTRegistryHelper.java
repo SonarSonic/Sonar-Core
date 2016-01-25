@@ -20,7 +20,6 @@ public abstract class NBTRegistryHelper<T extends INBTObject> extends RegistryHe
 	public abstract boolean equalTypes(T target, T current);
 
 	public static abstract class Buf<T extends IBufObject> extends NBTRegistryHelper<T> implements IBufManager<T> {
-
 		public T readFromBuf(ByteBuf buf) {
 			return (T) NBTHelper.readBufObject(buf, this);
 		}

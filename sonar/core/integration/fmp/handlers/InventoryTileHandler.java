@@ -11,8 +11,8 @@ import net.minecraft.world.World;
 
 public abstract class InventoryTileHandler extends TileHandler implements IInventory {
 
-	public InventoryTileHandler(boolean isMultipart) {
-		super(isMultipart);
+	public InventoryTileHandler(boolean isMultipart, TileEntity tile) {
+		super(isMultipart, tile);
 	}
 	public ItemStack[] slots;
 	

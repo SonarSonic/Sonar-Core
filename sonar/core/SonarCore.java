@@ -36,7 +36,7 @@ import cpw.mods.fml.relauncher.Side;
 public class SonarCore {
 
 	public static final String modid = "SonarCore";
-	public static final String version = "1.0.3";
+	public static final String version = "1.0.4";
 
 	@Instance(modid)
 	public static SonarCore instance;

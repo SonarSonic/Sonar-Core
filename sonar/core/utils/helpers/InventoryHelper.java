@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class InventoryHelper {
 
@@ -129,7 +130,7 @@ public class InventoryHelper {
 				check = true;
 			}
 		}
-		if (!pull.hasAccess() || pull.hasAccess() && (check || pull.getSidedInv().canExtractItem(slot, target, pull.side))) {
+		if (!pull.hasAccess() || pull.hasAccess() && (check || target!=null && pull.getSidedInv().canExtractItem(slot, target, pull.side))) {
 
 			if (target != null) {
 				int insert = canInsert(push, target);
@@ -171,6 +172,8 @@ public class InventoryHelper {
 		} else {
 			ISidedInventory inv = push.getSidedInv();
 			for (int j = 0; j < push.access.length; j++) {
+				System.out.print(push.side);
+				
 				if (check || inv.canInsertItem(push.access[j], stack, push.side)) {
 					ItemStack target = push.getInv().getStackInSlot(push.access[j]);
 					if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem() && target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {

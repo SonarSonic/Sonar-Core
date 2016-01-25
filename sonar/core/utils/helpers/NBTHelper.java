@@ -3,6 +3,7 @@ package sonar.core.utils.helpers;
 import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import sonar.core.SonarCore;
@@ -22,39 +23,39 @@ public class NBTHelper {
 
 	public static void readSyncedNBTObjectList(String tagName, NBTTagCompound tag, NBTRegistryHelper<? extends INBTObject> helper, List objectList) {
 		if (tag.hasKey(tagName + "null")) {
-			objectList = new ArrayList();
+			objectList = Collections.EMPTY_LIST;
 			return;
-		}
+		} else if (tag.hasKey(tagName)) {
+			NBTTagList list = tag.getTagList(tagName, 10);
+			if (objectList == null) {
+				objectList = new ArrayList();
+			}
 
-		NBTTagList list = tag.getTagList(tagName, 10);
-		if (objectList == null) {
-			objectList = new ArrayList();
-		}
+			for (int i = 0; i < list.tagCount(); i++) {
+				NBTTagCompound compound = list.getCompoundTagAt(i);
+				int slot = compound.getInteger("Slot");
+				boolean set = slot < objectList.size();
+				switch (compound.getByte("f")) {
+				case 0:
+					if (set) {
+						objectList.set(slot, helper.readFromNBT(compound));
+					} else {
+						objectList.add(slot, helper.readFromNBT(compound));
+					}
+					break;
+				case 1:
+					long stored = compound.getLong("Stored");
+					if (stored != 0) {
+						objectList.set(slot, helper.readFromNBT(compound));
+					} else {
+						objectList.set(slot, null);
 
-		for (int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound compound = list.getCompoundTagAt(i);
-			int slot = compound.getInteger("Slot");
-			boolean set = slot < objectList.size();
-			switch (compound.getByte("f")) {
-			case 0:				
-				if (set) {
-					objectList.set(slot, helper.readFromNBT(compound));
-				} else {
-					objectList.add(slot, helper.readFromNBT(compound));
-				}
-				break;
-			case 1:
-				long stored = compound.getLong("Stored");
-				if (stored != 0) {
-					objectList.set(slot, helper.readFromNBT(compound));
-				} else {
+					}
+					break;
+				case 2:
 					objectList.set(slot, null);
-
+					break;
 				}
-				break;
-			case 2:
-				objectList.set(slot, null);
-				break;
 			}
 		}
 	}
@@ -65,11 +66,6 @@ public class NBTHelper {
 		}
 		if (lastList == null) {
 			lastList = new ArrayList();
-		}
-		if (objectList.size() <= 0 && (!(lastList.size() <= 0))) {
-			tag.setBoolean(tagName + "null", true);
-			lastList = new ArrayList();
-			return;
 		}
 		NBTTagList list = new NBTTagList();
 		int size = Math.max(objectList.size(), lastList.size());
@@ -107,24 +103,27 @@ public class NBTHelper {
 		}
 		if (list.tagCount() != 0) {
 			tag.setTag(tagName, list);
+
 		}
 	}
 
 	public static List<? extends INBTObject> readNBTObjectList(String tagName, NBTTagCompound tag, RegistryHelper<? extends INBTObject> helper) {
-		NBTTagList list = tag.getTagList(tagName, 10);
 		List<INBTObject> objects = new ArrayList();
-		for (int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound compound = list.getCompoundTagAt(i);
-			objects.add(readNBTObject(compound, helper));
+		if (tag.hasKey(tagName)) {
+			NBTTagList list = tag.getTagList(tagName, 10);
+			for (int i = 0; i < list.tagCount(); i++) {
+				NBTTagCompound compound = list.getCompoundTagAt(i);
+				objects.add(readNBTObject(compound, helper));
+			}
 		}
 		return objects;
 	}
 
 	public static void writeNBTObjectList(String tagName, NBTTagCompound tag, List<? extends INBTObject> objects) {
-		NBTTagList list = new NBTTagList();
-		if (objects == null) {
-			objects = new ArrayList();
+		if (objects == null || objects.isEmpty() || objects.size() == 0) {
+			return;
 		}
+		NBTTagList list = new NBTTagList();
 		for (int i = 0; i < objects.size(); i++) {
 			if (objects.get(i) != null) {
 				NBTTagCompound compound = new NBTTagCompound();
@@ -236,7 +235,7 @@ public class NBTHelper {
 	}
 
 	public static enum SyncType {
-		SAVE, SYNC, DROP, SPECIAL;
+		SAVE, SYNC, DROP, SPECIAL, PACKET;
 
 		public static byte getID(SyncType type) {
 			switch (type) {
@@ -246,6 +245,8 @@ public class NBTHelper {
 				return 2;
 			case SPECIAL:
 				return 3;
+			case PACKET:
+				return 4;
 			default:
 				return 0;
 			}
@@ -259,6 +260,8 @@ public class NBTHelper {
 				return DROP;
 			case 3:
 				return SPECIAL;
+			case 4:
+				return PACKET;
 			default:
 				return SAVE;
 			}

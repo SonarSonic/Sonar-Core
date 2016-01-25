@@ -17,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import sonar.core.SonarCore;
+import sonar.core.network.PacketByteBufServer;
 import sonar.core.network.PacketMachineButton;
 import sonar.core.utils.helpers.FontHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -24,13 +25,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class GuiSonar extends GuiContainer {
 
-	public final int x, y, z;
+	public TileEntity entity;
 
 	public GuiSonar(Container container, TileEntity entity) {
 		super(container);
-		this.x = entity.xCoord;
-		this.y = entity.yCoord;
-		this.z = entity.zCoord;
+		this.entity = entity;
 	}
 
 	public abstract ResourceLocation getBackground();
@@ -42,6 +41,26 @@ public abstract class GuiSonar extends GuiContainer {
 
 	public void initGui(boolean pause) {
 
+	}
+
+	public void drawNormalToolTip(ItemStack stack, int x, int y) {
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_LIGHTING);
+
+		this.renderToolTip(stack, x - guiLeft, y - guiTop);
+
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+	}
+
+	public void drawSpecialToolTip(List list, int x, int y, FontRenderer font) {
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		drawHoveringText(list, x - guiLeft, y - guiTop, (font == null ? fontRendererObj : font));
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
 	}
 
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
@@ -89,7 +108,7 @@ public abstract class GuiSonar extends GuiContainer {
 
 		@Override
 		public void onClicked() {
-			SonarCore.network.sendToServer(new PacketMachineButton(id, 0, x, y, z));
+			SonarCore.network.sendToServer(new PacketMachineButton(id, 0, entity.xCoord, entity.yCoord, entity.zCoord));
 			buttonList.clear();
 			initGui(!paused);
 			updateScreen();
@@ -111,7 +130,7 @@ public abstract class GuiSonar extends GuiContainer {
 
 		@Override
 		public void onClicked() {
-			SonarCore.network.sendToServer(new PacketMachineButton(id, 0, x, y, z));
+			SonarCore.network.sendToServer(new PacketMachineButton(id, 0, entity.xCoord, entity.yCoord, entity.zCoord));
 		}
 	}
 
