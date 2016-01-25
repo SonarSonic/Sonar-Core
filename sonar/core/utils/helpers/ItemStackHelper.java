@@ -2,17 +2,21 @@ package sonar.core.utils.helpers;
 
 import sonar.core.integration.SonarAPI;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemStackHelper {
 
 	/**
 	 * checks if the two itemstacks are equal and can be merged
 	 * 
-	 * @param stack1 first stack your checking
-	 * @param stack2 second stack your checking
+	 * @param stack1
+	 *            first stack your checking
+	 * @param stack2
+	 *            second stack your checking
 	 * @return if they are equal and can be merged
 	 */
 	public static boolean equalStacks(ItemStack stack1, ItemStack stack2) {
@@ -22,8 +26,10 @@ public class ItemStackHelper {
 	/**
 	 * checks if two itemstacks are the same (and nothing more!)
 	 * 
-	 * @param stack1 first stack your checking
-	 * @param stack2 second stack your checking
+	 * @param stack1
+	 *            first stack your checking
+	 * @param stack2
+	 *            second stack your checking
 	 * @return if they are equal and can be merged
 	 */
 	public static boolean equalStacksRegular(ItemStack stack1, ItemStack stack2) {
@@ -31,7 +37,8 @@ public class ItemStackHelper {
 	}
 
 	/**
-	 * fixes the problem with ItemStacks having no stack size, and sets it to the inputted number
+	 * fixes the problem with ItemStacks having no stack size, and sets it to
+	 * the inputted number
 	 */
 	public static ItemStack restoreItemStack(ItemStack stack, int size) {
 		ItemStack result = stack.copy();
@@ -44,7 +51,8 @@ public class ItemStackHelper {
 	}
 
 	/**
-	 * @param item Item you are checking
+	 * @param item
+	 *            Item you are checking
 	 * @return if the stack is an circuit
 	 */
 	public static boolean isCircuit(Item item) {
@@ -73,5 +81,34 @@ public class ItemStackHelper {
 			}
 			return new ItemStack((Block) obj, 1);
 		}
+	}
+
+	/**
+	 * checks if the two input itemstacks come from the same mod.
+	 * 
+	 * @param target
+	 * @param stack
+	 * @return
+	 */
+	public static boolean matchingModid(ItemStack target, ItemStack stack) {
+		UniqueIdentifier targetID = GameRegistry.findUniqueIdentifierFor(target.getItem());
+		UniqueIdentifier stackID = GameRegistry.findUniqueIdentifierFor(stack.getItem());
+		if (targetID != null && stackID != null && targetID.modId != null && stackID.modId != null) {
+			return targetID.modId.equals(stackID.modId);
+		}
+		return false;
+	}
+
+	public static boolean matchingOreDictID(ItemStack target, ItemStack stack) {
+		int[] stackIDs = OreDictionary.getOreIDs(stack);
+		int[] filterIDs = OreDictionary.getOreIDs(target);
+		for (int sID : stackIDs) {
+			for (int fID : filterIDs) {
+				if (sID == fID) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

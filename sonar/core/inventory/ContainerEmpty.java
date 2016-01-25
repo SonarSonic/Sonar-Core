@@ -16,9 +16,9 @@ public class ContainerEmpty extends ContainerSync {
 			}
 		}
 
-		for (int i = 0; i < 9; ++i) {
-			this.addSlotToContainer(new Slot(player, i, 8 + i * 18, 142));
-		}
+		//for (int i = 0; i < 9; ++i) {
+		//	this.addSlotToContainer(new Slot(player, i, 8 + i * 18, 142));
+		//}
 	}
 
 	@Override

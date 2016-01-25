@@ -3,12 +3,14 @@ package sonar.core.utils.helpers;
 import sonar.core.inventory.IFilteredInventory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
+import net.minecraft.block.BlockHopper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntityHopper;
 
 public class InventoryHelper {
 
@@ -21,24 +23,10 @@ public class InventoryHelper {
 			return;
 		}
 		if (pull instanceof IInventory && push instanceof IInventory) {
-			IInventory start = (IInventory) pull;
-			IInventory stop = (IInventory) push;
+			// IInventory start = (IInventory) pull;
+			// IInventory stop = (IInventory) push;
 			int[] pullAccess = null, pushAccess = null;
 
-			if (pull instanceof TileEntityChest) {
-				Block block = pull.blockType;
-
-				if (block instanceof BlockChest) {
-					start = ((BlockChest) block).func_149951_m(pull.getWorldObj(), pull.xCoord, pull.yCoord, pull.zCoord);
-				}
-			}
-			if (push instanceof TileEntityChest) {
-				Block block = push.blockType;
-
-				if (block instanceof BlockChest) {
-					stop = ((BlockChest) block).func_149951_m(push.getWorldObj(), push.xCoord, push.yCoord, push.zCoord);
-				}
-			}
 			if (pull instanceof ISidedInventory) {
 				pullAccess = ((ISidedInventory) pull).getAccessibleSlotsFromSide(pullSide);
 			}
@@ -46,7 +34,7 @@ public class InventoryHelper {
 				pushAccess = ((ISidedInventory) push).getAccessibleSlotsFromSide(pushSide);
 			}
 
-			extractItems(new InventoryOperation(start, pullSide, pullAccess, filter), new InventoryOperation(stop, pushSide, pushAccess, filter));
+			extractItems(new InventoryOperation(pull, pullSide, pullAccess, filter), new InventoryOperation(push, pushSide, pushAccess, filter));
 		}
 	}
 
@@ -56,21 +44,11 @@ public class InventoryHelper {
 		}
 		if (filter == null || filter.matches(stack)) {
 			if (push instanceof IInventory) {
-				IInventory start = (IInventory) push;
 				int[] pushAccess = null;
-
-				if (push instanceof TileEntityChest) {
-					Block block = push.blockType;
-
-					if (block instanceof BlockChest) {
-						start = ((BlockChest) block).func_149951_m(push.getWorldObj(), push.xCoord, push.yCoord, push.zCoord);
-					}
-				}
 				if (push instanceof ISidedInventory) {
 					pushAccess = ((ISidedInventory) push).getAccessibleSlotsFromSide(pushSide);
 				}
-
-				return exportItems(new InventoryOperation(start, pushSide, pushAccess, null), stack);
+				return exportItems(new InventoryOperation(push, pushSide, pushAccess, null), stack);
 
 			}
 		}
@@ -137,6 +115,12 @@ public class InventoryHelper {
 	private static int canExtract(InventoryOperation pull, InventoryOperation push, int slot) {
 		ItemStack target = pull.getInv().getStackInSlot(slot);
 		boolean check = false;
+		if (pull.inv instanceof TileEntityHopper) {
+			if (BlockHopper.func_149917_c(pull.inv.getBlockMetadata())) {
+				return -999;
+			}
+		}
+
 		if (pull.getInv() instanceof IFilteredInventory) {
 			IFilteredInventory inv = (IFilteredInventory) pull.getInv();
 			if (!inv.canPullItem(target, pull.side)) {
@@ -205,7 +189,7 @@ public class InventoryHelper {
 
 	private static void performExtract(InventoryOperation pull, InventoryOperation push, int pullID, int pushID) {
 		ItemStack pullStack = pull.getInv().getStackInSlot(pullID);
-		ItemStack pushStack = push.getSidedInv().getStackInSlot(pushID);
+		ItemStack pushStack = push.getInv().getStackInSlot(pushID);
 
 		if (pullStack != null && (!push.hasFilter() || push.filter.matches(pullStack))) {
 			if (pushStack == null) {
@@ -221,29 +205,28 @@ public class InventoryHelper {
 				}
 			} else if (pullStack.getItem() == pushStack.getItem()) {
 				int max = Math.min(pushStack.getMaxStackSize(), push.getInv().getInventoryStackLimit());
-				if (max > pushStack.stackSize) {
-					int l = Math.min(pullStack.stackSize, max - pushStack.stackSize);
+				if (max > push.getInv().getStackInSlot(pushID).stackSize) {
+					int l = Math.min(pull.getInv().getStackInSlot(pullID).stackSize, max - push.getInv().getStackInSlot(pushID).stackSize);
 
 					pull.getInv().decrStackSize(pullID, l);
-					ItemStack moveStack = pushStack.copy();
-					if (pullStack.stackSize - l <= 0) {
+					ItemStack moveStack = push.getInv().getStackInSlot(pushID).copy();
+					if (push.getInv().getStackInSlot(pushID).stackSize - l <= 0) {
 						pull.getInv().setInventorySlotContents(pullID, null);
 					}
 					moveStack.stackSize += l;
 					push.getInv().setInventorySlotContents(pushID, moveStack);
-
 				}
 			}
 		}
 	}
 
 	private static class InventoryOperation {
-		public Object inv;
+		public TileEntity inv;
 		public int side;
 		private int[] access;
 		public IInventoryFilter filter;
 
-		public InventoryOperation(Object inv, int side, int[] access, IInventoryFilter filter) {
+		public InventoryOperation(TileEntity inv, int side, int[] access, IInventoryFilter filter) {
 			this.inv = inv;
 			this.side = side;
 			this.access = access;
@@ -265,6 +248,13 @@ public class InventoryHelper {
 		}
 
 		public IInventory getInv() {
+			if (inv instanceof TileEntityChest) {
+				Block block = inv.blockType;
+
+				if (block instanceof BlockChest) {
+					return ((BlockChest) block).func_149951_m(inv.getWorldObj(), inv.xCoord, inv.yCoord, inv.zCoord);
+				}
+			}
 			return (IInventory) inv;
 		}
 

@@ -42,7 +42,7 @@ public class PacketTileSync implements IMessage {
 		this.yCoord = buf.readInt();
 		this.zCoord = buf.readInt();
 		this.tag = ByteBufUtils.readTag(buf);
-		if (Minecraft.getMinecraft() != null && Minecraft.getMinecraft().thePlayer != null) {
+		if (tag!=null && Minecraft.getMinecraft() != null && Minecraft.getMinecraft().thePlayer != null) {
 			if (Minecraft.getMinecraft().thePlayer.worldObj != null) {
 				Object tile = Minecraft.getMinecraft().thePlayer.worldObj.getTileEntity(xCoord, yCoord, zCoord);
 				tile = FMPHelper.checkObject(tile);

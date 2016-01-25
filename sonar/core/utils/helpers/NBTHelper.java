@@ -20,7 +20,97 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 
 public class NBTHelper {
 
-	public static List<INBTObject> readNBTObjectList(String tagName, NBTTagCompound tag, RegistryHelper<? extends INBTObject> helper) {
+	public static void readSyncedNBTObjectList(String tagName, NBTTagCompound tag, NBTRegistryHelper<? extends INBTObject> helper, List objectList) {
+		if (tag.hasKey(tagName + "null")) {
+			objectList = new ArrayList();
+			return;
+		}
+
+		NBTTagList list = tag.getTagList(tagName, 10);
+		if (objectList == null) {
+			objectList = new ArrayList();
+		}
+
+		for (int i = 0; i < list.tagCount(); i++) {
+			NBTTagCompound compound = list.getCompoundTagAt(i);
+			int slot = compound.getInteger("Slot");
+			boolean set = slot < objectList.size();
+			switch (compound.getByte("f")) {
+			case 0:				
+				if (set) {
+					objectList.set(slot, helper.readFromNBT(compound));
+				} else {
+					objectList.add(slot, helper.readFromNBT(compound));
+				}
+				break;
+			case 1:
+				long stored = compound.getLong("Stored");
+				if (stored != 0) {
+					objectList.set(slot, helper.readFromNBT(compound));
+				} else {
+					objectList.set(slot, null);
+
+				}
+				break;
+			case 2:
+				objectList.set(slot, null);
+				break;
+			}
+		}
+	}
+
+	public static void writeSyncedNBTObjectList(String tagName, NBTTagCompound tag, NBTRegistryHelper helper, List objectList, List lastList) {
+		if (objectList == null) {
+			objectList = new ArrayList();
+		}
+		if (lastList == null) {
+			lastList = new ArrayList();
+		}
+		if (objectList.size() <= 0 && (!(lastList.size() <= 0))) {
+			tag.setBoolean(tagName + "null", true);
+			lastList = new ArrayList();
+			return;
+		}
+		NBTTagList list = new NBTTagList();
+		int size = Math.max(objectList.size(), lastList.size());
+		for (int i = 0; i < size; ++i) {
+			INBTObject current = null;
+			INBTObject last = null;
+			if (i < objectList.size()) {
+				current = (INBTObject) objectList.get(i);
+			}
+			if (i < lastList.size()) {
+				last = (INBTObject) lastList.get(i);
+			}
+			NBTTagCompound compound = new NBTTagCompound();
+			if (current != null) {
+				if (last != null) {
+					if (!helper.equalTypes(current, last)) {
+						compound.setByte("f", (byte) 0);
+						lastList.set(i, current);
+						helper.writeToNBT(compound, (INBTObject) objectList.get(i));
+					}
+				} else {
+					compound.setByte("f", (byte) 0);
+					lastList.add(i, current);
+					helper.writeToNBT(compound, (INBTObject) objectList.get(i));
+				}
+			} else if (last != null) {
+				lastList.set(i, null);
+				compound.setByte("f", (byte) 2);
+			}
+			if (!compound.hasNoTags()) {
+				compound.setInteger("Slot", i);
+				list.appendTag(compound);
+			}
+
+		}
+		if (list.tagCount() != 0) {
+			tag.setTag(tagName, list);
+		}
+	}
+
+	public static List<? extends INBTObject> readNBTObjectList(String tagName, NBTTagCompound tag, RegistryHelper<? extends INBTObject> helper) {
 		NBTTagList list = tag.getTagList(tagName, 10);
 		List<INBTObject> objects = new ArrayList();
 		for (int i = 0; i < list.tagCount(); i++) {

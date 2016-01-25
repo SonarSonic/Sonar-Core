@@ -13,7 +13,6 @@ import sonar.core.utils.IRegistryObject;
 
 public abstract class RegistryHelper<T extends IRegistryObject> {
 
-	
 	private List<T> objects = new ArrayList();
 	private Map<String, Byte> objectIDs = new THashMap<String, Byte>();
 	private Map<Byte, String> objectNames = new THashMap<Byte, String>();

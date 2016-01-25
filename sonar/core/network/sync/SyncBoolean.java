@@ -52,7 +52,9 @@ public class SyncBoolean implements ISyncPart {
 				this.c = nbt.getBoolean(String.valueOf(id));
 			}
 		} else if (type == SyncType.SAVE) {
-			this.c = nbt.getBoolean(String.valueOf(id));
+			if (nbt.hasKey(String.valueOf(id))) {
+				this.c = nbt.getBoolean(String.valueOf(id));
+			}
 		}
 	}
 
