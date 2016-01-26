@@ -18,6 +18,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import sonar.core.integration.SonarAPI;
+import sonar.core.inventory.IAdditionalInventory;
+import sonar.core.inventory.IDropInventory;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.IUpgradeCircuits;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
@@ -195,59 +197,52 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block oldblock, int oldMetadata) {
 
+		List<ItemStack> drops = new ArrayList();
 		TileEntity entity = world.getTileEntity(x, y, z);
-
-		if (entity != null && entity instanceof IInventory) {
-			IInventory tileentity = (IInventory) world.getTileEntity(x, y, z);
-			for (int i = 0; i < tileentity.getSizeInventory(); i++) {
-				ItemStack itemstack = tileentity.getStackInSlot(i);
-
-				if (itemstack != null) {
-					float f = this.rand.nextFloat() * 0.8F + 0.1F;
-					float f1 = this.rand.nextFloat() * 0.8F + 0.1F;
-					float f2 = this.rand.nextFloat() * 0.8F + 0.1F;
-
-					while (itemstack.stackSize > 0) {
-						int j = this.rand.nextInt(21) + 10;
-
-						if (j > itemstack.stackSize) {
-							j = itemstack.stackSize;
+		if (entity != null) {
+			if (entity instanceof IDropInventory) {
+				IDropInventory inv = (IDropInventory) entity;
+				if (inv.canDrop() && inv.dropSlots() != null) {
+					int[] slots = inv.dropSlots();
+					for (int i = 0; i < slots.length; i++) {
+						ItemStack itemstack = inv.getStackInSlot(slots[i]);
+						if (itemstack != null) {
+							drops.add(itemstack);
 						}
-
-						itemstack.stackSize -= j;
-
-						EntityItem item = new EntityItem(world, x + f, y + f1, z + f2, new ItemStack(itemstack.getItem(), j, itemstack.getItemDamage()));
-
-						if (itemstack.hasTagCompound()) {
-							item.getEntityItem().setTagCompound((NBTTagCompound) itemstack.getTagCompound().copy());
-						}
-
-						world.spawnEntityInWorld(item);
+					}
+				}
+			} else if (entity instanceof IInventory) {
+				IInventory inv = (IInventory) entity;
+				for (int i = 0; i < inv.getSizeInventory(); i++) {
+					ItemStack itemstack = inv.getStackInSlot(i);
+					if (itemstack != null) {
+						drops.add(itemstack);
 					}
 				}
 			}
-
-			world.func_147453_f(x, y, z, oldblock);
-		}
-		if (entity != null && entity instanceof IUpgradeCircuits) {
-			IUpgradeCircuits tileentity = (IUpgradeCircuits) entity;
-			float f = this.rand.nextFloat() * 0.8F + 0.1F;
-			float f1 = this.rand.nextFloat() * 0.8F + 0.1F;
-			float f2 = this.rand.nextFloat() * 0.8F + 0.1F;
-			if (tileentity.getUpgrades(0) > 0) {
-				EntityItem speed = new EntityItem(world, x + f, y + f1, z + f2, new ItemStack(GameRegistry.findItem("Calculator", "SpeedUpgrade"), tileentity.getUpgrades(0)));
-				world.spawnEntityInWorld(speed);
-			}
-			if (tileentity.getUpgrades(1) > 0) {
-				EntityItem energy = new EntityItem(world, x + f, y + f1, z + f2, new ItemStack(GameRegistry.findItem("Calculator", "EnergyUpgrade"), tileentity.getUpgrades(1)));
-				world.spawnEntityInWorld(energy);
-			}
-			if (tileentity.getUpgrades(2) > 0) {
-				EntityItem energy = new EntityItem(world, x + f, y + f1, z + f2, new ItemStack(GameRegistry.findItem("Calculator", "VoidUpgrade"), tileentity.getUpgrades(2)));
-				world.spawnEntityInWorld(energy);
+			if (entity instanceof IAdditionalInventory) {
+				IAdditionalInventory additionalInv = (IAdditionalInventory) entity;
+				ItemStack[] additionalStacks = additionalInv.getAdditionalStacks();
+				if (additionalStacks != null) {
+					for (ItemStack stack : additionalStacks) {
+						if (stack != null) {
+							drops.add(stack);
+						}
+					}
+				}
 			}
 		}
 
+		for (ItemStack stack : drops) {
+			if (stack != null) {
+				float f = this.rand.nextFloat() * 0.8F + 0.1F;
+				float f1 = this.rand.nextFloat() * 0.8F + 0.1F;
+				float f2 = this.rand.nextFloat() * 0.8F + 0.1F;
+
+				EntityItem dropStack = new EntityItem(world, x + f, y + f1, z + f2, stack);
+				world.spawnEntityInWorld(dropStack);
+			}
+		}
 		super.breakBlock(world, x, y, z, oldblock, oldMetadata);
 
 	}
@@ -297,7 +292,7 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 					list.add(collision);
 				}
 			}
-		}else{
+		} else {
 			super.addCollisionBoxesToList(world, x, y, z, axis, list, entity);
 		}
 	}

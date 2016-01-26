@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /** an object with a blocks x, y and z coordinates */
 public class BlockCoords {
@@ -212,4 +213,7 @@ public class BlockCoords {
 		return true;
 	}
 
+	public static BlockCoords translateCoords(BlockCoords coords, ForgeDirection dir) {
+		return new BlockCoords(coords.getX() + dir.offsetX, coords.getY() + dir.offsetY, coords.getZ() + dir.offsetZ);
+	}
 }
