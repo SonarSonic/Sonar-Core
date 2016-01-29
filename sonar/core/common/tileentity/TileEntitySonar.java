@@ -31,9 +31,7 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 		return !worldObj.isRemote;
 	}
 
-	public void onLoaded() {
-
-	}
+	public void onLoaded() {}
 
 	public void updateEntity() {
 		if (load) {
@@ -71,11 +69,9 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 		this.load = true;
 	}
 
-	public void readData(NBTTagCompound nbt, SyncType type) {
-	}
+	public void readData(NBTTagCompound nbt, SyncType type) {}
 
-	public void writeData(NBTTagCompound nbt, SyncType type) {
-	}
+	public void writeData(NBTTagCompound nbt, SyncType type) {}
 
 	@SideOnly(Side.CLIENT)
 	public List<String> getWailaInfo(List<String> currenttip) {

@@ -171,9 +171,7 @@ public class InventoryHelper {
 			return emptySlot;
 		} else {
 			ISidedInventory inv = push.getSidedInv();
-			for (int j = 0; j < push.access.length; j++) {
-				System.out.print(push.side);
-				
+			for (int j = 0; j < push.access.length; j++) {				
 				if (check || inv.canInsertItem(push.access[j], stack, push.side)) {
 					ItemStack target = push.getInv().getStackInSlot(push.access[j]);
 					if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem() && target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {

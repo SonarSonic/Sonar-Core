@@ -47,7 +47,12 @@ public class BlockCoords {
 		this.xCoord = tile.xCoord;
 		this.yCoord = tile.yCoord;
 		this.zCoord = tile.zCoord;
-		this.hasDimension = false;
+		if (tile.getWorldObj() == null) {
+			this.hasDimension = false;
+		}else{
+			this.hasDimension = true;
+			this.dimension = tile.getWorldObj().provider.dimensionId;
+		}
 	}
 
 	public BlockCoords(TileEntity tile, int dimension) {
@@ -102,7 +107,7 @@ public class BlockCoords {
 	}
 
 	public String getRender() {
-		return "X: " + this.xCoord + " Y: " + this.yCoord + " Z: " + this.zCoord;
+		return "X: " + this.xCoord + " Y: " + this.yCoord + " Z: " + this.zCoord + " D: " + this.dimension;
 
 	}
 
@@ -214,6 +219,10 @@ public class BlockCoords {
 	}
 
 	public static BlockCoords translateCoords(BlockCoords coords, ForgeDirection dir) {
-		return new BlockCoords(coords.getX() + dir.offsetX, coords.getY() + dir.offsetY, coords.getZ() + dir.offsetZ);
+		return new BlockCoords(coords.getX() + dir.offsetX, coords.getY() + dir.offsetY, coords.getZ() + dir.offsetZ, coords.dimension);
+	}
+	
+	public String toString(){
+		return getRender();		
 	}
 }

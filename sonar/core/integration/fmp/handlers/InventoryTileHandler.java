@@ -127,7 +127,6 @@ public abstract class InventoryTileHandler extends TileHandler implements IInven
 
 	@Override
 	public void markDirty() {
-		System.out.print("mark");
 	}
 
 	@Override
