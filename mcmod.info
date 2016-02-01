@@ -3,7 +3,7 @@
 "modid": "SonarCore",
 "name": "SonarCore",
 "description": "Sonar's Modding Framework",
-"version": "1.0.4",
+"version": "1.0.5",
 "mcversion": "1.7.10",
 "updateUrl": "",
 "authors": ["Ollie Lansdell"],

@@ -15,6 +15,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import sonar.core.integration.SonarAPI;
+import sonar.core.utils.BlockCoords;
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
@@ -67,6 +68,9 @@ public class SonarHelper {
 		return tile.getWorldObj().getTileEntity(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ);
 	}
 
+	public static Block getAdjacentBlock(World world, BlockCoords coords, ForgeDirection side) {
+		return world.getBlock(coords.getX() + side.offsetX, coords.getY() + side.offsetY, coords.getZ() + side.offsetZ);
+	}
 	/**
 	 * @param tile Tile Entity you are checking
 	 * @return if the Tile is an Energy Handler
