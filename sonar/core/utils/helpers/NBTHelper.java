@@ -81,10 +81,12 @@ public class NBTHelper {
 			NBTTagCompound compound = new NBTTagCompound();
 			if (current != null) {
 				if (last != null) {
-					if (!helper.equalTypes(current, last)) {
+					if (!helper.areTypesEqual(current, last)) {
 						compound.setByte("f", (byte) 0);
 						lastList.set(i, current);
 						helper.writeToNBT(compound, (INBTObject) objectList.get(i));
+					}else{
+						
 					}
 				} else {
 					compound.setByte("f", (byte) 0);

@@ -32,7 +32,7 @@ public class SyncGeneric<T extends IBufObject> implements ISyncPart {
 
 	@Override
 	public boolean equal() {
-		return manager.equalTypes(c, last);
+		return manager.areTypesEqual(c, last);
 	}
 
 	public void writeToBuf(ByteBuf buf) {

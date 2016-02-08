@@ -64,7 +64,6 @@ public abstract class GuiSonar extends GuiContainer {
 	}
 
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
-
 		RenderHelper.disableStandardItemLighting();
 		Iterator iterator = this.buttonList.iterator();
 

@@ -65,4 +65,13 @@ public class StoredFluidStack {
 		buf.writeLong(storedStack.capacity);
 	}
 
+	public boolean equals(Object obj) {
+		if (obj instanceof StoredFluidStack) {
+			StoredFluidStack target = (StoredFluidStack) obj;
+			if (equalStack(target.fluid) && this.stored == target.stored && this.capacity == target.capacity) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -49,7 +49,7 @@ public class BlockCoords {
 		this.zCoord = tile.zCoord;
 		if (tile.getWorldObj() == null) {
 			this.hasDimension = false;
-		}else{
+		} else {
 			this.hasDimension = true;
 			this.dimension = tile.getWorldObj().provider.dimensionId;
 		}
@@ -192,6 +192,14 @@ public class BlockCoords {
 		return coords;
 	}
 
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof BlockCoords)) {
+			return false;
+		}
+		BlockCoords coords = (BlockCoords) obj;
+		return this.xCoord == coords.xCoord && this.yCoord == coords.yCoord && this.zCoord == coords.zCoord;
+	}
+
 	public static boolean equalCoords(BlockCoords coords1, BlockCoords coords2) {
 		if (coords1 == null && coords2 == null) {
 			return true;
@@ -221,8 +229,8 @@ public class BlockCoords {
 	public static BlockCoords translateCoords(BlockCoords coords, ForgeDirection dir) {
 		return new BlockCoords(coords.getX() + dir.offsetX, coords.getY() + dir.offsetY, coords.getZ() + dir.offsetZ, coords.dimension);
 	}
-	
-	public String toString(){
-		return getRender();		
+
+	public String toString() {
+		return getRender();
 	}
 }

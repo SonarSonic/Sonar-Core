@@ -14,7 +14,7 @@ import sonar.core.utils.helpers.NBTHelper.SyncType;
 public abstract class TileHandler implements ISyncTile {
 
 	public TileEntity tile;
-	public SyncBoolean isMultipart = new SyncBoolean(0);
+	public SyncBoolean isMultipart = new SyncBoolean(-1);
 
 	public TileHandler(boolean isMultipart, TileEntity tile) {
 		this.isMultipart.setBoolean(isMultipart);
