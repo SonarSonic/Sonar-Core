@@ -1,5 +1,6 @@
 package sonar.core.network;
 
+import cofh.api.tileentity.IReconfigurableSides;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,41 +11,20 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketRequestSync implements IMessage {
-
-	public int xCoord, yCoord, zCoord;
+public class PacketRequestSync extends PacketTileEntity<PacketRequestSync> {
 
 	public PacketRequestSync() {
 	}
 
-	public PacketRequestSync(int xCoord, int yCoord, int zCoord) {
-		this.xCoord = xCoord;
-		this.yCoord = yCoord;
-		this.zCoord = zCoord;
+	public PacketRequestSync(int x, int y, int z) {
+		super(x, y, z);
 	}
-
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		this.xCoord = buf.readInt();
-		this.yCoord = buf.readInt();
-		this.zCoord = buf.readInt();
-
-	}
-
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeInt(xCoord);
-		buf.writeInt(yCoord);
-		buf.writeInt(zCoord);
-	}
-
-	public static class Handler implements IMessageHandler<PacketRequestSync, IMessage> {
+	public static class Handler extends PacketTileEntityHandler<PacketRequestSync> {
 
 		@Override
-		public IMessage onMessage(PacketRequestSync message, MessageContext ctx) {
-			if (Minecraft.getMinecraft().thePlayer.worldObj != null) {
-				TileEntity tile = Minecraft.getMinecraft().thePlayer.worldObj.getTileEntity(message.xCoord, message.yCoord, message.zCoord);
-				if (tile != null && tile instanceof ISyncTile) {
+		public IMessage processMessage(PacketRequestSync message, TileEntity tile) {
+			if (!tile.getWorldObj().isRemote) {
+				if (tile instanceof ISyncTile) {
 					NBTTagCompound tag = new NBTTagCompound();
 					ISyncTile sync = (ISyncTile) tile;
 					sync.writeData(tag, SyncType.SYNC);
@@ -57,4 +37,5 @@ public class PacketRequestSync implements IMessage {
 			return null;
 		}
 	}
+
 }

@@ -1,5 +1,7 @@
 package sonar.core.network;
 
+import sonar.core.integration.fmp.FMPHelper;
+import sonar.core.network.utils.ITextField;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
@@ -8,48 +10,43 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketSonarSides implements IMessage {
+public class PacketSonarSides extends PacketTileEntity<PacketSonarSides> {
 
-	public int xCoord, yCoord, zCoord;
 	public int side, value;
 
 	public PacketSonarSides() {
 	}
 
-	public PacketSonarSides(int xCoord, int yCoord, int zCoord, int side, int value) {
-		this.xCoord = xCoord;
-		this.yCoord = yCoord;
-		this.zCoord = zCoord;
+	public PacketSonarSides(int x, int y, int z, int side, int value) {
+		super(x, y, z);
 		this.side = side;
 		this.value = value;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		this.xCoord = buf.readInt();
-		this.yCoord = buf.readInt();
-		this.zCoord = buf.readInt();
-		TileEntity tile = Minecraft.getMinecraft().thePlayer.worldObj.getTileEntity(xCoord, yCoord, zCoord);
-		if (tile != null && tile instanceof IReconfigurableSides) {
-			IReconfigurableSides sides = (IReconfigurableSides) tile;
-			sides.setSide(buf.readInt(), buf.readInt());
-		}
+		super.fromBytes(buf);
+		side = buf.readInt();
+		value = buf.readInt();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(xCoord);
-		buf.writeInt(yCoord);
-		buf.writeInt(zCoord);
+		super.toBytes(buf);
 		buf.writeInt(side);
 		buf.writeInt(value);
 	}
-
-	public static class Handler implements IMessageHandler<PacketSonarSides, IMessage> {
+	public static class Handler extends PacketTileEntityHandler<PacketSonarSides> {
 
 		@Override
-		public IMessage onMessage(PacketSonarSides message, MessageContext ctx) {
+		public IMessage processMessage(PacketSonarSides message, TileEntity tile) {
+
+			if (tile.getWorldObj().isRemote && tile instanceof IReconfigurableSides) {
+				IReconfigurableSides sides = (IReconfigurableSides) tile;
+				sides.setSide(message.side, message.value);
+			}
 			return null;
 		}
 	}
+
 }

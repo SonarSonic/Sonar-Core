@@ -13,10 +13,10 @@ import sonar.core.integration.fmp.FMPHelper;
 import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.network.PacketByteBufClient;
 import sonar.core.network.PacketByteBufServer;
-import sonar.core.network.PacketInventorySync;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketSonarSides;
 import sonar.core.network.PacketTextField;
+import sonar.core.network.PacketTileEntityHandler;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.network.utils.ISyncTile;
@@ -67,15 +67,13 @@ public class SonarCore {
 
 	public static void registerPackets() {
 		if (network == null) {
-			network = NetworkRegistry.INSTANCE.newSimpleChannel("Sonar-Packets");
-			//network.registerMessage(PacketMachineButton.Handler.class, PacketMachineButton.class, 0, Side.SERVER);
-			network.registerMessage(PacketTileSync.Handler.class, PacketTileSync.class, 1, Side.CLIENT);
-			network.registerMessage(PacketSonarSides.Handler.class, PacketSonarSides.class, 2, Side.CLIENT);
-			network.registerMessage(PacketInventorySync.Handler.class, PacketInventorySync.class, 3, Side.CLIENT);
-			network.registerMessage(PacketRequestSync.Handler.class, PacketRequestSync.class, 4, Side.SERVER);
-			network.registerMessage(PacketTextField.Handler.class, PacketTextField.class, 5, Side.SERVER);
-			network.registerMessage(PacketByteBufClient.HandlerClient.class, PacketByteBufClient.class, 6, Side.CLIENT);
-			network.registerMessage(PacketByteBufServer.HandlerServer.class, PacketByteBufServer.class, 7, Side.SERVER);
+			network = NetworkRegistry.INSTANCE.newSimpleChannel("Sonar-Packets");			
+			network.registerMessage(PacketTileSync.Handler.class, PacketTileSync.class, 0, Side.CLIENT);
+			network.registerMessage(PacketSonarSides.Handler.class, PacketSonarSides.class, 1, Side.CLIENT);
+			network.registerMessage(PacketRequestSync.Handler.class, PacketRequestSync.class, 2, Side.SERVER);
+			network.registerMessage(PacketTextField.Handler.class, PacketTextField.class, 3, Side.SERVER);
+			network.registerMessage(PacketByteBufClient.Handler.class, PacketByteBufClient.class, 4, Side.CLIENT);
+			network.registerMessage(PacketByteBufServer.Handler.class, PacketByteBufServer.class, 5, Side.SERVER);
 		}
 	}
 
