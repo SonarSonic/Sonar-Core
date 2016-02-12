@@ -235,7 +235,7 @@ public class NBTHelper {
 	public static FluidTankInfo readTankInfo(NBTTagCompound nbt) {
 		return new FluidTankInfo(FluidStack.loadFluidStackFromNBT(nbt), nbt.getInteger("capacity"));
 	}
-
+		
 	public static enum SyncType {
 		SAVE, SYNC, DROP, SPECIAL, PACKET;
 

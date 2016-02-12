@@ -57,7 +57,9 @@ public class SyncBoolean implements ISyncPart {
 			}
 		}
 	}
-
+	public void invert() {
+		c = !c;
+	}
 	public void setBoolean(boolean value) {
 		c = value;
 	}

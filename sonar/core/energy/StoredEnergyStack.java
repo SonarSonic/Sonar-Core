@@ -9,13 +9,13 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 
 public class StoredEnergyStack {
 
-	private double rfModifier;
-	private double stored, capacity;
-	private static byte type;
-	public final static byte storage=0;
-	public final static byte input=1;
-	public final static byte output=2;
-	public final static byte usage=3;
+	public double rfModifier;
+	public double stored, capacity;
+	public byte type;
+	public final static byte storage = 0;
+	public final static byte input = 1;
+	public final static byte output = 2;
+	public final static byte usage = 3;
 
 	public StoredEnergyStack(byte type, double rfModifier, double stored, double capacity) {
 		this.rfModifier = rfModifier;

@@ -73,4 +73,8 @@ public class SyncInt implements ISyncPart {
 	public void increaseBy(int increase) {
 		c += increase;
 	}
+
+	public void decreaseBy(int decrease) {
+		c -= decrease;
+	}
 }

@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 
 import sonar.core.SonarCore;
 import sonar.core.network.PacketByteBufServer;
-import sonar.core.network.PacketMachineButton;
+import sonar.core.network.utils.IByteBufTile;
 import sonar.core.utils.helpers.FontHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -107,10 +107,10 @@ public abstract class GuiSonar extends GuiContainer {
 
 		@Override
 		public void onClicked() {
-			SonarCore.network.sendToServer(new PacketMachineButton(id, 0, entity.xCoord, entity.yCoord, entity.zCoord));
+			SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) entity, entity.xCoord, entity.yCoord, entity.zCoord, id));
 			buttonList.clear();
-			initGui(!paused);
-			updateScreen();
+			initGui();
+			// updateScreen();
 		}
 	}
 
@@ -129,7 +129,7 @@ public abstract class GuiSonar extends GuiContainer {
 
 		@Override
 		public void onClicked() {
-			SonarCore.network.sendToServer(new PacketMachineButton(id, 0, entity.xCoord, entity.yCoord, entity.zCoord));
+			SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) entity, entity.xCoord, entity.yCoord, entity.zCoord, id));
 		}
 	}
 

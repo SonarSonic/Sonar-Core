@@ -14,7 +14,6 @@ import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.network.PacketByteBufClient;
 import sonar.core.network.PacketByteBufServer;
 import sonar.core.network.PacketInventorySync;
-import sonar.core.network.PacketMachineButton;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketSonarSides;
 import sonar.core.network.PacketTextField;
@@ -36,7 +35,7 @@ import cpw.mods.fml.relauncher.Side;
 public class SonarCore {
 
 	public static final String modid = "SonarCore";
-	public static final String version = "1.0.5";
+	public static final String version = "1.0.6";
 
 	@Instance(modid)
 	public static SonarCore instance;
@@ -69,7 +68,7 @@ public class SonarCore {
 	public static void registerPackets() {
 		if (network == null) {
 			network = NetworkRegistry.INSTANCE.newSimpleChannel("Sonar-Packets");
-			network.registerMessage(PacketMachineButton.Handler.class, PacketMachineButton.class, 0, Side.SERVER);
+			//network.registerMessage(PacketMachineButton.Handler.class, PacketMachineButton.class, 0, Side.SERVER);
 			network.registerMessage(PacketTileSync.Handler.class, PacketTileSync.class, 1, Side.CLIENT);
 			network.registerMessage(PacketSonarSides.Handler.class, PacketSonarSides.class, 2, Side.CLIENT);
 			network.registerMessage(PacketInventorySync.Handler.class, PacketInventorySync.class, 3, Side.CLIENT);
