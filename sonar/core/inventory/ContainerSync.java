@@ -11,6 +11,7 @@ import sonar.core.SonarCore;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper;
+import sonar.core.utils.helpers.NBTHelper.SyncType;
 
 public abstract class ContainerSync extends Container {
 
@@ -31,21 +32,30 @@ public abstract class ContainerSync extends Container {
 
 	@Override
 	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		if (sync != null) {
-			if (crafters != null) {
-				NBTTagCompound syncData = new NBTTagCompound();
-				sync.writeData(syncData, NBTHelper.SyncType.SYNC);
+		if (syncInventory()){
+			super.detectAndSendChanges();
+		}
+		if (sync != null && crafters != null) {
+			NBTTagCompound syncData = new NBTTagCompound();
+			SyncType[] types = getSyncTypes();
+			for (SyncType type : types) {
+				sync.writeData(syncData, type);
 				if (!syncData.hasNoTags()) {
 					for (Object o : crafters) {
 						if (o != null && o instanceof EntityPlayerMP) {
-							SonarCore.network.sendTo(new PacketTileSync(tile.xCoord, tile.yCoord, tile.zCoord, syncData), (EntityPlayerMP) o);
+							SonarCore.network.sendTo(new PacketTileSync(tile.xCoord, tile.yCoord, tile.zCoord, syncData, type), (EntityPlayerMP) o);
 						}
 					}
 				}
-
 			}
-
 		}
+	}
+
+	public SyncType[] getSyncTypes() {
+		return new SyncType[] { SyncType.SYNC };
+	}
+
+	public boolean syncInventory() {
+		return true;
 	}
 }

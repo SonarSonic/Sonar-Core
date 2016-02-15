@@ -85,8 +85,8 @@ public class NBTHelper {
 						compound.setByte("f", (byte) 0);
 						lastList.set(i, current);
 						helper.writeToNBT(compound, (INBTObject) objectList.get(i));
-					}else{
-						
+					} else {
+
 					}
 				} else {
 					compound.setByte("f", (byte) 0);
@@ -235,7 +235,7 @@ public class NBTHelper {
 	public static FluidTankInfo readTankInfo(NBTTagCompound nbt) {
 		return new FluidTankInfo(FluidStack.loadFluidStackFromNBT(nbt), nbt.getInteger("capacity"));
 	}
-		
+
 	public static enum SyncType {
 		SAVE, SYNC, DROP, SPECIAL, PACKET;
 

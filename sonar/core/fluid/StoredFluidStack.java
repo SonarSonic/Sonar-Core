@@ -12,6 +12,12 @@ public class StoredFluidStack {
 	public FluidStack fluid;
 	public long stored, capacity;
 
+	public StoredFluidStack(FluidStack stack) {
+		this.fluid = stack.copy();
+		this.stored = stack.amount;
+		this.capacity = stack.amount;
+	}
+
 	public StoredFluidStack(FluidStack stack, long capacity) {
 		this.fluid = stack.copy();
 		this.stored = stack.amount;
@@ -73,5 +79,11 @@ public class StoredFluidStack {
 			}
 		}
 		return false;
+	}
+
+	public FluidStack getFullStack() {
+		FluidStack stack = fluid.copy();
+		stack.amount = (int) Math.min(stored, Integer.MAX_VALUE);
+		return stack;
 	}
 }

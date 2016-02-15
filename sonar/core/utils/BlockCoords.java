@@ -98,17 +98,16 @@ public class BlockCoords {
 
 	public TileEntity getTileEntity() {
 		if (this.hasDimension()) {
-			MinecraftServer server = MinecraftServer.getServer();
-			World world = server.worldServerForDimension(getDimension());
-			return world.getTileEntity(xCoord, yCoord, zCoord);
+			return getWorld().getTileEntity(xCoord, yCoord, zCoord);
 		} else {
 			return null;
 		}
 	}
 
-	public String getRender() {
-		return "X: " + this.xCoord + " Y: " + this.yCoord + " Z: " + this.zCoord + " D: " + this.dimension;
-
+	public World getWorld() {
+		MinecraftServer server = MinecraftServer.getServer();
+		World world = server.worldServerForDimension(getDimension());
+		return world;
 	}
 
 	public static void writeToBuf(ByteBuf tag, BlockCoords coords) {
@@ -231,6 +230,17 @@ public class BlockCoords {
 	}
 
 	public String toString() {
-		return getRender();
+		return "X: " + this.xCoord + " Y: " + this.yCoord + " Z: " + this.zCoord + " D: " + this.dimension;
 	}
+
+	public BlockCoords fromString(String string) {
+		String[] split = string.split(": ");
+		int x = Integer.parseInt(split[1]);
+		int y = Integer.parseInt(split[3]);
+		int z = Integer.parseInt(split[5]);
+		int d = Integer.parseInt(split[7]);
+
+		return new BlockCoords(x, y, z, d);
+	}
+
 }

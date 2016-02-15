@@ -14,8 +14,8 @@ import sonar.core.utils.IRegistryObject;
 public abstract class RegistryHelper<T extends IRegistryObject> {
 
 	private List<T> objects = new ArrayList();
-	private Map<String, Byte> objectIDs = new THashMap<String, Byte>();
-	private Map<Byte, String> objectNames = new THashMap<Byte, String>();
+	private Map<String, Integer> objectIDs = new THashMap<String, Integer>();
+	private Map<Integer, String> objectNames = new THashMap<Integer, String>();
 
 	public abstract void register();
 
@@ -29,7 +29,7 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 		return objects;
 	}
 
-	public T getRegisteredObject(byte objectID) {
+	public T getRegisteredObject(int objectID) {
 		String helperName = objectNames.get(objectID);
 		if (helperName == null || helperName.isEmpty()) {
 			return null;
@@ -62,7 +62,7 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 		if (object != null) {
 			if (getRegisteredObject(object.getName()) == null) {
 				objects.add(object);
-				byte id = (byte) objectIDs.size();
+				int id = objectIDs.size();
 				objectIDs.put(object.getName(), id);
 				objectNames.put(id, object.getName());
 				SonarCore.logger.info("Loaded " + registeryType() + ": " + object.getName());
@@ -72,8 +72,8 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 		}
 	}
 
-	public byte getObjectID(String name) {
-		byte id = objectIDs.get(name);
+	public int getObjectID(String name) {
+		int id = objectIDs.get(name);
 		return id;
 	}
 	

@@ -15,6 +15,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -27,6 +28,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -46,9 +48,9 @@ import codechicken.multipart.TileMultipart;
 public class RenderHelper {
 
 	private static final ResourceLocation mapBackgroundTextures = new ResourceLocation("textures/map/map_background.png");
-	protected RenderManager renderManager;
-
 	private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
+	
+	protected RenderManager renderManager;
 
 	public static int setMetaData(TileEntity tileentity) {
 		int i;
@@ -337,4 +339,28 @@ public class RenderHelper {
 			GL11.glPopMatrix();
 		}
 	}
+	
+	
+	public static void drawTexturedModalRect(double minX, double minY, double maxY, double width, double height) {
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		double widthnew = (0 + (width * (2)));
+		double heightnew = (0 + ((height) * (2)));		
+		tessellator.addVertexWithUV((minX + 0), maxY / 2, 0, 0, heightnew);
+		tessellator.addVertexWithUV((minX + width), maxY / 2, 0, widthnew, heightnew);
+		tessellator.addVertexWithUV((minX + width), (minY + 0), 0, widthnew, 0);
+		tessellator.addVertexWithUV((minX + 0), (minY + 0), 0, 0, 0);
+		tessellator.draw();
+	}
+
+	public void drawTexturedModelRectFromIcon(int p_94065_1_, int p_94065_2_, IIcon p_94065_3_, int p_94065_4_, int p_94065_5_) {
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV((double) (p_94065_1_ + 0), (double) (p_94065_2_ + p_94065_5_), 0, (double) p_94065_3_.getMinU(), (double) p_94065_3_.getMaxV());
+		tessellator.addVertexWithUV((double) (p_94065_1_ + p_94065_4_), (double) (p_94065_2_ + p_94065_5_), 0, (double) p_94065_3_.getMaxU(), (double) p_94065_3_.getMaxV());
+		tessellator.addVertexWithUV((double) (p_94065_1_ + p_94065_4_), (double) (p_94065_2_ + 0), 0, (double) p_94065_3_.getMaxU(), (double) p_94065_3_.getMinV());
+		tessellator.addVertexWithUV((double) (p_94065_1_ + 0), (double) (p_94065_2_ + 0), 0, (double) p_94065_3_.getMinU(), (double) p_94065_3_.getMinV());
+		tessellator.draw();
+	}
+
 }

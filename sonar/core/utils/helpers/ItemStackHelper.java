@@ -13,10 +13,8 @@ public class ItemStackHelper {
 	/**
 	 * checks if the two itemstacks are equal and can be merged
 	 * 
-	 * @param stack1
-	 *            first stack your checking
-	 * @param stack2
-	 *            second stack your checking
+	 * @param stack1 first stack your checking
+	 * @param stack2 second stack your checking
 	 * @return if they are equal and can be merged
 	 */
 	public static boolean equalStacks(ItemStack stack1, ItemStack stack2) {
@@ -26,10 +24,8 @@ public class ItemStackHelper {
 	/**
 	 * checks if two itemstacks are the same (and nothing more!)
 	 * 
-	 * @param stack1
-	 *            first stack your checking
-	 * @param stack2
-	 *            second stack your checking
+	 * @param stack1  first stack your checking
+	 * @param stack2second stack your checking
 	 * @return if they are equal and can be merged
 	 */
 	public static boolean equalStacksRegular(ItemStack stack1, ItemStack stack2) {

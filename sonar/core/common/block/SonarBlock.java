@@ -53,7 +53,6 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 
 	@Override
 	public final boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitx, float hity, float hitz) {
-		super.onBlockActivated(world, x, y, z, player, side, hitx, hity, hitz);
 		if (player != null) {
 			ItemStack heldItem = player.getHeldItem();
 			if (wrenchable && heldItem != null && heldItem.getItem() instanceof IToolHammer) {
@@ -71,7 +70,7 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 				return operateBlock(world, x, y, z, player, side, hitx, hity, hitz);
 			}
 		}
-		return false;
+		return super.onBlockActivated(world, x, y, z, player, side, hitx, hity, hitz);
 
 	}
 

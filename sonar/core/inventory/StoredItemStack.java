@@ -1,6 +1,5 @@
 package sonar.core.inventory;
 
-import sonar.core.fluid.StoredFluidStack;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -72,5 +71,28 @@ public class StoredItemStack {
 			}
 		}
 		return false;
+	}
+
+	public ItemStack getItemStack() {
+		return item;
+	}
+
+	public long getStackSize() {
+		return stored;
+	}
+
+	public int getItemDamage() {
+		return item.getItemDamage();
+	}
+
+	public NBTTagCompound getTagCompound() {
+		return item.getTagCompound();
+	}
+
+	public ItemStack getFullStack() {
+		int min = (int) Math.min(stored, item.getMaxStackSize());
+		ItemStack stack = item.copy();
+		stack.stackSize = min;
+		return stack;
 	}
 }

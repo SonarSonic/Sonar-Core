@@ -26,8 +26,10 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class SonarHelper {
 
 	/**
-	 * @param tile Tile Entity you're checking from
-	 * @param side side to find IEnergyHandler
+	 * @param tile
+	 *            Tile Entity you're checking from
+	 * @param side
+	 *            side to find IEnergyHandler
 	 * @return if there is an adjacent Energy Hander
 	 */
 	public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, int side) {
@@ -41,8 +43,10 @@ public class SonarHelper {
 	}
 
 	/**
-	 * @param tile Tile Entity you want to check
-	 * @param from direction your adding from
+	 * @param tile
+	 *            Tile Entity you want to check
+	 * @param from
+	 *            direction your adding from
 	 * @return if Handler can connect
 	 */
 	public static boolean isEnergyHandlerFromSide(TileEntity tile, ForgeDirection from) {
@@ -59,8 +63,10 @@ public class SonarHelper {
 	}
 
 	/**
-	 * @param tile Tile Entity you're checking from
-	 * @param side direction from Tile Entity your checking from
+	 * @param tile
+	 *            Tile Entity you're checking from
+	 * @param side
+	 *            direction from Tile Entity your checking from
 	 * @return adjacent Tile Entity
 	 */
 	public static TileEntity getAdjacentTileEntity(TileEntity tile, ForgeDirection side) {
@@ -71,8 +77,10 @@ public class SonarHelper {
 	public static Block getAdjacentBlock(World world, BlockCoords coords, ForgeDirection side) {
 		return world.getBlock(coords.getX() + side.offsetX, coords.getY() + side.offsetY, coords.getZ() + side.offsetZ);
 	}
+
 	/**
-	 * @param tile Tile Entity you are checking
+	 * @param tile
+	 *            Tile Entity you are checking
 	 * @return if the Tile is an Energy Handler
 	 */
 	public static boolean isEnergyHandler(TileEntity tile) {
@@ -85,12 +93,17 @@ public class SonarHelper {
 	}
 
 	/**
-	 * Add energy to an IEnergyReciever, internal distribution is left entirely to the IEnergyReciever.
+	 * Add energy to an IEnergyReciever, internal distribution is left entirely
+	 * to the IEnergyReciever.
 	 * 
-	 * @param from Orientation the energy is received from.
-	 * @param maxReceive Maximum amount of energy to receive.
-	 * @param simulate If TRUE, the charge will only be simulated.
-	 * @return Amount of energy that was (or would have been, if simulated) received.
+	 * @param from
+	 *            Orientation the energy is received from.
+	 * @param maxReceive
+	 *            Maximum amount of energy to receive.
+	 * @param simulate
+	 *            If TRUE, the charge will only be simulated.
+	 * @return Amount of energy that was (or would have been, if simulated)
+	 *         received.
 	 */
 	public static int pushEnergy(TileEntity tile, ForgeDirection dir, int amount, boolean simulate) {
 		if (tile instanceof IEnergyReceiver) {
@@ -102,12 +115,17 @@ public class SonarHelper {
 	}
 
 	/**
-	 * Remove energy from an IEnergyProvider, internal distribution is left entirely to the IEnergyProvider.
+	 * Remove energy from an IEnergyProvider, internal distribution is left
+	 * entirely to the IEnergyProvider.
 	 * 
-	 * @param from Orientation the energy is extracted from.
-	 * @param maxExtract Maximum amount of energy to extract.
-	 * @param simulate If TRUE, the extraction will only be simulated.
-	 * @return Amount of energy that was (or would have been, if simulated) extracted.
+	 * @param from
+	 *            Orientation the energy is extracted from.
+	 * @param maxExtract
+	 *            Maximum amount of energy to extract.
+	 * @param simulate
+	 *            If TRUE, the extraction will only be simulated.
+	 * @return Amount of energy that was (or would have been, if simulated)
+	 *         extracted.
 	 */
 	public static int pullEnergy(TileEntity tile, ForgeDirection dir, int amount, boolean simulate) {
 		if (tile instanceof IEnergyProvider) {
@@ -119,7 +137,8 @@ public class SonarHelper {
 	}
 
 	/**
-	 * checks if a tile implements IWrench and IDropTile and drops it accordingly
+	 * checks if a tile implements IWrench and IDropTile and drops it
+	 * accordingly
 	 */
 	public static void dropTile(EntityPlayer player, Block block, World world, int x, int y, int z) {
 		if (SonarAPI.calculatorLoaded() && block == GameRegistry.findBlock("Calculator", "ConductorMastBlock")) {
@@ -198,5 +217,21 @@ public class SonarHelper {
 		default:
 			return -1;
 		}
+	}
+
+	public static ItemStack createStackedBlock(Block block, int meta) {
+		if (block == null) {
+			return null;
+		}
+		Item item = Item.getItemFromBlock(block);
+		if (item == null) {
+			return null;
+		}
+		int j = 0;
+		if (item.getHasSubtypes()) {
+			j = meta;
+		}
+
+		return new ItemStack(item, 1, j);
 	}
 }

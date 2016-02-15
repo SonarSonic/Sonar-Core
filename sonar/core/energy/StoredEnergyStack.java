@@ -7,67 +7,153 @@ import sonar.core.inventory.StoredItemStack;
 import sonar.core.utils.helpers.NBTHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 
+/**
+ * should only be in RF, inaccuracy due to conversion is a price we must pay at
+ * the moment
+ */
 public class StoredEnergyStack {
 
-	public double rfModifier;
-	public double stored, capacity;
-	public byte type;
-	public final static byte storage = 0;
-	public final static byte input = 1;
-	public final static byte output = 2;
-	public final static byte usage = 3;
+	public long stored, capacity, input, output, usage;
+	public boolean hasStorage, hasInput, hasOutput, hasUsage;
 
-	public StoredEnergyStack(byte type, double rfModifier, double stored, double capacity) {
-		this.rfModifier = rfModifier;
-		this.stored = stored;
-		this.capacity = capacity;
-		this.type = type;
-	}
-
-	public void add(StoredEnergyStack stack) {
-		if (equalEnergyType(stack)) {
-			stored += stack.stored;
-			capacity += stack.capacity;
+	public StoredEnergyStack() {}
+	
+	public void setStorageValues(long stored, long capacity) {
+		if (!hasStorage) {
+			this.stored = stored;
+			this.capacity = capacity;
+			this.hasStorage = true;
 		}
 	}
 
-	public void remove(StoredEnergyStack stack) {
-		if (equalEnergyType(stack)) {
-			stored -= stack.stored;
-			capacity -= stack.capacity;
+	public void increaseStorageValues(long stored, long capacity) {
+		this.stored += stored;
+		this.capacity += capacity;
+	}
+
+	public void setMaxInput(long input) {
+		if (!hasInput) {
+			this.input = input;
+			this.hasInput = true;
 		}
 	}
 
-	public boolean equalEnergyType(StoredEnergyStack stack) {
-		return stack.type == type && stack.rfModifier == rfModifier;
+	public void increaseMaxInput(long input) {
+		this.input += input;
+	}
+
+	public void setMaxOutput(long output) {
+		if (!hasOutput) {
+			this.output = output;
+			this.hasOutput = true;
+		}
+	}
+
+	public void increaseMaxOutput(long output) {
+		this.output += output;
+	}
+
+	public void setUsage(long usage) {
+		if (!hasUsage) {
+			this.usage = usage;
+			this.hasUsage = true;
+		}
+	}
+
+	public void increaseUsage(long usage) {
+		this.usage += usage;
 	}
 
 	public static StoredEnergyStack readFromNBT(NBTTagCompound tag) {
-		return new StoredEnergyStack(tag.getByte("type"), tag.getDouble("rfModifier"), tag.getDouble("stored"), tag.getDouble("capacity"));
+		StoredEnergyStack stored = new StoredEnergyStack();
+		stored.hasStorage = tag.getBoolean("hS");
+		stored.hasInput = tag.getBoolean("hI");
+		stored.hasOutput = tag.getBoolean("hO");
+		stored.hasUsage = tag.getBoolean("hU");
+		if (stored.hasStorage) {
+			stored.stored = tag.getLong("s");
+			stored.capacity = tag.getLong("c");
+		}
+		if (stored.hasInput) {
+			stored.input = tag.getLong("i");
+		}
+		if (stored.hasOutput) {
+			stored.output = tag.getLong("o");
+		}
+		if (stored.hasUsage) {
+			stored.usage = tag.getLong("u");
+		}
+		return stored;
 	}
 
 	public static void writeToNBT(NBTTagCompound tag, StoredEnergyStack storedStack) {
-		tag.setByte("type", storedStack.type);
-		tag.setDouble("rfModifier", storedStack.rfModifier);
-		tag.setDouble("stored", storedStack.stored);
-		tag.setDouble("capacity", storedStack.capacity);
+		tag.setBoolean("hS", storedStack.hasStorage);
+		tag.setBoolean("hI", storedStack.hasInput);
+		tag.setBoolean("hO", storedStack.hasOutput);
+		tag.setBoolean("hU", storedStack.hasUsage);
+
+		if (storedStack.hasStorage) {
+			tag.setLong("s", storedStack.stored);
+			tag.setLong("c", storedStack.capacity);
+		}
+		if (storedStack.hasInput) {
+			tag.setLong("i", storedStack.input);
+		}
+		if (storedStack.hasOutput) {
+			tag.setLong("o", storedStack.output);
+		}
+		if (storedStack.hasUsage) {
+			tag.setLong("u", storedStack.usage);
+		}
 	}
 
 	public static StoredEnergyStack readFromBuf(ByteBuf buf) {
-		return new StoredEnergyStack(buf.readByte(), buf.readDouble(), buf.readDouble(), buf.readDouble());
+		StoredEnergyStack stored = new StoredEnergyStack();
+		stored.hasStorage = buf.readBoolean();
+		stored.hasInput = buf.readBoolean();
+		stored.hasOutput = buf.readBoolean();
+		stored.hasUsage = buf.readBoolean();
+		if (stored.hasStorage) {
+			stored.stored = buf.readLong();
+			stored.capacity = buf.readLong();
+		}
+		if (stored.hasInput) {
+			stored.input = buf.readLong();
+		}
+		if (stored.hasOutput) {
+			stored.output = buf.readLong();
+		}
+		if (stored.hasUsage) {
+			stored.usage = buf.readLong();
+		}
+		return stored;
 	}
 
 	public static void writeToBuf(ByteBuf buf, StoredEnergyStack storedStack) {
-		buf.writeByte(storedStack.type);
-		buf.writeDouble(storedStack.rfModifier);
-		buf.writeDouble(storedStack.stored);
-		buf.writeDouble(storedStack.capacity);
+		buf.writeBoolean(storedStack.hasStorage);
+		buf.writeBoolean(storedStack.hasInput);
+		buf.writeBoolean(storedStack.hasOutput);
+		buf.writeBoolean(storedStack.hasUsage);
+		
+		if (storedStack.hasStorage) {
+			buf.writeLong(storedStack.stored);
+			buf.writeLong(storedStack.capacity);
+		}
+		if (storedStack.hasInput) {
+			buf.writeLong(storedStack.input);
+		}
+		if (storedStack.hasOutput) {
+			buf.writeLong(storedStack.output);
+		}
+		if (storedStack.hasUsage) {
+			buf.writeLong(storedStack.usage);
+		}
 	}
 
 	public boolean equals(Object obj) {
 		if (obj instanceof StoredEnergyStack) {
 			StoredEnergyStack target = (StoredEnergyStack) obj;
-			if (equalEnergyType(target) && this.stored == target.stored && this.capacity == target.capacity) {
+			if (this.stored == target.stored && this.capacity == target.capacity && this.input == target.input && this.output == target.output && this.usage == target.usage) {
 				return true;
 			}
 		}
