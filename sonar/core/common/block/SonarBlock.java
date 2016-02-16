@@ -6,6 +6,8 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -16,11 +18,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import sonar.core.SonarCore;
 import sonar.core.integration.SonarAPI;
 import sonar.core.inventory.IAdditionalInventory;
 import sonar.core.inventory.IDropInventory;
+import sonar.core.network.PacketBlockInteraction;
 import sonar.core.network.utils.ISyncTile;
+import sonar.core.utils.BlockInteraction;
+import sonar.core.utils.IInteractBlock;
 import sonar.core.utils.IUpgradeCircuits;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import sonar.core.utils.helpers.SonarHelper;
@@ -34,21 +41,21 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class SonarBlock extends Block implements IDismantleable {
+public abstract class SonarBlock extends Block implements IDismantleable, IInteractBlock {
 
 	protected Random rand = new Random();
-	public boolean orientation, wrenchable;
+	public boolean orientation = true, wrenchable = true;
 
-	protected SonarBlock(Material material, boolean orientation) {
+	protected SonarBlock(Material material) {
 		super(material);
-		this.orientation = orientation;
-		this.wrenchable = true;
 	}
 
-	protected SonarBlock(Material material, boolean orientation, boolean wrenchable) {
-		super(material);
-		this.orientation = orientation;
-		this.wrenchable = wrenchable;
+	public void disableOrientation() {
+		this.orientation = false;
+	}
+
+	public void disableWrenchable() {
+		this.wrenchable = false;
 	}
 
 	@Override
@@ -67,17 +74,32 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 			if (wrenchable && SonarAPI.calculatorLoaded() && heldItem != null && (heldItem.getItem() instanceof IToolHammer || heldItem.getItem() == GameRegistry.findItem("Calculator", "Wrench"))) {
 				return false;
 			} else {
-				return operateBlock(world, x, y, z, player, side, hitx, hity, hitz);
+				return operateBlock(world, x, y, z, player, side, hitx, hity, hitz, player.isSneaking() ? BlockInteraction.SHIFT_RIGHT : BlockInteraction.RIGHT);
 			}
 		}
 		return super.onBlockActivated(world, x, y, z, player, side, hitx, hity, hitz);
 
 	}
 
+	public boolean isClickableSide(World world, int x, int y, int z, int side) {
+		return false;
+	}
+
+	@Override
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
+		if (world.isRemote && allowLeftClick() && player.capabilities.isCreativeMode) {
+			MovingObjectPosition posn = Minecraft.getMinecraft().objectMouseOver;
+			if (isClickableSide(world, x, y, z, posn.sideHit)) {
+				onBlockClicked(world, x, y, z, player);
+				return false;
+			}
+		}
+		return super.removedByPlayer(world, player, x, y, z);
+	}
+
 	@Override
 	public final boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
 		if (willHarvest) {
-
 			return true;
 		}
 		return super.removedByPlayer(world, player, x, y, z, willHarvest);
@@ -87,7 +109,23 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 	public abstract boolean dropStandard(World world, int x, int y, int z);
 
 	/** standard onBlockActivated for use in Calculators blocks */
-	public abstract boolean operateBlock(World world, int x, int y, int z, EntityPlayer player, int side, float hitx, float hity, float hitz);
+	public abstract boolean operateBlock(World world, int x, int y, int z, EntityPlayer player, int side, float hitx, float hity, float hitz, BlockInteraction interact);
+
+	@Override
+	public boolean allowLeftClick() {
+		return false;
+	}
+
+	@Override
+	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
+		if (world.isRemote && allowLeftClick()) {
+			MovingObjectPosition pos = Minecraft.getMinecraft().objectMouseOver;
+			float hitX = (float) (pos.hitVec.xCoord - pos.blockX);
+			float hitY = (float) (pos.hitVec.yCoord - pos.blockY);
+			float hitZ = (float) (pos.hitVec.zCoord - pos.blockZ);
+			SonarCore.network.sendToServer(new PacketBlockInteraction(x, y, z, pos.sideHit, hitX, hitY, hitZ, player.isSneaking() ? BlockInteraction.SHIFT_LEFT : BlockInteraction.LEFT));
+		}
+	}
 
 	@Override
 	public final void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
@@ -248,7 +286,6 @@ public abstract class SonarBlock extends Block implements IDismantleable {
 
 	@Override
 	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnDrops) {
-
 		SonarHelper.dropTile(player, world.getBlock(x, y, z), world, x, y, z);
 		return null;
 	}

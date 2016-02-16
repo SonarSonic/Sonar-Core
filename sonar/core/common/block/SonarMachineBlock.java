@@ -13,15 +13,7 @@ import sonar.core.utils.ISpecialTooltip;
 public abstract class SonarMachineBlock extends SonarBlock implements ITileEntityProvider, ISpecialTooltip {
 
 	protected SonarMachineBlock(Material material) {
-		super(material, true);
-	}
-
-	protected SonarMachineBlock(Material material, boolean bool) {
-		super(material, bool);
-	}
-
-	protected SonarMachineBlock(Material material, boolean bool, boolean bool2) {
-		super(material, bool, bool2);
+		super(material);
 	}
 
 	public abstract TileEntity createNewTileEntity(World world, int i);
@@ -32,26 +24,17 @@ public abstract class SonarMachineBlock extends SonarBlock implements ITileEntit
 		return tileentity != null ? tileentity.receiveClientEvent(par, par2) : false;
 	}
 
-	public abstract static class FrontFacing extends SonarMachineBlock {
-
-		protected FrontFacing(Material material) {
-			super(material);
-		}
-
-	}
-
 	@Override
 	public void addSpecialToolTip(ItemStack stack, EntityPlayer player, List list) {
-
 	}
 
 	@Override
 	public void standardInfo(ItemStack stack, EntityPlayer player, List list) {
-
 	}
 
 	@Override
 	public boolean dropStandard(World world, int x, int y, int z) {
 		return false;
 	}
+	
 }

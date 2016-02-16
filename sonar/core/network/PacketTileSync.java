@@ -13,7 +13,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketTileSync extends PacketTileEntity<PacketTileSync> {
+public class PacketTileSync extends PacketCoords<PacketTileSync> {
 
 	public NBTTagCompound tag;
 	public SyncType type;

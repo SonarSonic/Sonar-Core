@@ -44,6 +44,11 @@ public class StoredFluidStack {
 		}
 	}
 
+	public StoredFluidStack setStackSize(long size) {
+		this.stored = size;
+		return this;
+	}
+
 	public boolean equalStack(FluidStack stack) {
 		if (this.fluid == null || stack == null || stack.amount == 0) {
 			return false;

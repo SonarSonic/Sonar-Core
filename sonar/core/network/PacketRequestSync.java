@@ -11,7 +11,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketRequestSync extends PacketTileEntity<PacketRequestSync> {
+public class PacketRequestSync extends PacketCoords<PacketRequestSync> {
 
 	public PacketRequestSync() {
 	}

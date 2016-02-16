@@ -12,7 +12,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 
-public class PacketByteBufClient extends PacketTileEntity<PacketByteBufClient> {
+public class PacketByteBufClient extends PacketCoords<PacketByteBufClient> {
 
 	public int id;
 	public IByteBufTile tile;

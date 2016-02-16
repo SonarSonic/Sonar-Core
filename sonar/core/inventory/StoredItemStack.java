@@ -1,5 +1,6 @@
 package sonar.core.inventory;
 
+import sonar.core.fluid.StoredFluidStack;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,6 +31,27 @@ public class StoredItemStack {
 		if (equalStack(stack)) {
 			stored -= stack.stackSize;
 		}
+	}
+
+	public void add(StoredItemStack stack) {
+		if (equalStack(stack.item)) {
+			stored += stack.stored;
+		}
+	}
+
+	public void remove(StoredItemStack stack) {
+		if (equalStack(stack.item)) {
+			stored -= stack.stored;
+		}
+	}
+
+	public StoredItemStack copy() {
+		return new StoredItemStack(this.item, this.stored);
+	}
+
+	public StoredItemStack setStackSize(long size) {
+		this.stored = size;
+		return this;
 	}
 
 	public boolean equalStack(ItemStack stack) {

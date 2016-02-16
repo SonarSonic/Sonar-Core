@@ -2,6 +2,7 @@ package sonar.core;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ import sonar.core.integration.SonarAPI;
 import sonar.core.integration.SonarWailaModule;
 import sonar.core.integration.fmp.FMPHelper;
 import sonar.core.integration.fmp.handlers.TileHandler;
+import sonar.core.network.PacketBlockInteraction;
 import sonar.core.network.PacketByteBufClient;
 import sonar.core.network.PacketByteBufServer;
 import sonar.core.network.PacketRequestSync;
@@ -18,10 +20,12 @@ import sonar.core.network.PacketSonarSides;
 import sonar.core.network.PacketTextField;
 import sonar.core.network.PacketTileEntityHandler;
 import sonar.core.network.PacketTileSync;
+import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -37,6 +41,9 @@ public class SonarCore {
 	public static final String modid = "SonarCore";
 	public static final String version = "1.0.6";
 
+	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
+	public static SonarCommon proxy;
+	
 	@Instance(modid)
 	public static SonarCore instance;
 
@@ -63,6 +70,8 @@ public class SonarCore {
 		} else {
 			logger.warn("'WAILA' - unavailable or disabled in config");
 		}
+        MinecraftForge.EVENT_BUS.register(new SonarEvents());
+		logger.info("Registered Events");
 	}
 
 	public static void registerPackets() {
@@ -74,6 +83,7 @@ public class SonarCore {
 			network.registerMessage(PacketTextField.Handler.class, PacketTextField.class, 3, Side.SERVER);
 			network.registerMessage(PacketByteBufClient.Handler.class, PacketByteBufClient.class, 4, Side.CLIENT);
 			network.registerMessage(PacketByteBufServer.Handler.class, PacketByteBufServer.class, 5, Side.SERVER);
+			network.registerMessage(PacketBlockInteraction.Handler.class, PacketBlockInteraction.class, 6, Side.SERVER);
 		}
 	}
 

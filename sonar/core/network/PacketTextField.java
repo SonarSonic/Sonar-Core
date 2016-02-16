@@ -10,7 +10,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketTextField extends PacketTileEntity<PacketTextField> {
+public class PacketTextField extends PacketCoords<PacketTextField> {
 
 	public int id;
 	public String string;
