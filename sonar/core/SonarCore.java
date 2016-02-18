@@ -1,8 +1,13 @@
 package sonar.core;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,20 +20,23 @@ import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.network.PacketBlockInteraction;
 import sonar.core.network.PacketByteBufClient;
 import sonar.core.network.PacketByteBufServer;
+import sonar.core.network.PacketInvUpdate;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketSonarSides;
+import sonar.core.network.PacketStackUpdate;
 import sonar.core.network.PacketTextField;
-import sonar.core.network.PacketTileEntityHandler;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.network.utils.ISyncTile;
+import sonar.core.utils.BlockCoords;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -43,7 +51,7 @@ public class SonarCore {
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
-	
+
 	@Instance(modid)
 	public static SonarCore instance;
 
@@ -57,9 +65,6 @@ public class SonarCore {
 		registerPackets();
 		logger.info("Register Packets");
 
-		DischargeValues.addValues();
-		logger.info("Added Discharge Values");
-
 	}
 
 	@EventHandler
@@ -70,13 +75,23 @@ public class SonarCore {
 		} else {
 			logger.warn("'WAILA' - unavailable or disabled in config");
 		}
-        MinecraftForge.EVENT_BUS.register(new SonarEvents());
+		MinecraftForge.EVENT_BUS.register(new SonarEvents());
 		logger.info("Registered Events");
+	}
+
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+		logger.info("Adding Discharge Values");
+		DischargeValues.addValues();
+		logger.info("Added" + DischargeValues.getPowerList().size() + "Discharge Values");
+		for (Map.Entry<ItemStack, Integer> entry : DischargeValues.getPowerList().entrySet()) {
+			logger.info("Discharge Values: " + entry.toString() + " = " + entry.getValue());
+		}
 	}
 
 	public static void registerPackets() {
 		if (network == null) {
-			network = NetworkRegistry.INSTANCE.newSimpleChannel("Sonar-Packets");			
+			network = NetworkRegistry.INSTANCE.newSimpleChannel("Sonar-Packets");
 			network.registerMessage(PacketTileSync.Handler.class, PacketTileSync.class, 0, Side.CLIENT);
 			network.registerMessage(PacketSonarSides.Handler.class, PacketSonarSides.class, 1, Side.CLIENT);
 			network.registerMessage(PacketRequestSync.Handler.class, PacketRequestSync.class, 2, Side.SERVER);
@@ -84,6 +99,8 @@ public class SonarCore {
 			network.registerMessage(PacketByteBufClient.Handler.class, PacketByteBufClient.class, 4, Side.CLIENT);
 			network.registerMessage(PacketByteBufServer.Handler.class, PacketByteBufServer.class, 5, Side.SERVER);
 			network.registerMessage(PacketBlockInteraction.Handler.class, PacketBlockInteraction.class, 6, Side.SERVER);
+			network.registerMessage(PacketStackUpdate.Handler.class, PacketStackUpdate.class, 7, Side.CLIENT);
+			network.registerMessage(PacketInvUpdate.Handler.class, PacketInvUpdate.class, 8, Side.CLIENT);
 		}
 	}
 

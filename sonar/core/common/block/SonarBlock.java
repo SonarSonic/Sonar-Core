@@ -27,6 +27,7 @@ import sonar.core.inventory.IDropInventory;
 import sonar.core.network.PacketBlockInteraction;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.BlockInteraction;
+import sonar.core.utils.BlockInteractionType;
 import sonar.core.utils.IInteractBlock;
 import sonar.core.utils.IUpgradeCircuits;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
@@ -74,7 +75,7 @@ public abstract class SonarBlock extends Block implements IDismantleable, IInter
 			if (wrenchable && SonarAPI.calculatorLoaded() && heldItem != null && (heldItem.getItem() instanceof IToolHammer || heldItem.getItem() == GameRegistry.findItem("Calculator", "Wrench"))) {
 				return false;
 			} else {
-				return operateBlock(world, x, y, z, player, side, hitx, hity, hitz, player.isSneaking() ? BlockInteraction.SHIFT_RIGHT : BlockInteraction.RIGHT);
+				return operateBlock(world, x, y, z, player, new BlockInteraction(side, hitx, hity, hitz, player.isSneaking() ? BlockInteractionType.SHIFT_RIGHT : BlockInteractionType.RIGHT));
 			}
 		}
 		return super.onBlockActivated(world, x, y, z, player, side, hitx, hity, hitz);
@@ -87,7 +88,7 @@ public abstract class SonarBlock extends Block implements IDismantleable, IInter
 
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
-		if (world.isRemote && allowLeftClick() && player.capabilities.isCreativeMode) {
+		if (world.isRemote && allowLeftClick()) {
 			MovingObjectPosition posn = Minecraft.getMinecraft().objectMouseOver;
 			if (isClickableSide(world, x, y, z, posn.sideHit)) {
 				onBlockClicked(world, x, y, z, player);
@@ -109,7 +110,7 @@ public abstract class SonarBlock extends Block implements IDismantleable, IInter
 	public abstract boolean dropStandard(World world, int x, int y, int z);
 
 	/** standard onBlockActivated for use in Calculators blocks */
-	public abstract boolean operateBlock(World world, int x, int y, int z, EntityPlayer player, int side, float hitx, float hity, float hitz, BlockInteraction interact);
+	public abstract boolean operateBlock(World world, int x, int y, int z, EntityPlayer player, BlockInteraction interact);
 
 	@Override
 	public boolean allowLeftClick() {
@@ -123,7 +124,7 @@ public abstract class SonarBlock extends Block implements IDismantleable, IInter
 			float hitX = (float) (pos.hitVec.xCoord - pos.blockX);
 			float hitY = (float) (pos.hitVec.yCoord - pos.blockY);
 			float hitZ = (float) (pos.hitVec.zCoord - pos.blockZ);
-			SonarCore.network.sendToServer(new PacketBlockInteraction(x, y, z, pos.sideHit, hitX, hitY, hitZ, player.isSneaking() ? BlockInteraction.SHIFT_LEFT : BlockInteraction.LEFT));
+			SonarCore.network.sendToServer(new PacketBlockInteraction(x, y, z, new BlockInteraction(pos.sideHit, hitX, hitY, hitZ, player.isSneaking() ? BlockInteractionType.SHIFT_LEFT : BlockInteractionType.LEFT)));
 		}
 	}
 
@@ -233,7 +234,6 @@ public abstract class SonarBlock extends Block implements IDismantleable, IInter
 
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block oldblock, int oldMetadata) {
-
 		List<ItemStack> drops = new ArrayList();
 		TileEntity entity = world.getTileEntity(x, y, z);
 		if (entity != null) {

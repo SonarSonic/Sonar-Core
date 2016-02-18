@@ -8,7 +8,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 public class SonarEvents {
 	@SubscribeEvent
 	public void playerInteracts(PlayerInteractEvent event) {
-		if (event.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK && event.entityPlayer.capabilities.isCreativeMode) {
+		if (event.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK) {
 			Block block = event.world.getBlock(event.x, event.y, event.z);
 			if (block instanceof IInteractBlock) {
 				IInteractBlock interact = (IInteractBlock) block;

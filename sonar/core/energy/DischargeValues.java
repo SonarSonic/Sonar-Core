@@ -24,16 +24,16 @@ public class DischargeValues {
 	private static void clearList() {
 		dischargeList.clear();
 	}
-	
-	public static void addValue(Object object, int power){
-		if(object!=null){
+
+	public static void addValue(Object object, int power) {
+		if (object != null) {
 			ItemStack stack = ItemStackHelper.createStack(object);
-			if(stack!=null)
+			if (stack != null)
 				dischargeList.put(stack, power);
 		}
 	}
-	
-	public static int getValueOf(ItemStack stack) {
+
+	public static int getValueOf(ItemStack stack) {		
 		Iterator iterator = dischargeList.entrySet().iterator();
 
 		Map.Entry entry;
@@ -47,7 +47,7 @@ public class DischargeValues {
 		return (Integer) entry.getValue();
 	}
 
-	public static Map getPowerList() {
+	public static Map<ItemStack, Integer> getPowerList() {
 		return dischargeList;
 	}
 

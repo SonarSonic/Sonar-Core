@@ -14,8 +14,7 @@ public class PacketSonarSides extends PacketCoords<PacketSonarSides> {
 
 	public int side, value;
 
-	public PacketSonarSides() {
-	}
+	public PacketSonarSides() {}
 
 	public PacketSonarSides(int x, int y, int z, int side, int value) {
 		super(x, y, z);

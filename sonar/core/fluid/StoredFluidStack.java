@@ -43,6 +43,9 @@ public class StoredFluidStack {
 			capacity -= stack.capacity;
 		}
 	}
+	public StoredFluidStack copy() {
+		return new StoredFluidStack(this.fluid, this.stored);
+	}
 
 	public StoredFluidStack setStackSize(long size) {
 		this.stored = size;
