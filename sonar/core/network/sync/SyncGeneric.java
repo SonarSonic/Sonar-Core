@@ -14,7 +14,7 @@ import sonar.core.utils.helpers.RegistryHelper;
 public class SyncGeneric<T extends IBufObject> implements ISyncPart {
 	private T c;
 	private T last;
-	private byte id;
+	private byte id = -1;
 	private IBufManager<T> manager;
 
 	public SyncGeneric(IBufManager<T> manager, int id) {
@@ -22,14 +22,11 @@ public class SyncGeneric<T extends IBufObject> implements ISyncPart {
 		this.id = (byte) id;
 	}
 
-	public SyncGeneric(IBufManager<T> manager, int id, T def) {
-		this.manager = manager;
-		this.id = (byte) id;
+	public void setDefault(T def){
 		this.c = def;
 		this.last = def;
 	}
-
-
+	
 	@Override
 	public boolean equal() {
 		return manager.areTypesEqual(c, last);

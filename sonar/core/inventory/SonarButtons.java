@@ -6,13 +6,14 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import sonar.core.utils.helpers.FontHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SonarButtons {
+public final class SonarButtons {
 
 	@SideOnly(Side.CLIENT)
-	public static abstract class SonarButton extends GuiButton {
+	public static class SonarButton extends GuiButton {
 
 		public boolean isButtonDown = false;
 
@@ -34,7 +35,18 @@ public class SonarButtons {
 		}
 
 	}
+	
+	public static class HoverButton extends SonarButton{
 
+		public HoverButton(int id, int x, int y, int textureX, int textureY, String display) {
+			super(id, x, y, textureX, textureY, display);
+		}
+		
+		public String getHoverText(){
+			return "";
+		}
+	}
+	
 	@SideOnly(Side.CLIENT)
 	public static abstract class ImageButton extends SonarButton {
 		private final ResourceLocation texture;

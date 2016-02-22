@@ -3,7 +3,7 @@ package sonar.core.integration.fmp.handlers;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import sonar.core.network.sync.SyncBoolean;
+import sonar.core.network.sync.SyncTagType;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 
@@ -14,10 +14,10 @@ import sonar.core.utils.helpers.NBTHelper.SyncType;
 public abstract class TileHandler implements ISyncTile {
 
 	public TileEntity tile;
-	public SyncBoolean isMultipart = new SyncBoolean(-1);
+	public SyncTagType.BOOLEAN isMultipart = new SyncTagType.BOOLEAN(-1);
 
 	public TileHandler(boolean isMultipart, TileEntity tile) {
-		this.isMultipart.setBoolean(isMultipart);
+		this.isMultipart.setObject(isMultipart);
 		this.tile = tile;
 	}
 

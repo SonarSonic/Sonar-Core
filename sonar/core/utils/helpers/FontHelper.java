@@ -126,13 +126,13 @@ public class FontHelper {
 	}
 	public static String formatFluidSize(long fluidSize) {
 		if ((fluidSize < 10000)) {
-			return " " + fluidSize;
+			return " " + fluidSize + " mB";
 		} else if ((fluidSize < 1000000)) {
-			return roundValue(1, (float) fluidSize / 1000) + " K";
+			return roundValue(1, (float) fluidSize / 1000) + " KmB";
 		} else if ((fluidSize < 1000000000)) {
-			return roundValue(1, (float) fluidSize / 1000000) + " M";
+			return roundValue(1, (float) fluidSize / 1000000) + " MmB";
 		}
-		return roundValue(2, (float) fluidSize / 1000000000) + " B";
+		return roundValue(2, (float) fluidSize / 1000000000) + " BmB";
 
 	}
 	public static Float roundValue(int decimalPlace, Float d) {
