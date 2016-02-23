@@ -17,12 +17,13 @@ public abstract class SyncPart implements ISyncPart {
 	}
 
 	public String getTagName() {
-		if (id == -1) {
-			return name;
-		} else {
+		if (name == null) {
 			return String.valueOf(id);
+		} else {
+			return name;
 		}
 	}
+
 	public final void writeToBuf(ByteBuf buf) {
 		if (!equal()) {
 			buf.writeBoolean(true);
@@ -38,6 +39,7 @@ public abstract class SyncPart implements ISyncPart {
 			readObject(buf);
 		}
 	}
+
 	public final void writeToNBT(NBTTagCompound nbt, SyncType type) {
 		if (type == SyncType.SYNC) {
 			if (!equal()) {
@@ -59,13 +61,13 @@ public abstract class SyncPart implements ISyncPart {
 			this.readObject(nbt, type);
 		}
 	}
-	
+
 	public abstract void updateSync();
 
 	public abstract void writeObject(ByteBuf buf);
 
 	public abstract void readObject(ByteBuf buf);
-	
+
 	public abstract void writeObject(NBTTagCompound nbt, SyncType type);
 
 	public abstract void readObject(NBTTagCompound nbt, SyncType type);

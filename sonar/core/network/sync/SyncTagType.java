@@ -217,7 +217,7 @@ public abstract class SyncTagType<T> extends SyncPart {
 	public void updateSync() {
 		last = c;
 	}
-
+	
 	@Override
 	public void writeObject(ByteBuf buf) {
 		NBTHelper.writeBufBase(buf, nbtType, c, getTagName());
@@ -240,7 +240,7 @@ public abstract class SyncTagType<T> extends SyncPart {
 		if (nbt.hasKey(getTagName()))
 			c = (T) NBTHelper.readNBTBase(nbt, nbtType, getTagName());
 	}
-
+	
 	public SyncTagType<T> setDefault(T def) {
 		c = def;
 		last = def;

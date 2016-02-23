@@ -153,7 +153,6 @@ public abstract class SonarBlock extends Block implements IDismantleable, IInter
 			processDrop(world, x, y, z, null, itemStack);
 			return itemStack;
 		}
-
 	}
 
 	public void processDrop(World world, int x, int y, int z, ISyncTile te, ItemStack drop) {
@@ -161,6 +160,7 @@ public abstract class SonarBlock extends Block implements IDismantleable, IInter
 			ISyncTile handler = (ISyncTile) te;
 			NBTTagCompound tag = new NBTTagCompound();
 			handler.writeData(tag, SyncType.DROP);
+			tag.setBoolean("dropped", true);
 			drop.setTagCompound(tag);
 		}
 	}

@@ -1,5 +1,6 @@
 package sonar.core.common.tileentity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +15,7 @@ import sonar.core.SonarCore;
 import sonar.core.integration.IWailaInfo;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketTileSync;
+import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cpw.mods.fml.relauncher.Side;
@@ -50,7 +52,10 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		this.writeData(nbt, SyncType.SAVE);
+
 	}
+
+	public void addSyncParts(List<ISyncPart> part) {}
 
 	@Override
 	public Packet getDescriptionPacket() {
@@ -69,9 +74,25 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 		this.load = true;
 	}
 
-	public void readData(NBTTagCompound nbt, SyncType type) {}
+	public void readData(NBTTagCompound nbt, SyncType type) {
+		if (SyncType.SAVE == type || SyncType.SYNC == type) {
+			List<ISyncPart> parts = new ArrayList();
+			this.addSyncParts(parts);
+			for (ISyncPart part : parts) {
+				part.readFromNBT(nbt, type);
+			}
+		}
+	}
 
-	public void writeData(NBTTagCompound nbt, SyncType type) {}
+	public void writeData(NBTTagCompound nbt, SyncType type) {
+		if (SyncType.SAVE == type || SyncType.SYNC == type) {
+			List<ISyncPart> parts = new ArrayList();
+			this.addSyncParts(parts);
+			for (ISyncPart part : parts) {
+				part.writeToNBT(nbt, type);
+			}
+		}
+	}
 
 	@SideOnly(Side.CLIENT)
 	public List<String> getWailaInfo(List<String> currenttip) {

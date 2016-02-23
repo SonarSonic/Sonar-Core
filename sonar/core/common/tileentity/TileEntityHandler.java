@@ -9,6 +9,7 @@ public abstract class TileEntityHandler extends TileEntitySonar implements ITile
 	public void updateEntity() {
 		super.updateEntity();
 		this.getTileHandler().update(this);
+		this.markDirty();
 	}
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
