@@ -2,80 +2,33 @@ package sonar.core.network.sync;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import sonar.core.network.sync.ISyncPart;
 import sonar.core.utils.IBufManager;
 import sonar.core.utils.IBufObject;
-import sonar.core.utils.INBTObject;
-import sonar.core.utils.helpers.NBTHelper;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
-import sonar.core.utils.helpers.NBTRegistryHelper;
-import sonar.core.utils.helpers.RegistryHelper;
 
-public class SyncGeneric<T extends IBufObject> implements ISyncPart {
+public class SyncGeneric<T extends IBufObject> extends SyncPart {
 	private T c;
 	private T last;
-	private byte id = -1;
 	private IBufManager<T> manager;
 
 	public SyncGeneric(IBufManager<T> manager, int id) {
+		super(id);
 		this.manager = manager;
-		this.id = (byte) id;
 	}
 
-	public void setDefault(T def){
+	public SyncGeneric(IBufManager<T> manager, String name) {
+		super(name);
+		this.manager = manager;
+	}
+
+	public void setDefault(T def) {
 		this.c = def;
 		this.last = def;
 	}
-	
+
 	@Override
 	public boolean equal() {
 		return manager.areTypesEqual(c, last);
-	}
-
-	public void writeToBuf(ByteBuf buf) {
-		if (!equal()) {
-			buf.writeBoolean(true);
-			manager.writeToBuf(buf, c);
-			last = c;
-		} else
-			buf.writeBoolean(false);
-	}
-
-	@Override
-	public void readFromBuf(ByteBuf buf) {
-		if (buf.readBoolean()) {
-			this.c = manager.readFromBuf(buf);
-		}
-	}
-
-	public void writeToNBT(NBTTagCompound nbt, SyncType type) {
-		if (type == SyncType.SYNC) {
-			if (!equal()) {
-				NBTTagCompound infoTag = new NBTTagCompound();
-				manager.writeToNBT(infoTag, c);
-				nbt.setTag(String.valueOf(id), infoTag);
-				last = c;
-			}
-		}
-		if (type == SyncType.SAVE) {
-			NBTTagCompound infoTag = new NBTTagCompound();
-			manager.writeToNBT(infoTag, c);
-			nbt.setTag(String.valueOf(id), infoTag);
-
-		}
-	}
-
-	public void readFromNBT(NBTTagCompound nbt, SyncType type) {
-		if (type == SyncType.SYNC) {
-			if (nbt.hasKey(String.valueOf(id))) {
-				this.c = manager.readFromNBT(nbt.getCompoundTag(String.valueOf(id)));
-			}
-		}
-		if (type == SyncType.SAVE) {
-			if (nbt.hasKey(String.valueOf(id))) {
-				this.c = manager.readFromNBT(nbt.getCompoundTag(String.valueOf(id)));
-			}
-		}
 	}
 
 	public void setObject(T value) {
@@ -86,4 +39,35 @@ public class SyncGeneric<T extends IBufObject> implements ISyncPart {
 		return c;
 	}
 
+	@Override
+	public void updateSync() {
+		last = c;
+	}
+
+	@Override
+	public void writeObject(ByteBuf buf) {
+		manager.writeToBuf(buf, c);
+	}
+
+	@Override
+	public void readObject(ByteBuf buf) {
+		this.c = manager.readFromBuf(buf);
+	}
+
+	@Override
+	public void writeObject(NBTTagCompound nbt, SyncType type) {
+		NBTTagCompound infoTag = new NBTTagCompound();
+		manager.writeToNBT(infoTag, c);
+		nbt.setTag(this.getTagName(), infoTag);
+
+	}
+
+	@Override
+	public void readObject(NBTTagCompound nbt, SyncType type) {
+		this.c = manager.readFromNBT(nbt.getCompoundTag(this.getTagName()));
+	}
+
+	public String toString() {
+		return c.toString();
+	}
 }

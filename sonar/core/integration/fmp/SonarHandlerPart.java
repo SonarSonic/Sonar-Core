@@ -2,17 +2,9 @@ package sonar.core.integration.fmp;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import sonar.core.integration.IWailaInfo;
-import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
-import codechicken.lib.data.MCDataInput;
-import codechicken.lib.data.MCDataOutput;
-import codechicken.lib.vec.Vector3;
-import codechicken.multipart.minecraft.McMetaPart;
 
 public abstract class SonarHandlerPart extends SonarTilePart implements IWailaInfo, ITileHandler {
 

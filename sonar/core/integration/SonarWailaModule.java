@@ -16,7 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.integration.fmp.FMPHelper;
-import sonar.core.integration.fmp.SonarTilePart;
 import sonar.core.integration.fmp.handlers.TileHandler;
 
 /** Integrations with WAILA - Registers all HUDs */

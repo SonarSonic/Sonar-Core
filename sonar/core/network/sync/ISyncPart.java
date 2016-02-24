@@ -16,4 +16,5 @@ public interface ISyncPart{
 
 	public void readFromNBT(NBTTagCompound nbt, SyncType type);
 	
+	public boolean canSync(SyncType sync);
 }

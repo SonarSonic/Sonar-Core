@@ -2,9 +2,6 @@ package sonar.core.integration.fmp;
 
 import java.util.Arrays;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

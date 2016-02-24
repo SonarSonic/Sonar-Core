@@ -1,7 +1,10 @@
 package sonar.core.common.tileentity;
 
+import java.util.List;
+
 import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.integration.fmp.ITileHandler;
+import sonar.core.network.sync.ISyncPart;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 
 public abstract class TileEntityHandler extends TileEntitySonar implements ITileHandler {
@@ -20,6 +23,10 @@ public abstract class TileEntityHandler extends TileEntitySonar implements ITile
 	public void writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
 		this.getTileHandler().writeData(nbt, type);
+	}
 
+	public void addSyncParts(List<ISyncPart> parts) {
+		super.addSyncParts(parts);
+		this.getTileHandler().addSyncParts(parts);
 	}
 }

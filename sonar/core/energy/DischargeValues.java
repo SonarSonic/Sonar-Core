@@ -8,7 +8,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import sonar.core.utils.helpers.ItemStackHelper;
-import sonar.core.utils.helpers.SonarHelper;
 
 public class DischargeValues {
 

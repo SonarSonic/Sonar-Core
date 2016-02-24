@@ -1,11 +1,11 @@
 package sonar.core.utils.helpers;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.utils.IBufManager;
 import sonar.core.utils.IBufObject;
 import sonar.core.utils.INBTManager;
 import sonar.core.utils.INBTObject;
-import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class NBTRegistryHelper<T extends INBTObject> extends RegistryHelper implements INBTManager<T> {
 

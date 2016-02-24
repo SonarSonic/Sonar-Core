@@ -1,14 +1,9 @@
 package sonar.core.network;
 
-import sonar.core.integration.fmp.FMPHelper;
-import sonar.core.network.utils.ITextField;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import cofh.api.tileentity.IReconfigurableSides;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketSonarSides extends PacketCoords<PacketSonarSides> {
 

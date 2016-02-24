@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.SonarCore;
-import sonar.core.utils.INBTObject;
 import sonar.core.utils.IRegistryObject;
 
 public abstract class RegistryHelper<T extends IRegistryObject> {

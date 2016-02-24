@@ -1,13 +1,12 @@
 package sonar.core.integration.fmp.handlers;
 
-import sonar.core.utils.helpers.NBTHelper.SyncType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import sonar.core.utils.helpers.NBTHelper.SyncType;
 
 public abstract class InventoryTileHandler extends TileHandler implements IInventory {
 

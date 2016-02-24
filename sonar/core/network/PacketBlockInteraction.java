@@ -5,9 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import sonar.core.utils.BlockInteraction;
-import sonar.core.utils.BlockInteractionType;
 import sonar.core.utils.IInteractBlock;
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 
 public class PacketBlockInteraction extends PacketCoords {

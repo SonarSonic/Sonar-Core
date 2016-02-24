@@ -2,10 +2,6 @@ package sonar.core.energy;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidStack;
-import sonar.core.inventory.StoredItemStack;
-import sonar.core.utils.helpers.NBTHelper;
-import cpw.mods.fml.common.network.ByteBufUtils;
 
 /**
  * should only be in RF, inaccuracy due to conversion is a price we must pay at

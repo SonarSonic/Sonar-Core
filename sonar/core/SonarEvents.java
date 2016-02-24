@@ -1,8 +1,8 @@
 package sonar.core;
 
-import sonar.core.utils.IInteractBlock;
 import net.minecraft.block.Block;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import sonar.core.utils.IInteractBlock;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class SonarEvents {

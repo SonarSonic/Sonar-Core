@@ -1,13 +1,11 @@
 package sonar.core;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +27,6 @@ import sonar.core.network.PacketTileSync;
 import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.network.utils.ISyncTile;
-import sonar.core.utils.BlockCoords;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;

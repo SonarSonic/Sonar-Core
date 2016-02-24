@@ -1,6 +1,5 @@
 package sonar.core.utils.helpers;
 
-import sonar.core.inventory.IFilteredInventory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockHopper;
@@ -11,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityHopper;
-import net.minecraftforge.common.util.ForgeDirection;
+import sonar.core.inventory.IFilteredInventory;
 
 public class InventoryHelper {
 

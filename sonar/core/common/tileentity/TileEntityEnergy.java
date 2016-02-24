@@ -3,24 +3,23 @@ package sonar.core.common.tileentity;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyTile;
+
+import java.util.List;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import sonar.core.integration.SonarAPI;
-import sonar.core.utils.helpers.NBTHelper;
+import sonar.core.network.sync.ISyncPart;
+import sonar.core.network.sync.SyncEnergyStorage;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
-import cofh.api.energy.EnergyStorage;
 
 public class TileEntityEnergy extends TileEntitySonar implements IEnergyTile {
 
-	public EnergyStorage storage;
+	public SyncEnergyStorage storage;
 	public int maxTransfer;
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		super.readData(nbt, type);
-		if (type == SyncType.SAVE || type == SyncType.SYNC) {
-			NBTHelper.readEnergyStorage(storage, nbt);
-		}
-
 		if (type == SyncType.DROP) {
 			this.storage.setEnergyStored(nbt.getInteger("energy"));
 		}
@@ -28,13 +27,15 @@ public class TileEntityEnergy extends TileEntitySonar implements IEnergyTile {
 
 	public void writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
-		if (type == SyncType.SAVE || type == SyncType.SYNC) {
-			NBTHelper.writeEnergyStorage(storage, nbt);
-		}
 		if (type == SyncType.DROP) {
 			nbt.setInteger("energy", this.storage.getEnergyStored());
 
 		}
+	}
+	
+	public void addSyncParts(List<ISyncPart> parts) {
+		super.addSyncParts(parts);
+		parts.add(storage);
 	}
 
 	public void onLoaded() {

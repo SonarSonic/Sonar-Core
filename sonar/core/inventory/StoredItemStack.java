@@ -1,6 +1,5 @@
 package sonar.core.inventory;
 
-import sonar.core.fluid.StoredFluidStack;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

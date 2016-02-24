@@ -2,13 +2,10 @@ package sonar.core.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import sonar.core.integration.fmp.FMPHelper;
 import sonar.core.network.utils.ITextField;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketTextField extends PacketCoords<PacketTextField> {
 

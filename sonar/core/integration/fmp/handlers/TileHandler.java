@@ -1,8 +1,11 @@
 package sonar.core.integration.fmp.handlers;
 
+import java.util.List;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncTagType;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
@@ -21,17 +24,16 @@ public abstract class TileHandler implements ISyncTile {
 		this.tile = tile;
 	}
 
+	public void addSyncParts(List<ISyncPart> parts) {
+		parts.add(isMultipart);
+	}
+	
 	public abstract void update(TileEntity te);
 
-	public void readData(NBTTagCompound nbt, SyncType type) {
-		isMultipart.readFromNBT(nbt, type);
-	}
+	public void readData(NBTTagCompound nbt, SyncType type) {}
 
-	public void writeData(NBTTagCompound nbt, SyncType type) {
-		isMultipart.writeToNBT(nbt, type);
-	}
-
-	public void removed(World world, int x, int y, int z, int meta) {
-	}
+	public void writeData(NBTTagCompound nbt, SyncType type) {}
+	
+	public void removed(World world, int x, int y, int z, int meta) {}
 
 }

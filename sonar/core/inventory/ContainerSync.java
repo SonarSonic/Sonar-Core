@@ -2,15 +2,11 @@ package sonar.core.inventory;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import sonar.core.SonarCore;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.utils.ISyncTile;
-import sonar.core.utils.helpers.NBTHelper;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 
 public abstract class ContainerSync extends Container {

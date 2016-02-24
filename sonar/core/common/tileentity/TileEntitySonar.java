@@ -33,7 +33,8 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 		return !worldObj.isRemote;
 	}
 
-	public void onLoaded() {}
+	public void onLoaded() {
+	}
 
 	public void updateEntity() {
 		if (load) {
@@ -55,7 +56,7 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 
 	}
 
-	public void addSyncParts(List<ISyncPart> part) {}
+	public void addSyncParts(List<ISyncPart> parts) {}
 
 	@Override
 	public Packet getDescriptionPacket() {
@@ -75,22 +76,20 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 	}
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		if (SyncType.SAVE == type || SyncType.SYNC == type) {
-			List<ISyncPart> parts = new ArrayList();
-			this.addSyncParts(parts);
-			for (ISyncPart part : parts) {
+		List<ISyncPart> parts = new ArrayList();
+		this.addSyncParts(parts);
+		for (ISyncPart part : parts) {
+			if (part.canSync(type))
 				part.readFromNBT(nbt, type);
-			}
 		}
 	}
 
 	public void writeData(NBTTagCompound nbt, SyncType type) {
-		if (SyncType.SAVE == type || SyncType.SYNC == type) {
-			List<ISyncPart> parts = new ArrayList();
-			this.addSyncParts(parts);
-			for (ISyncPart part : parts) {
+		List<ISyncPart> parts = new ArrayList();
+		this.addSyncParts(parts);
+		for (ISyncPart part : parts) {
+			if (part.canSync(type))
 				part.writeToNBT(nbt, type);
-			}
 		}
 	}
 

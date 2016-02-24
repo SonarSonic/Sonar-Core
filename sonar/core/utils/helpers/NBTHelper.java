@@ -6,29 +6,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import sonar.core.SonarCore;
-import sonar.core.inventory.StoredItemStack;
-import sonar.core.utils.IBufObject;
-import sonar.core.utils.INBTObject;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagEnd;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagLong;
-import net.minecraft.nbt.NBTTagShort;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
-import cofh.api.energy.EnergyStorage;
+import sonar.core.SonarCore;
+import sonar.core.utils.IBufObject;
+import sonar.core.utils.INBTObject;
 import cpw.mods.fml.common.network.ByteBufUtils;
 
 public class NBTHelper {
@@ -201,7 +188,7 @@ public class NBTHelper {
 			buf.writeBoolean(false);
 		}
 	}
-
+/*
 	public static void writeEnergyStorage(EnergyStorage storage, NBTTagCompound nbt) {
 		NBTTagCompound energyTag = new NBTTagCompound();
 		storage.writeToNBT(energyTag);
@@ -213,7 +200,7 @@ public class NBTHelper {
 			storage.readFromNBT(nbt.getCompoundTag("energyStorage"));
 		}
 	}
-
+	*/
 	public static void writeFluidToBuf(FluidStack stack, ByteBuf buf) {
 		ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(stack.getFluid()));
 		buf.writeInt(stack.amount);
