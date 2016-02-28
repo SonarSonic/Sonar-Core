@@ -44,7 +44,6 @@ public abstract class TileEntitySidedInventoryReceiver extends TileEntitySidedIn
 		super.writeData(nbt, type);
 		if (type == SyncType.DROP) {
 			nbt.setInteger("energy", this.storage.getEnergyStored());
-
 		}
 	}
 

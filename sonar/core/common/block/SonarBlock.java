@@ -142,9 +142,10 @@ public abstract class SonarBlock extends Block implements IDismantleable, IInter
 	}
 
 	public final ItemStack getSpecialDrop(World world, int x, int y, int z) {
-		if (world.getTileEntity(x, y, z) != null && world.getTileEntity(x, y, z) instanceof ISyncTile) {
+		TileEntity target = world.getTileEntity(x, y, z);
+		if (target != null && target instanceof ISyncTile) {
 			ItemStack itemStack = new ItemStack(this, 1);
-			processDrop(world, x, y, z, (ISyncTile) world.getTileEntity(x, y, z), itemStack);
+			processDrop(world, x, y, z, (ISyncTile) target, itemStack);
 			return itemStack;
 		} else {
 			ItemStack itemStack = new ItemStack(this, 1);
@@ -158,8 +159,10 @@ public abstract class SonarBlock extends Block implements IDismantleable, IInter
 			ISyncTile handler = (ISyncTile) te;
 			NBTTagCompound tag = new NBTTagCompound();
 			handler.writeData(tag, SyncType.DROP);
-			tag.setBoolean("dropped", true);
-			drop.setTagCompound(tag);
+			if (!tag.hasNoTags()) {
+				tag.setBoolean("dropped", true);
+				drop.setTagCompound(tag);
+			}
 		}
 	}
 

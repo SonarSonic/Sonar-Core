@@ -1,6 +1,8 @@
 package sonar.core.integration.fmp;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import sonar.core.SonarCore;
 import sonar.core.network.PacketTileSync;
+import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 import codechicken.lib.data.MCDataInput;
@@ -46,9 +49,24 @@ public abstract class SonarTilePart extends McMetaPart implements ISyncTile {
 	}
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
+		List<ISyncPart> parts = new ArrayList();
+		this.addSyncParts(parts);
+		for (ISyncPart part : parts) {
+			if (part.canSync(type))
+				part.readFromNBT(nbt, type);
+		}
 	}
 
 	public void writeData(NBTTagCompound nbt, SyncType type) {
+		List<ISyncPart> parts = new ArrayList();
+		this.addSyncParts(parts);
+		for (ISyncPart part : parts) {
+			if (part.canSync(type))
+				part.writeToNBT(nbt, type);
+		}
+	}
+
+	public void addSyncParts(List<ISyncPart> parts) {
 	}
 
 	@Override

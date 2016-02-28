@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.0.5"
+version = "1.0.7"
 group= "sonar.core.modid"
 archivesBaseName = "SonarCore-1.7.10"
 
@@ -41,7 +41,7 @@ dependencies {
 compile files('lib/Waila-1.5.10_1.7.10.jar')
 compile files('lib/NotEnoughItems-1.7.10-1.0.5.120-dev.jar')
 compile files('lib/ForgeMultipart-1.7.10-1.2.0.345-dev.jar')
-compile files('lib/Calculator-1.7.10-1.9.2.jar')
+compile files('lib/Calculator-1.7.10-1.9.5-dev.jar')
 compile files('lib/CodeChickenLib-1.7.10-1.1.3.138-dev.jar')
 }
 

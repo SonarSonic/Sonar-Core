@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.integration.IWailaInfo;
+import sonar.core.network.sync.ISyncPart;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
 
 public abstract class SonarHandlerPart extends SonarTilePart implements IWailaInfo, ITileHandler {
@@ -29,10 +30,15 @@ public abstract class SonarHandlerPart extends SonarTilePart implements IWailaIn
 		getTileHandler().writeData(nbt, type);
 	}
 
+	public void addSyncParts(List<ISyncPart> parts) {
+		getTileHandler().addSyncParts(parts);
+	}
+
 	@Override
 	public void onWorldSeparate() {
 		getTileHandler().removed(world(), x(), y(), z(), meta);
 	}
+
 	@Override
 	public List<String> getWailaInfo(List<String> currenttip) {
 		if (this.getTileHandler() instanceof IWailaInfo) {
