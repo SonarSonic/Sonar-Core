@@ -281,25 +281,25 @@ public class NBTHelper {
 		}
 		switch (type) {
 		case NBT.TAG_END:
-			nbt.setBoolean(tagName, (boolean) object);
+			nbt.setBoolean(tagName, (Boolean) object);
 			return;
 		case NBT.TAG_BYTE:
-			nbt.setByte(tagName, (byte) object);
+			nbt.setByte(tagName, (Byte) object);
 			return;
 		case NBT.TAG_SHORT:
-			nbt.setShort(tagName, (short) object);
+			nbt.setShort(tagName, (Short) object);
 			return;
 		case NBT.TAG_INT:
-			nbt.setInteger(tagName, (int) object);
+			nbt.setInteger(tagName, (Integer) object);
 			return;
 		case NBT.TAG_LONG:
-			nbt.setLong(tagName, (long) object);
+			nbt.setLong(tagName, (Long) object);
 			return;
 		case NBT.TAG_FLOAT:
-			nbt.setFloat(tagName, (float) object);
+			nbt.setFloat(tagName, (Float) object);
 			return;
 		case NBT.TAG_DOUBLE:
-			nbt.setDouble(tagName, (double) object);
+			nbt.setDouble(tagName, (Double) object);
 			return;
 		case NBT.TAG_BYTE_ARRAY:
 			nbt.setByteArray(tagName, (byte[]) object);
@@ -351,28 +351,28 @@ public class NBTHelper {
 	public static void writeBufBase(ByteBuf buf, int type, Object object, String tagName) {
 		switch (type) {
 		case NBT.TAG_END:
-			buf.writeBoolean((boolean) object);
+			buf.writeBoolean((Boolean) object);
 			return;
 		case NBT.TAG_BYTE:
-			buf.writeByte((byte) object);
+			buf.writeByte((Byte) object);
 			return;
 		case NBT.TAG_SHORT:
-			buf.writeShort((short) object);
+			buf.writeShort((Short) object);
 			return;
 		case NBT.TAG_INT:
-			buf.writeInt((int) object);
+			buf.writeInt((Integer) object);
 			return;
 		case NBT.TAG_LONG:
-			buf.writeLong((long) object);
+			buf.writeLong((Long) object);
 			return;
 		case NBT.TAG_FLOAT:
-			buf.writeFloat((float) object);
+			buf.writeFloat((Float) object);
 			return;
 		case NBT.TAG_DOUBLE:
-			buf.writeDouble((double) object);
+			buf.writeDouble((Double) object);
 			return;
 		case NBT.TAG_BYTE_ARRAY:
-			byte[] byteArray = (byte[]) object;
+			Byte[] byteArray = (Byte[]) object;
 			buf.writeInt(byteArray.length);
 			for (int i = 0; i < byteArray.length; i++) {
 				buf.writeByte(byteArray[i]);
@@ -388,7 +388,7 @@ public class NBTHelper {
 			ByteBufUtils.writeTag(buf, (NBTTagCompound) object);
 			return;
 		case NBT.TAG_INT_ARRAY:
-			int[] intArray = (int[]) object;
+			Integer[] intArray = (Integer[]) object;
 			buf.writeInt(intArray.length);
 			for (int i = 0; i < intArray.length; i++) {
 				buf.writeInt(intArray[i]);
