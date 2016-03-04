@@ -22,12 +22,9 @@ public class BlockCoords {
 	private boolean hasDimension;
 
 	/**
-	 * @param x
-	 *            block x coordinate
-	 * @param y
-	 *            block y coordinate
-	 * @param z
-	 *            block z coordinate
+	 * @param x block x coordinate
+	 * @param y block y coordinate
+	 * @param z block z coordinate
 	 */
 	public BlockCoords(int x, int y, int z) {
 		this.xCoord = x;
@@ -197,7 +194,7 @@ public class BlockCoords {
 			return false;
 		}
 		BlockCoords coords = (BlockCoords) obj;
-		return this.xCoord == coords.xCoord && this.yCoord == coords.yCoord && this.zCoord == coords.zCoord;
+		return this.xCoord == coords.xCoord && this.yCoord == coords.yCoord && this.zCoord == coords.zCoord && this.dimension == coords.dimension;
 	}
 
 	public static boolean equalCoords(BlockCoords coords1, BlockCoords coords2) {
@@ -210,7 +207,7 @@ public class BlockCoords {
 		if (coords2 != null && coords1 == null) {
 			return false;
 		}
-		return coords1.xCoord == coords2.xCoord && coords1.yCoord == coords2.yCoord && coords1.zCoord == coords2.zCoord;
+		return coords1.xCoord == coords2.xCoord && coords1.yCoord == coords2.yCoord && coords1.zCoord == coords2.zCoord && coords1.dimension == coords2.dimension;
 	}
 
 	public static boolean equalCoordArrays(BlockCoords[] coords1, BlockCoords[] coords2) {

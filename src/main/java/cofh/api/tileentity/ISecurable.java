@@ -1,8 +1,8 @@
 package cofh.api.tileentity;
 
-import net.minecraft.entity.player.EntityPlayer;
-
 import com.mojang.authlib.GameProfile;
+
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Implement this interface on Tile Entities which can have access restrictions.

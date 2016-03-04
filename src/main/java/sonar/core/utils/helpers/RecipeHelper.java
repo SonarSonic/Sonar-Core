@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.calculator.mod.api.CalculatorAPI;
+import sonar.core.SonarCore;
 import sonar.core.integration.SonarAPI;
 import cpw.mods.fml.common.FMLLog;
 
@@ -28,9 +29,12 @@ public abstract class RecipeHelper {
 	public abstract String getRecipeID();
 
 	/**
-	 * @param inputSize number of stacks required in the input
-	 * @param outputSize number of stacks to be created
-	 * @param shapeless does the order matter?
+	 * @param inputSize
+	 *            number of stacks required in the input
+	 * @param outputSize
+	 *            number of stacks to be created
+	 * @param shapeless
+	 *            does the order matter?
 	 */
 	public RecipeHelper(int inputSize, int outputSize, boolean shapeless) {
 		this.inputSize = inputSize;
@@ -60,47 +64,51 @@ public abstract class RecipeHelper {
 	public void addRecipe(Object... objects) {
 		Object[] stack = new Object[objects.length];
 		if (objects.length != this.inputSize + this.outputSize) {
-			FMLLog.severe("RecipeHelper - A recipeOutput wasn't added because the size didn't match!");
+			SonarCore.logger.error("RecipeHelper - A recipeOutput wasn't added because the size didn't match!");
 			return;
 		}
-		for (int i = 0; i < objects.length; i++) {
-			if (objects[i] == null) {
-				return;
+		try {
+			for (int i = 0; i < objects.length; i++) {
+				if (objects[i] == null) {
+					return;
+				}
+				if (objects[i] instanceof String) {
+					if (i < inputSize) {
+						stack[i] = new OreStack((String) objects[i], 1);
+					} else if (!(i - inputSize > outputSize)) {
+						ArrayList<ItemStack> ores = OreDictionary.getOres((String) objects[i]);
+						if (ores.size() > 0) {
+							stack[i] = ores.get(0);
+						} else {
+							return;
+						}
+					}
+				} else if (objects[i] instanceof OreStack) {
+					if (i - inputSize < outputSize) {
+						ArrayList<ItemStack> ores = OreDictionary.getOres(((OreStack) objects[i]).oreString);
+						if (ores.size() > 0) {
+							stack[i] = new ItemStack(ores.get(0).getItem(), ((OreStack) objects[i]).stackSize, ores.get(0).getItemDamage());
+						} else {
+							return;
+						}
+					}
+				} else if (objects[i] instanceof ItemStack[]) {
+					for (ItemStack checkStack : (ItemStack[]) objects[i]) {
+						if (checkStack == null) {
+							return;
+						}
+					}
+					stack[i] = objects[i];
+				} else if (objects[i] instanceof Integer) {
+					stack[i] = objects[i];
+				} else {
+					stack[i] = ItemStackHelper.createStack(objects[i]);
+				}
 			}
-			if (objects[i] instanceof String) {
-				if (i < inputSize) {					
-					stack[i] = new OreStack((String) objects[i], 1);
-				} else if (!(i - inputSize > outputSize)) {
-					ArrayList<ItemStack> ores = OreDictionary.getOres((String) objects[i]);
-					if (ores.size() > 0) {
-						stack[i] = ores.get(0);
-					} else {
-						return;
-					}
-				}
-			} else if (objects[i] instanceof OreStack) {
-				if (i - inputSize < outputSize) {
-					ArrayList<ItemStack> ores = OreDictionary.getOres(((OreStack) objects[i]).oreString);
-					if (ores.size() > 0) {
-						stack[i] = new ItemStack(ores.get(0).getItem(), ((OreStack) objects[i]).stackSize, ores.get(0).getItemDamage());
-					} else {
-						return;
-					}
-				}
-			} else if (objects[i] instanceof ItemStack[]) {
-				for (ItemStack checkStack : (ItemStack[]) objects[i]) {
-					if (checkStack == null) {
-						return;
-					}
-				}
-				stack[i] = objects[i];
-			} else if (objects[i] instanceof Integer) {
-				stack[i] = objects[i];
-			} else {
-				stack[i] = ItemStackHelper.createStack(objects[i]);
-			}
+			addFinal(stack);
+		} catch (Exception exception) {
+			SonarCore.logger.error("RecipeHelper : Exception Loading Recipe : " + exception.getLocalizedMessage());
 		}
-		addFinal(stack);
 	}
 
 	/** separates the recipeOutput into an input and output list */
@@ -119,15 +127,16 @@ public abstract class RecipeHelper {
 		addRecipe(input, output);
 	}
 
-
 	/** adds the two input and output lists */
 	public void addRecipe(Object[] input, Object[] output) {
 		recipeList.put(input, output);
 	}
 
 	/**
-	 * @param output stack you wish to find
-	 * @param input full list of inputs
+	 * @param output
+	 *            stack you wish to find
+	 * @param input
+	 *            full list of inputs
 	 * @return
 	 */
 	public ItemStack getOutput(int output, ItemStack... input) {
@@ -138,7 +147,8 @@ public abstract class RecipeHelper {
 	}
 
 	/**
-	 * @param input full list of inputs
+	 * @param input
+	 *            full list of inputs
 	 * @return full list of output stacks
 	 */
 	public ItemStack[] getOutput(ItemStack... input) {
@@ -178,7 +188,8 @@ public abstract class RecipeHelper {
 	/**
 	 * gets the full list of inputs from list of outputs
 	 * 
-	 * @param input stack to check
+	 * @param input
+	 *            stack to check
 	 * @return
 	 */
 	private Object[] getInput(ItemStack... output) {
@@ -206,9 +217,11 @@ public abstract class RecipeHelper {
 	}
 
 	/**
-	 * fixed check if the stack is used in any recipeOutput ignoring its stack size
+	 * fixed check if the stack is used in any recipeOutput ignoring its stack
+	 * size
 	 * 
-	 * @param input stack to check
+	 * @param input
+	 *            stack to check
 	 * @return validity
 	 */
 	public boolean validInput(ItemStack input) {
@@ -230,9 +243,11 @@ public abstract class RecipeHelper {
 	}
 
 	/**
-	 * fixed check if the stack is used in any recipeOutput ignoring its stack size
+	 * fixed check if the stack is used in any recipeOutput ignoring its stack
+	 * size
 	 * 
-	 * @param output stack to check
+	 * @param output
+	 *            stack to check
 	 * @return validity
 	 */
 	public boolean validOutput(ItemStack output) {
@@ -283,8 +298,10 @@ public abstract class RecipeHelper {
 	}
 
 	/**
-	 * @param input input stacks to check
-	 * @param key input stacks to check
+	 * @param input
+	 *            input stacks to check
+	 * @param key
+	 *            input stacks to check
 	 * @return if they are same
 	 */
 	private boolean checkInput(ItemStack[] input, Object[] key) {
@@ -360,8 +377,10 @@ public abstract class RecipeHelper {
 	}
 
 	/**
-	 * @param output output stacks to check
-	 * @param key output stacks to check
+	 * @param output
+	 *            output stacks to check
+	 * @param key
+	 *            output stacks to check
 	 * @return if they are same
 	 */
 	private boolean checkOutput(ItemStack[] output, Object[] key) {
@@ -384,9 +403,12 @@ public abstract class RecipeHelper {
 
 	/**
 	 * 
-	 * @param stack ItemStack to search for
-	 * @param key search field
-	 * @param checkSize does the stacksize matter
+	 * @param stack
+	 *            ItemStack to search for
+	 * @param key
+	 *            search field
+	 * @param checkSize
+	 *            does the stacksize matter
 	 * @return if a match was found
 	 */
 	public int containsStack(ItemStack stack, Object[] key, boolean checkSize) {
@@ -419,9 +441,12 @@ public abstract class RecipeHelper {
 	}
 
 	/**
-	 * @param stack ItemStack to check
-	 * @param key ItemStack to compare against
-	 * @param checkSize does the stack size matter
+	 * @param stack
+	 *            ItemStack to check
+	 * @param key
+	 *            ItemStack to compare against
+	 * @param checkSize
+	 *            does the stack size matter
 	 * @return if the stacks are equal or not
 	 */
 	private boolean equalStack(ItemStack stack, ItemStack key, boolean checkSize) {
@@ -430,9 +455,12 @@ public abstract class RecipeHelper {
 
 	/**
 	 * 
-	 * @param stack ItemStack you wish to obtain the stack size of
-	 * @param key field you wish to find it in
-	 * @param pos the position of the stack in the output
+	 * @param stack
+	 *            ItemStack you wish to obtain the stack size of
+	 * @param key
+	 *            field you wish to find it in
+	 * @param pos
+	 *            the position of the stack in the output
 	 * @return
 	 */
 	private int findStackSize(ItemStack stack, Object[] key, int pos) {
@@ -443,9 +471,9 @@ public abstract class RecipeHelper {
 				}
 			} else if (key[pos] instanceof ItemStack[]) {
 				return findStackSize(stack, (ItemStack[]) key[pos], pos);
-				
+
 			} else if (key[pos] instanceof OreStack) {
-				return ((OreStack)key[pos]).stackSize;
+				return ((OreStack) key[pos]).stackSize;
 			}
 		}
 		return -1;
@@ -453,7 +481,8 @@ public abstract class RecipeHelper {
 
 	/**
 	 * 
-	 * @param inputs list of inputs stacks to check
+	 * @param inputs
+	 *            list of inputs stacks to check
 	 * @return the crafting result
 	 */
 	public ItemStack getCraftingResult(ItemStack... inputs) {
@@ -474,7 +503,8 @@ public abstract class RecipeHelper {
 	/**
 	 * Removes the recipeOutput with the specified inputs
 	 * 
-	 * @param inputs inputs of the recipeOutput to remove
+	 * @param inputs
+	 *            inputs of the recipeOutput to remove
 	 * @return if the recipeOutput was found and removed
 	 */
 	public boolean removeRecipe(Object... inputs) {
@@ -519,7 +549,8 @@ public abstract class RecipeHelper {
 	}
 
 	/**
-	 * used for inputs/outputs using OreDict which require a custom stack size instead of 1.
+	 * used for inputs/outputs using OreDict which require a custom stack size
+	 * instead of 1.
 	 */
 	public static class OreStack {
 		public String oreString;

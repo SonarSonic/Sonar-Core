@@ -13,9 +13,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class FontHelper {
 
-	/**
-	 * @param colour 0 = grey, 1 = black, 2 = white
-	 */
+	/** @param colour 0 = grey, 1 = black, 2 = white */
 	public static void text(String info, int x, int y, int colour) {
 		FontRenderer render = Minecraft.getMinecraft().fontRenderer;
 		switch (colour) {
@@ -34,9 +32,7 @@ public class FontHelper {
 		}
 	}
 
-	/**
-	 * @param colour 0 = grey, 1 = black, 2 = white
-	 */
+	/** @param colour 0 = grey, 1 = black, 2 = white */
 	public static void textCentre(String info, int xSize, int y, int colour) {
 		FontRenderer render = Minecraft.getMinecraft().fontRenderer;
 		switch (colour) {
@@ -60,12 +56,10 @@ public class FontHelper {
 		return render.getStringWidth(info);
 	}
 
-	/**
-	 * @param info string information
+	/** @param info string information
 	 * @param xCentre where you want txt to be centred
 	 * @param y y coordinate
-	 * @param colour 0 = Gray, 1= Black, 2 = White
-	 */
+	 * @param colour 0 = Gray, 1= Black, 2 = White */
 	public static void textOffsetCentre(String info, int xCentre, int y, int colour) {
 		FontRenderer render = Minecraft.getMinecraft().fontRenderer;
 		switch (colour) {
@@ -90,6 +84,7 @@ public class FontHelper {
 			player.addChatComponentMessage(new ChatComponentText(string));
 		}
 	}
+
 	public static String formatStorage(long power) {
 		if ((power < 1000)) {
 			return power + " RF";
@@ -101,6 +96,7 @@ public class FontHelper {
 		return roundValue(2, (float) power / 1000000000) + " BRF";
 
 	}
+
 	public static String formatOutput(long power) {
 		if ((power < 1000)) {
 			return power + " RF/T";
@@ -124,6 +120,7 @@ public class FontHelper {
 		return roundValue(2, (float) stackSize / 1000000000) + " B";
 
 	}
+
 	public static String formatFluidSize(long fluidSize) {
 		if ((fluidSize < 10000)) {
 			return " " + fluidSize + " mB";
@@ -135,6 +132,7 @@ public class FontHelper {
 		return roundValue(2, (float) fluidSize / 1000000000) + " BmB";
 
 	}
+
 	public static Float roundValue(int decimalPlace, Float d) {
 		BigDecimal bd = new BigDecimal(Float.toString(d));
 		bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
@@ -171,24 +169,24 @@ public class FontHelper {
 		}
 		return false;
 	}
-	
-	public static String translate(String string){
+
+	public static String translate(String string) {
 		String local = StatCollector.translateToLocal(string);
-		if(!local.equals(string)){
+		if (!local.equals(string)) {
 			return local;
-		}else{
+		} else {
 			return StatCollector.translateToFallback(string);
 		}
 	}
-    public static String fullTranslate(String s)
-    {
-        String ret = LanguageRegistry.instance().getStringLocalization(s);
-        if(ret.length() == 0)
-            ret = LanguageRegistry.instance().getStringLocalization(s, "en_US");
-        if(ret.length() == 0)
-            ret = translate(s);
-        if(ret.length() == 0)
-            return s;
-        return ret;
-    }
+
+	public static String fullTranslate(String s) {
+		String ret = LanguageRegistry.instance().getStringLocalization(s);
+		if (ret.length() == 0)
+			ret = LanguageRegistry.instance().getStringLocalization(s, "en_US");
+		if (ret.length() == 0)
+			ret = translate(s);
+		if (ret.length() == 0)
+			return s;
+		return ret;
+	}
 }

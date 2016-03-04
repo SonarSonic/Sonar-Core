@@ -25,13 +25,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 /** helps with getting tiles, adding energy and checking stacks */
 public class SonarHelper {
 
-	/**
-	 * @param tile
-	 *            Tile Entity you're checking from
-	 * @param side
-	 *            side to find IEnergyHandler
-	 * @return if there is an adjacent Energy Hander
-	 */
+	/** @param tile Tile Entity you're checking from
+	 * @param side side to find IEnergyHandler
+	 * @return if there is an adjacent Energy Hander */
 	public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, int side) {
 		TileEntity handler = getAdjacentTileEntity(tile, ForgeDirection.getOrientation(side));
 		return isEnergyHandlerFromSide(handler, ForgeDirection.VALID_DIRECTIONS[side ^ 1]);
@@ -42,13 +38,9 @@ public class SonarHelper {
 		return isEnergyHandlerFromSide(handler, side.getOpposite());
 	}
 
-	/**
-	 * @param tile
-	 *            Tile Entity you want to check
-	 * @param from
-	 *            direction your adding from
-	 * @return if Handler can connect
-	 */
+	/** @param tile Tile Entity you want to check
+	 * @param from direction your adding from
+	 * @return if Handler can connect */
 	public static boolean isEnergyHandlerFromSide(TileEntity tile, ForgeDirection from) {
 		if (tile instanceof IEnergyProvider || tile instanceof IEnergyReceiver) {
 			IEnergyConnection handler = (IEnergyConnection) tile;
@@ -62,13 +54,9 @@ public class SonarHelper {
 		return false;
 	}
 
-	/**
-	 * @param tile
-	 *            Tile Entity you're checking from
-	 * @param side
-	 *            direction from Tile Entity your checking from
-	 * @return adjacent Tile Entity
-	 */
+	/** @param tile Tile Entity you're checking from
+	 * @param side direction from Tile Entity your checking from
+	 * @return adjacent Tile Entity */
 	public static TileEntity getAdjacentTileEntity(TileEntity tile, ForgeDirection side) {
 
 		return tile.getWorldObj().getTileEntity(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ);
@@ -78,11 +66,8 @@ public class SonarHelper {
 		return world.getBlock(coords.getX() + side.offsetX, coords.getY() + side.offsetY, coords.getZ() + side.offsetZ);
 	}
 
-	/**
-	 * @param tile
-	 *            Tile Entity you are checking
-	 * @return if the Tile is an Energy Handler
-	 */
+	/** @param tile Tile Entity you are checking
+	 * @return if the Tile is an Energy Handler */
 	public static boolean isEnergyHandler(TileEntity tile) {
 		if (tile instanceof IEnergyHandler) {
 			return true;
@@ -92,19 +77,12 @@ public class SonarHelper {
 		return false;
 	}
 
-	/**
-	 * Add energy to an IEnergyReciever, internal distribution is left entirely
-	 * to the IEnergyReciever.
+	/** Add energy to an IEnergyReciever, internal distribution is left entirely to the IEnergyReciever.
 	 * 
-	 * @param from
-	 *            Orientation the energy is received from.
-	 * @param maxReceive
-	 *            Maximum amount of energy to receive.
-	 * @param simulate
-	 *            If TRUE, the charge will only be simulated.
-	 * @return Amount of energy that was (or would have been, if simulated)
-	 *         received.
-	 */
+	 * @param from Orientation the energy is received from.
+	 * @param maxReceive Maximum amount of energy to receive.
+	 * @param simulate If TRUE, the charge will only be simulated.
+	 * @return Amount of energy that was (or would have been, if simulated) received. */
 	public static int pushEnergy(TileEntity tile, ForgeDirection dir, int amount, boolean simulate) {
 		if (tile instanceof IEnergyReceiver) {
 			IEnergyReceiver handler = (IEnergyReceiver) tile;
@@ -114,19 +92,11 @@ public class SonarHelper {
 
 	}
 
-	/**
-	 * Remove energy from an IEnergyProvider, internal distribution is left
-	 * entirely to the IEnergyProvider.
-	 * 
-	 * @param from
-	 *            Orientation the energy is extracted from.
-	 * @param maxExtract
-	 *            Maximum amount of energy to extract.
-	 * @param simulate
-	 *            If TRUE, the extraction will only be simulated.
-	 * @return Amount of energy that was (or would have been, if simulated)
-	 *         extracted.
-	 */
+	/** Remove energy from an IEnergyProvider, internal distribution is left entirely to the IEnergyProvider.
+	 * @param from Orientation the energy is extracted from.
+	 * @param maxExtract Maximum amount of energy to extract.
+	 * @param simulate If TRUE, the extraction will only be simulated.
+	 * @return Amount of energy that was (or would have been, if simulated) extracted. */
 	public static int pullEnergy(TileEntity tile, ForgeDirection dir, int amount, boolean simulate) {
 		if (tile instanceof IEnergyProvider) {
 			IEnergyProvider handler = (IEnergyProvider) tile;
@@ -136,10 +106,7 @@ public class SonarHelper {
 
 	}
 
-	/**
-	 * checks if a tile implements IWrench and IDropTile and drops it
-	 * accordingly
-	 */
+	/** checks if a tile implements IWrench and IDropTile and drops it accordingly */
 	public static void dropTile(EntityPlayer player, Block block, World world, int x, int y, int z) {
 		if (SonarAPI.calculatorLoaded() && block == GameRegistry.findBlock("Calculator", "ConductorMastBlock")) {
 			if (world.getBlock(x, y - 1, z) == GameRegistry.findBlock("Calculator", "ConductorMast")) {

@@ -53,20 +53,24 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 	}
 
 	public void registerObject(T object) {
-		if (!object.isLoadable()) {
-			SonarCore.logger.warn(registeryType() + " wasn't loadable: " + object.getName());
-			return;
-		}
-		if (object != null) {
-			if (getRegisteredObject(object.getName()) == null) {
-				objects.add(object);
-				int id = objectIDs.size();
-				objectIDs.put(object.getName(), id);
-				objectNames.put(id, object.getName());
-				SonarCore.logger.info("Loaded " + registeryType() + ": " + object.getName());
-			} else {
-				SonarCore.logger.warn(registeryType() + " DUPLICATE ID - skipping " + object.getName());
+		try {
+			if (!object.isLoadable()) {
+				SonarCore.logger.warn(registeryType() + " wasn't loadable: " + object.getName());
+				return;
 			}
+			if (object != null) {
+				if (getRegisteredObject(object.getName()) == null) {
+					objects.add(object);
+					int id = objectIDs.size();
+					objectIDs.put(object.getName(), id);
+					objectNames.put(id, object.getName());
+					SonarCore.logger.info("Loaded " + registeryType() + ": " + object.getName());
+				} else {
+					SonarCore.logger.warn(registeryType() + " DUPLICATE ID - skipping " + object.getName());
+				}
+			}
+		} catch (Exception exception) {
+			SonarCore.logger.warn(registeryType() + " : Exception Loading Helper: " + exception.getLocalizedMessage());
 		}
 	}
 
@@ -74,5 +78,5 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 		int id = objectIDs.get(name);
 		return id;
 	}
-	
+
 }
