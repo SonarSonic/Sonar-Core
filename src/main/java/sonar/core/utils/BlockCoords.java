@@ -4,6 +4,8 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,11 +23,9 @@ public class BlockCoords {
 	private int dimension;
 	private boolean hasDimension;
 
-	/**
-	 * @param x block x coordinate
+	/** @param x block x coordinate
 	 * @param y block y coordinate
-	 * @param z block z coordinate
-	 */
+	 * @param z block z coordinate */
 	public BlockCoords(int x, int y, int z) {
 		this.xCoord = x;
 		this.yCoord = y;
@@ -92,6 +92,14 @@ public class BlockCoords {
 	public TileEntity getTileEntity(World world) {
 
 		return world.getTileEntity(xCoord, yCoord, zCoord);
+	}
+
+	public Block getBlock() {
+		if (this.hasDimension()) {
+			return getWorld().getBlock(xCoord, yCoord, zCoord);
+		} else {
+			return null;
+		}
 	}
 
 	public TileEntity getTileEntity() {
@@ -197,6 +205,16 @@ public class BlockCoords {
 		return this.xCoord == coords.xCoord && this.yCoord == coords.yCoord && this.zCoord == coords.zCoord && this.dimension == coords.dimension;
 	}
 
+	public int hashCode() {
+		int result = 1;
+		result = 37 * result + (hasDimension ? 0 : 1);
+		result = 37 * result + xCoord;
+		result = 37 * result + yCoord;
+		result = 37 * result + zCoord;
+		result = 37 * result + dimension;
+		return result;
+	}
+
 	public static boolean equalCoords(BlockCoords coords1, BlockCoords coords2) {
 		if (coords1 == null && coords2 == null) {
 			return true;
@@ -241,4 +259,21 @@ public class BlockCoords {
 		return new BlockCoords(x, y, z, d);
 	}
 
+	public boolean contains(Map<BlockCoords, ?> map) {
+		for (Entry<BlockCoords, ?> set : map.entrySet()) {
+			if (set.getKey().equals(this)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean contains(List<BlockCoords> list) {
+		for (BlockCoords coords : list) {
+			if (coords.equals(this)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

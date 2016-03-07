@@ -37,7 +37,7 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 				return provider;
 			}
 		}
-		return null;
+		return getDefault();
 	}
 
 	public T getRegisteredObject(String name) {
@@ -49,7 +49,7 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 				return provider;
 			}
 		}
-		return null;
+		return getDefault();
 	}
 
 	public void registerObject(T object) {
@@ -70,13 +70,17 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 				}
 			}
 		} catch (Exception exception) {
-			SonarCore.logger.warn(registeryType() + " : Exception Loading Helper: " + exception.getLocalizedMessage());
+			SonarCore.logger.warn(registeryType() + " : Exception Loading Helper: " + exception.getMessage());
 		}
 	}
 
 	public int getObjectID(String name) {
 		int id = objectIDs.get(name);
 		return id;
+	}
+	
+	public T getDefault(){
+		return null;
 	}
 
 }

@@ -16,7 +16,7 @@ import sonar.core.utils.helpers.NBTHelper.SyncType;
  */
 public abstract class TileHandler implements ISyncTile {
 
-	public TileEntity tile;
+	public final TileEntity tile;
 	public SyncTagType.BOOLEAN isMultipart = new SyncTagType.BOOLEAN(-1);
 
 	public TileHandler(boolean isMultipart, TileEntity tile) {

@@ -143,7 +143,7 @@ public class NBTHelper {
 				return null;
 			}
 			if (helper.getRegisteredObject(type) == null) {
-				SonarCore.logger.warn("NBT ERROR: " + "Unregistered " + helper.registeryType() + ": " + type);
+				SonarCore.logger.warn("NBT ERROR: " + "Unregistered " + helper.registeryType() + ": " + type + " in " + helper.toString());
 				return null;
 			}
 			INBTObject filter = (INBTObject) helper.getRegisteredObject(type).instance();
