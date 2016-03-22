@@ -21,7 +21,7 @@ public class PacketByteBufServer extends PacketCoords<PacketByteBufServer> {
 		this.tile = tile;
 		this.id = id;
 	}
-
+			
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		super.fromBytes(buf);

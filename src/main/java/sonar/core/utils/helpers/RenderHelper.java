@@ -76,7 +76,7 @@ public class RenderHelper {
 	public static void beginRender(double x, double y, double z, int meta, String texture) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x, (float) y, (float) z);
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(texture));
+		Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(texture));
 		GL11.glPushMatrix();
 		GL11.glRotatef(180.0F, 180.0F, 0.0F, 1.0F);
 		int j = 0;
