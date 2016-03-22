@@ -12,14 +12,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /** an object with a blocks x, y and z coordinates */
 public class BlockCoords {
-	private int xCoord;
-	private int yCoord;
-	private int zCoord;
+
+	public static final BlockCoords EMPTY = new BlockCoords(0, 0, 0);
+	private BlockPos pos;
 	private int dimension;
 	private boolean hasDimension;
 
@@ -27,53 +28,61 @@ public class BlockCoords {
 	 * @param y block y coordinate
 	 * @param z block z coordinate */
 	public BlockCoords(int x, int y, int z) {
-		this.xCoord = x;
-		this.yCoord = y;
-		this.zCoord = z;
+		this.pos = new BlockPos(x, y, z);
 		this.hasDimension = false;
 	}
 
 	public BlockCoords(int x, int y, int z, int dimension) {
-		this.xCoord = x;
-		this.yCoord = y;
-		this.zCoord = z;
+		this.pos = new BlockPos(x, y, z);
 		this.hasDimension = true;
 		this.dimension = dimension;
 	}
+	
+	public BlockCoords(BlockPos pos) {
+		this.pos = pos;
+		this.hasDimension = false;
+	}	
 
+	public BlockCoords(BlockPos pos, int dimension) {
+		this.pos = pos;
+		this.hasDimension = true;
+		this.dimension = dimension;
+	}
+	
 	public BlockCoords(TileEntity tile) {
-		this.xCoord = tile.xCoord;
-		this.yCoord = tile.yCoord;
-		this.zCoord = tile.zCoord;
-		if (tile.getWorldObj() == null) {
+		this.pos = tile.getPos();
+		if (tile.getWorld() == null) {
 			this.hasDimension = false;
 		} else {
 			this.hasDimension = true;
-			this.dimension = tile.getWorldObj().provider.dimensionId;
+			this.dimension = tile.getWorld().provider.getDimensionId();
 		}
 	}
 
 	public BlockCoords(TileEntity tile, int dimension) {
-		this.xCoord = tile.xCoord;
-		this.yCoord = tile.yCoord;
-		this.zCoord = tile.zCoord;
+		this.pos = tile.getPos();
 		this.hasDimension = true;
 		this.dimension = dimension;
 	}
 
+	/** @return blocks position */
+	public BlockPos getBlockPos() {
+		return pos;
+	}
+
 	/** @return blocks X coordinates */
 	public int getX() {
-		return this.xCoord;
+		return pos.getX();
 	}
 
 	/** @return blocks Y coordinates */
 	public int getY() {
-		return this.yCoord;
+		return pos.getY();
 	}
 
 	/** @return blocks Z coordinates */
 	public int getZ() {
-		return this.zCoord;
+		return pos.getZ();
 	}
 
 	/** @return dimension */
@@ -86,17 +95,17 @@ public class BlockCoords {
 	}
 
 	public Block getBlock(World world) {
-		return world.getBlock(xCoord, yCoord, zCoord);
+		return world.getBlockState(pos).getBlock();
 	}
 
 	public TileEntity getTileEntity(World world) {
 
-		return world.getTileEntity(xCoord, yCoord, zCoord);
+		return world.getTileEntity(pos);
 	}
 
 	public Block getBlock() {
 		if (this.hasDimension()) {
-			return getWorld().getBlock(xCoord, yCoord, zCoord);
+			return getWorld().getBlockState(pos).getBlock();
 		} else {
 			return null;
 		}
@@ -104,7 +113,7 @@ public class BlockCoords {
 
 	public TileEntity getTileEntity() {
 		if (this.hasDimension()) {
-			return getWorld().getTileEntity(xCoord, yCoord, zCoord);
+			return getWorld().getTileEntity(pos);
 		} else {
 			return null;
 		}
@@ -117,9 +126,9 @@ public class BlockCoords {
 	}
 
 	public static void writeToBuf(ByteBuf tag, BlockCoords coords) {
-		tag.writeInt(coords.xCoord);
-		tag.writeInt(coords.yCoord);
-		tag.writeInt(coords.zCoord);
+		tag.writeInt(coords.pos.getX());
+		tag.writeInt(coords.pos.getY());
+		tag.writeInt(coords.pos.getZ());
 		tag.writeInt(coords.dimension);
 	}
 
@@ -128,9 +137,9 @@ public class BlockCoords {
 	}
 
 	public static void writeToNBT(NBTTagCompound tag, BlockCoords coords) {
-		tag.setInteger("x", coords.xCoord);
-		tag.setInteger("y", coords.yCoord);
-		tag.setInteger("z", coords.zCoord);
+		tag.setInteger("x", coords.getX());
+		tag.setInteger("y", coords.getY());
+		tag.setInteger("z", coords.getZ());
 		tag.setBoolean("hasDimension", coords.hasDimension);
 		tag.setInteger("dimension", coords.dimension);
 	}
@@ -202,15 +211,15 @@ public class BlockCoords {
 			return false;
 		}
 		BlockCoords coords = (BlockCoords) obj;
-		return this.xCoord == coords.xCoord && this.yCoord == coords.yCoord && this.zCoord == coords.zCoord && this.dimension == coords.dimension;
+		return pos.getX() == coords.pos.getX() && pos.getY() == coords.pos.getY() && pos.getZ() == coords.pos.getZ() && this.dimension == coords.dimension;
 	}
 
 	public int hashCode() {
 		int result = 1;
 		result = 37 * result + (hasDimension ? 0 : 1);
-		result = 37 * result + xCoord;
-		result = 37 * result + yCoord;
-		result = 37 * result + zCoord;
+		result = 37 * result + pos.getX();
+		result = 37 * result + pos.getY();
+		result = 37 * result + pos.getZ();
 		result = 37 * result + dimension;
 		return result;
 	}
@@ -225,7 +234,7 @@ public class BlockCoords {
 		if (coords2 != null && coords1 == null) {
 			return false;
 		}
-		return coords1.xCoord == coords2.xCoord && coords1.yCoord == coords2.yCoord && coords1.zCoord == coords2.zCoord && coords1.dimension == coords2.dimension;
+		return coords1.pos.getX() == coords2.pos.getX() && coords1.pos.getY() == coords2.pos.getY() && coords1.pos.getZ() == coords2.pos.getZ() && coords1.dimension == coords2.dimension;
 	}
 
 	public static boolean equalCoordArrays(BlockCoords[] coords1, BlockCoords[] coords2) {
@@ -241,12 +250,12 @@ public class BlockCoords {
 		return true;
 	}
 
-	public static BlockCoords translateCoords(BlockCoords coords, ForgeDirection dir) {
-		return new BlockCoords(coords.getX() + dir.offsetX, coords.getY() + dir.offsetY, coords.getZ() + dir.offsetZ, coords.dimension);
+	public static BlockCoords translateCoords(BlockCoords coords, EnumFacing dir) {
+		return new BlockCoords(coords.getX() + dir.getFrontOffsetX(), coords.getY() + dir.getFrontOffsetY(), coords.getZ() + dir.getFrontOffsetZ(), coords.dimension);
 	}
 
 	public String toString() {
-		return "X: " + this.xCoord + " Y: " + this.yCoord + " Z: " + this.zCoord + " D: " + this.dimension;
+		return "X: " + getX() + " Y: " + getY() + " Z: " + getZ() + " D: " + this.dimension;
 	}
 
 	public BlockCoords fromString(String string) {

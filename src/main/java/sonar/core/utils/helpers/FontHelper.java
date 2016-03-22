@@ -9,13 +9,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.registry.LanguageRegistry;
+import net.minecraftforge.fml.common.registry.LanguageRegistry;
 
 public class FontHelper {
 
 	/** @param colour 0 = grey, 1 = black, 2 = white */
 	public static void text(String info, int x, int y, int colour) {
-		FontRenderer render = Minecraft.getMinecraft().fontRenderer;
+		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		switch (colour) {
 		case 0:
 			render.drawString(info, x, y, 4210752);
@@ -34,7 +34,7 @@ public class FontHelper {
 
 	/** @param colour 0 = grey, 1 = black, 2 = white */
 	public static void textCentre(String info, int xSize, int y, int colour) {
-		FontRenderer render = Minecraft.getMinecraft().fontRenderer;
+		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		switch (colour) {
 		case 0:
 			render.drawString(info, xSize / 2 - width(info) / 2, y, 4210752);
@@ -52,7 +52,7 @@ public class FontHelper {
 	}
 
 	public static int width(String info) {
-		FontRenderer render = Minecraft.getMinecraft().fontRenderer;
+		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		return render.getStringWidth(info);
 	}
 
@@ -61,7 +61,7 @@ public class FontHelper {
 	 * @param y y coordinate
 	 * @param colour 0 = Gray, 1= Black, 2 = White */
 	public static void textOffsetCentre(String info, int xCentre, int y, int colour) {
-		FontRenderer render = Minecraft.getMinecraft().fontRenderer;
+		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		switch (colour) {
 		case 0:
 			render.drawString(info, xCentre - width(info) / 2, y, 4210752);

@@ -13,10 +13,10 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.SonarCore;
 import sonar.core.utils.IBufObject;
 import sonar.core.utils.INBTObject;
-import cpw.mods.fml.common.network.ByteBufUtils;
 
 public class NBTHelper {
 

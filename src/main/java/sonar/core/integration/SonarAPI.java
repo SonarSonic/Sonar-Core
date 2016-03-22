@@ -3,7 +3,7 @@ package sonar.core.integration;
 import java.lang.reflect.Method;
 
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.common.Loader;
+import net.minecraftforge.fml.common.Loader;
 
 public class SonarAPI {
 
@@ -44,13 +44,17 @@ public class SonarAPI {
 	}
 
 	public static boolean isEnabled(ItemStack stack) {
-		if (calculatorLoaded()) {
+		if(stack==null){
+			return true;
+		}
+		if (calculatorLoaded()) {			
 			try {
 				Class recipeClass = Class.forName("sonar.calculator.mod.CalculatorConfig");
 				Method method = recipeClass.getMethod("isEnabled", ItemStack.class);
 				return (Boolean) method.invoke(null, stack);
 			} catch (Exception exception) {
-				System.err.println("SonarCore: Calculator couldn't check if ItemStack was enabled " + exception.getMessage());
+				return false;
+				//System.err.println("SonarCore: Calculator couldn't check if ItemStack was enabled " + exception.getMessage());
 			}
 		}
 		if (logisticsLoaded()) {
@@ -59,7 +63,8 @@ public class SonarAPI {
 				Method method = recipeClass.getMethod("isEnabled", ItemStack.class);
 				return (Boolean) method.invoke(null, stack);
 			} catch (Exception exception) {
-				System.err.println("SonarCore: PracticalLogistics couldn't check if ItemStack was enabled " + exception.getMessage());
+				return false;
+				//System.err.println("SonarCore: PracticalLogistics couldn't check if ItemStack was enabled " + exception.getMessage());
 			}
 		}
 		return true;

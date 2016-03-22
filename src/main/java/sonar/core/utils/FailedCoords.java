@@ -1,33 +1,28 @@
 package sonar.core.utils;
 
-public class FailedCoords extends Object {
+import net.minecraft.util.BlockPos;
+
+public class FailedCoords {
 	private boolean objectBoolean;
-	private int xCoord;
-	private int yCoord;
-	private int zCoord;
+	private BlockCoords coords;
 	private String blockName;
 
+	public FailedCoords(boolean objectReturn, BlockCoords coords, String block) {
+		this.objectBoolean = objectReturn;
+		this.coords = coords;
+		this.blockName = block;
+	}
 	public FailedCoords(boolean objectReturn, int x, int y, int z, String block) {
 		this.objectBoolean = objectReturn;
-		this.xCoord = x;
-		this.yCoord = y;
-		this.zCoord = z;
+		this.coords = new BlockCoords(x,y,z);
 		this.blockName = block;
 	}
 	public boolean getBoolean(){
 		return this.objectBoolean;
 	}
-	/**@return X Coordinate where the failure occurred*/
-	public int getX(){
-		return this.xCoord;
-	}
-	/**@return Y Coordinate where the failure occurred*/
-	public int getY(){
-		return this.yCoord;
-	}
-	/**@return Z Coordinate where the failure occurred*/
-	public int getZ(){
-		return this.zCoord;
+	/**@return the coordinates where the failure occurred*/
+	public BlockCoords getCoords(){
+		return this.coords;
 	}
 	/**@return name of the block which failed*/
 	public String getBlock(){

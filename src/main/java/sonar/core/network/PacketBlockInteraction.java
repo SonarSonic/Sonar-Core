@@ -3,10 +3,11 @@ package sonar.core.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import sonar.core.utils.BlockInteraction;
 import sonar.core.utils.IInteractBlock;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 
 public class PacketBlockInteraction extends PacketCoords {
 
@@ -15,8 +16,8 @@ public class PacketBlockInteraction extends PacketCoords {
 	public PacketBlockInteraction() {
 	}
 
-	public PacketBlockInteraction(int x, int y, int z, BlockInteraction interact) {
-		super(x, y, z);
+	public PacketBlockInteraction(BlockPos pos, BlockInteraction interact) {
+		super(pos);
 		this.interact = interact;
 	}
 
@@ -36,10 +37,10 @@ public class PacketBlockInteraction extends PacketCoords {
 		@Override
 		public IMessage processMessage(PacketBlockInteraction message, World world, EntityPlayer player) {
 			if (!world.isRemote) {
-				Block target = world.getBlock(message.xCoord, message.yCoord, message.zCoord);
+				Block target = world.getBlockState(message.pos).getBlock();
 				if (target != null && target instanceof IInteractBlock) {
 					IInteractBlock interact = (IInteractBlock) target;
-					interact.operateBlock(world, message.xCoord, message.yCoord, message.zCoord, player, message.interact);
+					interact.operateBlock(world, message.pos, player, message.interact);
 				}
 			}
 			return null;

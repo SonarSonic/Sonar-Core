@@ -5,6 +5,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
 
 /** coolAlias <3 */
@@ -26,17 +28,14 @@ public class InventoryItem implements IInventory {
 		readFromNBT(stack.getTagCompound());
 	}
 
-	@Override
 	public int getSizeInventory() {
 		return inventory.length;
 	}
 
-	@Override
 	public ItemStack getStackInSlot(int slot) {
 		return inventory[slot];
 	}
 
-	@Override
 	public ItemStack decrStackSize(int slot, int amount) {
 		ItemStack stack = getStackInSlot(slot);
 		if (stack != null) {
@@ -50,14 +49,12 @@ public class InventoryItem implements IInventory {
 		return stack;
 	}
 
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
+	public ItemStack removeStackFromSlot(int slot) {
 		ItemStack stack = getStackInSlot(slot);
 		setInventorySlotContents(slot, null);
 		return stack;
 	}
 
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		setInventorySlotContents(slot, stack, false);
 	}
@@ -68,26 +65,31 @@ public class InventoryItem implements IInventory {
 		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
 			stack.stackSize = getInventoryStackLimit();
 		}
-		if (!isRemote){
-			markDirty();}
+		if (!isRemote) {
+			markDirty();
+		}
 	}
 
-	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return name;
 	}
 
-	@Override
+	public boolean hasCustomName() {
+		return name.length() > 0;
+	}
+
+	public IChatComponent getDisplayName() {
+		return new ChatComponentText(name);
+	}
+
 	public boolean hasCustomInventoryName() {
 		return name.length() > 0;
 	}
 
-	@Override
 	public int getInventoryStackLimit() {
 		return 64;
 	}
 
-	@Override
 	public void markDirty() {
 		for (int i = 0; i < getSizeInventory(); ++i) {
 			if (getStackInSlot(i) != null && getStackInSlot(i).stackSize == 0) {
@@ -97,20 +99,16 @@ public class InventoryItem implements IInventory {
 		writeToNBT(invItem.getTagCompound());
 	}
 
-	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
 		return true;
 	}
 
-	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 	}
 
-	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
 	}
 
-	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
 		return !(itemstack.getItem() instanceof InventoryContainerItem);
 	}
@@ -127,9 +125,7 @@ public class InventoryItem implements IInventory {
 		}
 	}
 
-	/**
-	 * A custom method to write our inventory to an ItemStack's NBT compound
-	 */
+	/** A custom method to write our inventory to an ItemStack's NBT compound */
 	public void writeToNBT(NBTTagCompound compound) {
 		NBTTagList items = new NBTTagList();
 
@@ -154,4 +150,22 @@ public class InventoryItem implements IInventory {
 			return 0;
 		}
 	}
+
+	public int getField(int id) {
+		return 0;
+	}
+
+	public void setField(int id, int value) {
+
+	}
+
+	public int getFieldCount() {
+		return 0;
+	}
+
+	public void clear() {
+		for (int i = 0; i < this.getSizeInventory(); i++)
+			this.setInventorySlotContents(i, null);
+	}
+
 }

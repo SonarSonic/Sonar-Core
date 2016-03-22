@@ -3,6 +3,7 @@ package sonar.core.utils.helpers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
@@ -34,7 +35,7 @@ public abstract class ValueHelper {
 			return;
 		}
 		if (object instanceof String) {
-			ArrayList<ItemStack> ores = OreDictionary.getOres((String) object);
+			List<ItemStack> ores = (List<ItemStack>) OreDictionary.getOres((String) object);
 			if (ores.size() > 0) {
 				ItemStack[] oreStacks = new ItemStack[ores.size()];
 				stack = ores.toArray(oreStacks);

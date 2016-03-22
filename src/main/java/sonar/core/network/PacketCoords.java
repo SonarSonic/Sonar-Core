@@ -1,32 +1,27 @@
 package sonar.core.network;
 
 import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public abstract class PacketCoords<T extends PacketCoords> implements IMessage {
 
-	public int xCoord, yCoord, zCoord;
+	public BlockPos pos;
 
 	public PacketCoords() {}
 
-	public PacketCoords(int x, int y, int z) {
-		this.xCoord = x;
-		this.yCoord = y;
-		this.zCoord = z;
+	public PacketCoords(BlockPos pos) {
+		this.pos = pos;
 	}
 
-	@Override
 	public void fromBytes(ByteBuf buf) {
-		this.xCoord = buf.readInt();
-		this.yCoord = buf.readInt();
-		this.zCoord = buf.readInt();
+		pos = new BlockPos(buf.readInt(),buf.readInt(),buf.readInt());
 	}
 
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeInt(xCoord);
-		buf.writeInt(yCoord);
-		buf.writeInt(zCoord);
+	public void toBytes(ByteBuf buf) {		
+		buf.writeInt(pos.getX());
+		buf.writeInt(pos.getY());
+		buf.writeInt(pos.getZ());
 	}
 
 }

@@ -1,7 +1,8 @@
 package sonar.core.network.utils;
 
-import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
+import net.minecraft.nbt.NBTTagCompound;
+
 
 /** used for managing the saving of the NBT on Tile Entities */
 public interface ISyncTile {

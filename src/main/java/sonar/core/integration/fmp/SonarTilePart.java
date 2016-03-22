@@ -14,11 +14,6 @@ import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
-import codechicken.lib.data.MCDataInput;
-import codechicken.lib.data.MCDataOutput;
-import codechicken.lib.vec.Cuboid6;
-import codechicken.lib.vec.Vector3;
-import codechicken.multipart.minecraft.McMetaPart;
 
 public abstract class SonarTilePart extends McMetaPart implements ISyncTile {
 

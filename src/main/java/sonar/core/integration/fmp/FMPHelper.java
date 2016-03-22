@@ -3,24 +3,21 @@ package sonar.core.integration.fmp;
 import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import sonar.core.integration.SonarAPI;
 import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.utils.BlockCoords;
-import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TileMultipart;
-import codechicken.multipart.minecraft.McMetaPart;
 
 public class FMPHelper {
 
-	public static Object getAdjacentTile(TileEntity tile, ForgeDirection side) {
+	public static Object getAdjacentTile(TileEntity tile, EnumFacing side) {
 		if (tile == null || side == null) {
 			return null;
 		}
 		BlockCoords origin = new BlockCoords(tile);
 		BlockCoords target = BlockCoords.translateCoords(origin, side);
-		return getTile(target.getTileEntity(tile.getWorldObj()));
+		return getTile(target.getTileEntity(tile.getWorld()));
 	}
 
 	public static int getMeta(TileEntity tile) {
@@ -50,6 +47,7 @@ public class FMPHelper {
 	}
 
 	public static Object checkObject(Object object) {
+		/*
 		if (object != null && SonarAPI.forgeMultipartLoaded() && object instanceof TileMultipart) {
 			List<TMultiPart> list = ((TileMultipart) object).jPartList();
 			if (0 < list.size()) {
@@ -57,6 +55,7 @@ public class FMPHelper {
 			}
 
 		}
+		*/
 		return object;
 	}
 }

@@ -1,43 +1,48 @@
 package sonar.core.network;
 
+import sonar.core.common.tileentity.TileEntitySonar;
+import sonar.core.utils.ISonarSides;
+import sonar.core.utils.MachineSide;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
-import cofh.api.tileentity.IReconfigurableSides;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class PacketSonarSides extends PacketCoords<PacketSonarSides> {
 
-	public int side, value;
-
+	public EnumFacing side;
+	public MachineSide config;
+	
 	public PacketSonarSides() {}
 
-	public PacketSonarSides(int x, int y, int z, int side, int value) {
-		super(x, y, z);
+	public PacketSonarSides(BlockPos pos, EnumFacing side, MachineSide config) {
+		super(pos);
 		this.side = side;
-		this.value = value;
+		this.config = config;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		super.fromBytes(buf);
-		side = buf.readInt();
-		value = buf.readInt();
+		side = side.VALUES[buf.readInt()];
+		config = config.values()[buf.readInt()];
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		super.toBytes(buf);
-		buf.writeInt(side);
-		buf.writeInt(value);
+		buf.writeInt(side.getIndex());
+		buf.writeInt(config.ordinal());
 	}
 	public static class Handler extends PacketTileEntityHandler<PacketSonarSides> {
 
 		@Override
 		public IMessage processMessage(PacketSonarSides message, TileEntity tile) {
-
-			if (tile.getWorldObj().isRemote && tile instanceof IReconfigurableSides) {
-				IReconfigurableSides sides = (IReconfigurableSides) tile;
-				sides.setSide(message.side, message.value);
+			if (tile.getWorld().isRemote && tile instanceof ISonarSides) {
+				ISonarSides sides = (ISonarSides) tile;
+				sides.setSide(message.side, message.config);
+				tile.receiveClientEvent(1, 1);
 			}
 			return null;
 		}

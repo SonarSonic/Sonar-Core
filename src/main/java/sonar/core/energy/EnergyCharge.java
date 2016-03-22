@@ -2,6 +2,7 @@ package sonar.core.energy;
 
 import net.minecraft.item.ItemStack;
 
+
 /**for use with charging/discharging methods, an ItemStack to charge/discharge and if the stack was used up*/
 public class EnergyCharge extends Object {
 	private int charge;

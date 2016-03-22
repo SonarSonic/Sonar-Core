@@ -39,7 +39,7 @@ public abstract class ContainerSync extends Container {
 				if (!syncData.hasNoTags()) {
 					for (Object o : crafters) {
 						if (o != null && o instanceof EntityPlayerMP) {
-							SonarCore.network.sendTo(new PacketTileSync(tile.xCoord, tile.yCoord, tile.zCoord, syncData, type), (EntityPlayerMP) o);
+							SonarCore.network.sendTo(new PacketTileSync(tile.getPos(), syncData, type), (EntityPlayerMP) o);
 						}
 					}
 				}

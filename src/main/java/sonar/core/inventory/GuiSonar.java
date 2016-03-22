@@ -12,6 +12,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
 
@@ -19,8 +21,6 @@ import sonar.core.SonarCore;
 import sonar.core.network.PacketByteBufServer;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.utils.helpers.FontHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class GuiSonar extends GuiContainer {
 
@@ -38,9 +38,7 @@ public abstract class GuiSonar extends GuiContainer {
 		this.initGui();
 	}
 
-	public void initGui(boolean pause) {
-
-	}
+	public void initGui(boolean pause) {}
 
 	public void drawNormalToolTip(ItemStack stack, int x, int y) {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -69,8 +67,8 @@ public abstract class GuiSonar extends GuiContainer {
 		while (iterator.hasNext()) {
 			GuiButton guibutton = (GuiButton) iterator.next();
 
-			if (guibutton.func_146115_a()) {
-				guibutton.func_146111_b(x - this.guiLeft, y - this.guiTop);
+			if (guibutton.isMouseOver()) {
+				guibutton.drawButtonForegroundLayer(x - this.guiLeft, y - this.guiTop);
 				break;
 			}
 		}
@@ -106,7 +104,7 @@ public abstract class GuiSonar extends GuiContainer {
 
 		@Override
 		public void onClicked() {
-			SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) entity, entity.xCoord, entity.yCoord, entity.zCoord, id));
+			SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) entity, entity.getPos(), id));
 			buttonList.clear();
 			initGui();
 			// updateScreen();
@@ -128,7 +126,7 @@ public abstract class GuiSonar extends GuiContainer {
 
 		@Override
 		public void onClicked() {
-			SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) entity, entity.xCoord, entity.yCoord, entity.zCoord, id));
+			SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) entity, entity.getPos(), id));
 		}
 	}
 

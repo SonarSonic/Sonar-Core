@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.util.EnumFacing;
 import sonar.core.inventory.IFilteredInventory;
 
 public class InventoryHelper {
@@ -28,10 +29,10 @@ public class InventoryHelper {
 			int[] pullAccess = null, pushAccess = null;
 
 			if (pull instanceof ISidedInventory) {
-				pullAccess = ((ISidedInventory) pull).getAccessibleSlotsFromSide(pullSide);
+				pullAccess = ((ISidedInventory) pull).getSlotsForFace(EnumFacing.getFront(pullSide));
 			}
 			if (push instanceof ISidedInventory) {
-				pushAccess = ((ISidedInventory) push).getAccessibleSlotsFromSide(pushSide);
+				pushAccess = ((ISidedInventory) push).getSlotsForFace(EnumFacing.getFront(pushSide));
 			}
 
 			extractItems(new InventoryOperation(pull, pullSide, pullAccess, filter), new InventoryOperation(push, pushSide, pushAccess, filter));
@@ -46,7 +47,7 @@ public class InventoryHelper {
 			if (push instanceof IInventory) {
 				int[] pushAccess = null;
 				if (push instanceof ISidedInventory) {
-					pushAccess = ((ISidedInventory) push).getAccessibleSlotsFromSide(pushSide);
+					pushAccess = ((ISidedInventory) push).getSlotsForFace(EnumFacing.getFront(pushSide));
 				}
 				return exportItems(new InventoryOperation(push, pushSide, pushAccess, null), stack);
 
@@ -115,12 +116,13 @@ public class InventoryHelper {
 	private static int canExtract(InventoryOperation pull, InventoryOperation push, int slot) {
 		ItemStack target = pull.getInv().getStackInSlot(slot);
 		boolean check = false;
+		/*
 		if (pull.inv instanceof TileEntityHopper) {
 			if (BlockHopper.func_149917_c(pull.inv.getBlockMetadata())) {
 				return -999;
 			}
 		}
-
+		 */
 		if (pull.getInv() instanceof IFilteredInventory) {
 			IFilteredInventory inv = (IFilteredInventory) pull.getInv();
 			if (!inv.canPullItem(target, pull.side)) {
@@ -129,7 +131,7 @@ public class InventoryHelper {
 				check = true;
 			}
 		}
-		if (!pull.hasAccess() || pull.hasAccess() && (check || target!=null && pull.getSidedInv().canExtractItem(slot, target, pull.side))) {
+		if (!pull.hasAccess() || pull.hasAccess() && (check || target!=null && pull.getSidedInv().canExtractItem(slot, target, EnumFacing.getFront(pull.side)))) {
 
 			if (target != null) {
 				int insert = canInsert(push, target);
@@ -171,7 +173,7 @@ public class InventoryHelper {
 		} else {
 			ISidedInventory inv = push.getSidedInv();
 			for (int j = 0; j < push.access.length; j++) {				
-				if (check || inv.canInsertItem(push.access[j], stack, push.side)) {
+				if (check || inv.canInsertItem(push.access[j], stack, EnumFacing.getFront(push.side))) {
 					ItemStack target = push.getInv().getStackInSlot(push.access[j]);
 					if (target != null && target.stackSize != target.getMaxStackSize() && target.stackSize != push.getInv().getInventoryStackLimit() && target.getItem() == stack.getItem() && target.getItemDamage() == stack.getItemDamage() && target.areItemStackTagsEqual(target, stack)) {
 						return push.access[j];
@@ -249,10 +251,10 @@ public class InventoryHelper {
 
 		public IInventory getInv() {
 			if (inv instanceof TileEntityChest) {
-				Block block = inv.blockType;
+				Block block = inv.getBlockType();
 
 				if (block instanceof BlockChest) {
-					return ((BlockChest) block).func_149951_m(inv.getWorldObj(), inv.xCoord, inv.yCoord, inv.zCoord);
+					return ((BlockChest) block).getLockableContainer(inv.getWorld(), inv.getPos());
 				}
 			}
 			return (IInventory) inv;

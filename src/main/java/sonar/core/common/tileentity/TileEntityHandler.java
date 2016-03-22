@@ -9,8 +9,8 @@ import sonar.core.utils.helpers.NBTHelper.SyncType;
 
 public abstract class TileEntityHandler extends TileEntitySonar implements ITileHandler {
 
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 		this.getTileHandler().update(this);
 		this.markDirty();
 	}

@@ -38,6 +38,6 @@ public class ItemModelRender implements IItemRenderer {
 			GL11.glTranslatef(-0.5F, -0.5F, 0.5F);
 			GL11.glRotated(90, 0, 1, 0);
 		}
-		this.render.renderTileEntityAt(this.entity, 0.0D, 0.0D, 0.0D, 0.0F);
+		this.render.renderTileEntityAt(this.entity, 0.0D, 0.0D, 0.0D, 0.0F, 0);
 	}
 }

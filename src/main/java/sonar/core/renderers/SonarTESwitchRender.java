@@ -17,8 +17,8 @@ public abstract class SonarTESwitchRender extends TileEntitySpecialRenderer {
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntity entity, double x, double y, double z, float f) {
-		if (entity!=null && entity.getWorldObj() != null) {
+	public void renderTileEntityAt(TileEntity entity, double x, double y, double z, float f, int par) {
+		if (entity!=null && entity.getWorld() != null) {
 			if (isActive(entity)) {
 				RenderHelper.beginRender(x + 0.5F, y + 1.5F, z + 0.5F, RenderHelper.setMetaData(entity), on);
 			} else {

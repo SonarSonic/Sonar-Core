@@ -5,6 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+
 public class SlotList extends Slot {
 
 	public SlotList(IInventory inv, int slot, int x, int y) {

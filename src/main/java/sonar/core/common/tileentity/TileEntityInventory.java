@@ -1,126 +1,106 @@
 package sonar.core.common.tileentity;
 
+import sonar.core.inventory.SonarTileInventory;
+import sonar.core.utils.helpers.NBTHelper.SyncType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
 public class TileEntityInventory extends TileEntitySonar implements IInventory {
 
-	public ItemStack[] slots;
-	
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		NBTTagList list = nbt.getTagList("Items", 10);
-		this.slots = new ItemStack[this.getSizeInventory()];
-		for (int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound compound = list.getCompoundTagAt(i);
-			byte b = compound.getByte("Slot");
-			if (b >= 0 && b < this.slots.length) {
-				this.slots[b] = ItemStack.loadItemStackFromNBT(compound);
-			}
-		}
+	public SonarTileInventory inv;
+
+	public SonarTileInventory getTileInv() {
+		return inv;
 	}
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		NBTTagList list = new NBTTagList();
-		for (int i = 0; i < this.slots.length; i++) {
-			if (this.slots[i] != null) {
-				NBTTagCompound compound = new NBTTagCompound();
-				compound.setByte("Slot", (byte) i);
-				this.slots[i].writeToNBT(compound);
-				list.appendTag(compound);
-			}
-		}
-		nbt.setTag("Items", list);
+	public ItemStack[] slots() {
+		return inv.slots;
 	}
 
-	@Override
+	public void readData(NBTTagCompound nbt, SyncType type) {
+		super.readData(nbt, type);
+		getTileInv().readData(nbt, type);
+	}
+
+	public void writeData(NBTTagCompound nbt, SyncType type) {
+		super.writeData(nbt, type);
+		getTileInv().writeData(nbt, type);
+	}
+
 	public int getSizeInventory() {
-		return this.slots.length;
+		return getTileInv().getSizeInventory();
 	}
 
-	@Override
-	public ItemStack getStackInSlot(int var1) {
-		return this.slots[var1];
+	public ItemStack getStackInSlot(int slot) {
+		return getTileInv().getStackInSlot(slot);
 	}
 
-	@Override
 	public ItemStack decrStackSize(int slot, int var2) {
-		if (this.slots[slot] != null) {
-
-			if (this.slots[slot].stackSize <= var2) {
-				ItemStack itemstack = this.slots[slot];
-				this.slots[slot] = null;
-				return itemstack;
-			}
-			ItemStack itemstack = this.slots[slot].splitStack(var2);
-
-			if (this.slots[slot].stackSize == 0) {
-				this.slots[slot] = null;
-			}
-
-			return itemstack;
-		}
-
-		return null;
+		return getTileInv().decrStackSize(slot, var2);
 	}
 
-	@Override
-	public ItemStack getStackInSlotOnClosing(int i) {
-		if (this.slots[i] != null) {
-			ItemStack itemstack = this.slots[i];
-			this.slots[i] = null;
-			return itemstack;
-		}
-		return null;
+	public ItemStack removeStackFromSlot(int slot) {
+		return getTileInv().removeStackFromSlot(slot);
 	}
 
-	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
-		this.slots[i] = itemstack;
-
-		if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit())) {
-			itemstack.stackSize = getInventoryStackLimit();
-		}
+		getTileInv().setInventorySlotContents(i, itemstack);
 	}
 
-	@Override
 	public int getInventoryStackLimit() {
-		return 64;
+		return getTileInv().getInventoryStackLimit();
 	}
 
-	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : player.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64.0D;
+		return this.worldObj.getTileEntity(pos) != this ? false : player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
 	}
 
-	@Override
-	public void openInventory() {}
+	public void openInventory(EntityPlayer player) {
+		getTileInv().openInventory(player);
+	}
 
-	@Override
-	public void closeInventory() {}
+	public void closeInventory(EntityPlayer player) {
+		getTileInv().closeInventory(player);
+	}
 
-	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return true;
+		return getTileInv().isItemValidForSlot(slot, stack);
 	}
 
-	@Override
-	public String getInventoryName() {
-		if(this.blockType==null){
+	public String getName() {
+		if (this.blockType == null) {
 			return "Sonar Inventory";
 		}
 		return this.blockType.getLocalizedName();
 	}
 
-	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return false;
+	}
+
+	public IChatComponent getDisplayName() {
+		return new ChatComponentText(this.blockType.getLocalizedName());
+	}
+
+	public int getField(int id) {
+		return getTileInv().getField(id);
+	}
+
+	public void setField(int id, int value) {
+		getTileInv().setField(id, value);
+	}
+
+	public int getFieldCount() {
+		return getTileInv().getFieldCount();
+	}
+
+	public void clear() {
+		getTileInv().clear();
 	}
 
 }

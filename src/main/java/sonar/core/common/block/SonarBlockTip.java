@@ -7,11 +7,11 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.integration.SonarAPI;
 import sonar.core.utils.ISpecialTooltip;
 import sonar.core.utils.helpers.FontHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class SonarBlockTip extends ItemBlock {
 

@@ -2,10 +2,11 @@ package sonar.core.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import sonar.core.integration.fmp.FMPHelper;
 import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.network.utils.IByteBufTile;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 
 public class PacketByteBufClient extends PacketCoords<PacketByteBufClient> {
 
@@ -16,8 +17,8 @@ public class PacketByteBufClient extends PacketCoords<PacketByteBufClient> {
 	public PacketByteBufClient() {
 	}
 
-	public PacketByteBufClient(IByteBufTile tile, int x, int y, int z, int id) {
-		super(x,y,z);
+	public PacketByteBufClient(IByteBufTile tile, BlockPos pos, int id) {
+		super(pos);
 		this.tile = tile;
 		this.id = id;
 	}
@@ -40,7 +41,7 @@ public class PacketByteBufClient extends PacketCoords<PacketByteBufClient> {
 
 		@Override
 		public IMessage processMessage(PacketByteBufClient message, TileEntity tile) {
-			if (tile.getWorldObj().isRemote) {
+			if (tile.getWorld().isRemote) {
 				if (tile instanceof IByteBufTile) {
 					IByteBufTile packet = (IByteBufTile) tile;
 					packet.readPacket(message.buf, message.id);

@@ -3,81 +3,74 @@ package sonar.core.common.tileentity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import sonar.core.SonarCore;
+import sonar.core.common.block.SonarSidedBlock;
 import sonar.core.network.PacketSonarSides;
-import cofh.api.tileentity.IReconfigurableSides;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import sonar.core.utils.ISonarSides;
+import sonar.core.utils.MachineSide;
 
-public abstract class TileEntitySidedInventory extends TileEntityInventory implements IReconfigurableSides, ISidedInventory {
+public abstract class TileEntitySidedInventory extends TileEntityInventory implements ISonarSides, ISidedInventory {
 
-	public int[] sides = new int[6];
+	public MachineSide[] sides = new MachineSide[]{MachineSide.INPUT,MachineSide.INPUT,MachineSide.INPUT,MachineSide.INPUT,MachineSide.INPUT,MachineSide.INPUT};
 	public int[] input, output;
 
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		this.sides = nbt.getIntArray("SideConfig");
-		if (sides == null || sides.length != 6) {
-			sides = new int[6];
+		NBTTagCompound sideNBT = nbt.getCompoundTag("sides");
+		for (int i = 0; i < 6; i++) {
+			MachineSide side = MachineSide.values()[sideNBT.getInteger("" + i)];
+			if (side == null)
+				sides[i] = MachineSide.INPUT;
+			else
+				sides[i] = side;
 		}
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setIntArray("SideConfig", this.sides);
+		NBTTagCompound sideNBT = new NBTTagCompound();
+		for (int i = 0; i < 6; i++) {
+			sideNBT.setInteger("" + i, sides[i].ordinal());
+		}
+		nbt.setTag("sides", sideNBT);
 
 	}
 
-	public boolean getBlockTexture(int side, int metadata) {
-		if (sides == null || sides.length != 6) {
-			sides = new int[6];
-		}
-		if (side > sides.length) {
-			return true;
-		}
-		return sides[side] == 0;
-	}
-
-	public final void sendPacket(int dimension, int side, int value) {
-		SonarCore.network.sendToAllAround(new PacketSonarSides(xCoord, yCoord, zCoord, side, value), new TargetPoint(dimension, xCoord, yCoord, zCoord, 32));
+	public void sendPacket(int dimension, EnumFacing side) {		
+		SonarCore.network.sendToAllAround(new PacketSonarSides(pos, side, sides[side.getIndex()]), new TargetPoint(dimension, pos.getX(), pos.getY(), pos.getZ(), 64));
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int slot) {
-		return sides[slot] == 0 ? input : output;
+	public int[] getSlotsForFace(EnumFacing side) {
+		return sides[side.getIndex()].isInput() ? input : output;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int side) {
+	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
 		return true;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack stack, int side) {
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
 		return true;
 	}
 
 	@Override
-	public boolean decrSide(int side) {
-		if (!this.getWorldObj().isRemote) {
-			if (sides[side] >= getNumConfig(side) - 1) {
-				sides[side] = 0;
-			} else {
-				sides[side] = getNumConfig(side) - 1;
-			}
-			sendPacket(this.worldObj.provider.dimensionId, side, sides[side]);
+	public boolean decrSide(EnumFacing side) {
+		if (!this.getWorld().isRemote) {
+			sides[side.getIndex()].decrease();
+			sendPacket(this.worldObj.provider.getDimensionId(), side);
 		}
 		return false;
 	}
 
 	@Override
-	public boolean incrSide(int side) {
-		if (!this.getWorldObj().isRemote) {
-			if (sides[side] >= getNumConfig(side) - 1) {
-				sides[side] = 0;
-			} else {
-				sides[side] = getNumConfig(side) - 1;
-			}
-			sendPacket(this.worldObj.provider.dimensionId, side, sides[side]);
+	public boolean incrSide(EnumFacing side) {
+		if (!this.getWorld().isRemote) {			
+			sides[side.getIndex()] = sides[side.getIndex()].increase();
+			sendPacket(this.worldObj.provider.getDimensionId(), side);
 		}
 		return false;
 	}
@@ -88,14 +81,14 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 	}
 
 	@Override
-	public int getNumConfig(int side) {
-		return 2;
+	public MachineSide getSideConfig(EnumFacing side) {
+		return sides[side.getIndex()];
 	}
 
 	@Override
-	public boolean setSide(int side, int config) {
-		sides[side] = config;
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	public boolean setSide(EnumFacing side, MachineSide config) {
+		sides[side.getIndex()] = config;
+		this.worldObj.markBlockForUpdate(pos);
 		return true;
 	}
 

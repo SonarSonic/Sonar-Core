@@ -11,19 +11,22 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ITickable;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
 import sonar.core.integration.IWailaInfo;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.utils.ISyncTile;
+import sonar.core.utils.BlockCoords;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo {
+public class TileEntitySonar extends TileEntity implements ITickable, ISyncTile, IWailaInfo {
 
 	protected boolean load;
+	protected BlockCoords coords = BlockCoords.EMPTY;
 
 	public boolean isClient() {
 		return worldObj.isRemote;
@@ -36,11 +39,15 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 	public void onLoaded() {
 	}
 
-	public void updateEntity() {
+	public void update() {
 		if (load) {
 			load = false;
 			this.onLoaded();
 		}
+	}
+
+	public BlockCoords getCoords() {
+		return coords;
 	}
 
 	@Override
@@ -56,22 +63,24 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 
 	}
 
-	public void addSyncParts(List<ISyncPart> parts) {}
+	public void addSyncParts(List<ISyncPart> parts) {
+	}
 
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		writeToNBT(nbtTag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbtTag);
+		return new S35PacketUpdateTileEntity(pos, 0, nbtTag);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-		readFromNBT(packet.func_148857_g());
+		readFromNBT(packet.getNbtCompound());
 	}
 
 	public void validate() {
 		super.validate();
+		coords = new BlockCoords(this);
 		this.load = true;
 	}
 
@@ -99,7 +108,7 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 	}
 
 	public void requestSyncPacket() {
-		SonarCore.network.sendToServer(new PacketRequestSync(xCoord, yCoord, zCoord));
+		SonarCore.network.sendToServer(new PacketRequestSync(pos));
 	}
 
 	public void sendSyncPacket(EntityPlayer player) {
@@ -110,7 +119,7 @@ public class TileEntitySonar extends TileEntity implements ISyncTile, IWailaInfo
 			NBTTagCompound tag = new NBTTagCompound();
 			writeData(tag, SyncType.SYNC);
 			if (!tag.hasNoTags()) {
-				SonarCore.network.sendTo(new PacketTileSync(xCoord, yCoord, zCoord, tag), (EntityPlayerMP) player);
+				SonarCore.network.sendTo(new PacketTileSync(pos, tag), (EntityPlayerMP) player);
 			}
 		}
 	}

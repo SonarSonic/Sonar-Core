@@ -3,12 +3,13 @@ package sonar.core.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import sonar.core.integration.fmp.FMPHelper;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 
 public class PacketTileSync extends PacketCoords<PacketTileSync> {
 
@@ -18,13 +19,13 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 	public PacketTileSync() {
 	}
 
-	public PacketTileSync(int x, int y, int z, NBTTagCompound tag) {
-		super(x, y, z);
+	public PacketTileSync(BlockPos pos, NBTTagCompound tag) {
+		super(pos);
 		this.tag = tag;
 	}
 
-	public PacketTileSync(int x, int y, int z, NBTTagCompound tag, SyncType type) {
-		super(x, y, z);
+	public PacketTileSync(BlockPos pos, NBTTagCompound tag, SyncType type) {
+		super(pos);
 		this.tag = tag;
 		this.type = type;
 	}
@@ -54,7 +55,7 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 
 		@Override
 		public IMessage processMessage(PacketTileSync message, TileEntity tile) {
-			if (tile.getWorldObj().isRemote) {
+			if (tile.getWorld().isRemote) {
 				Object te = FMPHelper.checkObject(tile);
 				if (te == null) {
 					return null;

@@ -3,27 +3,30 @@ package sonar.core.common.item;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.integration.SonarAPI;
 import sonar.core.utils.helpers.FontHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class SonarSeedsFood extends ItemFood implements IPlantable {
-	private Block blockCrop;
+	private Block cropBlock;
 	private Block soilId;
 	public int greenhouseTier;
 
 	public SonarSeedsFood(int hunger, float saturation, Block crop, Block soil, int tier) {
 		super(hunger, saturation, false);
-		this.blockCrop = crop;
+		this.cropBlock = crop;
 		this.soilId = soil;
 		this.greenhouseTier = tier;
 	}
@@ -52,14 +55,13 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par, float f1, float f2, float f3) {
-
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitx, float hity, float hitz) {
 		if (this.greenhouseTier == 0 || !SonarAPI.calculatorLoaded()) {
-			if (par != 1) {
+			if (side != EnumFacing.UP) {
 				return false;
-			} else if (player.canPlayerEdit(x, y, z, par, stack) && player.canPlayerEdit(x, y + 1, z, par, stack)) {
-				if (world.getBlock(x, y, z).canSustainPlant(world, x, y, z, ForgeDirection.UP, this) && world.isAirBlock(x, y + 1, z)) {
-					world.setBlock(x, y + 1, z, this.blockCrop);
+			} else if (player.canPlayerEdit(pos, side, stack) && player.canPlayerEdit(pos.offset(EnumFacing.UP), side, stack)) {
+				if (world.getBlockState(pos).getBlock().canSustainPlant(world, pos, EnumFacing.UP, this) && world.isAirBlock(pos.offset(EnumFacing.UP))) {
+					world.setBlockState(pos.offset(side), cropBlock.getDefaultState());
 					--stack.stackSize;
 					return true;
 				} else {
@@ -72,19 +74,12 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 		return false;
 	}
 
-	@Override
-	public EnumPlantType getPlantType(IBlockAccess world, int x, int y, int z) {
-		return EnumPlantType.Crop;
+	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
+		return cropBlock == Blocks.nether_wart ? EnumPlantType.Nether : EnumPlantType.Crop;
 	}
 
-	@Override
-	public Block getPlant(IBlockAccess world, int x, int y, int z) {
-		return blockCrop;
-	}
-
-	@Override
-	public int getPlantMetadata(IBlockAccess world, int x, int y, int z) {
-		return 0;
+	public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
+		return cropBlock.getDefaultState();
 	}
 
 	public boolean canTierUse(int tier) {

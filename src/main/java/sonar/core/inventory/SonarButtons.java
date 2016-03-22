@@ -3,11 +3,10 @@ package sonar.core.inventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public final class SonarButtons {
 
@@ -69,7 +68,7 @@ public final class SonarButtons {
 		public void drawButton(Minecraft mc, int x, int y) {
 			if (this.visible) {
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-				this.field_146123_n = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
+				this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
 				short short1 = 219;
 				int k = 0;
 
@@ -77,7 +76,7 @@ public final class SonarButtons {
 					k += this.width * 2;
 				} else if (this.bool) {
 					k += this.width * 1;
-				} else if (this.field_146123_n) {
+				} else if (this.hovered) {
 					k += this.width * 3;
 				}
 
@@ -109,7 +108,7 @@ public final class SonarButtons {
 		public void drawButton(Minecraft mc, int x, int y) {
 			if (this.visible) {
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-				this.field_146123_n = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
+				this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
 				short short1 = 219;
 				int k = 0;
 
@@ -117,7 +116,7 @@ public final class SonarButtons {
 					k += this.width * 2;
 				} else if (this.bool) {
 					k += this.width * 1;
-				} else if (this.field_146123_n) {
+				} else if (this.hovered) {
 					k += this.width * 3;
 				}
 

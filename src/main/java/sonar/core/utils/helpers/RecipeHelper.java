@@ -8,11 +8,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.oredict.OreDictionary;
-import sonar.calculator.mod.api.CalculatorAPI;
 import sonar.core.SonarCore;
 import sonar.core.integration.SonarAPI;
-import cpw.mods.fml.common.FMLLog;
 
 /** Recipe Template allows gigantic recipes with full Ore Dict compatibility */
 public abstract class RecipeHelper {
@@ -45,6 +44,7 @@ public abstract class RecipeHelper {
 	}
 
 	public void addRegisteredRecipes() {
+		/*
 		if (SonarAPI.calculatorLoaded()) {
 			List<Object[]> recipes = CalculatorAPI.getRecipes(this.getRecipeID());
 			if (recipes != null && recipes.size() != 0) {
@@ -53,6 +53,7 @@ public abstract class RecipeHelper {
 				}
 			}
 		}
+		*/
 	}
 
 	/** get the full list of recipes */
@@ -76,7 +77,7 @@ public abstract class RecipeHelper {
 					if (i < inputSize) {
 						stack[i] = new OreStack((String) objects[i], 1);
 					} else if (!(i - inputSize > outputSize)) {
-						ArrayList<ItemStack> ores = OreDictionary.getOres((String) objects[i]);
+						List<ItemStack> ores = OreDictionary.getOres((String) objects[i]);
 						if (ores.size() > 0) {
 							stack[i] = ores.get(0);
 						} else {
@@ -85,7 +86,7 @@ public abstract class RecipeHelper {
 					}
 				} else if (objects[i] instanceof OreStack) {
 					if (i - inputSize < outputSize) {
-						ArrayList<ItemStack> ores = OreDictionary.getOres(((OreStack) objects[i]).oreString);
+						List<ItemStack> ores = OreDictionary.getOres(((OreStack) objects[i]).oreString);
 						if (ores.size() > 0) {
 							stack[i] = new ItemStack(ores.get(0).getItem(), ((OreStack) objects[i]).stackSize, ores.get(0).getItemDamage());
 						} else {
@@ -276,7 +277,7 @@ public abstract class RecipeHelper {
 			if (output[i] instanceof ItemStack) {
 				stack[i] = (ItemStack) output[i];
 			} else if (output[i] instanceof OreStack) {
-				ArrayList<ItemStack> ore = OreDictionary.getOres(((OreStack) output[i]).oreString);
+				List<ItemStack> ore = OreDictionary.getOres(((OreStack) output[i]).oreString);
 				stack[i] = new ItemStack(ore.get(0).getItem(), ((OreStack) output[i]).stackSize, ore.get(0).getItemDamage());
 			}
 		}

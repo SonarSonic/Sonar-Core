@@ -2,14 +2,24 @@ package sonar.core;
 
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 import sonar.core.energy.DischargeValues;
 import sonar.core.integration.SonarAPI;
 import sonar.core.integration.SonarWailaModule;
@@ -28,17 +38,6 @@ import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.helpers.NBTHelper.SyncType;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = SonarCore.modid, name = "SonarCore", version = SonarCore.version)
 public class SonarCore {
@@ -82,7 +81,7 @@ public class SonarCore {
 		DischargeValues.addValues();
 		logger.info("Added" + DischargeValues.getPowerList().size() + "Discharge Values");
 		for (Map.Entry<ItemStack, Integer> entry : DischargeValues.getPowerList().entrySet()) {
-			logger.info("Discharge Values: " + entry.toString() + " = " + entry.getValue());
+			logger.info("Discharge Values: " + entry.toString());
 		}
 	}
 
@@ -105,19 +104,19 @@ public class SonarCore {
 		Object object = FMPHelper.checkObject(tile);
 
 		if (object != null && object instanceof IByteBufTile) {
-			if (!tile.getWorldObj().isRemote) {
-				SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) object, tile.xCoord, tile.yCoord, tile.zCoord, id), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
+			if (!tile.getWorld().isRemote) {
+				SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) object, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(),tile.getPos().getY(),tile.getPos().getZ(), spread));
 			} else {
-				SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) object, tile.xCoord, tile.yCoord, tile.zCoord, id));
+				SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) object, tile.getPos(), id));
 			}
 		} else {
 			TileHandler handler = FMPHelper.getHandler(object);
 			if (handler != null && handler instanceof IByteBufTile) {
 
-				if (!tile.getWorldObj().isRemote) {
-					SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) handler, tile.xCoord, tile.yCoord, tile.zCoord, id), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
+				if (!tile.getWorld().isRemote) {
+					SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) handler, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(),tile.getPos().getY(),tile.getPos().getZ(), spread));
 				} else {
-					SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) handler, tile.xCoord, tile.yCoord, tile.zCoord, id));
+					SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) handler, tile.getPos(), id));
 				}
 			}
 		}
@@ -129,7 +128,7 @@ public class SonarCore {
 			NBTTagCompound tag = new NBTTagCompound();
 			((ISyncTile) object).writeData(tag, SyncType.SYNC);
 			if (!tag.hasNoTags()) {
-				SonarCore.network.sendToAllAround(new PacketTileSync(tile.xCoord, tile.yCoord, tile.zCoord, tag), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, spread));
+				SonarCore.network.sendToAllAround(new PacketTileSync(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(),tile.getPos().getY(),tile.getPos().getZ(), spread));
 			}
 		}
 	}

@@ -1,10 +1,5 @@
 package sonar.core.utils.helpers;
 
-import static net.minecraftforge.client.IItemRenderer.ItemRenderType.ENTITY;
-import static net.minecraftforge.client.IItemRenderer.ItemRendererHelper.BLOCK_3D;
-import static net.minecraftforge.client.IItemRenderer.ItemRendererHelper.ENTITY_BOBBING;
-import static net.minecraftforge.client.IItemRenderer.ItemRendererHelper.ENTITY_ROTATION;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -13,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -28,13 +22,11 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
@@ -42,19 +34,17 @@ import org.lwjgl.opengl.GL11;
 import sonar.core.common.block.SonarBlock;
 import sonar.core.integration.SonarAPI;
 import sonar.core.integration.fmp.SonarTilePart;
-import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TileMultipart;
 
 public class RenderHelper {
 
 	private static final ResourceLocation mapBackgroundTextures = new ResourceLocation("textures/map/map_background.png");
 	private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
-	
+
 	protected RenderManager renderManager;
 
 	public static int setMetaData(TileEntity tileentity) {
 		int i;
-		if (tileentity.getWorldObj() == null) {
+		if (tileentity.getWorld() == null) {
 			i = 0;
 		} else {
 			Block block = tileentity.getBlockType();
@@ -63,11 +53,15 @@ public class RenderHelper {
 				i = tileentity.getBlockMetadata();
 			}
 		}
-		if (SonarAPI.forgeMultipartLoaded() && tileentity != null && tileentity.getWorldObj() != null && tileentity instanceof TileMultipart) {
-			TMultiPart part = ((TileMultipart) tileentity).jPartList().get(0);
-			if (part != null && part instanceof SonarTilePart) {
-				i = ((SonarTilePart) part).meta;
+		if (SonarAPI.forgeMultipartLoaded() && tileentity != null && tileentity.getWorld() != null) {
+			/*
+			if (tileentity instanceof TileMultipart) {
+				TMultiPart part = ((TileMultipart) tileentity).jPartList().get(0);
+				if (part != null && part instanceof SonarTilePart) {
+					i = ((SonarTilePart) part).meta;
+				}
 			}
+			*/
 		}
 
 		return i;
@@ -188,18 +182,18 @@ public class RenderHelper {
 	}
 
 	/** returns horizontal direction to the forward direction **/
-	public static ForgeDirection getHorizontal(ForgeDirection forward) {
-		if (forward == ForgeDirection.NORTH) {
-			return ForgeDirection.EAST;
+	public static EnumFacing getHorizontal(EnumFacing forward) {
+		if (forward == EnumFacing.NORTH) {
+			return EnumFacing.EAST;
 		}
-		if (forward == ForgeDirection.EAST) {
-			return ForgeDirection.SOUTH;
+		if (forward == EnumFacing.EAST) {
+			return EnumFacing.SOUTH;
 		}
-		if (forward == ForgeDirection.SOUTH) {
-			return ForgeDirection.WEST;
+		if (forward == EnumFacing.SOUTH) {
+			return EnumFacing.WEST;
 		}
-		if (forward == ForgeDirection.WEST) {
-			return ForgeDirection.NORTH;
+		if (forward == EnumFacing.WEST) {
+			return EnumFacing.NORTH;
 		}
 		return null;
 
@@ -339,13 +333,12 @@ public class RenderHelper {
 			GL11.glPopMatrix();
 		}
 	}
-	
-	
+
 	public static void drawTexturedModalRect(double minX, double minY, double maxY, double width, double height) {
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
 		double widthnew = (0 + (width * (2)));
-		double heightnew = (0 + ((height) * (2)));		
+		double heightnew = (0 + ((height) * (2)));
 		tessellator.addVertexWithUV((minX + 0), maxY / 2, 0, 0, heightnew);
 		tessellator.addVertexWithUV((minX + width), maxY / 2, 0, widthnew, heightnew);
 		tessellator.addVertexWithUV((minX + width), (minY + 0), 0, widthnew, 0);
@@ -354,7 +347,7 @@ public class RenderHelper {
 	}
 
 	public void drawTexturedModelRectFromIcon(int p_94065_1_, int p_94065_2_, IIcon p_94065_3_, int p_94065_4_, int p_94065_5_) {
-		Tessellator tessellator = Tessellator.instance;
+		Tessellator tessellator = Tessellator.getInstance();
 		tessellator.startDrawingQuads();
 		tessellator.addVertexWithUV((double) (p_94065_1_ + 0), (double) (p_94065_2_ + p_94065_5_), 0, (double) p_94065_3_.getMinU(), (double) p_94065_3_.getMaxV());
 		tessellator.addVertexWithUV((double) (p_94065_1_ + p_94065_4_), (double) (p_94065_2_ + p_94065_5_), 0, (double) p_94065_3_.getMaxU(), (double) p_94065_3_.getMaxV());

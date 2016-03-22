@@ -41,7 +41,7 @@ public class InventoryStoredResult extends InventoryCraftResult {
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int par1) {
+	public ItemStack removeStackFromSlot(int par1) {
 		return null;
 	}
 
