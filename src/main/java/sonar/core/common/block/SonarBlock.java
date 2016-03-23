@@ -167,7 +167,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 			setDefaultFacing(world, pos, state);
 	}
 
-	private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
+	protected void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
 		if (!worldIn.isRemote) {
 			Block block = worldIn.getBlockState(pos.north()).getBlock();
 			Block block1 = worldIn.getBlockState(pos.south()).getBlock();

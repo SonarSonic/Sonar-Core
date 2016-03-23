@@ -1,9 +1,7 @@
 package sonar.core.common.block.properties;
 
-public interface IMetaVariant{
+public interface IMetaVariant extends IItemVariant{
 
-	public String getName();
-	
 	public int getMeta();
 	
 }

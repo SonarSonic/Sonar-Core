@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import sonar.core.inventory.IFilteredInventory;
 
-public class InventoryHelper {
+public class DEADInventoryHelper {
 
 	public static boolean isPlayerInventoryFull(EntityPlayer player) {
 		return player.inventory.getFirstEmptyStack() == -1;
