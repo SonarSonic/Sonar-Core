@@ -9,23 +9,28 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
 
-/** coolAlias <3 */
 public class InventoryItem implements IInventory {
 	private String name = "Inventory Item";
 	private final ItemStack invItem;
 	private ItemStack[] inventory;
+	private static String invTag = "inv";
 	private String tag;
+	private boolean useStackTag;
 	public int size;
 
-	public InventoryItem(ItemStack stack, int size, String tag) {
+	public InventoryItem(ItemStack stack, int size, String tag, boolean useStackTag) {
 		inventory = new ItemStack[size];
 		invItem = stack;
 		this.tag = tag;
-
-		if (!stack.hasTagCompound()) {
-			stack.setTagCompound(new NBTTagCompound());
+		this.useStackTag = useStackTag;
+		if (useStackTag) {
+			if (!stack.hasTagCompound()) {
+				stack.setTagCompound(new NBTTagCompound());
+			}
+			readFromNBT(stack.getTagCompound());
+		} else {
+			readFromNBT(stack.getSubCompound(tag, true));
 		}
-		readFromNBT(stack.getTagCompound());
 	}
 
 	public int getSizeInventory() {
@@ -96,7 +101,11 @@ public class InventoryItem implements IInventory {
 				inventory[i] = null;
 			}
 		}
-		writeToNBT(invItem.getTagCompound());
+		if (useStackTag) {
+			writeToNBT(invItem.getTagCompound());
+		} else {
+			writeToNBT(invItem.getSubCompound(tag, true));
+		}
 	}
 
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
@@ -114,7 +123,7 @@ public class InventoryItem implements IInventory {
 	}
 
 	public void readFromNBT(NBTTagCompound compound) {
-		NBTTagList items = compound.getTagList(tag, Constants.NBT.TAG_COMPOUND);
+		NBTTagList items = compound.getTagList(invTag, Constants.NBT.TAG_COMPOUND);
 
 		for (int i = 0; i < items.tagCount(); ++i) {
 			NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
@@ -139,15 +148,19 @@ public class InventoryItem implements IInventory {
 				size++;
 			}
 		}
-		compound.setTag(tag, items);
-		compound.setInteger(tag + "size", size);
+		compound.setTag(invTag, items);
+		compound.setInteger("invsize", size);
 	}
 
 	public int getItemsStored(ItemStack stack) {
-		if (stack.hasTagCompound()) {
-			return stack.getTagCompound().getInteger(tag + "size");
+		if (this.useStackTag) {
+			if (stack.hasTagCompound()) {
+				return stack.getTagCompound().getInteger(tag + "size");
+			} else {
+				return 0;
+			}
 		} else {
-			return 0;
+			return stack.getSubCompound(tag, true).getInteger("invsize");
 		}
 	}
 
