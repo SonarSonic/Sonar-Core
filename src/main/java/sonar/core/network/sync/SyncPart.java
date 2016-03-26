@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
+import sonar.core.helpers.NBTHelper.SyncType;
 
 import com.google.common.collect.Lists;
 

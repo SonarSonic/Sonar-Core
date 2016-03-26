@@ -10,8 +10,10 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import sonar.core.api.SonarAPI;
 import sonar.core.energy.DischargeValues;
-import sonar.core.integration.SonarAPI;
+import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.integration.SonarLoader;
 import sonar.core.integration.SonarWailaModule;
 import sonar.core.integration.fmp.FMPHelper;
 import sonar.core.integration.fmp.handlers.TileHandler;
@@ -27,7 +29,10 @@ import sonar.core.network.PacketTileSync;
 import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.network.utils.ISyncTile;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
+import sonar.core.registries.EnergyProviderRegistry;
+import sonar.core.registries.EnergyTypeRegistry;
+import sonar.core.registries.FluidProviderRegistry;
+import sonar.core.registries.InventoryProviderRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -52,12 +57,19 @@ public class SonarCore {
 	@Instance(modid)
 	public static SonarCore instance;
 
+	public static InventoryProviderRegistry inventoryProviders = new InventoryProviderRegistry();
+	public static FluidProviderRegistry fluidProviders = new FluidProviderRegistry();
+	public static EnergyProviderRegistry energyProviders = new EnergyProviderRegistry();
+	public static EnergyTypeRegistry energyTypes = new EnergyTypeRegistry();
 	public static SimpleNetworkWrapper network;
 
 	public static Logger logger = (Logger) LogManager.getLogger(modid);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		SonarAPI.init();
+		logger.info("Initilised API");
+		
 		logger.info("Registering Packets");
 		registerPackets();
 		logger.info("Register Packets");
@@ -66,7 +78,7 @@ public class SonarCore {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		if (SonarAPI.wailaLoaded()) {
+		if (SonarLoader.wailaLoaded()) {
 			SonarWailaModule.register();
 			logger.info("Integrated with WAILA");
 		} else {
@@ -74,6 +86,10 @@ public class SonarCore {
 		}
 		MinecraftForge.EVENT_BUS.register(new SonarEvents());
 		logger.info("Registered Events");
+		energyTypes.register();		
+		inventoryProviders.register();
+		fluidProviders.register();
+		energyProviders.register();
 	}
 
 	@EventHandler
@@ -84,6 +100,10 @@ public class SonarCore {
 		for (Map.Entry<ItemStack, Integer> entry : DischargeValues.getPowerList().entrySet()) {
 			logger.info("Discharge Values: " + entry.toString() + " = " + entry.getValue());
 		}
+		logger.info("Registered " + energyTypes.getObjects().size() + " Energy Types");
+		logger.info("Registered " + inventoryProviders.getObjects().size() + " Inventory Providers");
+		logger.info("Registered " + fluidProviders.getObjects().size() + " Fluid Providers");
+		logger.info("Registered " + energyProviders.getObjects().size() + " Energy Providers");
 	}
 
 	public static void registerPackets() {

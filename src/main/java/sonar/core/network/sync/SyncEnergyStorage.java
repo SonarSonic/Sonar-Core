@@ -2,7 +2,7 @@ package sonar.core.network.sync;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
+import sonar.core.helpers.NBTHelper.SyncType;
 import cofh.api.energy.EnergyStorage;
 
 public class SyncEnergyStorage extends EnergyStorage implements ISyncPart {

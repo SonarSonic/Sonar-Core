@@ -20,7 +20,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import sonar.core.SonarCore;
-import sonar.core.integration.SonarAPI;
+import sonar.core.helpers.SonarHelper;
+import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.integration.SonarLoader;
 import sonar.core.inventory.IAdditionalInventory;
 import sonar.core.inventory.IDropInventory;
 import sonar.core.network.PacketBlockInteraction;
@@ -28,8 +30,6 @@ import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.BlockInteraction;
 import sonar.core.utils.BlockInteractionType;
 import sonar.core.utils.IInteractBlock;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
-import sonar.core.utils.helpers.SonarHelper;
 import cofh.api.block.IDismantleable;
 import cofh.api.item.IToolHammer;
 import cofh.api.tileentity.IReconfigurableSides;
@@ -70,7 +70,7 @@ public abstract class SonarBlock extends Block implements IDismantleable, IInter
 				}
 				return false;
 			}
-			if (wrenchable && SonarAPI.calculatorLoaded() && heldItem != null && (heldItem.getItem() instanceof IToolHammer || heldItem.getItem() == GameRegistry.findItem("Calculator", "Wrench"))) {
+			if (wrenchable && SonarLoader.calculatorLoaded() && heldItem != null && (heldItem.getItem() instanceof IToolHammer || heldItem.getItem() == GameRegistry.findItem("Calculator", "Wrench"))) {
 				return false;
 			} else {
 				return operateBlock(world, x, y, z, player, new BlockInteraction(side, hitx, hity, hitz, player.isSneaking() ? BlockInteractionType.SHIFT_RIGHT : BlockInteractionType.RIGHT));

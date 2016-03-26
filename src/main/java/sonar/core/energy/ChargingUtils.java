@@ -5,7 +5,7 @@ import ic2.api.item.IElectricItem;
 import ic2.api.item.IElectricItemManager;
 import ic2.api.item.ISpecialElectricItem;
 import net.minecraft.item.ItemStack;
-import sonar.core.integration.SonarAPI;
+import sonar.core.integration.SonarLoader;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 
@@ -29,7 +29,7 @@ public class ChargingUtils {
 			return true;
 		}
 
-		if (SonarAPI.ic2Loaded()) {
+		if (SonarLoader.ic2Loaded()) {
 			if (energy.getItem() instanceof IElectricItem) {
 				return true;
 			}
@@ -59,7 +59,7 @@ public class ChargingUtils {
 			return true;
 		}
 
-		if (SonarAPI.ic2Loaded()) {
+		if (SonarLoader.ic2Loaded()) {
 			if (energy.getItem() instanceof IElectricItem) {
 				return true;
 			}
@@ -83,14 +83,14 @@ public class ChargingUtils {
 				int toTransfer = Math.round(Math.min(itemEnergy, ((max - stored))));
 				return new EnergyCharge(+item.extractEnergy(energy, toTransfer, false), energy, false);
 
-			} else if (SonarAPI.ic2Loaded() && energy.getItem() instanceof ISpecialElectricItem) {
+			} else if (SonarLoader.ic2Loaded() && energy.getItem() instanceof ISpecialElectricItem) {
 				ISpecialElectricItem special = (ISpecialElectricItem) energy.getItem();
 				IElectricItemManager manager = special.getManager(energy);
 
 				int itemEnergyRF = (int) manager.getCharge(energy) * 4;
 				int toTransferRF = Math.round(Math.min(itemEnergyRF, ((max - stored))));
 				return new EnergyCharge((int) (manager.discharge(energy, toTransferRF, 4, false, false, false) * 4), energy, false);
-			} else if (SonarAPI.ic2Loaded() && energy.getItem() instanceof IElectricItem) {
+			} else if (SonarLoader.ic2Loaded() && energy.getItem() instanceof IElectricItem) {
 				IElectricItem item = (IElectricItem) energy.getItem();
 				IElectricItemManager manager = ElectricItem.manager;
 
@@ -119,7 +119,7 @@ public class ChargingUtils {
 				int toTransfer = Math.min(maxTransfer, Math.round(Math.min(itemEnergy, (energyStorage.getEnergyStored()))));
 
 				return new EnergyCharge(-(item.receiveEnergy(energy, toTransfer, false)), energy, false);
-			} else if (SonarAPI.ic2Loaded() && energy.getItem() instanceof IElectricItem) {
+			} else if (SonarLoader.ic2Loaded() && energy.getItem() instanceof IElectricItem) {
 				IElectricItem item = (IElectricItem) energy.getItem();
 				IElectricItemManager manager = ElectricItem.manager;
 
@@ -128,7 +128,7 @@ public class ChargingUtils {
 
 				energyStorage.setEnergyStored((int) (stored - (manager.charge(energy, toTransferRF / 4, 4, false, false) * 4)));
 				return new EnergyCharge(-(int) (manager.charge(energy, toTransferRF / 4, 4, false, false) * 4), energy, false);
-			} else if (SonarAPI.ic2Loaded() && energy.getItem() instanceof ISpecialElectricItem) {
+			} else if (SonarLoader.ic2Loaded() && energy.getItem() instanceof ISpecialElectricItem) {
 				ISpecialElectricItem item = (ISpecialElectricItem) energy.getItem();
 				IElectricItemManager manager = item.getManager(energy);
 

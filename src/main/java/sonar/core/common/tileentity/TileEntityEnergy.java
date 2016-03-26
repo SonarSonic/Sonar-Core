@@ -8,10 +8,10 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
-import sonar.core.integration.SonarAPI;
+import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.integration.SonarLoader;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncEnergyStorage;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
 
 public class TileEntityEnergy extends TileEntitySonar implements IEnergyTile {
 
@@ -39,7 +39,7 @@ public class TileEntityEnergy extends TileEntitySonar implements IEnergyTile {
 	}
 
 	public void onLoaded() {
-		if (!this.worldObj.isRemote && SonarAPI.ic2Loaded()) {
+		if (!this.worldObj.isRemote && SonarLoader.ic2Loaded()) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 		}
 	}
@@ -48,7 +48,7 @@ public class TileEntityEnergy extends TileEntitySonar implements IEnergyTile {
 	public void invalidate() {
 		super.invalidate();
 		if (!this.worldObj.isRemote) {
-			if (SonarAPI.ic2Loaded()) {
+			if (SonarLoader.ic2Loaded()) {
 				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 			}
 		}

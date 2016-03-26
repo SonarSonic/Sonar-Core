@@ -11,8 +11,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
-import sonar.core.integration.SonarAPI;
-import sonar.core.utils.helpers.FontHelper;
+import sonar.core.helpers.FontHelper;
+import sonar.core.integration.SonarLoader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -33,7 +33,7 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
 		super.addInformation(stack, player, list, par4);
 
-		if (SonarAPI.calculatorLoaded()) {
+		if (SonarLoader.calculatorLoaded()) {
 			String mode = FontHelper.translate("calculator.tools.calculator.greenhouse");
 			switch (greenhouseTier) {
 			case 0:
@@ -54,7 +54,7 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par, float f1, float f2, float f3) {
 
-		if (this.greenhouseTier == 0 || !SonarAPI.calculatorLoaded()) {
+		if (this.greenhouseTier == 0 || !SonarLoader.calculatorLoaded()) {
 			if (par != 1) {
 				return false;
 			} else if (player.canPlayerEdit(x, y, z, par, stack) && player.canPlayerEdit(x, y + 1, z, par, stack)) {

@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
+import sonar.core.helpers.NBTHelper.SyncType;
 
 public abstract class InventoryTileHandler extends TileHandler implements IInventory {
 

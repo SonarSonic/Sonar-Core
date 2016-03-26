@@ -2,8 +2,8 @@ package sonar.core.network;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.utils.ISyncTile;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 
 public class PacketRequestSync extends PacketCoords<PacketRequestSync> {

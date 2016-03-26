@@ -16,9 +16,9 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import sonar.core.SonarCore;
+import sonar.core.helpers.FontHelper;
 import sonar.core.network.PacketByteBufServer;
 import sonar.core.network.utils.IByteBufTile;
-import sonar.core.utils.helpers.FontHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

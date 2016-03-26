@@ -12,11 +12,11 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import sonar.core.energy.ChargingUtils;
 import sonar.core.energy.EnergyCharge;
-import sonar.core.integration.SonarAPI;
+import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.integration.SonarLoader;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncEnergyStorage;
 import sonar.core.network.utils.ISyncTile;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.Optional.Method;
@@ -30,7 +30,7 @@ public abstract class TileEntitySidedInventorySender extends TileEntitySidedInve
 	public int maxTransfer = 5000;
 
 	public void onLoaded() {
-		if (!this.worldObj.isRemote && SonarAPI.ic2Loaded()) {
+		if (!this.worldObj.isRemote && SonarLoader.ic2Loaded()) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 		}
 	}
@@ -119,7 +119,7 @@ public abstract class TileEntitySidedInventorySender extends TileEntitySidedInve
 	public void invalidate() {
 		super.invalidate();
 		if (!this.worldObj.isRemote) {
-			if (SonarAPI.ic2Loaded()) {
+			if (SonarLoader.ic2Loaded()) {
 				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 			}
 		}

@@ -1,5 +1,6 @@
 package sonar.core.utils;
 
+import sonar.core.api.IRegistryObject;
 import net.minecraft.nbt.NBTTagCompound;
 
 public interface INBTObject<T> extends IRegistryObject {

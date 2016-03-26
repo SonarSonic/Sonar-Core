@@ -3,8 +3,8 @@ package sonar.core.network.sync;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants.NBT;
-import sonar.core.utils.helpers.NBTHelper;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
+import sonar.core.helpers.NBTHelper;
+import sonar.core.helpers.NBTHelper.SyncType;
 
 public abstract class SyncTagType<T> extends SyncPart {
 
