@@ -1,5 +1,6 @@
 package sonar.core.utils;
 
+import net.minecraftforge.common.util.ForgeDirection;
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.common.network.ByteBufUtils;
 
@@ -27,5 +28,9 @@ public class BlockInteraction {
 		buf.writeFloat(hity);
 		buf.writeFloat(hitz);
 		ByteBufUtils.writeUTF8String(buf, type.name());
+	}
+
+	public ForgeDirection getDir() {
+		return ForgeDirection.getOrientation(side);
 	}
 }
