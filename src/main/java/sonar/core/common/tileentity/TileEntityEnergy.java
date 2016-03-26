@@ -8,10 +8,10 @@ import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
-import sonar.core.integration.SonarAPI;
+import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.integration.SonarLoader;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncEnergyStorage;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
 
 public class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver, IEnergyProvider {
 

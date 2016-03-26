@@ -1,7 +1,7 @@
 package sonar.core.energy;
 
 import net.minecraft.item.ItemStack;
-import sonar.core.integration.SonarAPI;
+import sonar.core.integration.SonarLoader;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 

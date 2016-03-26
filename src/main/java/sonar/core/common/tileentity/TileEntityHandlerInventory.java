@@ -1,8 +1,6 @@
 package sonar.core.common.tileentity;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import sonar.core.integration.fmp.handlers.InventoryTileHandler;
 
 public abstract class TileEntityHandlerInventory extends TileEntityHandler implements IInventory {

@@ -1,13 +1,12 @@
 package sonar.core.network;
 
-import sonar.core.common.tileentity.TileEntitySonar;
-import sonar.core.utils.ISonarSides;
-import sonar.core.utils.MachineSide;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import sonar.core.utils.ISonarSides;
+import sonar.core.utils.MachineSide;
 
 public class PacketSonarSides extends PacketCoords<PacketSonarSides> {
 

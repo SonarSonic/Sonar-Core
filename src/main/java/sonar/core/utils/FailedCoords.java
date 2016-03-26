@@ -1,6 +1,6 @@
 package sonar.core.utils;
 
-import net.minecraft.util.BlockPos;
+import sonar.core.api.BlockCoords;
 
 public class FailedCoords {
 	private boolean objectBoolean;

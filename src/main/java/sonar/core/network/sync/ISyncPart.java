@@ -1,9 +1,8 @@
 package sonar.core.network.sync;
 
-import sonar.core.utils.helpers.NBTHelper.SyncType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-
+import sonar.core.helpers.NBTHelper.SyncType;
 
 public interface ISyncPart{
 	

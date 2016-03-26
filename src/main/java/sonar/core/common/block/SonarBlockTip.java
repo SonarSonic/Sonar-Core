@@ -9,9 +9,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import sonar.core.integration.SonarAPI;
 import sonar.core.utils.ISpecialTooltip;
-import sonar.core.utils.helpers.FontHelper;
 
 public class SonarBlockTip extends ItemBlock {
 
@@ -27,9 +25,6 @@ public class SonarBlockTip extends ItemBlock {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
 		super.addInformation(stack, player, list, par4);
-		if (!SonarAPI.isEnabled(stack)) {
-			list.add(FontHelper.translate("calc.ban"));
-		}
 		if (stack.hasTagCompound() && Block.getBlockFromItem(stack.getItem()) instanceof ISpecialTooltip) {
 			ISpecialTooltip tooltip = (ISpecialTooltip) Block.getBlockFromItem(stack.getItem());
 			tooltip.addSpecialToolTip(stack, player, list);

@@ -10,10 +10,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import sonar.core.SonarCore;
+import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.utils.ISyncTile;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
+
 
 public abstract class SonarTilePart extends McMetaPart implements ISyncTile {
 

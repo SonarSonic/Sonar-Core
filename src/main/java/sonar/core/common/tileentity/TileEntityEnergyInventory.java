@@ -8,8 +8,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import sonar.core.energy.ChargingUtils;
 import sonar.core.energy.EnergyCharge;
+import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.inventory.SonarTileInventory;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
 
 public class TileEntityEnergyInventory extends TileEntityEnergy implements IInventory {
 

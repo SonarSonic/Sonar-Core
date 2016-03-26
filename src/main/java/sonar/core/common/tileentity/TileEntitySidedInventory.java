@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import sonar.core.SonarCore;
-import sonar.core.common.block.SonarSidedBlock;
 import sonar.core.network.PacketSonarSides;
 import sonar.core.utils.ISonarSides;
 import sonar.core.utils.MachineSide;

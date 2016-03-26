@@ -6,10 +6,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import sonar.core.helpers.NBTHelper;
+import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.fmp.FMPHelper;
 import sonar.core.network.utils.ISyncTile;
-import sonar.core.utils.helpers.NBTHelper;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
+
 
 public class PacketTileSync extends PacketCoords<PacketTileSync> {
 

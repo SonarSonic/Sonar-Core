@@ -1,7 +1,6 @@
 package sonar.core.utils;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 
 public interface IGuiTile {
 

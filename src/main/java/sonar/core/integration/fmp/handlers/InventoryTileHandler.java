@@ -4,12 +4,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.inventory.SonarTileInventory;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
+
 
 public abstract class InventoryTileHandler extends TileHandler implements IInventory {
 

@@ -18,9 +18,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import sonar.core.SonarCore;
+import sonar.core.helpers.FontHelper;
 import sonar.core.network.PacketByteBufServer;
 import sonar.core.network.utils.IByteBufTile;
-import sonar.core.utils.helpers.FontHelper;
+
 
 public abstract class GuiSonar extends GuiContainer {
 

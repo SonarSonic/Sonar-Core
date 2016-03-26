@@ -7,7 +7,8 @@ import java.util.Map;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
-import sonar.core.utils.helpers.RecipeHelper;
+import sonar.core.helpers.RecipeHelper;
+
 
 public abstract class AbstractDualOutputHandler extends TemplateRecipeHandler {
 

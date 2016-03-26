@@ -5,10 +5,10 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncTagType;
 import sonar.core.network.utils.ISyncTile;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
 
 /**
  * used for creating embedded handlers for blocks to allow easier alteration for

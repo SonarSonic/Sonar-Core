@@ -1,8 +1,5 @@
 package sonar.core.utils;
 
-import com.google.common.base.Predicate;
-
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 
 public enum MachineSide implements IStringSerializable {

@@ -1,6 +1,7 @@
 package sonar.core.utils;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 
@@ -28,5 +29,9 @@ public class BlockInteraction {
 		buf.writeFloat(hity);
 		buf.writeFloat(hitz);
 		ByteBufUtils.writeUTF8String(buf, type.name());
+	}
+
+	public EnumFacing getDir() {
+		return EnumFacing.getFront(side);
 	}
 }

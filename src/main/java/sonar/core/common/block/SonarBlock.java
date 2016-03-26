@@ -29,6 +29,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
+import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.helpers.SonarHelper;
 import sonar.core.inventory.IAdditionalInventory;
 import sonar.core.inventory.IDropInventory;
 import sonar.core.network.PacketBlockInteraction;
@@ -39,8 +41,6 @@ import sonar.core.utils.IInteractBlock;
 import sonar.core.utils.ISonarSides;
 import sonar.core.utils.IWrench;
 import sonar.core.utils.IWrenchable;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
-import sonar.core.utils.helpers.SonarHelper;
 
 import com.google.common.collect.Lists;
 
@@ -167,7 +167,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 			setDefaultFacing(world, pos, state);
 	}
 
-	protected void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
+	private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
 		if (!worldIn.isRemote) {
 			Block block = worldIn.getBlockState(pos.north()).getBlock();
 			Block block1 = worldIn.getBlockState(pos.south()).getBlock();

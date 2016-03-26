@@ -4,7 +4,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import sonar.core.utils.helpers.RenderHelper;
+import sonar.core.helpers.RenderHelper;
 
 public abstract class SonarTESwitchRender extends TileEntitySpecialRenderer {
 	public ModelBase model;

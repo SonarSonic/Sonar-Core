@@ -2,17 +2,15 @@ package sonar.core.common.tileentity;
 
 import java.util.List;
 
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
-import sonar.core.common.tileentity.TileEntityEnergy.EnergyMode;
-import sonar.core.energy.ChargingUtils;
-import sonar.core.energy.EnergyCharge;
-import sonar.core.network.sync.ISyncPart;
-import sonar.core.network.sync.SyncEnergyStorage;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import sonar.core.energy.ChargingUtils;
+import sonar.core.energy.EnergyCharge;
+import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.network.sync.ISyncPart;
+import sonar.core.network.sync.SyncEnergyStorage;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 
 public class TileEntityEnergySidedInventory extends TileEntitySidedInventory implements IEnergyReceiver, IEnergyProvider  {
 

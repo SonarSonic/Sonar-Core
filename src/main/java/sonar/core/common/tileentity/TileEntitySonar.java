@@ -15,13 +15,13 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
+import sonar.core.api.BlockCoords;
+import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.IWailaInfo;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.utils.ISyncTile;
-import sonar.core.utils.BlockCoords;
-import sonar.core.utils.helpers.NBTHelper.SyncType;
 
 public class TileEntitySonar extends TileEntity implements ITickable, ISyncTile, IWailaInfo {
 
