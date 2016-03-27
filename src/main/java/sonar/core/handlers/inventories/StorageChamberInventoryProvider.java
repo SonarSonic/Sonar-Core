@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.Loader;
 import sonar.core.api.ActionType;
 import sonar.core.api.InventoryHandler;
 import sonar.core.api.StoredItemStack;
@@ -67,7 +68,7 @@ public class StorageChamberInventoryProvider extends InventoryHandler {
 	}
 
 	public boolean isLoadable() {
-		return Loader.isModLoaded("Calculator");
+		return false;
 	}
 
 	@Override

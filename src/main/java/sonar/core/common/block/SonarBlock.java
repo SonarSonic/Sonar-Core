@@ -54,7 +54,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 		super(material);
 		this.orientation = orientation;
 		this.wrenchable = wrenchable;
-		this.useNeighborBrightness=true;
+		this.useNeighborBrightness = true;
 		if (orientation)
 			this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 	}
@@ -64,8 +64,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 		if (player != null) {
 			ItemStack heldItem = player.getHeldItem();
-			if (wrenchable && heldItem != null && (heldItem.getItem() instanceof IWrench||heldItem.getItem() == Items.bowl)) {
-				System.out.print(side);
+			if (wrenchable && heldItem != null && (heldItem.getItem() instanceof IWrench || heldItem.getItem() == Items.bowl)) {
 				if (!player.isSneaking()) {
 					TileEntity target = world.getTileEntity(pos);
 					if (target instanceof ISonarSides) {
@@ -167,7 +166,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 			setDefaultFacing(world, pos, state);
 	}
 
-	private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
+	protected void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
 		if (!worldIn.isRemote) {
 			Block block = worldIn.getBlockState(pos.north()).getBlock();
 			Block block1 = worldIn.getBlockState(pos.south()).getBlock();
@@ -280,7 +279,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 	@Override
 	public int getRenderType() {
-		//NEEDS SOME ATTENTION
+		// NEEDS SOME ATTENTION
 		return hasSpecialRenderer() || orientation ? 3 : 0;
 	}
 

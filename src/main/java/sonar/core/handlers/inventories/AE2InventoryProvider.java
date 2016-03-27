@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.Loader;
 import sonar.core.api.ActionType;
 import sonar.core.api.InventoryHandler;
 import sonar.core.api.SonarAPI;

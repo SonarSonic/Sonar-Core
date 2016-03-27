@@ -38,13 +38,14 @@ public abstract class RecipeHelper {
 	}
 
 	public void addRegisteredRecipes() {
+		/*
 		List<Object[]> recipes = CalculatorAPI.getRecipes(this.getRecipeID());
 		if (recipes != null && recipes.size() != 0) {
 			for (Object[] object : recipes) {
 				this.addRecipe(object);
 			}
 		}
-
+	*/
 	}
 
 	/** get the full list of recipes */

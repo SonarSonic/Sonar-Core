@@ -9,40 +9,33 @@ public class SonarLoader {
 
 	/** @returns if Industrial Craft is installed */
 	public static boolean ic2Loaded() {
-
 		return Loader.isModLoaded("IC2");
 	}
 
 	/** @returns if Waila is installed */
 	public static boolean wailaLoaded() {
-
 		return Loader.isModLoaded("Waila");
 	}
 
 	/** @returns if Calculator is installed */
 	public static boolean calculatorLoaded() {
-
 		return Loader.isModLoaded("Calculator");
 	}
 
 	/** @returns if Optics is installed */
 	public static boolean opticsLoaded() {
-
 		return Loader.isModLoaded("Optics");
 	}
 
 	/** @returns if Practical Logistics is installed */
 	public static boolean logisticsLoaded() {
-
 		return Loader.isModLoaded("PracticalLogistics");
 	}
 	
 	/** @returns if Forge Multipart is installed */
 	public static boolean forgeMultipartLoaded() {
-
 		return Loader.isModLoaded("ForgeMultipart");
 	}
-<<<<<<< HEAD:src/main/java/sonar/core/integration/SonarAPI.java
 
 	public static boolean isEnabled(ItemStack stack) {
 		if(stack==null){
@@ -71,6 +64,4 @@ public class SonarLoader {
 		return true;
 
 	}
-=======
->>>>>>> refs/remotes/origin/master:src/main/java/sonar/core/integration/SonarLoader.java
 }

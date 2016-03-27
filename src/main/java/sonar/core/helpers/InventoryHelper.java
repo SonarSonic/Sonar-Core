@@ -99,7 +99,10 @@ public class InventoryHelper extends InventoryWrapper {
 	}
 
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
-		if (tile != null && filter == null || filter.allowed(stack.getFullStack())) {
+		if(stack==null){
+			return stack;
+		}
+		if (tile != null && (filter == null || filter.allowed(stack.getFullStack()))) {
 			List<InventoryHandler> handlers = SonarCore.inventoryProviders.getObjects();
 			for (InventoryHandler handler : handlers) {
 				if (handler.canHandleItems(tile, dir)) {
