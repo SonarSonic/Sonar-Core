@@ -144,7 +144,6 @@ public class InventoryHelper extends InventoryWrapper {
 					if (add != null) {
 						removeItems(from, add.copy(), dirFrom, ActionType.PERFORM, filter);						
 						addItems(to, removed.copy(), dirTo, ActionType.PERFORM, filter);
-						//System.out.print(removed.getStackSize());
 					}
 				}
 			}

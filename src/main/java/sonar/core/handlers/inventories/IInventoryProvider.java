@@ -49,8 +49,6 @@ public class IInventoryProvider extends InventoryHandler {
 
 	@Override
 	public StoredItemStack addStack(StoredItemStack add, TileEntity tile, ForgeDirection dir, ActionType action) {
-		System.out.print(action);
-		// long toAdd = add.stored;
 		final IInventory inv = (IInventory) tile;
 		int invSize = inv.getSizeInventory();
 		int limit = inv.getInventoryStackLimit();
