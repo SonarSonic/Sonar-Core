@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import sonar.core.helpers.NBTHelper;
 
-public class StoredFluidStack {
+public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 
 	public FluidStack fluid;
 	public long stored, capacity;
@@ -91,5 +91,15 @@ public class StoredFluidStack {
 		FluidStack stack = fluid.copy();
 		stack.amount = (int) Math.min(stored, Integer.MAX_VALUE);
 		return stack;
+	}
+
+	@Override
+	public StorageTypes getStorageType() {
+		return StorageTypes.FLUIDS;
+	}
+
+	@Override
+	public long getStackSize() {
+		return stored;
 	}
 }

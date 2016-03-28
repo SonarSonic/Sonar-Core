@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 
-public class StoredItemStack {
+public class StoredItemStack implements ISonarStack<StoredItemStack> {
 
 	public ItemStack item;
 	public long stored;
@@ -116,5 +116,10 @@ public class StoredItemStack {
 		ItemStack stack = item.copy();
 		stack.stackSize = min;
 		return stack;
+	}
+
+	@Override
+	public StorageTypes getStorageType() {
+		return StorageTypes.ITEMS;
 	}
 }

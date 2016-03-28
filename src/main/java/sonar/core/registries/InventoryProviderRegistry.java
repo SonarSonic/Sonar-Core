@@ -7,7 +7,6 @@ import sonar.core.handlers.inventories.DSUInventoryProvider;
 import sonar.core.handlers.inventories.DrawersInventoryProvider;
 import sonar.core.handlers.inventories.IInventoryProvider;
 import sonar.core.handlers.inventories.LPInventoryProvider;
-import sonar.core.handlers.inventories.StorageChamberInventoryProvider;
 import sonar.core.helpers.RegistryHelper;
 
 public class InventoryProviderRegistry extends RegistryHelper<InventoryHandler> {
@@ -20,7 +19,6 @@ public class InventoryProviderRegistry extends RegistryHelper<InventoryHandler> 
 		registerObject(new DSUInventoryProvider());
 		registerObject(new LPInventoryProvider());
 		registerObject(new DrawersInventoryProvider());
-		registerObject(new StorageChamberInventoryProvider());
 		registerObject(new IInventoryProvider());
 	}
 

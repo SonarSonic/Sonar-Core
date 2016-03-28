@@ -12,6 +12,7 @@ public final class SonarAPI {
 	private static RegistryWrapper registry = new RegistryWrapper();
 	private static FluidWrapper fluids = new FluidWrapper();
 	private static InventoryWrapper inventories = new InventoryWrapper();
+	private static EnergyWrapper energy = new  EnergyWrapper();
 
 	public static void init() {
 		if (Loader.isModLoaded("SonarCore")) {
@@ -19,6 +20,7 @@ public final class SonarAPI {
 				registry = (RegistryWrapper) Class.forName("sonar.core.SonarRegistry").newInstance();
 				fluids = (FluidWrapper) Class.forName("sonar.core.helpers.FluidHelper").newInstance();
 				inventories = (InventoryWrapper) Class.forName("sonar.core.helpers.InventoryHelper").newInstance();
+				energy = (EnergyWrapper) Class.forName("sonar.core.helpers.EnergyHelper").newInstance();
 			} catch (Exception exception) {
 				System.err.println(NAME + " : FAILED TO INITILISE API" + exception.getMessage());
 			}
@@ -35,5 +37,9 @@ public final class SonarAPI {
 
 	public static InventoryWrapper getItemHelper() {
 		return inventories;
+	}
+	
+	public static EnergyWrapper getEnergyHelper() {
+		return energy;
 	}
 }

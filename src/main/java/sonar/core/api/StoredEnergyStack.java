@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /** should only be in RF, inaccuracy due to conversion is a price we must pay at the moment */
-public class StoredEnergyStack {
+public class StoredEnergyStack implements ISonarStack<StoredEnergyStack> {
 
 	public long stored, capacity, input, output, usage;
 	public boolean hasStorage, hasInput, hasOutput, hasUsage;
@@ -158,4 +158,72 @@ public class StoredEnergyStack {
 		}
 		return false;
 	}
+
+	@Override
+	public StorageTypes getStorageType() {
+		return StorageTypes.ENERGY;
+	}
+
+	@Override
+	public StoredEnergyStack copy() {
+		StoredEnergyStack copy = new StoredEnergyStack(energyType);
+		copy.setStorageValues(stored, capacity);
+		copy.setMaxInput(input);
+		copy.setMaxOutput(output);
+		copy.setUsage(usage);
+		return copy;
+	}
+
+	@Override
+	public void add(StoredEnergyStack stack) {
+		if (energyType.getName().equals(stack.energyType.getName())) {
+			this.stored += stack.stored;
+			this.capacity += stack.capacity;
+			if (stack.input > this.input)
+				this.input += stack.input;
+			if (stack.output > this.output)
+				this.output += stack.output;
+			if (stack.usage > this.usage)
+				this.usage += stack.usage;
+		}
+	}
+
+	@Override
+	public void remove(StoredEnergyStack stack) {
+		if (energyType.getName().equals(stack.energyType.getName())) {
+			this.stored -= stack.stored;
+			this.capacity -= stack.capacity;
+		}
+	}
+
+	@Override
+	public StoredEnergyStack setStackSize(long size) {
+		stored = size;
+		return this;
+	}
+
+	@Override
+	public long getStackSize() {
+		return stored;
+	}
+
+	public StoredEnergyStack convert(EnergyType type) {
+		StoredEnergyStack stack = copy();
+		if (!this.energyType.getName().equals(type.getName())) {
+			stack.energyType = type;
+			stack.stored = convert(stack.stored, type);
+			stack.capacity = convert(stack.capacity, type);
+			stack.input = convert(stack.input, type);
+			stack.output = convert(stack.output, type);
+			stack.usage = convert(stack.usage, type);
+		}
+		return stack;
+
+	}
+
+	public long convert(long val, EnergyType type) {
+		double inRF = (val * this.energyType.getRFConversion());
+		return (long) (inRF / type.getRFConversion());
+	}
+
 }

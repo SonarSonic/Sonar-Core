@@ -121,8 +121,8 @@ public class InventoryHelper extends InventoryWrapper {
 			for (InventoryHandler handler : handlers) {
 				if (handler.canHandleItems(tile, dir)) {
 					StoredItemStack returned = handler.removeStack(stack.copy(), tile, dir, type);
-					StoredItemStack add = getStackToAdd(stack.getStackSize(), stack, returned);
-					return add;
+					StoredItemStack remove = getStackToAdd(stack.getStackSize(), stack.copy(), returned);
+					return remove;
 				}
 			}
 		}

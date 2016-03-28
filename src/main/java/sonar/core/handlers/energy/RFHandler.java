@@ -48,11 +48,9 @@ public class RFHandler extends EnergyHandler {
 			IEnergyReceiver receiver = (IEnergyReceiver) tile;
 			if (receiver.canConnectEnergy(dir.getOpposite())) {
 				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-				transfer.stored -= receiver.receiveEnergy(dir.getOpposite(), transferRF, false);
+				transfer.stored -= receiver.receiveEnergy(dir.getOpposite(), transferRF, action.shouldSimulate());
 			}
 		}
-		if (transfer.stored == 0)
-			transfer = null;
 		return transfer;
 	}
 
@@ -61,11 +59,10 @@ public class RFHandler extends EnergyHandler {
 		if (tile instanceof IEnergyProvider) {
 			IEnergyProvider receiver = (IEnergyProvider) tile;
 			if (receiver.canConnectEnergy(dir.getOpposite())) {
-				transfer.stored -= receiver.extractEnergy(dir.getOpposite(), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE, false);
+				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
+				transfer.stored -= receiver.extractEnergy(dir.getOpposite(), transferRF, action.shouldSimulate());
 			}
 		}
-		if (transfer.stored == 0)
-			transfer = null;
 		return transfer;
 	}
 

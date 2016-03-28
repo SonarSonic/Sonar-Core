@@ -38,7 +38,7 @@ public class EnergyType implements IRegistryObject {
 		return usage;
 	}
 
-	public String getRFConversion() {
-		return usage;
+	public double getRFConversion() {
+		return rfConversion;
 	}
 }

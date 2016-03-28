@@ -38,7 +38,7 @@ import sonar.core.network.utils.ISyncTile;
 import sonar.core.utils.BlockInteraction;
 import sonar.core.utils.BlockInteractionType;
 import sonar.core.utils.IInteractBlock;
-import sonar.core.utils.ISonarSides;
+import sonar.core.utils.IMachineSides;
 import sonar.core.utils.IWrench;
 import sonar.core.utils.IWrenchable;
 
@@ -67,8 +67,8 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 			if (wrenchable && heldItem != null && (heldItem.getItem() instanceof IWrench || heldItem.getItem() == Items.bowl)) {
 				if (!player.isSneaking()) {
 					TileEntity target = world.getTileEntity(pos);
-					if (target instanceof ISonarSides) {
-						((ISonarSides) target).incrSide(side);
+					if (target instanceof IMachineSides) {
+						((IMachineSides) target).getSideConfigs().increaseSide(side);
 					}
 				}
 				return false;

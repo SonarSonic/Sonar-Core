@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
@@ -37,18 +38,18 @@ public class BlockCoords {
 		this.hasDimension = true;
 		this.dimension = dimension;
 	}
-	
+
 	public BlockCoords(BlockPos pos) {
 		this.pos = pos;
 		this.hasDimension = false;
-	}	
+	}
 
 	public BlockCoords(BlockPos pos, int dimension) {
 		this.pos = pos;
 		this.hasDimension = true;
 		this.dimension = dimension;
 	}
-	
+
 	public BlockCoords(TileEntity tile) {
 		this.pos = tile.getPos();
 		if (tile.getWorld() == null) {
@@ -106,6 +107,18 @@ public class BlockCoords {
 	public Block getBlock() {
 		if (this.hasDimension()) {
 			return getWorld().getBlockState(pos).getBlock();
+		} else {
+			return null;
+		}
+	}
+
+	public IBlockState getBlockState(World world) {
+		return world.getBlockState(pos);
+	}
+
+	public IBlockState getBlockState() {
+		if (this.hasDimension()) {
+			return getWorld().getBlockState(pos);
 		} else {
 			return null;
 		}

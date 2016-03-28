@@ -5,17 +5,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import sonar.core.utils.ISonarSides;
-import sonar.core.utils.MachineSide;
+import sonar.core.utils.IMachineSides;
+import sonar.core.utils.MachineSideConfig;
 
 public class PacketSonarSides extends PacketCoords<PacketSonarSides> {
 
 	public EnumFacing side;
-	public MachineSide config;
+	public MachineSideConfig config;
 	
 	public PacketSonarSides() {}
 
-	public PacketSonarSides(BlockPos pos, EnumFacing side, MachineSide config) {
+	public PacketSonarSides(BlockPos pos, EnumFacing side, MachineSideConfig config) {
 		super(pos);
 		this.side = side;
 		this.config = config;
@@ -38,10 +38,10 @@ public class PacketSonarSides extends PacketCoords<PacketSonarSides> {
 
 		@Override
 		public IMessage processMessage(PacketSonarSides message, TileEntity tile) {
-			if (tile.getWorld().isRemote && tile instanceof ISonarSides) {
-				ISonarSides sides = (ISonarSides) tile;
-				sides.setSide(message.side, message.config);
-				tile.receiveClientEvent(1, 1);
+			if (tile.getWorld().isRemote && tile instanceof IMachineSides) {
+				IMachineSides sides = (IMachineSides) tile;
+				sides.getSideConfigs().setSide(message.side, message.config);
+				tile.getWorld().markBlockForUpdate(tile.getPos());
 			}
 			return null;
 		}

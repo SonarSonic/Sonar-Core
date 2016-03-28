@@ -10,7 +10,6 @@ import net.minecraft.util.IChatComponent;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.inventory.SonarTileInventory;
 
-
 public abstract class InventoryTileHandler extends TileHandler implements IInventory {
 
 	public InventoryTileHandler(boolean isMultipart, TileEntity tile) {
@@ -31,14 +30,14 @@ public abstract class InventoryTileHandler extends TileHandler implements IInven
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		super.readData(nbt, type);
 		if (type == SyncType.SAVE)
-			getTileInv().readFromNBT(nbt);
+			getTileInv().readData(nbt, type);
 	}
 
 	@Override
 	public void writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
 		if (type == SyncType.SAVE)
-			getTileInv().writeToNBT(nbt);
+			getTileInv().writeData(nbt, type);
 	}
 
 	public int getSizeInventory() {

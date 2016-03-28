@@ -50,7 +50,7 @@ public class InventoryWrapper {
 	}
 
 	public StoredItemStack removeItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
-		return null;
+		return stack;
 	}
 
 	public void transferItems(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, IInventoryFilter filter) {}

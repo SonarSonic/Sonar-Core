@@ -44,6 +44,7 @@ import sonar.core.registries.EnergyProviderRegistry;
 import sonar.core.registries.EnergyTypeRegistry;
 import sonar.core.registries.FluidProviderRegistry;
 import sonar.core.registries.InventoryProviderRegistry;
+import sonar.core.utils.upgrades.MachineUpgradeRegistry;
 
 @Mod(modid = SonarCore.modid, name = "SonarCore", version = SonarCore.version)
 public class SonarCore {
@@ -61,6 +62,7 @@ public class SonarCore {
 	public static FluidProviderRegistry fluidProviders = new FluidProviderRegistry();
 	public static EnergyProviderRegistry energyProviders = new EnergyProviderRegistry();
 	public static EnergyTypeRegistry energyTypes = new EnergyTypeRegistry();
+	public static MachineUpgradeRegistry machineUpgrades = new MachineUpgradeRegistry();
 	public static SimpleNetworkWrapper network;
 
 	public static Logger logger = (Logger) LogManager.getLogger(modid);
@@ -68,8 +70,7 @@ public class SonarCore {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		SonarAPI.init();
-		logger.info("Initilised API");
-		
+		logger.info("Initilised API");		
 		logger.info("Registering Packets");
 		registerPackets();
 		logger.info("Register Packets");
@@ -90,6 +91,7 @@ public class SonarCore {
 		inventoryProviders.register();
 		fluidProviders.register();
 		energyProviders.register();
+		machineUpgrades.register();
 	}
 
 	@EventHandler
@@ -104,6 +106,7 @@ public class SonarCore {
 		logger.info("Registered " + inventoryProviders.getObjects().size() + " Inventory Providers");
 		logger.info("Registered " + fluidProviders.getObjects().size() + " Fluid Providers");
 		logger.info("Registered " + energyProviders.getObjects().size() + " Energy Providers");
+		logger.info("Registered " + machineUpgrades.getMap().size() + " Machine Upgrades");
 	}
 
 	public static void registerPackets() {
