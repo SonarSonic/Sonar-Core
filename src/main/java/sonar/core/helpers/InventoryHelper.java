@@ -100,7 +100,7 @@ public class InventoryHelper extends InventoryWrapper {
 	}
 
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, ForgeDirection dir, ActionType type, IInventoryFilter filter) {
-		if (tile != null && filter == null || filter.allowed(stack.getFullStack())) {
+		if (tile != null && (filter == null || filter.allowed(stack.getFullStack()))) {
 			List<InventoryHandler> handlers = SonarCore.inventoryProviders.getObjects();
 			for (InventoryHandler handler : handlers) {
 				if (handler.canHandleItems(tile, dir)) {
@@ -114,7 +114,7 @@ public class InventoryHelper extends InventoryWrapper {
 	}
 
 	public StoredItemStack removeItems(TileEntity tile, StoredItemStack stack, ForgeDirection dir, ActionType type, IInventoryFilter filter) {
-		if (tile != null && filter == null || filter.allowed(stack.getFullStack())) {
+		if (tile != null && (filter == null || filter.allowed(stack.getFullStack()))) {
 			List<InventoryHandler> handlers = SonarCore.inventoryProviders.getObjects();
 			for (InventoryHandler handler : handlers) {
 				if (handler.canHandleItems(tile, dir)) {
