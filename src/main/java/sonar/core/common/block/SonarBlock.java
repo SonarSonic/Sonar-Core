@@ -64,12 +64,12 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 		if (player != null) {
 			ItemStack heldItem = player.getHeldItem();
-			if (wrenchable && heldItem != null && (heldItem.getItem() instanceof IWrench || heldItem.getItem() == Items.bowl)) {
+			if (wrenchable && heldItem != null && (heldItem.getItem() instanceof IWrench)) {
 				if (!player.isSneaking()) {
 					TileEntity target = world.getTileEntity(pos);
-					if (target instanceof IMachineSides) {
-						((IMachineSides) target).getSideConfigs().increaseSide(side);
-					}
+					//if (target instanceof IMachineSides) {
+						//((IMachineSides) target).getSideConfigs().increaseSide(side);
+					//}
 				}
 				return false;
 			}

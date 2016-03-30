@@ -3,6 +3,7 @@ package sonar.core.common.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,11 +12,13 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
 import sonar.core.api.BlockCoords;
+import sonar.core.common.block.SonarBlock;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.IWailaInfo;
 import sonar.core.network.PacketRequestSync;
@@ -49,7 +52,19 @@ public class TileEntitySonar extends TileEntity implements ITickable, ISyncTile,
 	public BlockCoords getCoords() {
 		return coords;
 	}
-
+	/*
+	public EnumFacing getForward() {
+		IBlockState state = this.worldObj.getBlockState(pos);
+		if (state != null) {
+			try {
+				return state.getValue(SonarBlock.FACING).getOpposite();
+			} catch (Exception exception) {
+				SonarCore.logger.warn(this + " Block State doesn't contain PropertyFacing");
+			}
+		}
+		return EnumFacing.NORTH;
+	}
+	*/
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -88,7 +103,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, ISyncTile,
 		List<ISyncPart> parts = new ArrayList();
 		this.addSyncParts(parts);
 		for (ISyncPart part : parts) {
-			if (part.canSync(type))
+			if (part!=null && part.canSync(type))
 				part.readFromNBT(nbt, type);
 		}
 	}
@@ -97,7 +112,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, ISyncTile,
 		List<ISyncPart> parts = new ArrayList();
 		this.addSyncParts(parts);
 		for (ISyncPart part : parts) {
-			if (part.canSync(type))
+			if (part!=null && part.canSync(type))
 				part.writeToNBT(nbt, type);
 		}
 	}

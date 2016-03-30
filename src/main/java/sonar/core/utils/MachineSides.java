@@ -94,7 +94,6 @@ public class MachineSides implements INBTSaveable {
 				}
 				pos++;
 			}
-			System.out.print(pos);
 			if (allowedSides.size() <= pos + 1) {
 				configs[side.getIndex()] = allowedSides.get(0);
 			} else {

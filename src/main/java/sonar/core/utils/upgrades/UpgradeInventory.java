@@ -38,7 +38,7 @@ public class UpgradeInventory implements INBTSyncable {
 			this.maxUpgrades.put(type, max);
 		}
 		if (allowed.length == 0) {
-			SonarCore.logger.warn("Upgradable Inventory:  has no allowed Upgrade Types");
+			SonarCore.logger.warn("Upgradable Inventory: has no allowed Upgrade Types");
 		}
 	}
 

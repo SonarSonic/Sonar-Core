@@ -1,0 +1,4 @@
+//machine upgrades
+upgrade.maximum=Maximum Installed
+upgrade.incompatible=Incompatible Upgrade
+upgrade.accepted=Accepted Upgrades

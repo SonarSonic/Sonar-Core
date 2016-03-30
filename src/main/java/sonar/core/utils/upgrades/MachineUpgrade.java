@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import sonar.core.SonarCore;
 import sonar.core.common.item.SonarItem;
 import sonar.core.helpers.FontHelper;
 
@@ -19,11 +20,16 @@ public class MachineUpgrade extends SonarItem {
 			if (!player.isSneaking()) {
 				if (upgrades.addUpgrade(player.getHeldItem())) {
 					stack.stackSize -= 1;
-				}else{
-					FontHelper.sendMessage("Maximum Installed", world, player);
+					FontHelper.sendMessage("" + upgrades.upgrades, world, player);
+				} else {
+					if (upgrades.allowed.contains(SonarCore.machineUpgrades.getSecondaryObject(stack.getItem()))) {
+						FontHelper.sendMessage(FontHelper.translate("upgrade.maximum"), world, player);
+					}else{
+						FontHelper.sendMessage(FontHelper.translate("upgrade.incompatible"), world, player);
+					}
 				}
-			}else{
-				FontHelper.sendMessage("Accepted Upgrades: " + upgrades.allowed, world, player);
+			} else {
+				FontHelper.sendMessage(FontHelper.translate("upgrade.accepted") + ": " + upgrades.allowed, world, player);
 			}
 		}
 		return true;
