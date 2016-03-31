@@ -5,15 +5,17 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.SonarCore;
+import sonar.core.integration.jei.JEIRecipe;
 
 /** Recipe Template allows gigantic recipes with full Ore Dict compatibility */
-public abstract class RecipeHelper {
+public abstract class RecipeHelper<T extends JEIRecipe> implements ISonarRecipeHelper<T> {
 
 	public int outputSize, inputSize;
 	public boolean shapeless;
@@ -22,9 +24,6 @@ public abstract class RecipeHelper {
 
 	/** add all your recipes here */
 	public abstract void addRecipes();
-
-	/** the recipeOutput name used in the API */
-	public abstract String getRecipeID();
 
 	/** @param inputSize number of stacks required in the input
 	 * @param outputSize number of stacks to be created
@@ -38,14 +37,7 @@ public abstract class RecipeHelper {
 	}
 
 	public void addRegisteredRecipes() {
-		/*
-		List<Object[]> recipes = CalculatorAPI.getRecipes(this.getRecipeID());
-		if (recipes != null && recipes.size() != 0) {
-			for (Object[] object : recipes) {
-				this.addRecipe(object);
-			}
-		}
-	*/
+		/* List<Object[]> recipes = CalculatorAPI.getRecipes(this.getRecipeID()); if (recipes != null && recipes.size() != 0) { for (Object[] object : recipes) { this.addRecipe(object); } } */
 	}
 
 	/** get the full list of recipes */
@@ -486,6 +478,15 @@ public abstract class RecipeHelper {
 		return false;
 	}
 
+	public List<T> getJEIRecipes() {
+		ArrayList<T> recipes = new ArrayList();
+		String id = this.getRecipeID();
+		for (Entry<Object[], Object[]> entry : recipeList.entrySet()) {
+			//recipes.add(new JEIRecipe(id, entry.getKey(), entry.getValue()));
+		}
+		return recipes;
+	}
+	
 	/** used for inputs/outputs using OreDict which require a custom stack size instead of 1. */
 	public static class OreStack {
 		public String oreString;
