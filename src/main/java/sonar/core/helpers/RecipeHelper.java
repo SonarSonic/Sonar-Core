@@ -5,17 +5,15 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.SonarCore;
-import sonar.core.integration.jei.JEIRecipe;
 
 /** Recipe Template allows gigantic recipes with full Ore Dict compatibility */
-public abstract class RecipeHelper<T extends JEIRecipe> implements ISonarRecipeHelper<T> {
+public abstract class RecipeHelper {
 
 	public int outputSize, inputSize;
 	public boolean shapeless;
@@ -24,7 +22,9 @@ public abstract class RecipeHelper<T extends JEIRecipe> implements ISonarRecipeH
 
 	/** add all your recipes here */
 	public abstract void addRecipes();
-
+	
+	public abstract String getRecipeID(); 
+	
 	/** @param inputSize number of stacks required in the input
 	 * @param outputSize number of stacks to be created
 	 * @param shapeless does the order matter? */
@@ -230,7 +230,7 @@ public abstract class RecipeHelper<T extends JEIRecipe> implements ISonarRecipeH
 		return true;
 	}
 
-	private ItemStack[] convertOutput(Object[] output) {
+	public ItemStack[] convertOutput(Object[] output) {
 		if (output == null)
 			return new ItemStack[0];
 		ItemStack[] stack = new ItemStack[output.length];
@@ -478,14 +478,7 @@ public abstract class RecipeHelper<T extends JEIRecipe> implements ISonarRecipeH
 		return false;
 	}
 
-	public List<T> getJEIRecipes() {
-		ArrayList<T> recipes = new ArrayList();
-		String id = this.getRecipeID();
-		for (Entry<Object[], Object[]> entry : recipeList.entrySet()) {
-			//recipes.add(new JEIRecipe(id, entry.getKey(), entry.getValue()));
-		}
-		return recipes;
-	}
+	
 	
 	/** used for inputs/outputs using OreDict which require a custom stack size instead of 1. */
 	public static class OreStack {

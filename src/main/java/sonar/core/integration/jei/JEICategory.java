@@ -1,6 +1,5 @@
 package sonar.core.integration.jei;
 
-import sonar.core.helpers.ISonarRecipeHelper;
 import net.minecraft.util.StatCollector;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import mezz.jei.api.recipe.IRecipeHandler;
@@ -8,27 +7,25 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 
 public abstract class JEICategory extends BlankRecipeCategory implements IRecipeHandler<JEIRecipe> {
 
-	private final ISonarRecipeHelper helper;
-	private final String name;
+	private final IJEIHandler handler;
 
-	public JEICategory(ISonarRecipeHelper helper, String name) {
-		this.helper = helper;
-		this.name = name;
+	public JEICategory(IJEIHandler handler) {
+		this.handler = handler;
 	}
 
 	@Override
 	public String getUid() {
-		return helper.getRecipeID();
+		return handler.getRecipeHelper().getRecipeID();
 	}
 
 	@Override
 	public String getTitle() {
-		return StatCollector.translateToLocal(name);
+		return StatCollector.translateToLocal(handler.getTitle());
 	}
-	
+
 	@Override
 	public Class getRecipeClass() {
-		return JEIRecipe.class;
+		return handler.getRecipeClass();
 	}
 
 	@Override
@@ -43,7 +40,7 @@ public abstract class JEICategory extends BlankRecipeCategory implements IRecipe
 
 	@Override
 	public boolean isRecipeValid(JEIRecipe recipe) {
-		return recipe.recipeID.equals(helper.getRecipeID());
+		return recipe.recipeID.equals(getUid());
 	}
 
 }

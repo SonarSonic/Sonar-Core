@@ -7,20 +7,25 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fluids.FluidStack;
 import mezz.jei.api.recipe.IRecipeWrapper;
 
-public class JEIRecipe implements IRecipeWrapper {
+public abstract class JEIRecipe<T extends JEIRecipe> implements IRecipeWrapper {
 
 	public String recipeID;
 	public List<Object> inputs;
 	public List<Object> outputs;
 
-	public JEIRecipe(String recipeID, Object[] inputs, Object[] outputs) {
+	public JEIRecipe(){}
+	
+	public abstract T getInstance(String recipeID, Object[] inputs, Object[] outputs);
+
+	public T setRecipe(String recipeID, Object[] inputs, Object[] outputs) {
 		this.recipeID = recipeID;
 		this.inputs = Arrays.asList(inputs);
 		this.outputs = Arrays.asList(outputs);
+		return (T) this;
 	}
-	
+
 	@Override
-	public List getInputs() {		
+	public List getInputs() {
 		return inputs;
 	}
 
@@ -40,13 +45,16 @@ public class JEIRecipe implements IRecipeWrapper {
 	}
 
 	@Override
-	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight) {}
+	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight) {
+	}
 
 	@Override
-	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {}
+	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+	}
 
 	@Override
-	public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight) {}
+	public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight) {
+	}
 
 	@Override
 	public List<String> getTooltipStrings(int mouseX, int mouseY) {
