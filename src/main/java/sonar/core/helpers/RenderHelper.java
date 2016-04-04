@@ -36,7 +36,6 @@ import sonar.core.integration.SonarLoader;
 import sonar.core.integration.fmp.SonarTilePart;
 
 public class RenderHelper {
-
 	private static final ResourceLocation mapBackgroundTextures = new ResourceLocation("textures/map/map_background.png");
 	private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
 
@@ -87,6 +86,23 @@ public class RenderHelper {
 		GL11.glPopMatrix();
 	}
 
+	public static EnumFacing getHorizontal(EnumFacing forward) {
+		if (forward == EnumFacing.NORTH) {
+			return EnumFacing.EAST;
+		}
+		if (forward == EnumFacing.EAST) {
+			return EnumFacing.SOUTH;
+		}
+		if (forward == EnumFacing.SOUTH) {
+			return EnumFacing.WEST;
+		}
+		if (forward == EnumFacing.WEST) {
+			return EnumFacing.NORTH;
+		}
+		return null;
+
+	}
+	/*
 	public static boolean renderItem(ItemStack item, float bobing, float rotation, Random random, TextureManager engine, RenderBlocks renderBlocks, int count) {
 		IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(item, ENTITY);
 		if (customRenderer == null) {
@@ -172,22 +188,7 @@ public class RenderHelper {
 	}
 
 	/** returns horizontal direction to the forward direction **/
-	public static EnumFacing getHorizontal(EnumFacing forward) {
-		if (forward == EnumFacing.NORTH) {
-			return EnumFacing.EAST;
-		}
-		if (forward == EnumFacing.EAST) {
-			return EnumFacing.SOUTH;
-		}
-		if (forward == EnumFacing.SOUTH) {
-			return EnumFacing.WEST;
-		}
-		if (forward == EnumFacing.WEST) {
-			return EnumFacing.NORTH;
-		}
-		return null;
-
-	}
+/*
 
 	public static void renderBlockCollisions(World world, int x, int y, int z) {
 		if (world != null) {
@@ -262,6 +263,7 @@ public class RenderHelper {
 	}
 
 	/** AE2 Rendering Method - All credit goes to them, I don't understand it */
+/*
 	public static void doRenderItem(ItemStack itemstack, World world, boolean normalSize) {
 		if (itemstack != null) {
 			EntityItem entityitem = new EntityItem(world, 0.0D, 0.0D, 0.0D, itemstack);
@@ -346,4 +348,5 @@ public class RenderHelper {
 		tessellator.draw();
 	}
 
+*/
 }

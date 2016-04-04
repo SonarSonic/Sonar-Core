@@ -29,6 +29,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
+import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.helpers.SonarHelper;
 import sonar.core.inventory.IAdditionalInventory;
@@ -63,15 +64,9 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	public final boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitx, float hity, float hitz) {
 
 		if (player != null) {
-			ItemStack heldItem = player.getHeldItem();
-			if (wrenchable && heldItem != null && (heldItem.getItem() instanceof IWrench)) {
-				if (!player.isSneaking()) {
-					TileEntity target = world.getTileEntity(pos);
-					//if (target instanceof IMachineSides) {
-						//((IMachineSides) target).getSideConfigs().increaseSide(side);
-					//}
-				}
-				return false;
+			TileEntity target = world.getTileEntity(pos);
+			if(target!=null && target instanceof TileEntitySonar){
+				((TileEntitySonar)target).forceNextSync();				
 			}
 			return operateBlock(world, pos, player, new BlockInteraction(side.getIndex(), hitx, hity, hitz, player.isSneaking() ? BlockInteractionType.SHIFT_RIGHT : BlockInteractionType.RIGHT));
 		}

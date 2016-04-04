@@ -1,5 +1,5 @@
 package sonar.core.integration.nei;
-
+/*
 import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.List;
@@ -100,3 +100,4 @@ public abstract class AbstractProcessorHandler extends TemplateRecipeHandler {
 	}
 
 }
+*/

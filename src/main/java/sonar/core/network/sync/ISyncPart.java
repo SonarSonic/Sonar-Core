@@ -6,7 +6,9 @@ import sonar.core.helpers.NBTHelper.SyncType;
 
 public interface ISyncPart{
 	
-	public boolean equal();
+	public void setChanged(boolean set);
+	
+	public boolean hasChanged();
 	
 	public void writeToBuf(ByteBuf buf);	
 

@@ -23,6 +23,7 @@ public abstract class SyncTagType<T> extends SyncPart {
 
 		public void invert() {
 			setObject(!getObject());
+			this.setChanged(true);
 		}
 	}
 
@@ -54,10 +55,12 @@ public abstract class SyncTagType<T> extends SyncPart {
 		}
 		public void increaseBy(int i) {
 			setObject((short) (getObject() + i));
+			this.setChanged(true);
 		}
 
 		public void decreaseBy(int i) {
 			setObject((short) (getObject() - i));
+			this.setChanged(true);
 		}
 	}
 
@@ -76,10 +79,12 @@ public abstract class SyncTagType<T> extends SyncPart {
 
 		public void increaseBy(int i) {
 			setObject(getObject() + i);
+			this.setChanged(true);
 		}
 
 		public void decreaseBy(int i) {
 			setObject(getObject() - i);
+			this.setChanged(true);
 		}
 	}
 
@@ -98,10 +103,12 @@ public abstract class SyncTagType<T> extends SyncPart {
 
 		public void increaseBy(int i) {
 			setObject(getObject() + i);
+			this.setChanged(true);
 		}
 
 		public void decreaseBy(int i) {
 			setObject(getObject() - i);
+			this.setChanged(true);
 		}
 	}
 
@@ -204,40 +211,24 @@ public abstract class SyncTagType<T> extends SyncPart {
 	}
 
 	@Override
-	public boolean equal() {
-		if (last == null && current == null) {
-			return true;
-		}
-		if (last == null || current == null) {
-			return false;
-		}
-		return current.equals(last);
-	}
-
-	@Override
-	public void updateSync() {
-		last = current;
-	}
-	
-	@Override
-	public void writeObject(ByteBuf buf) {
+	public void writeToBuf(ByteBuf buf) {
 		NBTHelper.writeBufBase(buf, nbtType, current, getTagName());
 	}
 
 	@Override
-	public void readObject(ByteBuf buf) {
+	public void readFromBuf(ByteBuf buf) {
 		current = (T) NBTHelper.readBufBase(buf, nbtType, getTagName());
 	}
 
 	@Override
-	public void writeObject(NBTTagCompound nbt, SyncType type) {
+	public void writeToNBT(NBTTagCompound nbt, SyncType type) {
 		if (current != null) {
 			NBTHelper.writeNBTBase(nbt, nbtType, current, getTagName());
 		}
 	}
 
 	@Override
-	public void readObject(NBTTagCompound nbt, SyncType type) {
+	public void readFromNBT(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(getTagName()))
 			current = (T) NBTHelper.readNBTBase(nbt, nbtType, getTagName());
 	}
@@ -254,6 +245,7 @@ public abstract class SyncTagType<T> extends SyncPart {
 
 	public void setObject(T object) {
 		current = object;
+		this.setChanged(true);
 	}	
 
 	public String toString(){

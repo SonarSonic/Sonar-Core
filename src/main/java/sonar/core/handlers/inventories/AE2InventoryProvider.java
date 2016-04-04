@@ -1,5 +1,5 @@
 package sonar.core.handlers.inventories;
-
+/*
 import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
@@ -114,3 +114,4 @@ public class AE2InventoryProvider extends InventoryHandler {
 	}
 
 }
+*/

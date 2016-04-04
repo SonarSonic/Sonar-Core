@@ -1,5 +1,5 @@
 package sonar.core.handlers.energy;
-
+/*
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Loader;
@@ -65,3 +65,4 @@ public class MekanismProvider extends EnergyHandler {
 	}
 
 }
+*/

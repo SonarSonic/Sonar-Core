@@ -24,8 +24,7 @@ public class PacketRequestSync extends PacketCoords<PacketRequestSync> {
 				if (tile instanceof ISyncTile) {
 					NBTTagCompound tag = new NBTTagCompound();
 					ISyncTile sync = (ISyncTile) tile;
-					sync.writeData(tag, SyncType.SYNC);
-
+					sync.writeData(tag, SyncType.SYNC_OVERRIDE);
 					if (!tag.hasNoTags()) {
 						return new PacketTileSync(message.pos, tag);
 					}

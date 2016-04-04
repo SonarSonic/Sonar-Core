@@ -56,8 +56,8 @@ public class ChargingUtils {
 		if (energy != null && stored < max) {
 			if (energy.getItem() instanceof IEnergyContainerItem) {
 				IEnergyContainerItem item = (IEnergyContainerItem) energy.getItem();
-
-				int itemEnergy = item.getEnergyStored(energy);
+				
+				int itemEnergy = Math.min(energyStorage.getMaxReceive(), item.getEnergyStored(energy));
 				int toTransfer = Math.round(Math.min(itemEnergy, ((max - stored))));
 				return new EnergyCharge(+item.extractEnergy(energy, toTransfer, false), energy, false);
 			} else if (stored + DischargeValues.getValueOf(energy) <= energyStorage.getMaxEnergyStored()) {

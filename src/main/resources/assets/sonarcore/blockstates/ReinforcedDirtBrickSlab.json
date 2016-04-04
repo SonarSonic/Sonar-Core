@@ -1,0 +1,17 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {            
+	        "bottom":"sonarcore:blocks/reinforceddirtbrick",
+	        "top":"sonarcore:blocks/reinforceddirtbrick",
+	        "side":"sonarcore:blocks/reinforceddirtbrick"
+        },
+        "model":"half_slab",
+        "transform":"forge:default-block"
+     },
+    "variants": {
+        "inventory": [{}],        
+        "half=bottom": { "model":"half_slab" },
+        "half=top": { "model":"upper_slab" }
+    }
+}

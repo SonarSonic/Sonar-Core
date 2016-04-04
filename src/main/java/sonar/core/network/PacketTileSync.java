@@ -36,7 +36,7 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 		super.fromBytes(buf);
 		this.tag = ByteBufUtils.readTag(buf);
 		if (buf.readBoolean()) {
-			type = SyncType.getType(buf.readByte());
+			type = SyncType.values()[buf.readByte()];
 		}
 	}
 
@@ -48,7 +48,7 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 			buf.writeBoolean(false);
 		} else {
 			buf.writeBoolean(true);
-			buf.writeByte(SyncType.getID(type));
+			buf.writeByte(type.ordinal());
 		}
 	}
 
@@ -61,7 +61,7 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 				if (te == null) {
 					return null;
 				}
-				SyncType type = NBTHelper.SyncType.SYNC;
+				SyncType type = SyncType.DEFAULT_SYNC;
 				if (message.type != null) {
 					type = message.type;
 				}

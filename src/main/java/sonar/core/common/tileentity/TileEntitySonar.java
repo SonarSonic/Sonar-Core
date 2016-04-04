@@ -28,7 +28,7 @@ import sonar.core.network.utils.ISyncTile;
 
 public class TileEntitySonar extends TileEntity implements ITickable, ISyncTile, IWailaInfo {
 
-	protected boolean load;
+	protected boolean load, forceSync;
 	protected BlockCoords coords = BlockCoords.EMPTY;
 
 	public boolean isClient() {
@@ -40,6 +40,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, ISyncTile,
 	}
 
 	public void onLoaded() {
+
 	}
 
 	public void update() {
@@ -47,24 +48,14 @@ public class TileEntitySonar extends TileEntity implements ITickable, ISyncTile,
 			load = false;
 			this.onLoaded();
 		}
+		/*List<ISyncPart> parts = new ArrayList(); this.addSyncParts(parts); boolean markDirty = false; for (ISyncPart part : parts) { if (part.hasChanged()) { markDirty = true; break; } } if (markDirty) { markDirty(); } */
+		markDirty();
 	}
 
 	public BlockCoords getCoords() {
 		return coords;
 	}
-	/*
-	public EnumFacing getForward() {
-		IBlockState state = this.worldObj.getBlockState(pos);
-		if (state != null) {
-			try {
-				return state.getValue(SonarBlock.FACING).getOpposite();
-			} catch (Exception exception) {
-				SonarCore.logger.warn(this + " Block State doesn't contain PropertyFacing");
-			}
-		}
-		return EnumFacing.NORTH;
-	}
-	*/
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -75,7 +66,6 @@ public class TileEntitySonar extends TileEntity implements ITickable, ISyncTile,
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		this.writeData(nbt, SyncType.SAVE);
-
 	}
 
 	public void addSyncParts(List<ISyncPart> parts) {
@@ -103,23 +93,35 @@ public class TileEntitySonar extends TileEntity implements ITickable, ISyncTile,
 		List<ISyncPart> parts = new ArrayList();
 		this.addSyncParts(parts);
 		for (ISyncPart part : parts) {
-			if (part!=null && part.canSync(type))
+			if (part != null && part.canSync(type)) {
 				part.readFromNBT(nbt, type);
+				part.setChanged(false);
+			}
 		}
 	}
 
 	public void writeData(NBTTagCompound nbt, SyncType type) {
+		if (forceSync && type == SyncType.DEFAULT_SYNC) {
+			type = SyncType.SYNC_OVERRIDE;
+			forceSync = false;
+		}
 		List<ISyncPart> parts = new ArrayList();
 		this.addSyncParts(parts);
 		for (ISyncPart part : parts) {
-			if (part!=null && part.canSync(type))
+			if (part != null && (forceSync || type.mustSync() || part.hasChanged()) && part.canSync(type)) {
 				part.writeToNBT(nbt, type);
+				part.setChanged(false);
+			}
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
 	public List<String> getWailaInfo(List<String> currenttip) {
 		return currenttip;
+	}
+
+	public void forceNextSync() {
+		forceSync = true;
 	}
 
 	public void requestSyncPacket() {
@@ -132,7 +134,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, ISyncTile,
 		}
 		if (player != null && player instanceof EntityPlayerMP) {
 			NBTTagCompound tag = new NBTTagCompound();
-			writeData(tag, SyncType.SYNC);
+			writeData(tag, SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendTo(new PacketTileSync(pos, tag), (EntityPlayerMP) player);
 			}

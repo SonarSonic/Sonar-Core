@@ -188,19 +188,10 @@ public class NBTHelper {
 			buf.writeBoolean(false);
 		}
 	}
-/*
-	public static void writeEnergyStorage(EnergyStorage storage, NBTTagCompound nbt) {
-		NBTTagCompound energyTag = new NBTTagCompound();
-		storage.writeToNBT(energyTag);
-		nbt.setTag("energyStorage", energyTag);
-	}
 
-	public static void readEnergyStorage(EnergyStorage storage, NBTTagCompound nbt) {
-		if (nbt.hasKey("energyStorage")) {
-			storage.readFromNBT(nbt.getCompoundTag("energyStorage"));
-		}
-	}
-	*/
+	/*public static void writeEnergyStorage(EnergyStorage storage, NBTTagCompound nbt) { NBTTagCompound energyTag = new NBTTagCompound(); storage.writeToNBT(energyTag); nbt.setTag("energyStorage", energyTag); }
+	 * 
+	 * public static void readEnergyStorage(EnergyStorage storage, NBTTagCompound nbt) { if (nbt.hasKey("energyStorage")) { storage.readFromNBT(nbt.getCompoundTag("energyStorage")); } } */
 	public static void writeFluidToBuf(FluidStack stack, ByteBuf buf) {
 		ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(stack.getFluid()));
 		buf.writeInt(stack.amount);
@@ -236,46 +227,33 @@ public class NBTHelper {
 	}
 
 	public static enum SyncType {
-		SAVE, SYNC, DROP, SPECIAL, PACKET;
-
-		public static byte getID(SyncType type) {
-			switch (type) {
-			case SYNC:
-				return 1;
-			case DROP:
-				return 2;
-			case SPECIAL:
-				return 3;
-			case PACKET:
-				return 4;
-			default:
-				return 0;
-			}
+		SAVE(0), DROP(2), SPECIAL(3), PACKET(4), DEFAULT_SYNC(1), SYNC_OVERRIDE(1);
+		
+		private int type;
+		SyncType(int type){
+			this.type=type;
 		}
-
-		public static SyncType getType(int i) {
-			switch (i) {
-			case 1:
-				return SYNC;
-			case 2:
-				return DROP;
-			case 3:
-				return SPECIAL;
-			case 4:
-				return PACKET;
-			default:
-				return SAVE;
+		
+		public boolean mustSync(){
+			return this == SYNC_OVERRIDE || this == SAVE;
+		}		
+		
+		public boolean isType(SyncType... types) {
+			for (SyncType type : types) {
+				if (type.type == this.type) {
+					return true;
+				}
 			}
-
+			return false;
 		}
 	}
 
 	public static void writeNBTBase(NBTTagCompound nbt, int type, Object object, String tagName) {
-		if(object==null){
+		if (object == null) {
 			SonarCore.logger.error("NBT ERROR: Can't write NULL");
 			return;
 		}
-		if(tagName==null){
+		if (tagName == null) {
 			SonarCore.logger.error("NBT ERROR: Can't write with a no TAG NAME");
 			return;
 		}

@@ -48,7 +48,7 @@ public abstract class ContainerSync extends Container {
 	}
 
 	public SyncType[] getSyncTypes() {
-		return new SyncType[] { SyncType.SYNC };
+		return new SyncType[] { SyncType.DEFAULT_SYNC };
 	}
 
 	public boolean syncInventory() {

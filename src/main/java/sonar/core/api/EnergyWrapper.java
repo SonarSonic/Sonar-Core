@@ -15,15 +15,16 @@ public class EnergyWrapper {
 		return null;
 	}
 	
-	public StoredEnergyStack addEnergy(TileEntity tile, StoredEnergyStack stack, EnumFacing dir, ActionType type) {
-		return stack;
+	public long receiveEnergy(TileEntity tile, long maxReceive, EnumFacing dir, ActionType type) {
+		return maxReceive;
 	}
 
-	public StoredEnergyStack removeEnergy(TileEntity tile, StoredEnergyStack stack, EnumFacing dir, ActionType type) {
-		return stack;
+	public long extractEnergy(TileEntity tile, long maxExtract, EnumFacing dir, ActionType type) {
+		return maxExtract;
 	}
 
-	public void transferEnergy(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo) {
+	public long transferEnergy(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, final long maxTransferRF) {
+		return 0;
 	}
 
 }

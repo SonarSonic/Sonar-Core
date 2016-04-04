@@ -99,7 +99,7 @@ public class UpgradeInventory implements INBTSyncable {
 
 	@Override
 	public void writeData(NBTTagCompound tag, SyncType type) {
-		if (type == SyncType.SAVE || (type == SyncType.SYNC && markDirty)) {
+		if (type == SyncType.SAVE || (type.isType(SyncType.DEFAULT_SYNC) && markDirty)) {
 			NBTTagCompound upgradeTag = new NBTTagCompound();
 			for (Entry<String, Integer> entry : upgrades.entrySet()) {
 				upgradeTag.setInteger(entry.getKey(), entry.getValue());
@@ -107,7 +107,7 @@ public class UpgradeInventory implements INBTSyncable {
 			if (!upgradeTag.hasNoTags()) {
 				tag.setTag("Upgrades", upgradeTag);
 			}
-			if (type == SyncType.SYNC) {
+			if (type.isType(SyncType.DEFAULT_SYNC)) {
 				markDirty = false;
 			}
 		}
@@ -115,7 +115,7 @@ public class UpgradeInventory implements INBTSyncable {
 
 	@Override
 	public void readData(NBTTagCompound tag, SyncType type) {
-		if (type == SyncType.SAVE || type == SyncType.SYNC) {
+		if (type == SyncType.SAVE || type.isType(SyncType.DEFAULT_SYNC)) {
 			NBTTagCompound upgradeTag = tag.getCompoundTag("Upgrades");
 			if (upgradeTag != null && !upgradeTag.hasNoTags()) {
 				for (String key : upgradeTag.getKeySet()) {

@@ -3,9 +3,12 @@ package sonar.core.common.tileentity;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import sonar.core.api.SonarAPI;
 import sonar.core.energy.ChargingUtils;
 import sonar.core.energy.EnergyCharge;
+import sonar.core.helpers.SonarHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncEnergyStorage;
@@ -13,7 +16,7 @@ import sonar.core.utils.MachineSides;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 
-public class TileEntityEnergySidedInventory extends TileEntitySidedInventory implements IEnergyReceiver, IEnergyProvider  {
+public class TileEntityEnergySidedInventory extends TileEntitySidedInventory implements IEnergyReceiver, IEnergyProvider {
 
 	public static enum EnergyMode {
 		RECIEVE, SEND, SEND_RECIEVE, BLOCKED;
@@ -72,16 +75,17 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
 		if (energyMode.canSend())
-			storage.extractEnergy(maxExtract, simulate);
+			return storage.extractEnergy(maxExtract, simulate);
 		return 0;
 	}
 
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 		if (energyMode.canRecieve())
-			storage.receiveEnergy(maxReceive, simulate);
+			return storage.receiveEnergy(maxReceive, simulate);
 		return 0;
 	}
+
 	public void discharge(int id) {
 		if (ChargingUtils.canDischarge(slots()[id], this.storage)) {
 			EnergyCharge discharge = ChargingUtils.discharge(slots()[id], storage);
@@ -108,4 +112,10 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 		}
 	}
 
+	public void addEnergy(EnumFacing... faces) {
+		for (EnumFacing dir : faces) {
+			TileEntity entity = SonarHelper.getAdjacentTileEntity(this, dir);
+			SonarAPI.getEnergyHelper().transferEnergy(this, entity, dir.getOpposite(), dir, maxTransfer);
+		}
+	}
 }

@@ -8,72 +8,62 @@ import net.minecraft.util.EnumFacing;
 import sonar.core.SonarCore;
 import sonar.core.api.ActionType;
 import sonar.core.api.EnergyHandler;
+import sonar.core.api.EnergyType;
 import sonar.core.api.EnergyWrapper;
 import sonar.core.api.InventoryHandler;
 import sonar.core.api.StoredEnergyStack;
 import sonar.core.api.StoredItemStack;
 
 public class EnergyHelper extends EnergyWrapper {
-
-	//VERY FAR FROM COMPLETION, HELP OUT IF YOU CAN!!!
-	
-	public StoredEnergyStack getStackToAdd(long inputSize, StoredEnergyStack stack, StoredEnergyStack returned) {
-		StoredEnergyStack simulateStack = null;
-		if (returned == null || returned.stored == 0) {
-			simulateStack = stack.copy().setStackSize(inputSize);
-		} else {
-			simulateStack = stack.copy().setStackSize(inputSize - returned.stored);
+	/* public StoredEnergyStack getStackToAdd(long inputSize, StoredEnergyStack stack, StoredEnergyStack returned) { StoredEnergyStack simulateStack = null; System.out.print(stack.stored); if (returned == null || returned.stored == 0) { simulateStack = stack.copy().setStackSize(inputSize); } else { simulateStack = stack.copy().setStackSize(inputSize - returned.stored); } return simulateStack; } */
+	public long receiveEnergy(TileEntity tile, long maxReceive, EnumFacing dir, ActionType type) {
+		if (maxReceive != 0 && tile != null) {
+			List<EnergyHandler> handlers = SonarCore.energyProviders.getObjects();
+			for (EnergyHandler handler : handlers) {
+				if (handler.canProvideEnergy(tile, dir)) {
+					// maxReceive is converted from RF to the handlers type
+					maxReceive = StoredEnergyStack.convert(maxReceive, EnergyType.RF, handler.getProvidedType());
+					// the receiving is performed in the correct format
+					maxReceive = handler.receiveEnergy(maxReceive, tile, dir, type);
+					// then converted back to RF
+					maxReceive = StoredEnergyStack.convert(maxReceive, handler.getProvidedType(), EnergyType.RF);
+					return maxReceive;
+				}
+			}
 		}
-		return simulateStack;
+		return maxReceive;
 	}
 
-	public StoredEnergyStack addEnergy(TileEntity tile, StoredEnergyStack stack, EnumFacing dir, ActionType type) {
-		if (stack == null) {
-			return stack;
-		}
+	public long extractEnergy(TileEntity tile, long maxExtract, EnumFacing dir, ActionType type) {
 		if (tile != null) {
 			List<EnergyHandler> handlers = SonarCore.energyProviders.getObjects();
 			for (EnergyHandler handler : handlers) {
 				if (handler.canProvideEnergy(tile, dir)) {
-					StoredEnergyStack returned = handler.addEnergy(stack.copy(), tile, dir, type);
-					StoredEnergyStack add = getStackToAdd(stack.getStackSize(), stack.copy(), returned);
-					return add;
+					// maxReceive is converted from RF to the handlers type
+					maxExtract = StoredEnergyStack.convert(maxExtract, EnergyType.RF, handler.getProvidedType());
+					// the extracting is performed in the correct format
+					maxExtract = handler.extractEnergy(maxExtract, tile, dir, type);
+					// then converted back to RF
+					maxExtract = StoredEnergyStack.convert(maxExtract, handler.getProvidedType(), EnergyType.RF);
+					return maxExtract;
 				}
 			}
 		}
-		return stack;
+		return maxExtract;
 	}
 
-	public StoredEnergyStack removeEnergy(TileEntity tile, StoredEnergyStack stack, EnumFacing dir, ActionType type) {
-		if (stack == null) {
-			return stack;
-		}
-		if (tile != null) {
-			List<EnergyHandler> handlers = SonarCore.energyProviders.getObjects();
-			for (EnergyHandler handler : handlers) {
-				if (handler.canProvideEnergy(tile, dir)) {
-					StoredEnergyStack returned = handler.removeEnergy(stack.convert(handler.getProvidedType()), tile, dir, type).convert(stack.energyType);
-					StoredEnergyStack add = getStackToAdd(stack.getStackSize(), stack.copy(), returned);
-					return add;
-				}
+	public long transferEnergy(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, final long maxTransferRF) {
+		if (from != null && !from.getWorld().isRemote && to != null && maxTransferRF != 0) {
+			long maxExtract = extractEnergy(from, maxTransferRF, dirFrom, ActionType.SIMULATE);
+			long maxReceive = receiveEnergy(to, maxTransferRF, dirTo, ActionType.SIMULATE);
+			long maxTransfer = Math.min(maxTransferRF - maxExtract, maxTransferRF - maxReceive);
+			// System.out.print(maxTransfer);
+			if (maxTransfer != 0) {
+				receiveEnergy(to, maxTransfer, dirTo, ActionType.PERFORM);
+				extractEnergy(from, maxTransfer, dirFrom, ActionType.PERFORM);
+				return maxTransfer;
 			}
 		}
-		return null;
-	}
-
-	public void transferEnergy(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo) {
-		if (from != null && to != null) {
-			/*StoredEnergyStack energy = null; List<EnergyHandler> handlers = SonarCore.energyProviders.getObjects(); for (EnergyHandler handler : handlers) { if (handler.canProvideEnergy(from, dirFrom)) { energy = new StoredEnergyStack(handler.getProvidedType()); handler.getEnergy(energy, from, dirFrom); continue; } } if (energy != null) { */
-			/*
-			StoredEnergyStack removed = removeEnergy(from, energy.copy(), dirFrom, ActionType.SIMULATE);
-			if (removed != null) {
-				StoredEnergyStack add = addEnergy(to, removed.copy(), dirTo, ActionType.SIMULATE);
-				if (add != null) {
-					removeEnergy(from, add.copy(), dirFrom, ActionType.PERFORM);
-					addEnergy(to, add.copy(), dirTo, ActionType.PERFORM);
-				}
-			}
-		*/
-		}
+		return 0;
 	}
 }

@@ -2,6 +2,9 @@ package sonar.core;
 
 import java.util.Map;
 
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -67,14 +70,44 @@ public class SonarCore {
 
 	public static Logger logger = (Logger) LogManager.getLogger(modid);
 
+	// common blocks
+	public static Block reinforcedStoneBlock, reinforcedStoneBrick, reinforcedDirtBlock, reinforcedDirtBrick, stableStone, stablestonerimmedBlock, stablestonerimmedblackBlock, stableGlass, clearStableGlass;
+	public static Block toughenedStoneBlock, toughenedStoneBrick;
+	public static Block toughenedDirtBlock, toughenedDirtBrick;
+	public static Block reinforcedStoneStairs, reinforcedStoneBrickStairs, reinforcedDirtStairs, reinforcedDirtBrickStairs;
+	public static Block reinforcedStoneFence, reinforcedStoneBrickFence, reinforcedDirtFence, reinforcedDirtBrickFence;
+	public static Block reinforcedStoneGate, reinforcedStoneBrickGate, reinforcedDirtGate, reinforcedDirtBrickGate;
+	public static Block reinforcedStoneSlab_half, reinforcedStoneBrickSlab_half, reinforcedDirtSlab_half, reinforcedDirtBrickSlab_half;
+	public static Block reinforcedStoneSlab_double, reinforcedStoneBrickSlab_double, reinforcedDirtSlab_double, reinforcedDirtBrickSlab_double;
+
+	public static CreativeTabs tab = new CreativeTabs("SonarCore") {
+		@Override
+		public Item getTabIconItem() {
+			return Item.getItemFromBlock(reinforcedStoneBlock);
+		}
+	};
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		logger.info("Initilising API");
 		SonarAPI.init();
-		logger.info("Initilised API");		
+		logger.info("Initilised API");
+
 		logger.info("Registering Packets");
 		registerPackets();
 		logger.info("Register Packets");
 
+		logger.info("Registering Blocks");
+		SonarBlocks.registerBlocks();
+		logger.info("Register Blocks");
+
+		logger.info("Registering Crafting Recipes");
+		SonarCrafting.registerCraftingRecipes();
+		logger.info("Register Crafting Recipes");
+
+		logger.info("Registering Renderers");
+		proxy.registerRenderThings();
+		logger.info("Registered Renderers");
 	}
 
 	@EventHandler
@@ -87,7 +120,7 @@ public class SonarCore {
 		}
 		MinecraftForge.EVENT_BUS.register(new SonarEvents());
 		logger.info("Registered Events");
-		energyTypes.register();		
+		energyTypes.register();
 		inventoryProviders.register();
 		fluidProviders.register();
 		energyProviders.register();
@@ -129,7 +162,7 @@ public class SonarCore {
 
 		if (object != null && object instanceof IByteBufTile) {
 			if (!tile.getWorld().isRemote) {
-				SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) object, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(),tile.getPos().getY(),tile.getPos().getZ(), spread));
+				SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) object, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 			} else {
 				SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) object, tile.getPos(), id));
 			}
@@ -138,7 +171,7 @@ public class SonarCore {
 			if (handler != null && handler instanceof IByteBufTile) {
 
 				if (!tile.getWorld().isRemote) {
-					SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) handler, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(),tile.getPos().getY(),tile.getPos().getZ(), spread));
+					SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) handler, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 				} else {
 					SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) handler, tile.getPos(), id));
 				}
@@ -150,9 +183,9 @@ public class SonarCore {
 		Object object = FMPHelper.checkObject(tile);
 		if (object != null && object instanceof ISyncTile) {
 			NBTTagCompound tag = new NBTTagCompound();
-			((ISyncTile) object).writeData(tag, SyncType.SYNC);
+			((ISyncTile) object).writeData(tag, SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
-				SonarCore.network.sendToAllAround(new PacketTileSync(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(),tile.getPos().getY(),tile.getPos().getZ(), spread));
+				SonarCore.network.sendToAllAround(new PacketTileSync(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 			}
 		}
 	}

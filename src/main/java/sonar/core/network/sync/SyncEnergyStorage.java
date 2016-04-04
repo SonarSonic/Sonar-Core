@@ -8,7 +8,7 @@ import cofh.api.energy.EnergyStorage;
 public class SyncEnergyStorage extends EnergyStorage implements ISyncPart {
 
 	private String tagName = "energyStorage";
-	private int lastEnergy = 0;
+	private boolean hasChanged;
 
 	public SyncEnergyStorage(int capacity) {
 		super(capacity);
@@ -22,11 +22,32 @@ public class SyncEnergyStorage extends EnergyStorage implements ISyncPart {
 		super(capacity, maxReceive, maxExtract);
 	}
 
-	@Override
-	public boolean equal() {
-		return this.getEnergyStored() == lastEnergy;
+	public void setEnergyStored(int energy) {
+		super.setEnergyStored(energy);
+		this.setChanged(true);
 	}
 
+	public void modifyEnergyStored(int energy) {
+		super.modifyEnergyStored(energy);
+		this.setChanged(true);
+	}
+
+	public int receiveEnergy(int maxReceive, boolean simulate) {
+		if (!simulate) {
+			this.setChanged(true);
+		}
+		return super.receiveEnergy(maxReceive, simulate);
+
+	}
+
+	public int extractEnergy(int maxExtract, boolean simulate) {
+		if (!simulate) {
+			this.setChanged(true);
+		}
+		return super.extractEnergy(maxExtract, simulate);
+	}
+	
+	
 	@Override
 	public void writeToBuf(ByteBuf buf) {
 		if (energy < 0) {
@@ -45,18 +66,11 @@ public class SyncEnergyStorage extends EnergyStorage implements ISyncPart {
 	}
 
 	public final void writeToNBT(NBTTagCompound nbt, SyncType type) {
+		/*NBTTagCompound energyTag = new NBTTagCompound(); if (type.isType(SyncType.DEFAULT_SYNC)) { if (type.mustSync() || !equal()) { this.writeToNBT(energyTag); lastEnergy = this.getEnergyStored(); } } else if (type == SyncType.SAVE) { this.writeToNBT(energyTag); lastEnergy = this.getEnergyStored(); } if (!energyTag.hasNoTags()) nbt.setTag(getTagName(), energyTag); */
 		NBTTagCompound energyTag = new NBTTagCompound();
-		if (type == SyncType.SYNC) {
-			if (!equal()) {
-				this.writeToNBT(energyTag);
-				lastEnergy = this.getEnergyStored();
-			}
-		} else if (type == SyncType.SAVE) {
-			this.writeToNBT(energyTag);
-			lastEnergy = this.getEnergyStored();
-		}
-		if (!energyTag.hasNoTags())
-			nbt.setTag(getTagName(), energyTag);
+		this.writeToNBT(energyTag);
+		nbt.setTag(getTagName(), energyTag);
+
 	}
 
 	public final void readFromNBT(NBTTagCompound nbt, SyncType type) {
@@ -76,7 +90,17 @@ public class SyncEnergyStorage extends EnergyStorage implements ISyncPart {
 
 	@Override
 	public boolean canSync(SyncType sync) {
-		return sync == SyncType.SYNC || sync == SyncType.SAVE;
+		return sync.isType(SyncType.DEFAULT_SYNC, SyncType.SAVE);
 	}
-	
+
+	@Override
+	public void setChanged(boolean set) {
+		hasChanged = set;
+	}
+
+	@Override
+	public boolean hasChanged() {
+		return hasChanged;
+	}
+
 }

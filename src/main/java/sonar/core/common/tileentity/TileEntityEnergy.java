@@ -6,8 +6,11 @@ import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
+import sonar.core.api.SonarAPI;
+import sonar.core.helpers.SonarHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.SonarLoader;
 import sonar.core.network.sync.ISyncPart;
@@ -75,15 +78,22 @@ public class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
 		if (energyMode.canSend())
-			storage.extractEnergy(maxExtract, simulate);
+			return storage.extractEnergy(maxExtract, simulate);
 		return 0;
 	}
 
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		if (energyMode.canRecieve())
-			storage.receiveEnergy(maxReceive, simulate);
+		if (energyMode.canRecieve()){
+			return storage.receiveEnergy(maxReceive, simulate);
+		}
 		return 0;
 	}
 
+	public void addEnergy(EnumFacing ...faces) {
+		for (EnumFacing dir : faces) {
+			TileEntity entity = SonarHelper.getAdjacentTileEntity(this, dir);
+			SonarAPI.getEnergyHelper().transferEnergy(this, entity, dir.getOpposite(), dir, maxTransfer);
+		}
+	}
 }

@@ -43,27 +43,29 @@ public class RFHandler extends EnergyHandler {
 	}
 
 	@Override
-	public StoredEnergyStack addEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
+	public long receiveEnergy(long maxReceive, TileEntity tile, EnumFacing dir, ActionType action) {
+		long receive = maxReceive;
 		if (tile instanceof IEnergyReceiver) {
 			IEnergyReceiver receiver = (IEnergyReceiver) tile;
 			if (receiver.canConnectEnergy(dir.getOpposite())) {
-				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-				transfer.stored -= receiver.receiveEnergy(dir.getOpposite(), transferRF, action.shouldSimulate());
+				int transferRF = maxReceive < Integer.MAX_VALUE ? (int) maxReceive : Integer.MAX_VALUE;
+				receive -= receiver.receiveEnergy(dir.getOpposite(), transferRF, action.shouldSimulate());
 			}
 		}
-		return transfer;
+		return receive;
 	}
 
 	@Override
-	public StoredEnergyStack removeEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
+	public long extractEnergy(long maxExtract, TileEntity tile, EnumFacing dir, ActionType action) {
+		long extract = maxExtract;
 		if (tile instanceof IEnergyProvider) {
 			IEnergyProvider receiver = (IEnergyProvider) tile;
 			if (receiver.canConnectEnergy(dir.getOpposite())) {
-				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-				transfer.stored -= receiver.extractEnergy(dir.getOpposite(), transferRF, action.shouldSimulate());
+				int transferRF = maxExtract < Integer.MAX_VALUE ? (int) maxExtract : Integer.MAX_VALUE;
+				extract -= receiver.extractEnergy(dir.getOpposite(), transferRF, action.shouldSimulate());
 			}
 		}
-		return transfer;
+		return extract;
 	}
 
 	@Override

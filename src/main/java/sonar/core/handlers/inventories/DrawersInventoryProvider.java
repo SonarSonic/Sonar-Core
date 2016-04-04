@@ -11,6 +11,9 @@ import sonar.core.api.InventoryHandler;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.StoredItemStack;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+
 public class DrawersInventoryProvider extends InventoryHandler {
 
 	public static String name = "Storage Drawers";

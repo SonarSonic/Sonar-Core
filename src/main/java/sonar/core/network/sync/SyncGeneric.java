@@ -8,7 +8,6 @@ import sonar.core.utils.IBufObject;
 
 public class SyncGeneric<T extends IBufObject> extends SyncPart {
 	private T c;
-	private T last;
 	private IBufManager<T> manager;
 
 	public SyncGeneric(IBufManager<T> manager, int id) {
@@ -23,16 +22,11 @@ public class SyncGeneric<T extends IBufObject> extends SyncPart {
 
 	public void setDefault(T def) {
 		this.c = def;
-		this.last = def;
-	}
-
-	@Override
-	public boolean equal() {
-		return manager.areTypesEqual(c, last);
 	}
 
 	public void setObject(T value) {
 		c = value;
+		this.setChanged(true);
 	}
 
 	public T getObject() {
@@ -40,34 +34,32 @@ public class SyncGeneric<T extends IBufObject> extends SyncPart {
 	}
 
 	@Override
-	public void updateSync() {
-		last = c;
-	}
-
-	@Override
-	public void writeObject(ByteBuf buf) {
+	public void writeToBuf(ByteBuf buf) {
 		manager.writeToBuf(buf, c);
 	}
 
 	@Override
-	public void readObject(ByteBuf buf) {
+	public void readFromBuf(ByteBuf buf) {
 		this.c = manager.readFromBuf(buf);
 	}
 
 	@Override
-	public void writeObject(NBTTagCompound nbt, SyncType type) {
+	public void writeToNBT(NBTTagCompound nbt, SyncType type) {
 		NBTTagCompound infoTag = new NBTTagCompound();
 		manager.writeToNBT(infoTag, c);
-		nbt.setTag(this.getTagName(), infoTag);
+		if (!infoTag.hasNoTags())
+			nbt.setTag(this.getTagName(), infoTag);
 
 	}
 
 	@Override
-	public void readObject(NBTTagCompound nbt, SyncType type) {
-		this.c = manager.readFromNBT(nbt.getCompoundTag(this.getTagName()));
+	public void readFromNBT(NBTTagCompound nbt, SyncType type) {
+		if (nbt.hasKey(this.getTagName()))
+			this.c = manager.readFromNBT(nbt.getCompoundTag(this.getTagName()));
 	}
 
 	public String toString() {
 		return c.toString();
 	}
+
 }

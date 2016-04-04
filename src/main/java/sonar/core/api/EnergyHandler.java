@@ -20,21 +20,21 @@ public abstract class EnergyHandler extends SonarProvider {
 
 	/** used for adding an a {@link StoredEnergyStack} to the TileEntity
 	 * 
-	 * @param add the {@link StoredEnergyStack} to add, the {@link EnergyType} will always be the provided type, therefore there is no need to convert stored amounts
+	 * @param add the maximum to receive, the {@link EnergyType} will always be the provided type, therefore there is no need to convert stored amounts
 	 * @param tile the {@link TileEntity} to check
 	 * @param dir the {@link EnumFacing} to check from
 	 * @param action should this action be simulated
 	 * @return what wasn't added */
-	public abstract StoredEnergyStack addEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action);
+	public abstract long receiveEnergy(long maxReceive, TileEntity tile, EnumFacing dir, ActionType action);
 
 	/** used for removing an a {@link StoredEnergyStack} from the Inventory
 	 * 
-	 * @param remove the {@link StoredEnergyStack} to remove, the {@link EnergyType} will always be the provided type, therefore there is no need to convert stored amounts
+	 * @param remove the maximum to extract, the {@link EnergyType} will always be the provided type, therefore there is no need to convert stored amounts
 	 * @param tile the {@link TileEntity} to check
 	 * @param dir the {@link EnumFacing} to check from
 	 * @param action should this action be simulated
 	 * @return what wasn't extracted */
-	public abstract StoredEnergyStack removeEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action);
+	public abstract long extractEnergy(long maxExtract, TileEntity tile, EnumFacing dir, ActionType action);
 
 	/** only called if canProvideEnergy is true
 	 * 

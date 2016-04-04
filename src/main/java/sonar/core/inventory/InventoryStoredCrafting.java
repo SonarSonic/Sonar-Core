@@ -51,6 +51,7 @@ public class InventoryStoredCrafting extends InventoryCrafting {
 
 	@Override
 	public ItemStack removeStackFromSlot(int par1) {
+		this.eventHandler.onCraftMatrixChanged(this);
 		return null;
 	}
 

@@ -1,5 +1,5 @@
 package sonar.core.handlers.inventories;
-
+/*
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,3 +102,4 @@ public class LPInventoryProvider extends InventoryHandler {
 		return remove;
 	}
 }
+*/

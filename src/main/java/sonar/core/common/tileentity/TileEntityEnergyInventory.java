@@ -4,10 +4,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
+import sonar.core.api.SonarAPI;
 import sonar.core.energy.ChargingUtils;
 import sonar.core.energy.EnergyCharge;
+import sonar.core.helpers.SonarHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.inventory.SonarTileInventory;
 
@@ -48,6 +52,7 @@ public class TileEntityEnergyInventory extends TileEntityEnergy implements IInve
 	public ItemStack[] slots() {
 		return inv.slots;
 	}
+
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		super.readData(nbt, type);
 		getTileInv().readData(nbt, type);
