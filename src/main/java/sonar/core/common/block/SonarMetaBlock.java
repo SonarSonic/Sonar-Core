@@ -15,10 +15,10 @@ public class SonarMetaBlock extends ItemMultiTexture {
 				Block block = Block.getBlockFromItem(stack.getItem());
 				if (block instanceof IMetaRenderer) {
 					IMetaRenderer meta = (IMetaRenderer) block;
-					return ""+meta.getVariant(stack.getMetadata()).getMeta();
+					return String.valueOf(meta.getVariant(stack.getMetadata()).getMeta());
 				}
-				return ""+0;
+				return String.valueOf(0);
 			}
 		});
-	}	
+	}
 }

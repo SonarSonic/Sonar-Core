@@ -1,0 +1,523 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures":{            
+            "particle":"sonarcore:blocks/connected/stablestone_red",          
+            "north":"sonarcore:blocks/connected/stablestone_red",             
+            "east":"sonarcore:blocks/connected/stablestone_red",            
+            "south":"sonarcore:blocks/connected/stablestone_red",               
+            "west":"sonarcore:blocks/connected/stablestone_red",
+            "up":"sonarcore:blocks/connected/stablestone_red",  
+            "down":"sonarcore:blocks/connected/stablestone_red" 
+        },   
+        "model":"cube_all",
+        "transform":"forge:default-block"
+    },
+    "variants": {        
+        "inventory": [{}], 
+        "down=false,east=false,north=false,south=false,up=false,west=false": {             
+            "model":"cube_all"
+        },             
+        "down=false,east=false,north=false,south=false,up=true,west=false": {           
+            "model":"cube_all",
+             "textures":{                    
+                "north":"sonarcore:blocks/connected/stablestone_2_red",             
+                "east":"sonarcore:blocks/connected/stablestone_2_red",            
+                "south":"sonarcore:blocks/connected/stablestone_2_red",               
+                "west":"sonarcore:blocks/connected/stablestone_2_red"
+            }
+        }, 
+        "down=true,east=false,north=false,south=false,up=false,west=false": {     
+            "model":"cube_all",
+            "textures":{                    
+                "north":"sonarcore:blocks/connected/stablestone_1_red",             
+                "east":"sonarcore:blocks/connected/stablestone_1_red",            
+                "south":"sonarcore:blocks/connected/stablestone_1_red",               
+                "west":"sonarcore:blocks/connected/stablestone_1_red"
+            }
+        },     
+        
+        "down=false,east=false,north=true,south=false,up=false,west=false": {    
+            "model":"cube_all",
+            "textures":{                                
+                "east":"sonarcore:blocks/connected/stablestone_6_red",              
+                "west":"sonarcore:blocks/connected/stablestone_7_red",
+                "up":"sonarcore:blocks/connected/stablestone_2_red",  
+                "down":"sonarcore:blocks/connected/stablestone_1_red" 
+            }
+        },
+        
+        "down=false,east=false,north=false,south=true,up=false,west=false": {    
+            "model":"cube_all",
+            "textures":{                               
+                "east":"sonarcore:blocks/connected/stablestone_7_red",                
+                "west":"sonarcore:blocks/connected/stablestone_6_red",
+                "up":"sonarcore:blocks/connected/stablestone_1_red",  
+                "down":"sonarcore:blocks/connected/stablestone_2_red" 
+            }
+        },
+        "down=false,east=false,north=false,south=false,up=false,west=true": {   
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_6_red",                
+                "south":"sonarcore:blocks/connected/stablestone_7_red",
+                "up":"sonarcore:blocks/connected/stablestone_7_red",  
+                "down":"sonarcore:blocks/connected/stablestone_7_red" 
+            }
+        },
+        "down=false,east=true,north=false,south=false,up=false,west=false": {   
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_7_red",                
+                "south":"sonarcore:blocks/connected/stablestone_6_red",
+                "up":"sonarcore:blocks/connected/stablestone_6_red",  
+                "down":"sonarcore:blocks/connected/stablestone_6_red" 
+            }
+        },
+
+        "down=false,east=true,north=false,south=false,up=true,west=false": {    
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_5_red",                
+                "south":"sonarcore:blocks/connected/stablestone_4_red",
+                "west":"sonarcore:blocks/connected/stablestone_2_red",  
+                "down":"sonarcore:blocks/connected/stablestone_6_red" 
+            }
+        },
+        "down=false,east=false,north=false,south=false,up=true,west=true": {   
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_4_red",                
+                "south":"sonarcore:blocks/connected/stablestone_5_red",
+                "east":"sonarcore:blocks/connected/stablestone_2_red",  
+                "down":"sonarcore:blocks/connected/stablestone_7_red" 
+            }
+        },
+        "down=true,east=true,north=false,south=false,up=false,west=false": {    
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_10_red",                
+                "south":"sonarcore:blocks/connected/stablestone_9_red",
+                "west":"sonarcore:blocks/connected/stablestone_1_red",  
+                "up":"sonarcore:blocks/connected/stablestone_6_red" 
+            }
+        },
+        "down=true,east=false,north=false,south=false,up=false,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_9_red",                
+                "south":"sonarcore:blocks/connected/stablestone_10_red",
+                "east":"sonarcore:blocks/connected/stablestone_1_red",  
+                "up":"sonarcore:blocks/connected/stablestone_7_red" 
+            }
+        },
+        "down=false,east=false,north=true,south=false,up=true,west=false": {   
+            "model":"cube_all",
+            "textures":{                               
+                "south":"sonarcore:blocks/connected/stablestone_2_red",                
+                "east":"sonarcore:blocks/connected/stablestone_4_red",
+                "west":"sonarcore:blocks/connected/stablestone_5_red",  
+                "down":"sonarcore:blocks/connected/stablestone_1_red" 
+            }
+        },
+        "down=false,east=false,north=false,south=true,up=true,west=false": {    
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_2_red",                
+                "east":"sonarcore:blocks/connected/stablestone_5_red",
+                "west":"sonarcore:blocks/connected/stablestone_4_red",  
+                "down":"sonarcore:blocks/connected/stablestone_2_red" 
+            }
+        },
+        "down=true,east=false,north=true,south=false,up=false,west=false": {    
+            "model":"cube_all",
+            "textures":{                               
+                "south":"sonarcore:blocks/connected/stablestone_1_red",                
+                "east":"sonarcore:blocks/connected/stablestone_9_red",
+                "west":"sonarcore:blocks/connected/stablestone_10_red",  
+                "up":"sonarcore:blocks/connected/stablestone_2_red" 
+            }
+        },
+        "down=true,east=false,north=false,south=true,up=false,west=false": {   
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_1_red",                
+                "east":"sonarcore:blocks/connected/stablestone_10_red",
+                "west":"sonarcore:blocks/connected/stablestone_9_red",  
+                "up":"sonarcore:blocks/connected/stablestone_1_red" 
+            }
+         },
+        "down=false,east=true,north=true,south=false,up=false,west=false": {   
+            "model":"cube_all",
+            "textures":{                               
+                "south":"sonarcore:blocks/connected/stablestone_6_red",                
+                "west":"sonarcore:blocks/connected/stablestone_7_red",
+                "down":"sonarcore:blocks/connected/stablestone_9_red",  
+                "up":"sonarcore:blocks/connected/stablestone_4_red" 
+            }            
+        },
+        "down=false,east=true,north=false,south=true,up=false,west=false": {    
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_7_red",                
+                "west":"sonarcore:blocks/connected/stablestone_6_red",
+                "down":"sonarcore:blocks/connected/stablestone_4_red",  
+                "up":"sonarcore:blocks/connected/stablestone_9_red" 
+            }             
+        },
+        "down=false,east=false,north=true,south=false,up=false,west=true": {   
+            "model":"cube_all",
+            "textures":{                               
+                "south":"sonarcore:blocks/connected/stablestone_7_red",                
+                "east":"sonarcore:blocks/connected/stablestone_6_red",
+                "down":"sonarcore:blocks/connected/stablestone_10_red",  
+                "up":"sonarcore:blocks/connected/stablestone_5_red" 
+            }
+         },
+        "down=false,east=false,north=false,south=true,up=false,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_6_red",                
+                "east":"sonarcore:blocks/connected/stablestone_7_red",
+                "down":"sonarcore:blocks/connected/stablestone_5_red",  
+                "up":"sonarcore:blocks/connected/stablestone_10_red" 
+            }
+        },
+        "down=true,east=false,north=false,south=false,up=true,west=false": {   
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_3_red",                
+                "south":"sonarcore:blocks/connected/stablestone_3_red",
+                "east":"sonarcore:blocks/connected/stablestone_3_red",  
+                "west":"sonarcore:blocks/connected/stablestone_3_red" 
+            }
+        },
+        "down=false,east=true,north=false,south=false,up=false,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_8_red",                
+                "south":"sonarcore:blocks/connected/stablestone_8_red",
+                "up":"sonarcore:blocks/connected/stablestone_8_red",  
+                "down":"sonarcore:blocks/connected/stablestone_8_red" 
+            }
+        },
+        "down=false,east=false,north=true,south=true,up=false,west=false": {   
+            "model":"cube_all",
+            "textures":{                               
+                "east":"sonarcore:blocks/connected/stablestone_8_red",                
+                "west":"sonarcore:blocks/connected/stablestone_8_red",
+                "down":"sonarcore:blocks/connected/stablestone_3_red",  
+                "up":"sonarcore:blocks/connected/stablestone_3_red" 
+            }
+        },
+        "down=true,east=false,north=false,south=false,up=true,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_14_red",                
+                "south":"sonarcore:blocks/connected/stablestone_12_red",
+                "east":"sonarcore:blocks/connected/stablestone_3_red"  
+            }
+        },
+        "down=true,east=false,north=false,south=true,up=true,west=false": {   
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_3_red",                
+                "east":"sonarcore:blocks/connected/stablestone_12_red",
+                "west":"sonarcore:blocks/connected/stablestone_14_red"  
+            }
+         },
+        "down=true,east=true,north=false,south=false,up=true,west=false": {    
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_12_red",                
+                "south":"sonarcore:blocks/connected/stablestone_14_red",
+                "west":"sonarcore:blocks/connected/stablestone_3_red"  
+            }
+        },
+        "down=true,east=false,north=true,south=false,up=true,west=false": {   
+            "model":"cube_all",
+            "textures":{                               
+                "south":"sonarcore:blocks/connected/stablestone_3_red",                
+                "east":"sonarcore:blocks/connected/stablestone_14_red",
+                "west":"sonarcore:blocks/connected/stablestone_12_red"  
+            }
+        },
+        "down=false,east=false,north=true,south=true,up=false,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "down":"sonarcore:blocks/connected/stablestone_12_red",                
+                "up":"sonarcore:blocks/connected/stablestone_12_red",
+                "east":"sonarcore:blocks/connected/stablestone_8_red"  
+            }
+        },
+        "down=false,east=true,north=true,south=true,up=false,west=false": {   
+            "model":"cube_all",
+            "textures":{                               
+                "down":"sonarcore:blocks/connected/stablestone_14_red",                
+                "up":"sonarcore:blocks/connected/stablestone_14_red",
+                "west":"sonarcore:blocks/connected/stablestone_8_red"  
+            }
+         },
+
+        "down=false,east=true,north=false,south=false,up=true,west=true": {   
+            "model":"cube_all",
+            "textures":{                               
+                "down":"sonarcore:blocks/connected/stablestone_8_red",                
+                "north":"sonarcore:blocks/connected/stablestone_13_red",
+                "south":"sonarcore:blocks/connected/stablestone_13_red"  
+            } 
+         },
+        "down=false,east=true,north=false,south=true,up=false,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "down":"sonarcore:blocks/connected/stablestone_13_red",                
+                "north":"sonarcore:blocks/connected/stablestone_8_red",
+                "up":"sonarcore:blocks/connected/stablestone_11_red"  
+            }
+        },
+        "down=true,east=true,north=false,south=false,up=false,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "up":"sonarcore:blocks/connected/stablestone_8_red",                
+                "north":"sonarcore:blocks/connected/stablestone_11_red",
+                "south":"sonarcore:blocks/connected/stablestone_11_red"  
+            }
+         },
+        "down=false,east=true,north=true,south=false,up=false,west=true": {    
+            "model":"cube_all",
+             "textures":{                               
+                "up":"sonarcore:blocks/connected/stablestone_13_red",                
+                "south":"sonarcore:blocks/connected/stablestone_8_red",
+                "down":"sonarcore:blocks/connected/stablestone_11_red"  
+            }
+         },
+        "down=false,east=false,north=true,south=true,up=true,west=false": {    
+            "model":"cube_all",
+            "textures":{                               
+                "down":"sonarcore:blocks/connected/stablestone_3_red",                
+                "east":"sonarcore:blocks/connected/stablestone_13_red",
+                "west":"sonarcore:blocks/connected/stablestone_13_red"  
+            }
+        },
+        "down=true,east=false,north=true,south=true,up=false,west=false": {    
+            "model":"cube_all",
+            "textures":{                               
+                "up":"sonarcore:blocks/connected/stablestone_3_red",                
+                "east":"sonarcore:blocks/connected/stablestone_11_red",
+                "west":"sonarcore:blocks/connected/stablestone_11_red"  
+            }
+         },
+        "down=false,east=true,north=false,south=true,up=true,west=false": {   
+             "model":"cube_all",
+            "textures":{                               
+                "down":"sonarcore:blocks/connected/stablestone_4_red",                
+                "north":"sonarcore:blocks/connected/stablestone_5_red",
+                "west":"sonarcore:blocks/connected/stablestone_4_red"  
+            }
+        },
+        "down=false,east=false,north=false,south=true,up=true,west=true": {   
+            "model":"cube_all",
+            "textures":{                               
+                "down":"sonarcore:blocks/connected/stablestone_5_red",                
+                "north":"sonarcore:blocks/connected/stablestone_4_red",
+                "east":"sonarcore:blocks/connected/stablestone_5_red"  
+            }
+        },
+        "down=false,east=true,north=true,south=false,up=true,west=false": { 
+            "model":"cube_all",  
+            "textures":{                                            
+                "south":"sonarcore:blocks/connected/stablestone_4_red",
+                "down":"sonarcore:blocks/connected/stablestone_9_red",  
+                "west":"sonarcore:blocks/connected/stablestone_5_red" 
+            } 
+        },
+        "down=true,east=true,north=true,south=false,up=false,west=false": {   
+            "model":"cube_all",
+            "textures":{                                           
+                "south":"sonarcore:blocks/connected/stablestone_9_red",
+                "west":"sonarcore:blocks/connected/stablestone_10_red",  
+                "up":"sonarcore:blocks/connected/stablestone_4_red" 
+            }
+         },
+        "down=true,east=true,north=false,south=true,up=false,west=false": {   
+            "model":"cube_all",
+            "textures":{                                           
+                "north":"sonarcore:blocks/connected/stablestone_10_red",
+                "west":"sonarcore:blocks/connected/stablestone_9_red",  
+                "up":"sonarcore:blocks/connected/stablestone_9_red" 
+            }
+        },
+
+        "down=true,east=false,north=false,south=true,up=false,west=true": {    
+            "model":"cube_all",
+            "textures":{                                           
+                "east":"sonarcore:blocks/connected/stablestone_10_red",
+                "north":"sonarcore:blocks/connected/stablestone_9_red",  
+                "up":"sonarcore:blocks/connected/stablestone_10_red" 
+            }
+         },
+        "down=true,east=false,north=true,south=false,up=false,west=true": {    
+            "model":"cube_all",
+            "textures":{                                           
+                "east":"sonarcore:blocks/connected/stablestone_9_red",
+                "south":"sonarcore:blocks/connected/stablestone_10_red",  
+                "up":"sonarcore:blocks/connected/stablestone_5_red" 
+            }
+        },
+        "down=false,east=false,north=true,south=false,up=true,west=true": {    
+            "model":"cube_all",
+            "textures":{                                           
+                "down":"sonarcore:blocks/connected/stablestone_10_red",
+                "east":"sonarcore:blocks/connected/stablestone_4_red",  
+                "south":"sonarcore:blocks/connected/stablestone_5_red" 
+            }
+        },
+        "down=true,east=true,north=false,south=false,up=true,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_15_red",  
+                "south":"sonarcore:blocks/connected/stablestone_15_red" 
+            }
+        },
+        "down=false,east=true,north=true,south=true,up=false,west=true": {   
+            "model":"cube_all",
+            "textures":{                               
+                "up":"sonarcore:blocks/connected/stablestone_15_red",  
+                "down":"sonarcore:blocks/connected/stablestone_15_red" 
+            }
+        },
+        "down=true,east=false,north=true,south=true,up=true,west=false": {   
+            "model":"cube_all",
+            "textures":{                               
+                "east":"sonarcore:blocks/connected/stablestone_15_red",  
+                "west":"sonarcore:blocks/connected/stablestone_15_red" 
+            }
+        },
+
+        "down=true,east=false,north=true,south=false,up=true,west=true": {   
+            "model":"cube_all",
+            "textures":{                               
+                "east":"sonarcore:blocks/connected/stablestone_14_red",  
+                "south":"sonarcore:blocks/connected/stablestone_12_red" 
+            }
+          },
+        "down=true,east=false,north=true,south=true,up=false,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "east":"sonarcore:blocks/connected/stablestone_11_red",  
+                "up":"sonarcore:blocks/connected/stablestone_12_red" 
+            }
+        },
+        "down=false,east=false,north=true,south=true,up=true,west=true": {   
+            "model":"cube_all",
+            "textures":{                               
+                "down":"sonarcore:blocks/connected/stablestone_12_red",  
+                "east":"sonarcore:blocks/connected/stablestone_13_red" 
+            }           
+        },
+        "down=true,east=false,north=false,south=true,up=true,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "east":"sonarcore:blocks/connected/stablestone_12_red",  
+                "north":"sonarcore:blocks/connected/stablestone_14_red" 
+            }
+        },
+        "down=true,east=true,north=true,south=false,up=true,west=false": {    
+            "model":"cube_all",
+            "textures":{                               
+                "south":"sonarcore:blocks/connected/stablestone_14_red",  
+                "west":"sonarcore:blocks/connected/stablestone_12_red" 
+            }
+        },
+        "down=true,east=true,north=false,south=true,up=true,west=false": {    
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_12_red",  
+                "west":"sonarcore:blocks/connected/stablestone_14_red" 
+            }
+         },
+        "down=false,east=true,north=true,south=true,up=true,west=false": {    
+            "model":"cube_all",
+            "textures":{                               
+                "down":"sonarcore:blocks/connected/stablestone_14_red",  
+                "west":"sonarcore:blocks/connected/stablestone_13_red" 
+            }
+         },
+        "down=true,east=true,north=true,south=true,up=false,west=false": {   
+            "model":"cube_all",
+            "textures":{                               
+                "up":"sonarcore:blocks/connected/stablestone_14_red",  
+                "west":"sonarcore:blocks/connected/stablestone_11_red" 
+            }
+          },
+        "down=false,east=true,north=false,south=true,up=true,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "down":"sonarcore:blocks/connected/stablestone_13_red",  
+                "north":"sonarcore:blocks/connected/stablestone_13_red" 
+            }
+        },
+        "down=true,east=true,north=false,south=true,up=false,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "up":"sonarcore:blocks/connected/stablestone_11_red",  
+                "north":"sonarcore:blocks/connected/stablestone_11_red" 
+            }
+        },
+        "down=false,east=true,north=true,south=false,up=true,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "down":"sonarcore:blocks/connected/stablestone_11_red",  
+                "south":"sonarcore:blocks/connected/stablestone_13_red" 
+            }
+        },
+        "down=true,east=true,north=true,south=false,up=false,west=true": {   
+            "model":"cube_all",
+            "textures":{                               
+                "south":"sonarcore:blocks/connected/stablestone_11_red",                
+                "up":"sonarcore:blocks/connected/stablestone_13_red"
+            }
+         },
+
+        "down=true,east=true,north=true,south=true,up=false,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "up":"sonarcore:blocks/connected/stablestone_15_red"
+            }
+          },
+        "down=true,east=true,north=false,south=true,up=true,west=true": {   
+            "model":"cube_all",
+            "textures":{                               
+                "north":"sonarcore:blocks/connected/stablestone_15_red"
+            }
+         },
+        "down=true,east=false,north=true,south=true,up=true,west=true": {    
+            "model":"cube_all",
+            "textures":{                               
+                "east":"sonarcore:blocks/connected/stablestone_15_red"
+            }
+         },
+        "down=true,east=true,north=true,south=true,up=true,west=false": {   
+            "model":"cube_all",
+            "textures":{                               
+                "west":"sonarcore:blocks/connected/stablestone_15_red"
+            }
+         },
+        "down=true,east=true,north=true,south=false,up=true,west=true": {   
+            "model":"cube_all",
+            "textures":{                               
+                "south":"sonarcore:blocks/connected/stablestone_15_red"
+            }
+        },
+        "down=false,east=true,north=true,south=true,up=true,west=true": {   
+            "model":"cube_all",
+            "textures":{                               
+                "down":"sonarcore:blocks/connected/stablestone_15_red" 
+            } 
+        },
+
+        "down=true,east=true,north=true,south=true,up=true,west=true": {    
+            "model":"cube_all"}
+    }
+
+}

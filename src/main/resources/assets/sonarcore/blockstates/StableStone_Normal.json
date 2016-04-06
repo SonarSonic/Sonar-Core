@@ -42,8 +42,8 @@
             "textures":{                                
                 "east":"sonarcore:blocks/connected/stablestone_6",              
                 "west":"sonarcore:blocks/connected/stablestone_7",
-	            "up":"sonarcore:blocks/connected/stablestone_2",  
-	            "down":"sonarcore:blocks/connected/stablestone_1" 
+                "up":"sonarcore:blocks/connected/stablestone_2",  
+                "down":"sonarcore:blocks/connected/stablestone_1" 
             }
         },
         

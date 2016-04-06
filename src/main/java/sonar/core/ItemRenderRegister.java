@@ -12,6 +12,7 @@ import sonar.core.common.block.properties.IMetaRenderer;
 
 public class ItemRenderRegister {
 	public static void register() {
+		/*
 		for (Item item : SonarItems.registeredItems) {
 			if (item.getHasSubtypes()) {
 				List<ItemStack> stacks = new ArrayList();
@@ -28,5 +29,6 @@ public class ItemRenderRegister {
 				ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(new ResourceLocation(SonarCore.modid, item.getUnlocalizedName().substring(5)), "inventory"));
 			}
 		}
+		*/
 	}
 }

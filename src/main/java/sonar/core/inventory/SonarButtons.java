@@ -20,8 +20,7 @@ public final class SonarButtons {
 
 		}
 
-		public void onClicked() {
-		}
+		public void onClicked() {}
 
 		public boolean mousePressed(Minecraft minecraft, int x, int y) {
 			isButtonDown = this.enabled && this.visible && x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
