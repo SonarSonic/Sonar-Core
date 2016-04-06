@@ -3,7 +3,9 @@ package sonar.core;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import sonar.core.common.block.BlockBase;
 import sonar.core.common.block.ConnectedBlock;
@@ -13,23 +15,32 @@ import sonar.core.common.block.SonarGate;
 import sonar.core.common.block.SonarMetaBlock;
 import sonar.core.common.block.SonarSlab;
 import sonar.core.common.block.SonarStairs;
+import sonar.core.common.block.StableStone;
+import sonar.core.common.block.StableStone.Variants;
 
 public class SonarBlocks extends SonarCore {
 
 	public static ArrayList<Block> registeredBlocks = new ArrayList();
-	
+
 	public static Block registerBlock(String name, Block block) {
 		block.setCreativeTab(tab);
 		GameRegistry.registerBlock(block.setUnlocalizedName(name), SonarBlockTip.class, name);
 		registeredBlocks.add(block);
 		return block;
-	}	
+	}
+
 	public static Block registerMetaBlock(String name, Block block) {
 		block.setCreativeTab(tab);
 		GameRegistry.registerBlock(block.setUnlocalizedName(name), SonarMetaBlock.class, name);
 		registeredBlocks.add(block);
 		return block;
-	}	
+	}
+
+	public static void registerSlab(String name, Item slab, BlockSlab singleSlab, BlockSlab doubleSlab) {
+				
+		reinforcedStoneBrickSlab_double = new SonarSlab.Double(reinforcedStoneBrick).setUnlocalizedName("ReinforcedStoneBrickSlab");
+		reinforcedStoneBrickSlab_half = registerBlock("ReinforcedStoneBrickSlab", new SonarSlab.Half(reinforcedStoneBrick));
+	}
 
 	public static void registerBlocks() {
 		// common blocks
@@ -46,7 +57,7 @@ public class SonarBlocks extends SonarCore {
 		reinforcedStoneBrickGate = registerBlock("ReinforcedStoneBrickGate", new SonarGate(reinforcedStoneBrick));
 		reinforcedStoneBrickSlab_double = new SonarSlab.Double(reinforcedStoneBrick).setUnlocalizedName("ReinforcedStoneBrickSlab");
 		reinforcedStoneBrickSlab_half = registerBlock("ReinforcedStoneBrickSlab", new SonarSlab.Half(reinforcedStoneBrick));
-		
+
 		reinforcedDirtBlock = registerBlock("ReinforcedDirtBlock", new BlockBase(Material.ground, 1.0f, 4.0f));
 		reinforcedDirtStairs = registerBlock("ReinforcedDirtStairs", new SonarStairs(reinforcedDirtBlock));
 		reinforcedDirtFence = registerBlock("ReinforcedDirtFence", new SonarFence(Material.ground));
@@ -63,11 +74,16 @@ public class SonarBlocks extends SonarCore {
 
 		toughenedStoneBlock = registerBlock("ToughenedStoneBlock", new BlockBase(Material.rock, 2.0f, 10.0f));
 		toughenedStoneBrick = registerBlock("ToughenedStoneBrick", new BlockBase(Material.rock, 2.0f, 10.0f));
-		
+
 		toughenedDirtBlock = registerBlock("ToughenedDirtBlock", new BlockBase(Material.ground, 1.0f, 4.0f));
 		toughenedDirtBrick = registerBlock("ToughenedDirtBrick", new BlockBase(Material.ground, 1.0f, 4.0f));
-		
-		stableStone = registerBlock("StableStone", new ConnectedBlock(Material.rock, 0));
+
+		for (Variants variant : Variants.values()) {
+			stableStone = registerBlock("StableStone" + "_" + variant.name(), new StableStone(Material.rock, 0));
+			stablestonerimmedBlock = registerBlock("StableStoneRimmed" + "_" + variant.name(), new StableStone(Material.rock, 0));
+			stablestonerimmedblackBlock = registerBlock("StableStoneBlackRimmed" + "_" + variant.name(), new StableStone(Material.rock, 0));
+
+		}
 		stableGlass = registerBlock("StableGlass", new ConnectedBlock.Glass(Material.glass, 1)).setLightLevel(0.625F).setHardness(0.6F);
 		clearStableGlass = registerBlock("ClearStableGlass", new ConnectedBlock.Glass(Material.glass, 2)).setLightLevel(0.625F).setHardness(0.6F);
 	}
