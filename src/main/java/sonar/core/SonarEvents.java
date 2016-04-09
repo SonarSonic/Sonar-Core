@@ -3,7 +3,7 @@ package sonar.core;
 import net.minecraft.block.Block;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import sonar.core.utils.IInteractBlock;
+import sonar.core.api.blocks.IInteractBlock;
 
 public class SonarEvents {
 	@SubscribeEvent

@@ -15,8 +15,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.SonarCore;
-import sonar.core.utils.IBufObject;
-import sonar.core.utils.INBTObject;
+import sonar.core.api.nbt.IBufObject;
+import sonar.core.api.nbt.INBTObject;
 
 public class NBTHelper {
 

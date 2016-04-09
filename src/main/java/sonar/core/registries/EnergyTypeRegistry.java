@@ -1,6 +1,6 @@
 package sonar.core.registries;
 
-import sonar.core.api.EnergyType;
+import sonar.core.api.energy.EnergyType;
 import sonar.core.helpers.RegistryHelper;
 
 public class EnergyTypeRegistry extends RegistryHelper<EnergyType> {

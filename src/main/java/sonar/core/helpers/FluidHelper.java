@@ -2,9 +2,9 @@ package sonar.core.helpers;
 
 import java.util.List;
 
-import sonar.core.api.FluidWrapper;
-import sonar.core.api.StoredFluidStack;
-import sonar.core.api.StoredItemStack;
+import sonar.core.api.fluids.StoredFluidStack;
+import sonar.core.api.inventories.StoredItemStack;
+import sonar.core.api.wrappers.FluidWrapper;
 
 public class FluidHelper extends FluidWrapper {
 

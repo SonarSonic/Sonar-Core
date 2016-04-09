@@ -1,10 +1,10 @@
 package sonar.core;
 
-import sonar.core.api.EnergyHandler;
-import sonar.core.api.EnergyType;
-import sonar.core.api.FluidHandler;
-import sonar.core.api.InventoryHandler;
-import sonar.core.api.RegistryWrapper;
+import sonar.core.api.energy.EnergyHandler;
+import sonar.core.api.energy.EnergyType;
+import sonar.core.api.fluids.FluidHandler;
+import sonar.core.api.inventories.InventoryHandler;
+import sonar.core.api.wrappers.RegistryWrapper;
 
 public class SonarRegistry extends RegistryWrapper {
 

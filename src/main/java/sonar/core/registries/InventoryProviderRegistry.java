@@ -1,7 +1,7 @@
 package sonar.core.registries;
 
 import net.minecraftforge.fml.common.Loader;
-import sonar.core.api.InventoryHandler;
+import sonar.core.api.inventories.InventoryHandler;
 /*
 import sonar.core.handlers.inventories.AE2InventoryProvider;
 import sonar.core.handlers.inventories.LPInventoryProvider;

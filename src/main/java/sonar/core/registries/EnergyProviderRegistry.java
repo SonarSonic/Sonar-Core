@@ -1,6 +1,6 @@
 package sonar.core.registries;
 
-import sonar.core.api.EnergyHandler;
+import sonar.core.api.energy.EnergyHandler;
 /*
 import sonar.core.handlers.energy.AEProvider;
 import sonar.core.handlers.energy.EUProvider;

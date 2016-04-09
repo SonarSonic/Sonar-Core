@@ -47,7 +47,7 @@ import sonar.core.registries.EnergyProviderRegistry;
 import sonar.core.registries.EnergyTypeRegistry;
 import sonar.core.registries.FluidProviderRegistry;
 import sonar.core.registries.InventoryProviderRegistry;
-import sonar.core.utils.upgrades.MachineUpgradeRegistry;
+import sonar.core.upgrades.MachineUpgradeRegistry;
 
 @Mod(modid = SonarCore.modid, name = "SonarCore", version = SonarCore.version)
 public class SonarCore {

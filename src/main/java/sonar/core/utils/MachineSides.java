@@ -7,6 +7,7 @@ import java.util.Objects;
 import com.google.common.collect.Lists;
 
 import sonar.core.SonarCore;
+import sonar.core.api.nbt.INBTSaveable;
 import sonar.core.network.PacketSonarSides;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

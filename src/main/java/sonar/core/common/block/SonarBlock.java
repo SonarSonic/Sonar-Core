@@ -15,7 +15,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,6 +28,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
+import sonar.core.api.blocks.IInteractBlock;
+import sonar.core.api.blocks.IWrenchable;
+import sonar.core.api.utils.BlockInteraction;
+import sonar.core.api.utils.BlockInteractionType;
 import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.helpers.SonarHelper;
@@ -36,12 +39,6 @@ import sonar.core.inventory.IAdditionalInventory;
 import sonar.core.inventory.IDropInventory;
 import sonar.core.network.PacketBlockInteraction;
 import sonar.core.network.utils.ISyncTile;
-import sonar.core.utils.BlockInteraction;
-import sonar.core.utils.BlockInteractionType;
-import sonar.core.utils.IInteractBlock;
-import sonar.core.utils.IMachineSides;
-import sonar.core.utils.IWrench;
-import sonar.core.utils.IWrenchable;
 
 import com.google.common.collect.Lists;
 
@@ -258,13 +255,13 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	}
 
 	@Override
-	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops) {
+	public ArrayList<ItemStack> wrenchBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops) {
 		SonarHelper.dropTile(player, world.getBlockState(pos).getBlock(), world, pos);
 		return null;
 	}
 
 	@Override
-	public boolean canDismantle(EntityPlayer player, World world, BlockPos pos) {
+	public boolean canWrench(EntityPlayer player, World world, BlockPos pos) {
 		return true;
 	}
 

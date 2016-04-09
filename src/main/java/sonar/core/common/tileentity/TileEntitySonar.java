@@ -17,7 +17,7 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
-import sonar.core.api.BlockCoords;
+import sonar.core.api.utils.BlockCoords;
 import sonar.core.common.block.SonarBlock;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.IWailaInfo;

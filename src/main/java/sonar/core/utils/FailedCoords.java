@@ -1,6 +1,6 @@
 package sonar.core.utils;
 
-import sonar.core.api.BlockCoords;
+import sonar.core.api.utils.BlockCoords;
 
 public class FailedCoords {
 	private boolean objectBoolean;

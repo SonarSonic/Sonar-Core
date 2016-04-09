@@ -7,10 +7,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import sonar.core.api.ActionType;
-import sonar.core.api.FluidHandler;
-import sonar.core.api.InventoryHandler.StorageSize;
-import sonar.core.api.StoredFluidStack;
+import sonar.core.api.fluids.FluidHandler;
+import sonar.core.api.fluids.StoredFluidStack;
+import sonar.core.api.inventories.InventoryHandler.StorageSize;
+import sonar.core.api.utils.ActionType;
 
 public class TankProvider extends FluidHandler {
 

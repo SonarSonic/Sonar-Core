@@ -6,13 +6,13 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.SonarCore;
-import sonar.core.api.ActionType;
-import sonar.core.api.EnergyHandler;
-import sonar.core.api.EnergyType;
-import sonar.core.api.EnergyWrapper;
-import sonar.core.api.InventoryHandler;
-import sonar.core.api.StoredEnergyStack;
-import sonar.core.api.StoredItemStack;
+import sonar.core.api.energy.EnergyHandler;
+import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.StoredEnergyStack;
+import sonar.core.api.inventories.InventoryHandler;
+import sonar.core.api.inventories.StoredItemStack;
+import sonar.core.api.utils.ActionType;
+import sonar.core.api.wrappers.EnergyWrapper;
 
 public class EnergyHelper extends EnergyWrapper {
 	/* public StoredEnergyStack getStackToAdd(long inputSize, StoredEnergyStack stack, StoredEnergyStack returned) { StoredEnergyStack simulateStack = null; System.out.print(stack.stored); if (returned == null || returned.stored == 0) { simulateStack = stack.copy().setStackSize(inputSize); } else { simulateStack = stack.copy().setStackSize(inputSize - returned.stored); } return simulateStack; } */
@@ -35,7 +35,7 @@ public class EnergyHelper extends EnergyWrapper {
 	}
 
 	public long extractEnergy(TileEntity tile, long maxExtract, EnumFacing dir, ActionType type) {
-		if (tile != null) {
+		if (maxExtract !=0 && tile != null) {
 			List<EnergyHandler> handlers = SonarCore.energyProviders.getObjects();
 			for (EnergyHandler handler : handlers) {
 				if (handler.canProvideEnergy(tile, dir)) {
@@ -66,4 +66,6 @@ public class EnergyHelper extends EnergyWrapper {
 		}
 		return 0;
 	}
+	
+	
 }

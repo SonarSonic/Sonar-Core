@@ -6,10 +6,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
-import sonar.core.api.ActionType;
-import sonar.core.api.InventoryHandler;
 import sonar.core.api.SonarAPI;
-import sonar.core.api.StoredItemStack;
+import sonar.core.api.inventories.InventoryHandler;
+import sonar.core.api.inventories.StoredItemStack;
+import sonar.core.api.utils.ActionType;
 
 public class DSUInventoryProvider extends InventoryHandler {
 

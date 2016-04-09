@@ -2,9 +2,9 @@ package sonar.core.network.sync;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+import sonar.core.api.nbt.IBufManager;
+import sonar.core.api.nbt.IBufObject;
 import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.utils.IBufManager;
-import sonar.core.utils.IBufObject;
 
 public class SyncGeneric<T extends IBufObject> extends SyncPart {
 	private T c;

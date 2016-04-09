@@ -17,8 +17,8 @@ import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import sonar.core.api.IConnectedBlock;
-import sonar.core.api.IStableBlock;
+import sonar.core.api.blocks.IConnectedBlock;
+import sonar.core.api.blocks.IStableBlock;
 
 public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlock {
 

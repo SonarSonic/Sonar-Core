@@ -2,10 +2,10 @@ package sonar.core.handlers.energy;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import sonar.core.api.ActionType;
-import sonar.core.api.EnergyHandler;
-import sonar.core.api.EnergyType;
-import sonar.core.api.StoredEnergyStack;
+import sonar.core.api.energy.EnergyHandler;
+import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.StoredEnergyStack;
+import sonar.core.api.utils.ActionType;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 

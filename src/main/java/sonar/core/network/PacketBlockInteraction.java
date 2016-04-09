@@ -6,8 +6,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import sonar.core.utils.BlockInteraction;
-import sonar.core.utils.IInteractBlock;
+import sonar.core.api.blocks.IInteractBlock;
+import sonar.core.api.utils.BlockInteraction;
 
 public class PacketBlockInteraction extends PacketCoords {
 
