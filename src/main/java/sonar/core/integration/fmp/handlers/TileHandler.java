@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncTagType;
@@ -13,7 +14,7 @@ import sonar.core.network.sync.SyncTagType;
  * used for creating embedded handlers for blocks to allow easier alteration for
  * Forge Multipart components
  */
-public abstract class TileHandler implements ISyncTile {
+public abstract class TileHandler implements INBTSyncable {
 
 	public final TileEntity tile;
 	public SyncTagType.BOOLEAN isMultipart = new SyncTagType.BOOLEAN(-1);
