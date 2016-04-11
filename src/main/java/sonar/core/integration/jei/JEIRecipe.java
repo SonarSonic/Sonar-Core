@@ -1,11 +1,11 @@
 package sonar.core.integration.jei;
 
+import java.util.Arrays;
 import java.util.List;
 
-import scala.actors.threadpool.Arrays;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fluids.FluidStack;
-import mezz.jei.api.recipe.IRecipeWrapper;
 
 public abstract class JEIRecipe<T extends JEIRecipe> implements IRecipeWrapper {
 
