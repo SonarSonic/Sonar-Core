@@ -2,11 +2,11 @@ package sonar.core.api.inventories;
 
 import java.util.List;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.SonarHandler;
 import sonar.core.api.utils.ActionType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 
 /** used for providing information on Inventories for the Inventory Reader to read, the Provider must be registered in the {@link SonarAPI} to be used */
 public abstract class InventoryHandler extends SonarHandler {

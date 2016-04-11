@@ -2,8 +2,6 @@ package sonar.core.common.item;
 
 import java.util.List;
 
-import sonar.core.helpers.FontHelper;
-import sonar.core.integration.SonarLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,6 +17,8 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import sonar.core.helpers.FontHelper;
+import sonar.core.integration.SonarLoader;
 
 public class SonarSeeds extends Item implements IPlantable {
 	private Block cropBlock;

@@ -3,23 +3,15 @@ package sonar.core.upgrades;
 import gnu.trove.map.hash.THashMap;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Map.Entry;
-
-import com.google.common.collect.Lists;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import scala.actors.threadpool.Arrays;
 import sonar.core.SonarCore;
-import sonar.core.api.nbt.INBTSaveable;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.upgrades.IUpgradeInventory;
 import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.inventory.SonarTileInventory;
 
 public class UpgradeInventory implements INBTSyncable, IUpgradeInventory {
 

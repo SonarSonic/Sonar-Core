@@ -1,19 +1,17 @@
 package sonar.core.utils;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
-import com.google.common.collect.Lists;
-
-import sonar.core.SonarCore;
-import sonar.core.api.nbt.INBTSaveable;
-import sonar.core.network.PacketSonarSides;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import sonar.core.SonarCore;
+import sonar.core.api.nbt.INBTSaveable;
+import sonar.core.network.PacketSonarSides;
+
+import com.google.common.collect.Lists;
 
 public class MachineSides implements INBTSaveable {
 

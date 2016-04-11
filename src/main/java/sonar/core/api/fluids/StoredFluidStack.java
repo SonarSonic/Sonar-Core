@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import sonar.core.api.ISonarStack;
-import sonar.core.api.ISonarStack.StorageTypes;
 import sonar.core.helpers.NBTHelper;
 
 public class StoredFluidStack implements ISonarStack<StoredFluidStack> {

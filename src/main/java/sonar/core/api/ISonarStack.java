@@ -1,6 +1,5 @@
 package sonar.core.api;
 
-import net.minecraft.nbt.NBTTagCompound;
 
 public interface ISonarStack<T extends ISonarStack> {
 

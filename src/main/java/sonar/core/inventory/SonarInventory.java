@@ -1,7 +1,6 @@
 package sonar.core.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -10,18 +9,18 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import sonar.core.helpers.NBTHelper.SyncType;
 
-public class SonarTileInventory implements IInventory {
+public class SonarInventory implements ISonarInventory {
 
 	public ItemStack[] slots;
 	public int limit = 64;
 	public final TileEntity tile;
 
-	public SonarTileInventory(TileEntity tile, int size) {
+	public SonarInventory(TileEntity tile, int size) {
 		this.slots = new ItemStack[size];
 		this.tile = tile;
 	}
 
-	public SonarTileInventory setStackLimit(int limit) {
+	public SonarInventory setStackLimit(int limit) {
 		this.limit = limit;
 		return this;
 	}
@@ -108,11 +107,9 @@ public class SonarTileInventory implements IInventory {
 		return true;
 	}
 
-	public void openInventory(EntityPlayer player) {
-	}
+	public void openInventory(EntityPlayer player) {}
 
-	public void closeInventory(EntityPlayer player) {
-	}
+	public void closeInventory(EntityPlayer player) {}
 
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return true;
@@ -134,8 +131,7 @@ public class SonarTileInventory implements IInventory {
 		return 0;
 	}
 
-	public void setField(int id, int value) {
-	}
+	public void setField(int id, int value) {}
 
 	public int getFieldCount() {
 		return 0;

@@ -1,9 +1,9 @@
 package sonar.core.api.blocks;
 
-import sonar.core.api.utils.BlockInteraction;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import sonar.core.api.utils.BlockInteraction;
 
 
 /** for blocks which can be clicked with left click */

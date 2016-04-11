@@ -1,6 +1,5 @@
 package sonar.core.registries;
 
-import net.minecraftforge.fml.common.Loader;
 import sonar.core.api.fluids.FluidHandler;
 /*
 import sonar.core.handlers.fluids.AE2FluidProvider;

@@ -1,11 +1,15 @@
 package sonar.core.api.nbt;
 
-import sonar.core.helpers.NBTHelper.SyncType;
 import net.minecraft.nbt.NBTTagCompound;
+import sonar.core.helpers.NBTHelper.SyncType;
 
 public interface INBTSyncable {
-	
-	public void writeData(NBTTagCompound tag, SyncType type);
 
-	public void readData(NBTTagCompound tag, SyncType type);
+	/** @param nbt the tag you wish the data read the data from
+	 * @param type the data type you are trying to sync */
+	public void readData(NBTTagCompound nbt, SyncType type);
+
+	/** @param nbt the tag you wish to write the data to
+	 * @param type the data type you are trying to sync */
+	public void writeData(NBTTagCompound nbt, SyncType type);
 }

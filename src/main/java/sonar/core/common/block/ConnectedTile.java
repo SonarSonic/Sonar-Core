@@ -3,7 +3,6 @@ package sonar.core.common.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockState;
@@ -13,14 +12,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.api.blocks.IConnectedBlock;
-import sonar.core.api.blocks.IStableBlock;
 
-public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlock {
+public abstract class ConnectedTile extends SonarMachineBlock implements IConnectedBlock {
+
+	protected ConnectedTile(int target) {
+		super(SonarMaterials.machine, false, true);
+		this.target = target;
+	}
 
 	public int target = 0;
 	public static final PropertyBool NORTH = PropertyBool.create("north");
@@ -29,12 +31,6 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 	public static final PropertyBool WEST = PropertyBool.create("west");
 	public static final PropertyBool DOWN = PropertyBool.create("down");
 	public static final PropertyBool UP = PropertyBool.create("up");
-
-	public ConnectedBlock(Material material, int target) {
-		super(material);
-		this.target = target;
-		this.setDefaultState(this.blockState.getBaseState().withProperty(NORTH, false).withProperty(EAST, false).withProperty(SOUTH, false).withProperty(WEST, false).withProperty(UP, false).withProperty(DOWN, false));
-	}
 
 	public boolean checkBlockInDirection(IBlockAccess world, int x, int y, int z, EnumFacing side) {
 		EnumFacing dir = side;
@@ -81,6 +77,16 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 		return 0;
 	}
 
+	@SideOnly(Side.CLIENT)
+	public IBlockState getStateForEntityRender(IBlockState state) {
+		return this.getDefaultState();
+	}
+
+	public IBlockState getStateFromMeta(int meta) {
+		return this.getDefaultState();
+
+	}
+
 	public IBlockState getActualState(IBlockState state, IBlockAccess w, BlockPos pos) {
 		int x = pos.getX();
 		int y = pos.getY();
@@ -95,41 +101,6 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 	@Override
 	public int[] getConnections() {
 		return new int[] { target };
-	}
-
-	public static class Glass extends ConnectedBlock {
-
-		public Glass(Material material, int target) {
-			super(material, target);
-		}
-
-		public EnumWorldBlockLayer getBlockLayer() {
-			return EnumWorldBlockLayer.CUTOUT_MIPPED;
-		}
-
-		public boolean isOpaqueCube() {
-			return false;
-		}
-
-		public boolean isFullCube() {
-			return false;
-		}
-
-		@SideOnly(Side.CLIENT)
-		public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
-			IBlockState iblockstate = worldIn.getBlockState(pos);
-			Block block = iblockstate.getBlock();
-
-			if (worldIn.getBlockState(pos.offset(side.getOpposite())) != iblockstate) {
-				return true;
-			}
-
-			if (block == this) {
-				return false;
-			}
-
-			return super.shouldSideBeRendered(worldIn, pos, side);
-		}
 	}
 
 }

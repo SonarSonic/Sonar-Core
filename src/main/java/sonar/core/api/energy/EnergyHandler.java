@@ -1,10 +1,10 @@
 package sonar.core.api.energy;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.SonarHandler;
 import sonar.core.api.utils.ActionType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 
 /** used for providing information on Block/TileEntity for the Info Reader to read, the Provider must be registered in the {@link SonarAPI} to be used */
 public abstract class EnergyHandler extends SonarHandler {

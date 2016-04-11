@@ -8,7 +8,6 @@ import net.minecraft.world.World;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncTagType;
-import sonar.core.network.utils.ISyncTile;
 
 /**
  * used for creating embedded handlers for blocks to allow easier alteration for

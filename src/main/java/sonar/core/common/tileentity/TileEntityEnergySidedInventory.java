@@ -8,11 +8,10 @@ import net.minecraft.util.EnumFacing;
 import sonar.core.api.SonarAPI;
 import sonar.core.energy.ChargingUtils;
 import sonar.core.energy.EnergyCharge;
-import sonar.core.helpers.SonarHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.helpers.SonarHelper;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncEnergyStorage;
-import sonar.core.utils.MachineSides;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 

@@ -6,11 +6,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import sonar.core.helpers.NBTHelper;
+import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.fmp.FMPHelper;
-import sonar.core.network.utils.ISyncTile;
-
 
 public class PacketTileSync extends PacketCoords<PacketTileSync> {
 
@@ -65,8 +63,8 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 				if (message.type != null) {
 					type = message.type;
 				}
-				if (te instanceof ISyncTile) {
-					ISyncTile sync = (ISyncTile) te;
+				if (te instanceof INBTSyncable) {
+					INBTSyncable sync = (INBTSyncable) te;
 					sync.readData(message.tag, type);
 				}
 			}

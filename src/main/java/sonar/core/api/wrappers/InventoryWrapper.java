@@ -8,8 +8,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import sonar.core.api.inventories.InventoryHandler;
-import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.inventories.InventoryHandler.StorageSize;
+import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.InventoryHelper.IInventoryFilter;
 

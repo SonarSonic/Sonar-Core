@@ -3,7 +3,6 @@ package sonar.core.common.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,21 +11,19 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
+import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.utils.BlockCoords;
-import sonar.core.common.block.SonarBlock;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.IWailaInfo;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.ISyncPart;
-import sonar.core.network.utils.ISyncTile;
 
-public class TileEntitySonar extends TileEntity implements ITickable, ISyncTile, IWailaInfo {
+public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncable, IWailaInfo {
 
 	protected boolean load, forceSync;
 	protected BlockCoords coords = BlockCoords.EMPTY;

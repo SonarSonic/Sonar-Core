@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import sonar.core.api.SonarAPI;
+import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.energy.DischargeValues;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.SonarLoader;
@@ -38,11 +39,10 @@ import sonar.core.network.PacketInvUpdate;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketSonarSides;
 import sonar.core.network.PacketStackUpdate;
-import sonar.core.network.PacketTextField;
+//import sonar.core.network.PacketTextField;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
-import sonar.core.network.utils.ISyncTile;
 import sonar.core.registries.EnergyProviderRegistry;
 import sonar.core.registries.EnergyTypeRegistry;
 import sonar.core.registries.FluidProviderRegistry;
@@ -148,7 +148,7 @@ public class SonarCore {
 			network.registerMessage(PacketTileSync.Handler.class, PacketTileSync.class, 0, Side.CLIENT);
 			network.registerMessage(PacketSonarSides.Handler.class, PacketSonarSides.class, 1, Side.CLIENT);
 			network.registerMessage(PacketRequestSync.Handler.class, PacketRequestSync.class, 2, Side.SERVER);
-			network.registerMessage(PacketTextField.Handler.class, PacketTextField.class, 3, Side.SERVER);
+			//network.registerMessage(PacketTextField.Handler.class, PacketTextField.class, 3, Side.SERVER);
 			network.registerMessage(PacketByteBufClient.Handler.class, PacketByteBufClient.class, 4, Side.CLIENT);
 			network.registerMessage(PacketByteBufServer.Handler.class, PacketByteBufServer.class, 5, Side.SERVER);
 			network.registerMessage(PacketBlockInteraction.Handler.class, PacketBlockInteraction.class, 6, Side.SERVER);
@@ -181,9 +181,9 @@ public class SonarCore {
 
 	public static void sendFullSyncAround(TileEntity tile, int spread) {
 		Object object = FMPHelper.checkObject(tile);
-		if (object != null && object instanceof ISyncTile) {
+		if (object != null && object instanceof INBTSyncable) {
 			NBTTagCompound tag = new NBTTagCompound();
-			((ISyncTile) object).writeData(tag, SyncType.SYNC_OVERRIDE);
+			((INBTSyncable) object).writeData(tag, SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendToAllAround(new PacketTileSync(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 			}

@@ -1,12 +1,12 @@
 package sonar.core.helpers;
 
-import sonar.core.integration.SonarLoader;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraftforge.oredict.OreDictionary;
+import sonar.core.integration.SonarLoader;
 
 public class ItemStackHelper {
 

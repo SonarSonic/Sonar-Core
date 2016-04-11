@@ -10,13 +10,13 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import sonar.core.SonarCore;
+import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.ISyncPart;
-import sonar.core.network.utils.ISyncTile;
 
 
-public abstract class SonarTilePart extends McMetaPart implements ISyncTile {
+public abstract class SonarTilePart extends McMetaPart implements INBTSyncable {
 
 	public Object rend;
 
@@ -95,8 +95,8 @@ public abstract class SonarTilePart extends McMetaPart implements ISyncTile {
 	@Override
 	public void invalidateConvertedTile() {
 		TileEntity tile = ((TileEntity) this.world().getTileEntity(x(), y(), z()));
-		if (tile instanceof ISyncTile) {
-			ISyncTile sync = (ISyncTile) tile;
+		if (tile instanceof INBTSyncable) {
+			INBTSyncable sync = (INBTSyncable) tile;
 			NBTTagCompound tag = new NBTTagCompound();
 			sync.writeData(tag, SyncType.SAVE);
 			this.readData(tag, SyncType.SAVE);

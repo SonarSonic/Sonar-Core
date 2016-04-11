@@ -1,11 +1,10 @@
 package sonar.core.api.inventories;
 
-import sonar.core.api.ISonarStack;
-import sonar.core.api.ISonarStack.StorageTypes;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import sonar.core.api.ISonarStack;
 
 
 public class StoredItemStack implements ISonarStack<StoredItemStack> {

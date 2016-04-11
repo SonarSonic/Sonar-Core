@@ -2,30 +2,15 @@ package sonar.core.client.gui;
 
 import java.awt.Rectangle;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
 
-import sonar.core.SonarCore;
 import sonar.core.client.gui.widgets.IWidget;
-import sonar.core.helpers.FontHelper;
-import sonar.core.network.PacketByteBufServer;
-import sonar.core.network.utils.IByteBufTile;
 
 public abstract class GuiSonarWidget extends GuiSonar {
 

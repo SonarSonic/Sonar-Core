@@ -1,9 +1,9 @@
 package sonar.core.integration.jei;
 
-import net.minecraft.util.StatCollector;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.util.StatCollector;
 
 public abstract class JEICategory extends BlankRecipeCategory implements IRecipeHandler<JEIRecipe> {
 

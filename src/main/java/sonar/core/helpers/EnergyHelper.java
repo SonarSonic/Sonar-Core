@@ -1,6 +1,5 @@
 package sonar.core.helpers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
@@ -9,8 +8,6 @@ import sonar.core.SonarCore;
 import sonar.core.api.energy.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.StoredEnergyStack;
-import sonar.core.api.inventories.InventoryHandler;
-import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.api.wrappers.EnergyWrapper;
 

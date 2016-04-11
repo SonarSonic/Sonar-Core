@@ -2,10 +2,6 @@ package sonar.core.common.block;
 
 import java.util.List;
 
-import sonar.core.common.block.properties.IItemVariant;
-import sonar.core.common.block.properties.IMetaRenderer;
-import sonar.core.common.block.properties.IMetaVariant;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -13,10 +9,10 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import sonar.core.common.block.properties.IMetaVariant;
 
 public class StableStone extends ConnectedBlock{
 	public static final PropertyEnum<Variants> VARIANT = PropertyEnum.<Variants> create("variant", Variants.class);

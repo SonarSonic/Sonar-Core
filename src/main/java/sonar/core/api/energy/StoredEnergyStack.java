@@ -1,11 +1,10 @@
 package sonar.core.api.energy;
 
-import sonar.core.api.ISonarStack;
-import sonar.core.api.SonarAPI;
-import sonar.core.api.ISonarStack.StorageTypes;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import sonar.core.api.ISonarStack;
+import sonar.core.api.SonarAPI;
 
 /** should only be in RF, inaccuracy due to conversion is a price we must pay at the moment */
 public class StoredEnergyStack implements ISonarStack<StoredEnergyStack> {

@@ -5,23 +5,23 @@ import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import sonar.core.SonarCore;
+import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.PacketTileSync;
-import sonar.core.network.utils.ISyncTile;
 
 public abstract class ContainerSync extends Container {
 
-	public ISyncTile sync;
+	public INBTSyncable sync;
 	public TileEntity tile;
 
-	public ContainerSync(ISyncTile sync, TileEntity tile) {
+	public ContainerSync(INBTSyncable sync, TileEntity tile) {
 		this.sync = sync;
 		this.tile = tile;
 	}
 
 	public ContainerSync(TileEntity tile) {
-		if (tile instanceof ISyncTile) {
-			sync = (ISyncTile) tile;
+		if (tile instanceof INBTSyncable) {
+			sync = (INBTSyncable) tile;
 		}
 		this.tile = tile;
 	}

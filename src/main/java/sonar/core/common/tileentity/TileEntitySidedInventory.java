@@ -4,9 +4,6 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import sonar.core.SonarCore;
-import sonar.core.network.PacketSonarSides;
 import sonar.core.utils.IMachineSides;
 import sonar.core.utils.MachineSideConfig;
 import sonar.core.utils.MachineSides;
@@ -32,13 +29,13 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
-		return sides.getSideConfig(direction.getOpposite()).isInput();
+	public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
+		return sides.getSideConfig(direction.getOpposite()).isInput() && inv.isItemValidForSlot(index, stack);
 	}
 
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
-		return sides.getSideConfig(direction.getOpposite()).isOutput();
+		return sides.getSideConfig(direction.getOpposite()).isOutput() && inv.isItemValidForSlot(index, stack);
 	}
 
 	@Override

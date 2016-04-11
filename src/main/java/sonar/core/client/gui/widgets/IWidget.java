@@ -1,9 +1,7 @@
 package sonar.core.client.gui.widgets;
 
 import java.awt.Rectangle;
-import java.io.IOException;
 
-import sonar.core.client.gui.GuiSonar;
 import sonar.core.client.gui.GuiSonarWidget;
 import sonar.core.client.gui.GuiSonarWidget.WidgetPos;
 

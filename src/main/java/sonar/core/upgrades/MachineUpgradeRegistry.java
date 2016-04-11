@@ -1,6 +1,5 @@
 package sonar.core.upgrades;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import sonar.core.helpers.LinkedRegistryHelper;
 

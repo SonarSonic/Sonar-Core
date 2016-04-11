@@ -30,6 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
 import sonar.core.api.blocks.IInteractBlock;
 import sonar.core.api.blocks.IWrenchable;
+import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.utils.BlockInteraction;
 import sonar.core.api.utils.BlockInteractionType;
 import sonar.core.common.tileentity.TileEntitySonar;
@@ -38,7 +39,6 @@ import sonar.core.helpers.SonarHelper;
 import sonar.core.inventory.IAdditionalInventory;
 import sonar.core.inventory.IDropInventory;
 import sonar.core.network.PacketBlockInteraction;
-import sonar.core.network.utils.ISyncTile;
 
 import com.google.common.collect.Lists;
 
@@ -128,9 +128,9 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 	public final ItemStack getSpecialDrop(IBlockAccess world, BlockPos pos) {
 		TileEntity target = world.getTileEntity(pos);
-		if (target != null && target instanceof ISyncTile) {
+		if (target != null && target instanceof INBTSyncable) {
 			ItemStack itemStack = new ItemStack(this, 1);
-			processDrop(world, pos, (ISyncTile) target, itemStack);
+			processDrop(world, pos, (INBTSyncable) target, itemStack);
 			return itemStack;
 		} else {
 			ItemStack itemStack = new ItemStack(this, 1);
@@ -139,9 +139,9 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 		}
 	}
 
-	public void processDrop(IBlockAccess world, BlockPos pos, ISyncTile te, ItemStack drop) {
+	public void processDrop(IBlockAccess world, BlockPos pos, INBTSyncable te, ItemStack drop) {
 		if (te != null) {
-			ISyncTile handler = (ISyncTile) te;
+			INBTSyncable handler = (INBTSyncable) te;
 			NBTTagCompound tag = new NBTTagCompound();
 			handler.writeData(tag, SyncType.DROP);
 			if (!tag.hasNoTags()) {
@@ -195,8 +195,8 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 		if (itemstack.hasTagCompound()) {
 			TileEntity entity = world.getTileEntity(pos);
-			if (entity != null && entity instanceof ISyncTile) {
-				ISyncTile handler = (ISyncTile) entity;
+			if (entity != null && entity instanceof INBTSyncable) {
+				INBTSyncable handler = (INBTSyncable) entity;
 				handler.readData(itemstack.getTagCompound(), SyncType.DROP);
 			}
 		}

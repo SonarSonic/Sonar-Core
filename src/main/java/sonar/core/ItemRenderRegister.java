@@ -1,14 +1,5 @@
 package sonar.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ModelLoader;
-import sonar.core.common.block.properties.IMetaRenderer;
 
 public class ItemRenderRegister {
 	public static void register() {

@@ -2,19 +2,16 @@ package sonar.core.common.tileentity;
 
 import java.util.List;
 
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.MinecraftForge;
 import sonar.core.api.SonarAPI;
-import sonar.core.helpers.SonarHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.integration.SonarLoader;
+import sonar.core.helpers.SonarHelper;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncEnergyStorage;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 
 public class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver, IEnergyProvider {
 

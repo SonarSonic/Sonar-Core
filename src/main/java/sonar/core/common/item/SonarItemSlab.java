@@ -1,9 +1,7 @@
 package sonar.core.common.item;
 
-import sonar.core.common.block.SonarSlab;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -13,6 +11,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import sonar.core.common.block.SonarSlab;
 
 public class SonarItemSlab extends ItemBlock {
 	private final SonarSlab singleSlab;

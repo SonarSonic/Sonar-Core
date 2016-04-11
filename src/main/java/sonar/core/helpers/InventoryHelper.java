@@ -11,8 +11,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import sonar.core.SonarCore;
 import sonar.core.api.inventories.InventoryHandler;
-import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.inventories.InventoryHandler.StorageSize;
+import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.api.wrappers.InventoryWrapper;
 

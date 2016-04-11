@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.inventory.SonarTileInventory;
+import sonar.core.inventory.SonarInventory;
 
 public abstract class InventoryTileHandler extends TileHandler implements IInventory {
 
@@ -16,9 +16,9 @@ public abstract class InventoryTileHandler extends TileHandler implements IInven
 		super(isMultipart, tile);
 	}
 
-	public SonarTileInventory inv;
+	public SonarInventory inv;
 
-	public SonarTileInventory getTileInv() {
+	public SonarInventory getTileInv() {
 		return inv;
 	}
 
