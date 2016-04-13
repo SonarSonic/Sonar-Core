@@ -107,7 +107,7 @@ public abstract class RecipeHelper {
 			}
 			addFinal(stack);
 		} catch (Exception exception) {
-			SonarCore.logger.error("RecipeHelper : Exception Loading Recipe : " + exception.getLocalizedMessage());
+			SonarCore.logger.error("RecipeHelper : Exception Loading Recipe", exception);
 		}
 	}
 
