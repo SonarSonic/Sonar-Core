@@ -8,14 +8,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SonarMetaItem extends SonarItem  {
-	
-	public int numSubItems=1;
-	
-	public SonarMetaItem(int numSubItems){
-		this.numSubItems=numSubItems;
+public class SonarMetaItem extends SonarItem {
+
+	public int numSubItems = 1;
+
+	public SonarMetaItem(int numSubItems) {
+		this.numSubItems = numSubItems;
+		this.hasSubtypes = true;
 	}
-	
+
+	public int getMaxDamage() {
+		return 0;
+	}
+
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
 		for (int i = 0; i < numSubItems; i++) {

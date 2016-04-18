@@ -131,8 +131,8 @@ public class SonarCore {
 	public void postInit(FMLPostInitializationEvent event) {
 		logger.info("Adding Discharge Values");
 		DischargeValues.addValues();
-		logger.info("Added" + DischargeValues.getPowerList().size() + "Discharge Values");
-		for (Map.Entry<ItemStack, Integer> entry : DischargeValues.getPowerList().entrySet()) {
+		logger.info("Added" + DischargeValues.dischargeList.size() + "Discharge Values");
+		for (Map.Entry<ItemStack, Integer> entry : DischargeValues.dischargeList.entrySet()) {
 			logger.info("Discharge Values: " + entry.toString());
 		}
 		logger.info("Registered " + energyTypes.getObjects().size() + " Energy Types");

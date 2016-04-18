@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public abstract class ValueHelper {
+public abstract class ValueHelper implements IRecipeHelper {
 
 	protected Map<Object, Integer> recipeList = new HashMap();
 
@@ -22,7 +22,7 @@ public abstract class ValueHelper {
 	}
 
 	/** get the full list of recipes */
-	public Map getRecipes() {
+	public Map<Object, Integer> getRecipes() {
 		return this.recipeList;
 	}
 

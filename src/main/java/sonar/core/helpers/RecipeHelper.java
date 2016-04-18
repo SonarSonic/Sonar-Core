@@ -13,7 +13,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.SonarCore;
 
 /** Recipe Template allows gigantic recipes with full Ore Dict compatibility */
-public abstract class RecipeHelper {
+public abstract class RecipeHelper implements IRecipeHelper {
 
 	public int outputSize, inputSize;
 	public boolean shapeless;

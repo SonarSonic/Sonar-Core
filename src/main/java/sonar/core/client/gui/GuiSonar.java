@@ -95,7 +95,7 @@ public abstract class GuiSonar extends GuiContainer {
 			this.id = id;
 		}
 
-		public void func_146111_b(int x, int y) {
+		public void drawButtonForegroundLayer(int x, int y) {
 			if (paused) {
 				drawCreativeTabHoveringText(FontHelper.translate("buttons.resume"), x, y);
 			} else {
@@ -121,7 +121,7 @@ public abstract class GuiSonar extends GuiContainer {
 			this.id = id;
 		}
 
-		public void func_146111_b(int x, int y) {
+		public void drawButtonForegroundLayer(int x, int y) {
 			drawCreativeTabHoveringText(FontHelper.translate("buttons.circuits"), x, y);
 		}
 

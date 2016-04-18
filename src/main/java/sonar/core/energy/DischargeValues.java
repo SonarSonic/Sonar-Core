@@ -7,9 +7,10 @@ import java.util.Map;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import sonar.core.helpers.IRecipeHelper;
 import sonar.core.helpers.ItemStackHelper;
 
-public class DischargeValues {
+public class DischargeValues implements IRecipeHelper {
 
 	public static Map<ItemStack, Integer> dischargeList = new HashMap<ItemStack, Integer>();
 
@@ -45,8 +46,14 @@ public class DischargeValues {
 
 		return (Integer) entry.getValue();
 	}
+	
+	@Override
+	public String getRecipeID() {
+		return "Discharge";
+	}
 
-	public static Map<ItemStack, Integer> getPowerList() {
+	@Override
+	public Map<ItemStack, Integer> getRecipes() {
 		return dischargeList;
 	}
 
