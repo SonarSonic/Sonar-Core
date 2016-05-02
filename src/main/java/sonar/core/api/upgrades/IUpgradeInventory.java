@@ -4,9 +4,10 @@ import gnu.trove.map.hash.THashMap;
 
 import java.util.ArrayList;
 
+import sonar.core.api.nbt.INBTSyncable;
 import net.minecraft.item.ItemStack;
 
-public interface IUpgradeInventory {
+public interface IUpgradeInventory extends INBTSyncable {
 
 	public boolean addUpgrade(ItemStack stack);
 

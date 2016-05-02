@@ -15,8 +15,7 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 	public NBTTagCompound tag;
 	public SyncType type;
 
-	public PacketTileSync() {
-	}
+	public PacketTileSync() {}
 
 	public PacketTileSync(BlockPos pos, NBTTagCompound tag) {
 		super(pos);

@@ -17,8 +17,28 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.SonarCore;
 import sonar.core.api.nbt.IBufObject;
 import sonar.core.api.nbt.INBTObject;
+import sonar.core.network.sync.ISyncPart;
+import sonar.core.network.sync.SyncPart;
 
 public class NBTHelper {
+
+	public static void readSyncParts(NBTTagCompound nbt, SyncType type, ArrayList<ISyncPart> parts) {
+		for (ISyncPart part : parts) {
+			if (part != null && part.canSync(type)) {
+				part.readFromNBT(nbt, type);
+				part.setChanged(false);
+			}
+		}
+	}
+	
+	public static void writeSyncParts(NBTTagCompound nbt, SyncType type, Iterable<ISyncPart> parts, boolean forceSync) {
+		for (ISyncPart part : parts) {
+			if (part != null && (forceSync || type.mustSync() || part.hasChanged()) && part.canSync(type)) {
+				part.writeToNBT(nbt, type);
+				part.setChanged(false);
+			}
+		}
+	}
 
 	public static void readSyncedNBTObjectList(String tagName, NBTTagCompound tag, NBTRegistryHelper<? extends INBTObject> helper, List objectList) {
 		if (tag.hasKey(tagName + "null")) {
@@ -189,7 +209,7 @@ public class NBTHelper {
 		}
 	}
 
-	/*public static void writeEnergyStorage(EnergyStorage storage, NBTTagCompound nbt) { NBTTagCompound energyTag = new NBTTagCompound(); storage.writeToNBT(energyTag); nbt.setTag("energyStorage", energyTag); }
+	/* public static void writeEnergyStorage(EnergyStorage storage, NBTTagCompound nbt) { NBTTagCompound energyTag = new NBTTagCompound(); storage.writeToNBT(energyTag); nbt.setTag("energyStorage", energyTag); }
 	 * 
 	 * public static void readEnergyStorage(EnergyStorage storage, NBTTagCompound nbt) { if (nbt.hasKey("energyStorage")) { storage.readFromNBT(nbt.getCompoundTag("energyStorage")); } } */
 	public static void writeFluidToBuf(FluidStack stack, ByteBuf buf) {
@@ -228,16 +248,17 @@ public class NBTHelper {
 
 	public static enum SyncType {
 		SAVE(0), DROP(2), SPECIAL(3), PACKET(4), DEFAULT_SYNC(1), SYNC_OVERRIDE(1);
-		
+
 		private int type;
-		SyncType(int type){
-			this.type=type;
+
+		SyncType(int type) {
+			this.type = type;
 		}
-		
-		public boolean mustSync(){
+
+		public boolean mustSync() {
 			return this == SYNC_OVERRIDE || this == SAVE;
-		}		
-		
+		}
+
 		public boolean isType(SyncType... types) {
 			for (SyncType type : types) {
 				if (type.type == this.type) {

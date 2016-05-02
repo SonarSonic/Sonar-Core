@@ -53,6 +53,7 @@ public abstract class SyncTagType<T> extends SyncPart {
 			this.current = 0;
 			this.last = 0;
 		}
+
 		public void increaseBy(int i) {
 			setObject((short) (getObject() + i));
 			this.setChanged(true);
@@ -232,7 +233,7 @@ public abstract class SyncTagType<T> extends SyncPart {
 		if (nbt.hasKey(getTagName()))
 			current = (T) NBTHelper.readNBTBase(nbt, nbtType, getTagName());
 	}
-	
+
 	public SyncTagType<T> setDefault(T def) {
 		current = def;
 		last = def;
@@ -244,12 +245,14 @@ public abstract class SyncTagType<T> extends SyncPart {
 	}
 
 	public void setObject(T object) {
-		current = object;
-		this.setChanged(true);
-	}	
+		if (current != object) {
+			current = object;
+			setChanged(true);
+		}
+	}
 
-	public String toString(){
+	public String toString() {
 		return current.toString();
 	}
-	
+
 }

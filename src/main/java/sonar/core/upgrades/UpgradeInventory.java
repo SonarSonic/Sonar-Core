@@ -13,7 +13,7 @@ import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.upgrades.IUpgradeInventory;
 import sonar.core.helpers.NBTHelper.SyncType;
 
-public class UpgradeInventory implements INBTSyncable, IUpgradeInventory {
+public class UpgradeInventory implements IUpgradeInventory {
 
 	public ArrayList<String> allowed = new ArrayList();
 	public THashMap<String, Integer> upgrades = new THashMap<String, Integer>();

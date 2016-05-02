@@ -1,8 +1,10 @@
 package sonar.core.helpers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -13,7 +15,9 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import sonar.core.api.utils.BlockCoords;
 import sonar.core.integration.SonarLoader;
+import sonar.core.integration.fmp.FMPHelper;
 
 /** helps with getting tiles, adding energy and checking stacks */
 public class SonarHelper {
@@ -21,34 +25,20 @@ public class SonarHelper {
 	/** @param tile Tile Entity you're checking from
 	 * @param side side to find IEnergyHandler
 	 * @return if there is an adjacent Energy Hander */
-	/*
-	public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, int side) {
-		TileEntity handler = getAdjacentTileEntity(tile, EnumFacing.getFront(side));
-		return isEnergyHandlerFromSide(handler, EnumFacing.VALUES[side ^ 1]);
-	}
-
-	/*
-	public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, EnumFacing side) {
-		TileEntity handler = getAdjacentTileEntity(tile, side);
-		return isEnergyHandlerFromSide(handler, side.getOpposite());
-	}
-
-	/** @param tile Tile Entity you want to check
+	/* public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, int side) { TileEntity handler = getAdjacentTileEntity(tile, EnumFacing.getFront(side)); return isEnergyHandlerFromSide(handler, EnumFacing.VALUES[side ^ 1]); }
+	 * 
+	 * /* public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, EnumFacing side) { TileEntity handler = getAdjacentTileEntity(tile, side); return isEnergyHandlerFromSide(handler, side.getOpposite()); }
+	 * 
+	 * /** @param tile Tile Entity you want to check
+	 * 
 	 * @param from direction your adding from
+	 * 
 	 * @return if Handler can connect */
-	/*
-	public static boolean isEnergyHandlerFromSide(TileEntity tile, EnumFacing from) {
-		if (tile instanceof IEnergyProvider || tile instanceof IEnergyReceiver) {
-			IEnergyConnection handler = (IEnergyConnection) tile;
-			return handler.canConnectEnergy(from);
-		}
-		return false;
-	}
-	*/
+	/* public static boolean isEnergyHandlerFromSide(TileEntity tile, EnumFacing from) { if (tile instanceof IEnergyProvider || tile instanceof IEnergyReceiver) { IEnergyConnection handler = (IEnergyConnection) tile; return handler.canConnectEnergy(from); } return false; } */
 	/** @param tile Tile Entity you're checking from
 	 * @param side direction from Tile Entity your checking from
 	 * @return adjacent Tile Entity */
-	
+
 	public static TileEntity getAdjacentTileEntity(TileEntity tile, EnumFacing side) {
 		return tile.getWorld().getTileEntity(tile.getPos().offset(side));
 	}
@@ -56,46 +46,31 @@ public class SonarHelper {
 	public static Block getAdjacentBlock(World world, BlockPos pos, EnumFacing side) {
 		return world.getBlockState(pos.offset(side)).getBlock();
 	}
-	/*
-	/** @param tile Tile Entity you are checking
-	 * @return if the Tile is an Energy Handler */
-	/*
-	public static boolean isEnergyHandler(TileEntity tile) {
-		if (tile instanceof IEnergyHandler) {
-			return true;
-		}
-		return false;
-	}
-	/** Add energy to an IEnergyReciever, internal distribution is left entirely to the IEnergyReciever.
-	 * @param from Orientation the energy is received from.
-	 * @param maxReceive Maximum amount of energy to receive.
-	 * @param simulate If TRUE, the charge will only be simulated.
-	 * @return Amount of energy that was (or would have been, if simulated) received. */
-	/*
-	public static int pushEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) {
-		if (tile instanceof IEnergyReceiver) {
-			IEnergyReceiver handler = (IEnergyReceiver) tile;
-			return handler.receiveEnergy(dir, amount, simulate);
-		}
-		return 0;
 
-	}
-	*/
+	/* /** @param tile Tile Entity you are checking
+	 * 
+	 * @return if the Tile is an Energy Handler */
+	/* public static boolean isEnergyHandler(TileEntity tile) { if (tile instanceof IEnergyHandler) { return true; } return false; } /** Add energy to an IEnergyReciever, internal distribution is left entirely to the IEnergyReciever.
+	 * 
+	 * @param from Orientation the energy is received from.
+	 * 
+	 * @param maxReceive Maximum amount of energy to receive.
+	 * 
+	 * @param simulate If TRUE, the charge will only be simulated.
+	 * 
+	 * @return Amount of energy that was (or would have been, if simulated) received. */
+	/* public static int pushEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyReceiver) { IEnergyReceiver handler = (IEnergyReceiver) tile; return handler.receiveEnergy(dir, amount, simulate); } return 0;
+	 * 
+	 * } */
 	/** Remove energy from an IEnergyProvider, internal distribution is left entirely to the IEnergyProvider.
+	 * 
 	 * @param from Orientation the energy is extracted from.
 	 * @param maxExtract Maximum amount of energy to extract.
 	 * @param simulate If TRUE, the extraction will only be simulated.
 	 * @return Amount of energy that was (or would have been, if simulated) extracted. */
-	/*
-	public static int pullEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) {
-		if (tile instanceof IEnergyProvider) {
-			IEnergyProvider handler = (IEnergyProvider) tile;
-			return handler.extractEnergy(dir, amount, simulate);
-		}
-		return 0;
-
-	}
-	*/
+	/* public static int pullEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyProvider) { IEnergyProvider handler = (IEnergyProvider) tile; return handler.extractEnergy(dir, amount, simulate); } return 0;
+	 * 
+	 * } */
 	/** checks if a tile implements IWrench and IDropTile and drops it accordingly */
 	public static void dropTile(EntityPlayer player, Block block, World world, BlockPos pos) {
 		TileEntity te = world.getTileEntity(pos);
@@ -228,5 +203,32 @@ public class SonarHelper {
 		}
 		return null;
 
+	}
+
+	public static ArrayList<BlockCoords> getConnectedBlocks(Block block, List<EnumFacing> dirs, World w, BlockPos pos, int max) {
+		ArrayList<BlockCoords> handlers = new ArrayList();
+		addCoords(block, w, pos, max, handlers, dirs);
+		return handlers;
+	}
+
+	public static void addCoords(Block block, World w, BlockPos pos, int max, ArrayList<BlockCoords> handlers, List<EnumFacing> dirs) {
+		for (EnumFacing side : dirs) {
+			if (handlers.size() > max) {
+				return;
+			}
+			BlockPos current = pos.offset(side);
+			IBlockState state = w.getBlockState(current);
+			if (state == null) {
+				continue;
+			}
+			Block tile = w.getBlockState(current).getBlock();
+			if (tile == block) {
+				BlockCoords coords = new BlockCoords(current);
+				if (!handlers.contains(coords)) {
+					handlers.add(coords);
+					addCoords(block, w, current, max, handlers, dirs);
+				}
+			}
+		}
 	}
 }

@@ -25,17 +25,17 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 
 	@Override
 	public int[] getSlotsForFace(EnumFacing side) {
-		return sides.getSideConfig(side.getOpposite()).isInput() ? input : output;
+		return sides.getSideConfig(side).isInput() ? input : output;
 	}
 
 	@Override
 	public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
-		return sides.getSideConfig(direction.getOpposite()).isInput() && inv.isItemValidForSlot(index, stack);
+		return sides.getSideConfig(direction).isInput() && inv.isItemValidForSlot(index, stack);
 	}
 
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
-		return sides.getSideConfig(direction.getOpposite()).isOutput() && inv.isItemValidForSlot(index, stack);
+		return sides.getSideConfig(direction).isOutput() && inv.isItemValidForSlot(index, stack);
 	}
 
 	@Override

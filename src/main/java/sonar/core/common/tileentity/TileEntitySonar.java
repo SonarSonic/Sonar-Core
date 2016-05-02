@@ -17,6 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.utils.BlockCoords;
+import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.IWailaInfo;
 import sonar.core.network.PacketRequestSync;
@@ -25,9 +26,16 @@ import sonar.core.network.sync.ISyncPart;
 
 public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncable, IWailaInfo {
 
+	protected final ArrayList<ISyncPart> parts;
 	protected boolean load, forceSync;
 	protected BlockCoords coords = BlockCoords.EMPTY;
 
+	public TileEntitySonar(){
+		ArrayList<ISyncPart> parts = new ArrayList();
+		this.addSyncParts(parts);
+		this.parts=parts;
+	}
+	
 	public boolean isClient() {
 		return worldObj.isRemote;
 	}
@@ -36,9 +44,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 		return !worldObj.isRemote;
 	}
 
-	public void onLoaded() {
-
-	}
+	public void onLoaded() {}
 
 	public void update() {
 		if (load) {
@@ -87,14 +93,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	}
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		List<ISyncPart> parts = new ArrayList();
-		this.addSyncParts(parts);
-		for (ISyncPart part : parts) {
-			if (part != null && part.canSync(type)) {
-				part.readFromNBT(nbt, type);
-				part.setChanged(false);
-			}
-		}
+		NBTHelper.readSyncParts(nbt, type, parts);
 	}
 
 	public void writeData(NBTTagCompound nbt, SyncType type) {
@@ -102,14 +101,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 			type = SyncType.SYNC_OVERRIDE;
 			forceSync = false;
 		}
-		List<ISyncPart> parts = new ArrayList();
-		this.addSyncParts(parts);
-		for (ISyncPart part : parts) {
-			if (part != null && (forceSync || type.mustSync() || part.hasChanged()) && part.canSync(type)) {
-				part.writeToNBT(nbt, type);
-				part.setChanged(false);
-			}
-		}
+		NBTHelper.writeSyncParts(nbt, type, parts, forceSync);
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -8,17 +8,18 @@ public abstract class PacketCoords<T extends PacketCoords> implements IMessage {
 
 	public BlockPos pos;
 
-	public PacketCoords() {}
+	public PacketCoords() {
+	}
 
 	public PacketCoords(BlockPos pos) {
 		this.pos = pos;
 	}
 
 	public void fromBytes(ByteBuf buf) {
-		pos = new BlockPos(buf.readInt(),buf.readInt(),buf.readInt());
+		pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
 	}
 
-	public void toBytes(ByteBuf buf) {		
+	public void toBytes(ByteBuf buf) {
 		buf.writeInt(pos.getX());
 		buf.writeInt(pos.getY());
 		buf.writeInt(pos.getZ());
