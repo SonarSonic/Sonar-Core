@@ -1,5 +1,5 @@
 package sonar.core.integration.fmp;
-
+/*
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -129,3 +129,4 @@ public abstract class SonarTilePart extends McMetaPart implements INBTSyncable {
 
 	}
 }
+*/

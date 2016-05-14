@@ -2,9 +2,9 @@
     "forge_marker": 1,
     "defaults": {
         "textures": {            
-	        "bottom":"sonarcore:blocks/ReinforcedStoneBrick",
-	        "top":"sonarcore:blocks/ReinforcedStoneBrick",
-	        "side":"sonarcore:blocks/ReinforcedStoneBrick"
+	        "bottom":"sonarcore:blocks/reinforcedstonebrick",
+	        "top":"sonarcore:blocks/reinforcedstonebrick",
+	        "side":"sonarcore:blocks/reinforcedstonebrick"
         },
         "model":"half_slab",
         "transform":"forge:default-block"

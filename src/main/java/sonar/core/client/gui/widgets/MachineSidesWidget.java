@@ -3,6 +3,7 @@ package sonar.core.client.gui.widgets;
 import net.minecraft.util.ResourceLocation;
 import sonar.core.utils.MachineSides;
 
+/**WIP, may never be finished*/
 public class MachineSidesWidget extends SonarWidget {
 
 	public final MachineSides sides;

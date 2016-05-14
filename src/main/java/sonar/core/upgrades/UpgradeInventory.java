@@ -9,7 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.SonarCore;
-import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.upgrades.IUpgradeInventory;
 import sonar.core.helpers.NBTHelper.SyncType;
 

@@ -1,6 +1,8 @@
 package sonar.core.common.block.properties;
 
-public interface IItemRenderer<T extends IItemVariant>  {
+import net.minecraft.util.IStringSerializable;
+
+public interface IItemRenderer  {
 	
-	public T[] getVariants();	
+	public IStringSerializable[] getVariants();	
 }

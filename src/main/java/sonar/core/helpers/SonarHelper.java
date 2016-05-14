@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.integration.SonarLoader;
-import sonar.core.integration.fmp.FMPHelper;
 
 /** helps with getting tiles, adding energy and checking stacks */
 public class SonarHelper {

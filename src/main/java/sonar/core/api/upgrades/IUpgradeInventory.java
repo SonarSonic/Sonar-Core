@@ -4,8 +4,8 @@ import gnu.trove.map.hash.THashMap;
 
 import java.util.ArrayList;
 
-import sonar.core.api.nbt.INBTSyncable;
 import net.minecraft.item.ItemStack;
+import sonar.core.api.nbt.INBTSyncable;
 
 public interface IUpgradeInventory extends INBTSyncable {
 

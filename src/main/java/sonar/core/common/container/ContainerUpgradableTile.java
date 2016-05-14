@@ -1,10 +1,7 @@
 package sonar.core.common.container;
 
-import com.jaquadro.minecraft.storagedrawers.inventory.InventoryUpgrade;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.upgrades.IUpgradableTile;
 import sonar.core.api.upgrades.IUpgradeInventory;
 import sonar.core.inventory.ContainerSync;

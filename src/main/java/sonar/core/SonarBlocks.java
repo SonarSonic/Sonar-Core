@@ -71,13 +71,14 @@ public class SonarBlocks extends SonarCore {
 		reinforcedDirtBrickGate = registerBlock("ReinforcedDirtBrickGate", new SonarGate(reinforcedDirtBrick));
 		reinforcedDirtBrickSlab_double = new SonarSlab.Double(reinforcedDirtBrick).setUnlocalizedName("ReinforcedDirtBrickSlab");
 		reinforcedDirtBrickSlab_half = registerBlock("ReinforcedDirtBrickSlab", new SonarSlab.Half(reinforcedDirtBrick));
-
+		
+		/*
 		toughenedStoneBlock = registerBlock("ToughenedStoneBlock", new BlockBase(Material.rock, 2.0f, 10.0f));
 		toughenedStoneBrick = registerBlock("ToughenedStoneBrick", new BlockBase(Material.rock, 2.0f, 10.0f));
 
 		toughenedDirtBlock = registerBlock("ToughenedDirtBlock", new BlockBase(Material.ground, 1.0f, 4.0f));
 		toughenedDirtBrick = registerBlock("ToughenedDirtBrick", new BlockBase(Material.ground, 1.0f, 4.0f));
-
+		 */
 		int pos = 0;
 		for (Variants variant : Variants.values()) {
 			Block normal = registerBlock("StableStone" + "_" + variant.name(), new StableStone(Material.rock, 100 + pos));

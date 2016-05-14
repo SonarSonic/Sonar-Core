@@ -1,6 +1,8 @@
 package sonar.core.common.block.properties;
 
-public interface IMetaVariant extends IItemVariant{
+import net.minecraft.util.IStringSerializable;
+
+public interface IMetaVariant extends IStringSerializable{
 
 	public int getMeta();
 	

@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import sonar.core.client.gui.GuiSonarWidget;
 import sonar.core.client.gui.GuiSonarWidget.WidgetPos;
 
+/**WIP, may never be finished*/
 public interface IWidget {
 
 	public void setGui(GuiSonarWidget gui);

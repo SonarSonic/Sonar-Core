@@ -8,6 +8,9 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class SonarCrafting extends SonarCore {
 
 	public static void registerCraftingRecipes() {		
+		addShapeless(new ItemStack(SonarCore.reinforcedStoneBrick, 2), new Object[]{SonarCore.reinforcedStoneBlock, SonarCore.reinforcedStoneBlock});
+		addShapeless(new ItemStack(SonarCore.stableStone, 2), new Object[]{SonarCore.reinforcedStoneBrick, SonarCore.reinforcedStoneBrick});
+		
 		addShapeless(new ItemStack(SonarCore.stableGlass, 1), new Object[] { SonarCore.clearStableGlass });
 		addShapeless(new ItemStack(SonarCore.clearStableGlass, 1), new Object[] { SonarCore.stableGlass });				
 		addShaped(new ItemStack(SonarCore.reinforcedStoneStairs, 4), new Object[] { "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedStoneBlock });

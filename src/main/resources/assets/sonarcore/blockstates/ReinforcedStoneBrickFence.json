@@ -1,7 +1,7 @@
 {
     "forge_marker": 1,
     "defaults": {
-        "textures": {"texture":"sonarcore:blocks/ReinforcedStoneBrick"},
+        "textures": {"texture":"sonarcore:blocks/reinforcedstonebrick"},
         "model":"fence_inventory",
         "transform":"forge:default-block", 
         "uvlock": true

@@ -18,7 +18,6 @@ import sonar.core.SonarCore;
 import sonar.core.api.nbt.IBufObject;
 import sonar.core.api.nbt.INBTObject;
 import sonar.core.network.sync.ISyncPart;
-import sonar.core.network.sync.SyncPart;
 
 public class NBTHelper {
 

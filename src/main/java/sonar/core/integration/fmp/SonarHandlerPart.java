@@ -1,5 +1,5 @@
 package sonar.core.integration.fmp;
-
+/*
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -48,3 +48,4 @@ public abstract class SonarHandlerPart extends SonarTilePart implements IWailaIn
 	}
 
 }
+*/

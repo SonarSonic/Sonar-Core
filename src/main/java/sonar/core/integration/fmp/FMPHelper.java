@@ -1,12 +1,11 @@
 package sonar.core.integration.fmp;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import sonar.core.api.utils.BlockCoords;
-import sonar.core.integration.SonarLoader;
 import sonar.core.integration.fmp.handlers.TileHandler;
-
 
 public class FMPHelper {
 
@@ -20,12 +19,15 @@ public class FMPHelper {
 	}
 
 	public static int getMeta(TileEntity tile) {
+		/*
 		Object part = FMPHelper.checkObject(tile);
 		if (SonarLoader.forgeMultipartLoaded() && part instanceof McMetaPart) {
 			return ((McMetaPart) part).meta;
 		} else {
-			return tile.getBlockMetadata();
 		}
+		*/
+			return tile.getBlockMetadata();
+		
 	}
 
 	public static TileHandler getHandler(Object te) {
@@ -36,8 +38,8 @@ public class FMPHelper {
 		return null;
 	}
 
-	public static Object getTile(World world, int x, int y, int z) {
-		return world != null ? checkObject(world.getTileEntity(x, y, z)) : null;
+	public static Object getTile(World world, BlockPos pos) {
+		return world != null ? checkObject(world.getTileEntity(pos)) : null;
 	}
 
 	public static Object getTile(Object tile) {

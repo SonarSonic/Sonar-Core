@@ -1,5 +1,5 @@
 package sonar.core.integration.fmp;
-
+/*
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 
@@ -28,3 +28,4 @@ public abstract class ContainerSyncFMP extends Container {
 		}
 	}
 }
+*/

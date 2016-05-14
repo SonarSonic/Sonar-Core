@@ -3,9 +3,9 @@
     "defaults": {
         "model":"stairs",
         "textures": {
-            "bottom":"sonarcore:blocks/ReinforcedStoneBrick",
-            "top":"sonarcore:blocks/ReinforcedStoneBrick",        
-            "side":"sonarcore:blocks/ReinforcedStoneBrick"
+            "bottom":"sonarcore:blocks/reinforcedstonebrick",
+            "top":"sonarcore:blocks/reinforcedstonebrick",        
+            "side":"sonarcore:blocks/reinforcedstonebrick"
         },
         "transform":"forge:default-block",
         "uvlock": true

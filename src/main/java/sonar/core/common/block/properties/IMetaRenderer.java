@@ -1,6 +1,6 @@
 package sonar.core.common.block.properties;
 
-public interface IMetaRenderer<T extends IMetaVariant> extends IItemRenderer<T> {
+public interface IMetaRenderer extends IItemRenderer {
 
-	public T getVariant(int metadata);	
+	public IMetaVariant getVariant(int metadata);	
 }

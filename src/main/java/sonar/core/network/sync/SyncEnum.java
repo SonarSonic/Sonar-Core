@@ -2,8 +2,6 @@ package sonar.core.network.sync;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.Constants.NBT;
-import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 
 public class SyncEnum<E extends Enum> extends SyncPart {

@@ -1,7 +1,7 @@
 {
     "forge_marker": 1,
     "defaults": {
-        "textures": {"all":"sonarcore:blocks/ReinforcedStoneBrick"},
+        "textures": {"all":"sonarcore:blocks/reinforcedstonebrick"},
         "model":"cube_all",
         "transform":"forge:default-block"
      },
