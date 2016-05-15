@@ -100,7 +100,7 @@ public class InventoryHelper extends InventoryWrapper {
 	}
 
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, ForgeDirection dir, ActionType type, IInventoryFilter filter) {
-		if(stack==null){
+		if (stack == null || stack.item == null || stack.item.getItem() == null) {
 			return stack;
 		}
 		if (tile != null && (filter == null || filter.allowed(stack.getFullStack()))) {
@@ -117,7 +117,7 @@ public class InventoryHelper extends InventoryWrapper {
 	}
 
 	public StoredItemStack removeItems(TileEntity tile, StoredItemStack stack, ForgeDirection dir, ActionType type, IInventoryFilter filter) {
-		if(stack==null){
+		if (stack == null || stack.item == null || stack.item.getItem() == null) {
 			return stack;
 		}
 		if (tile != null && (filter == null || filter.allowed(stack.getFullStack()))) {
@@ -145,10 +145,10 @@ public class InventoryHelper extends InventoryWrapper {
 			}
 			for (StoredItemStack stack : stacks) {
 				StoredItemStack removed = removeItems(from, stack.copy(), dirFrom, ActionType.SIMULATE, filter);
-				if (removed != null) {					
+				if (removed != null) {
 					StoredItemStack add = addItems(to, removed.copy(), dirTo, ActionType.SIMULATE, filter);
 					if (add != null) {
-						removeItems(from, add.copy(), dirFrom, ActionType.PERFORM, filter);						
+						removeItems(from, add.copy(), dirFrom, ActionType.PERFORM, filter);
 						addItems(to, removed.copy(), dirTo, ActionType.PERFORM, filter);
 					}
 				}

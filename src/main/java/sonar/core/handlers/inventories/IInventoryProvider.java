@@ -76,12 +76,14 @@ public class IInventoryProvider extends InventoryHandler {
 						}
 					}
 				} else {
-					long used = Math.min(add.item.getMaxStackSize(), Math.min(add.stored, limit));
-					if (used > 0) {
-						add.stored -= used;
-						if (!action.shouldSimulate()) {
-							inv.setInventorySlotContents(slot, new StoredItemStack(add.getFullStack()).setStackSize(used).getFullStack());
-							inv.markDirty();
+					if (add.item != null && add.item.getItem()!=null) {
+						long used = Math.min(add.item.getMaxStackSize(), Math.min(add.stored, limit));
+						if (used > 0) {
+							add.stored -= used;
+							if (!action.shouldSimulate()) {
+								inv.setInventorySlotContents(slot, new StoredItemStack(add.getFullStack()).setStackSize(used).getFullStack());
+								inv.markDirty();
+							}
 						}
 					}
 				}
