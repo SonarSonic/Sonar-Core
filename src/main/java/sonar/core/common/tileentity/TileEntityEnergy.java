@@ -27,7 +27,7 @@ public class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver
 		}
 	}
 
-	public EnergyMode energyMode = EnergyMode.BLOCKED;
+	public EnergyMode energyMode = EnergyMode.RECIEVE;
 	public SyncEnergyStorage storage;
 	public int maxTransfer;
 

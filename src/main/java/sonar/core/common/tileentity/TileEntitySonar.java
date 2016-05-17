@@ -26,7 +26,7 @@ import sonar.core.network.sync.ISyncPart;
 
 public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncable, IWailaInfo {
 
-	protected final ArrayList<ISyncPart> parts;
+	protected ArrayList<ISyncPart> parts;
 	protected boolean load, forceSync;
 	protected BlockCoords coords = BlockCoords.EMPTY;
 
@@ -44,7 +44,8 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 		return !worldObj.isRemote;
 	}
 
-	public void onLoaded() {}
+	public void onLoaded() {
+	}
 
 	public void update() {
 		if (load) {
@@ -62,12 +63,18 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		ArrayList<ISyncPart> parts = new ArrayList();
+		this.addSyncParts(parts);
+		this.parts=parts;
 		this.readData(nbt, SyncType.SAVE);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
+		ArrayList<ISyncPart> parts = new ArrayList();
+		this.addSyncParts(parts);
+		this.parts=parts;
 		this.writeData(nbt, SyncType.SAVE);
 	}
 
@@ -86,14 +93,14 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 		readFromNBT(packet.getNbtCompound());
 	}
 
-	public void validate() {
+	public void validate() {		
 		super.validate();
 		coords = new BlockCoords(this);
 		this.load = true;
 	}
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		NBTHelper.readSyncParts(nbt, type, parts);
+		NBTHelper.readSyncParts(nbt, type, this.parts);
 	}
 
 	public void writeData(NBTTagCompound nbt, SyncType type) {
@@ -101,7 +108,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 			type = SyncType.SYNC_OVERRIDE;
 			forceSync = false;
 		}
-		NBTHelper.writeSyncParts(nbt, type, parts, forceSync);
+		NBTHelper.writeSyncParts(nbt, type, this.parts, forceSync);
 	}
 
 	@SideOnly(Side.CLIENT)
