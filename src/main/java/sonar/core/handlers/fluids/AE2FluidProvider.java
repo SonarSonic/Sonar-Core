@@ -10,6 +10,7 @@ import sonar.core.api.InventoryHandler.StorageSize;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.StoredFluidStack;
 import sonar.core.integration.AE2Helper;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.storage.IStorageGrid;
@@ -41,18 +42,19 @@ public class AE2FluidProvider extends FluidHandler {
 	public StorageSize getFluids(List<StoredFluidStack> storedStacks, TileEntity tile, ForgeDirection dir) {
 		long maxStorage = 0;
 		IGridProxyable proxy = (IGridProxyable) tile;
-		try {
-			IStorageGrid storage = proxy.getProxy().getStorage();
+		final IGrid grid = proxy.getProxy().getNode().getGrid();
+		if (grid != null) {
+			final IStorageGrid storage = grid.getCache(IStorageGrid.class);
 			IItemList<IAEFluidStack> fluids = storage.getFluidInventory().getStorageList();
 			if (fluids == null) {
 				return StorageSize.EMPTY;
 			}
 			for (IAEFluidStack fluid : fluids) {
-				SonarAPI.getFluidHelper().addFluidToList(storedStacks, AE2Helper.convertAEFluidStack(fluid));
-				maxStorage += fluid.getStackSize();
+				if (fluid.isFluid() && fluid.getStackSize()!=0) {
+					SonarAPI.getFluidHelper().addFluidToList(storedStacks, AE2Helper.convertAEFluidStack(fluid));
+					maxStorage += fluid.getStackSize();
+				}
 			}
-		} catch (GridAccessException e) {
-			e.printStackTrace();
 		}
 		return new StorageSize(maxStorage, maxStorage);
 	}
@@ -60,15 +62,14 @@ public class AE2FluidProvider extends FluidHandler {
 	@Override
 	public StoredFluidStack addStack(StoredFluidStack add, TileEntity tile, ForgeDirection dir, ActionType action) {
 		IGridProxyable proxy = (IGridProxyable) tile;
-		try {
-			IStorageGrid storage = proxy.getProxy().getStorage();
+		final IGrid grid = proxy.getProxy().getNode().getGrid();
+		if (grid != null) {
+			final IStorageGrid storage = grid.getCache(IStorageGrid.class);
 			IAEFluidStack fluid = storage.getFluidInventory().injectItems(AE2Helper.convertStoredFluidStack(add), AE2Helper.getActionable(action), new MachineSource(((IActionHost) tile)));
 			if (fluid == null || fluid.getStackSize() == 0) {
 				return null;
 			}
 			return AE2Helper.convertAEFluidStack(fluid);
-		} catch (GridAccessException e) {
-			e.printStackTrace();
 		}
 		return add;
 	}
@@ -76,15 +77,14 @@ public class AE2FluidProvider extends FluidHandler {
 	@Override
 	public StoredFluidStack removeStack(StoredFluidStack remove, TileEntity tile, ForgeDirection dir, ActionType action) {
 		IGridProxyable proxy = (IGridProxyable) tile;
-		try {
-			IStorageGrid storage = proxy.getProxy().getStorage();
+		final IGrid grid = proxy.getProxy().getNode().getGrid();
+		if (grid != null) {
+			final IStorageGrid storage = grid.getCache(IStorageGrid.class);
 			StoredFluidStack fluid = SonarAPI.getFluidHelper().getStackToAdd(remove.stored, remove, AE2Helper.convertAEItemStack(storage.getFluidInventory().extractItems(AE2Helper.convertStoredFluidStack(remove), AE2Helper.getActionable(action), new MachineSource(((IActionHost) tile)))));
 			if (fluid == null || fluid.stored == 0) {
 				return null;
 			}
 			return fluid;
-		} catch (GridAccessException e) {
-			e.printStackTrace();
 		}
 		return remove;
 	}

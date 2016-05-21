@@ -54,7 +54,7 @@ public class InventoryHelper extends InventoryWrapper {
 	}
 
 	public void addStackToList(List<StoredItemStack> list, StoredItemStack stack) {
-		if (stack == null || list == null) {
+		if (stack == null || stack.stored==0 || list == null) {
 			return;
 		}
 		int pos = 0;

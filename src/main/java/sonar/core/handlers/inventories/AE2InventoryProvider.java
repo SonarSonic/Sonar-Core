@@ -11,6 +11,7 @@ import sonar.core.api.StoredItemStack;
 import sonar.core.integration.AE2Helper;
 import appeng.api.AEApi;
 import appeng.api.implementations.tiles.ITileStorageMonitorable;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.storage.IStorageGrid;
@@ -43,8 +44,9 @@ public class AE2InventoryProvider extends InventoryHandler {
 	@Override
 	public StoredItemStack getStack(int slot, TileEntity tile, ForgeDirection dir) {
 		IGridProxyable proxy = (IGridProxyable) tile;
-		try {
-			IStorageGrid storage = proxy.getProxy().getStorage();
+		final IGrid grid = proxy.getProxy().getNode().getGrid();
+		if (grid != null) {
+			final IStorageGrid storage = grid.getCache(IStorageGrid.class);
 			IItemList<IAEItemStack> items = storage.getItemInventory().getStorageList();
 			if (items == null) {
 				return null;
@@ -56,8 +58,6 @@ public class AE2InventoryProvider extends InventoryHandler {
 				}
 				current++;
 			}
-		} catch (GridAccessException e) {
-			e.printStackTrace();
 		}
 		return null;
 	}
@@ -66,18 +66,19 @@ public class AE2InventoryProvider extends InventoryHandler {
 	public StorageSize getItems(List<StoredItemStack> storedStacks, TileEntity tile, ForgeDirection dir) {
 		long maxStorage = 0;
 		IGridProxyable proxy = (IGridProxyable) tile;
-		try {
-			IStorageGrid storage = proxy.getProxy().getStorage();
+		final IGrid grid = proxy.getProxy().getNode().getGrid();
+		if (grid != null) {
+			final IStorageGrid storage = grid.getCache(IStorageGrid.class);
 			IItemList<IAEItemStack> items = storage.getItemInventory().getStorageList();
 			if (items == null) {
 				return StorageSize.EMPTY;
 			}
 			for (IAEItemStack item : items) {
-				SonarAPI.getItemHelper().addStackToList(storedStacks, AE2Helper.convertAEItemStack(item));
-				maxStorage += item.getStackSize();
+				//if (item.isItem() && item.getStackSize() != 0) {
+					SonarAPI.getItemHelper().addStackToList(storedStacks, AE2Helper.convertAEItemStack(item));				
+					maxStorage += item.getStackSize();
+				//}
 			}
-		} catch (GridAccessException e) {
-			e.printStackTrace();
 		}
 		return new StorageSize(maxStorage, maxStorage);
 	}
@@ -95,15 +96,14 @@ public class AE2InventoryProvider extends InventoryHandler {
 	@Override
 	public StoredItemStack addStack(StoredItemStack add, TileEntity tile, ForgeDirection dir, ActionType action) {
 		IGridProxyable proxy = (IGridProxyable) tile;
-		try {
-			IStorageGrid storage = proxy.getProxy().getStorage();
+		final IGrid grid = proxy.getProxy().getNode().getGrid();
+		if (grid != null) {
+			final IStorageGrid storage = grid.getCache(IStorageGrid.class);
 			IAEItemStack stack = storage.getItemInventory().injectItems(AE2Helper.convertStoredItemStack(add), AE2Helper.getActionable(action), new MachineSource(((IActionHost) tile)));
 			if (stack == null || stack.getStackSize() == 0) {
 				return null;
 			}
 			return AE2Helper.convertAEItemStack(stack);
-		} catch (GridAccessException e) {
-			e.printStackTrace();
 		}
 		return add;
 	}
@@ -111,15 +111,14 @@ public class AE2InventoryProvider extends InventoryHandler {
 	@Override
 	public StoredItemStack removeStack(StoredItemStack remove, TileEntity tile, ForgeDirection dir, ActionType action) {
 		IGridProxyable proxy = (IGridProxyable) tile;
-		try {
-			IStorageGrid storage = proxy.getProxy().getStorage();
+		final IGrid grid = proxy.getProxy().getNode().getGrid();
+		if (grid != null) {
+			final IStorageGrid storage = grid.getCache(IStorageGrid.class);
 			StoredItemStack stack = SonarAPI.getItemHelper().getStackToAdd(remove.stored, remove, AE2Helper.convertAEItemStack(storage.getItemInventory().extractItems(AE2Helper.convertStoredItemStack(remove), AE2Helper.getActionable(action), new MachineSource(((IActionHost) tile)))));
 			if (stack == null || stack.getStackSize() == 0) {
 				return null;
 			}
 			return stack;
-		} catch (GridAccessException e) {
-			e.printStackTrace();
 		}
 		return remove;
 	}

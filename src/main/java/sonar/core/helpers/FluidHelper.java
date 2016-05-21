@@ -9,6 +9,9 @@ import sonar.core.api.StoredItemStack;
 public class FluidHelper extends FluidWrapper {
 
 	public void addFluidToList(List<StoredFluidStack> list, StoredFluidStack stack) {
+		if (stack == null || stack.stored==0 || list == null) {
+			return;
+		}
 		int pos = 0;
 		for (StoredFluidStack storedTank : list) {
 			if (storedTank.equalStack(stack.fluid)) {

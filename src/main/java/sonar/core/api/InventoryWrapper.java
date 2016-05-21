@@ -25,8 +25,7 @@ public class InventoryWrapper {
 	/** convenient method, adds the given stack to the list, used by {@link InventoryHandler}
 	 * @param list {@link StoredItemStack} list to add to
 	 * @param stack {@link StoredItemStack} to combine */
-	public void addStackToList(List<StoredItemStack> list, StoredItemStack stack) {
-	}
+	public void addStackToList(List<StoredItemStack> list, StoredItemStack stack) {}
 
 	/** convenient method, adds the given inventory {@link IInventory} to the list, used by {@link InventoryHandler}
 	 * @param list {@link StoredItemStack} list to add to
