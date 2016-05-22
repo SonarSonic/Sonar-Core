@@ -53,7 +53,7 @@ import sonar.core.upgrades.MachineUpgradeRegistry;
 public class SonarCore {
 
 	public static final String modid = "SonarCore";
-	public static final String version = "2.0.0a";
+	public static final String version = "2.0.0";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -131,7 +131,7 @@ public class SonarCore {
 	public void postInit(FMLPostInitializationEvent event) {
 		logger.info("Adding Discharge Values");
 		DischargeValues.addValues();
-		logger.info("Added" + DischargeValues.dischargeList.size() + "Discharge Values");
+		logger.info("Added " + DischargeValues.dischargeList.size() + " Discharge Values");
 		for (Map.Entry<ItemStack, Integer> entry : DischargeValues.dischargeList.entrySet()) {
 			logger.info("Discharge Values: " + entry.toString());
 		}

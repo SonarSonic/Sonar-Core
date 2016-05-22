@@ -37,7 +37,6 @@ public class SonarBlocks extends SonarCore {
 	}
 
 	public static void registerSlab(String name, Item slab, BlockSlab singleSlab, BlockSlab doubleSlab) {
-
 		reinforcedStoneBrickSlab_double = new SonarSlab.Double(reinforcedStoneBrick).setUnlocalizedName("ReinforcedStoneBrickSlab");
 		reinforcedStoneBrickSlab_half = registerBlock("ReinforcedStoneBrickSlab", new SonarSlab.Half(reinforcedStoneBrick));
 	}
@@ -81,9 +80,9 @@ public class SonarBlocks extends SonarCore {
 		 */
 		int pos = 0;
 		for (Variants variant : Variants.values()) {
-			Block normal = registerBlock("StableStone" + "_" + variant.name(), new StableStone(Material.rock, 100 + pos));
-			Block rimmed = registerBlock("StableStoneRimmed" + "_" + variant.name(), new StableStone(Material.rock, 200 + pos));
-			Block black = registerBlock("StableStoneBlackRimmed" + "_" + variant.name(), new StableStone(Material.rock, 300 + pos));
+			Block normal = registerBlock("StableStone" + "_" + variant.name(), new StableStone(Material.rock, 100 + pos).setHardness(2.0F));
+			Block rimmed = registerBlock("StableStoneRimmed" + "_" + variant.name(), new StableStone(Material.rock, 200 + pos).setHardness(2.0F));
+			Block black = registerBlock("StableStoneBlackRimmed" + "_" + variant.name(), new StableStone(Material.rock, 300 + pos).setHardness(2.0F));
 			if (pos == 0) {
 				stableStone = normal;
 				stablestonerimmedBlock = rimmed;
