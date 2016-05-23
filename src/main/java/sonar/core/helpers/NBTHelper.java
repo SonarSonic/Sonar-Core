@@ -236,37 +236,29 @@ public class NBTHelper {
 	}
 	
 	public static enum SyncType {
-		SAVE, SYNC, DROP, SPECIAL, PACKET;
+		SAVE(0), DROP(2), SPECIAL(3), PACKET(4), SYNC(1);
 
-		public static byte getID(SyncType type) {
-			switch (type) {
-			case SYNC:
-				return 1;
-			case DROP:
-				return 2;
-			case SPECIAL:
-				return 3;
-			case PACKET:
-				return 4;
-			default:
-				return 0;
-			}
+		private int type;
+
+		SyncType(int type) {
+			this.type = type;
 		}
 
-		public static SyncType getType(int i) {
-			switch (i) {
-			case 1:
-				return SYNC;
-			case 2:
-				return DROP;
-			case 3:
-				return SPECIAL;
-			case 4:
-				return PACKET;
-			default:
-				return SAVE;
-			}
+		public boolean mustSync() {
+			return this == SAVE;
+		}
 
+		public byte getType(){
+			return (byte)type;
+		}
+		
+		public boolean isType(SyncType... types) {
+			for (SyncType type : types) {
+				if (type.type == this.type) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 

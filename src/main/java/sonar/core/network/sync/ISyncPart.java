@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.helpers.NBTHelper.SyncType;
 
 public interface ISyncPart{
-	
+		
 	public boolean equal();
 	
 	public void writeToBuf(ByteBuf buf);	
