@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import sonar.calculator.mod.api.blocks.IWrenchable;
 import sonar.core.api.BlockCoords;
 import sonar.core.integration.SonarLoader;
 import cofh.api.energy.IEnergyConnection;
@@ -118,7 +119,7 @@ public class SonarHelper {
 
 				block.harvestBlock(world, player, x, y - 3, z, world.getBlockMetadata(x, y - 3, z));
 			}
-		} else {
+		} else {	
 			block.harvestBlock(world, player, x, y, z, world.getBlockMetadata(x, y, z));
 		}
 
