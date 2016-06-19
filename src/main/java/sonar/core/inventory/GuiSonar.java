@@ -38,16 +38,12 @@ public abstract class GuiSonar extends GuiContainer {
 		this.initGui();
 	}
 
-	public void initGui(boolean pause) {
-
-	}
+	public void initGui(boolean pause) {}
 
 	public void drawNormalToolTip(ItemStack stack, int x, int y) {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_LIGHTING);
-
 		this.renderToolTip(stack, x - guiLeft, y - guiTop);
-
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();

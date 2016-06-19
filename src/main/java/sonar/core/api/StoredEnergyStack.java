@@ -14,7 +14,19 @@ public class StoredEnergyStack {
 	public StoredEnergyStack(EnergyType type) {
 		this.energyType = type;
 	}
-
+	public StoredEnergyStack copy() {
+		StoredEnergyStack stack = new StoredEnergyStack(energyType);
+		stack.stored=stored;
+		stack.capacity=stored;
+		stack.input=input;
+		stack.output=output;
+		stack.usage=usage;
+		stack.hasStorage=hasStorage;
+		stack.hasInput=hasInput;
+		stack.hasOutput=hasOutput;
+		stack.hasUsage=hasUsage;		
+		return stack;
+	}
 	public void setStorageValues(long stored, long capacity) {
 		if (!hasStorage) {
 			this.stored = stored;
@@ -125,6 +137,19 @@ public class StoredEnergyStack {
 			stored.usage = buf.readLong();
 		}
 		return stored;
+	}
+
+	public StoredEnergyStack convertEnergyType(EnergyType newFormat) {
+		if (energyType != newFormat) {
+			//System.out.print(1 / 10);
+			input=(long) ((long) (input/energyType.getRFConversion())*newFormat.getRFConversion());
+			output=(long) ((long) (output/energyType.getRFConversion())*newFormat.getRFConversion());
+			stored=(long) ((long) (stored/energyType.getRFConversion())*newFormat.getRFConversion());
+			capacity=(long) ((long) (capacity/energyType.getRFConversion())*newFormat.getRFConversion());
+			usage=(long) ((long) (usage/energyType.getRFConversion())*newFormat.getRFConversion());
+			energyType=newFormat;
+		}
+		return this;
 	}
 
 	public static void writeToBuf(ByteBuf buf, StoredEnergyStack storedStack) {
