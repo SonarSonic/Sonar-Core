@@ -8,6 +8,7 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import cofh.api.energy.IEnergyStorage;
 
 public class RFHandler extends EnergyHandler {
 
@@ -43,29 +44,30 @@ public class RFHandler extends EnergyHandler {
 	}
 
 	@Override
-	public long receiveEnergy(long maxReceive, TileEntity tile, EnumFacing dir, ActionType action) {
-		long receive = maxReceive;
+	public StoredEnergyStack addEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
 		if (tile instanceof IEnergyReceiver) {
 			IEnergyReceiver receiver = (IEnergyReceiver) tile;
 			if (receiver.canConnectEnergy(dir.getOpposite())) {
-				int transferRF = maxReceive < Integer.MAX_VALUE ? (int) maxReceive : Integer.MAX_VALUE;
-				receive -= receiver.receiveEnergy(dir.getOpposite(), transferRF, action.shouldSimulate());
+				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
+				transfer.stored -= receiver.receiveEnergy(dir.getOpposite(), transferRF, action.shouldSimulate());
 			}
 		}
-		return receive;
+		if (transfer.stored == 0)
+			transfer = null;
+		return transfer;
 	}
 
 	@Override
-	public long extractEnergy(long maxExtract, TileEntity tile, EnumFacing dir, ActionType action) {
-		long extract = maxExtract;
+	public StoredEnergyStack removeEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
 		if (tile instanceof IEnergyProvider) {
 			IEnergyProvider receiver = (IEnergyProvider) tile;
 			if (receiver.canConnectEnergy(dir.getOpposite())) {
-				int transferRF = maxExtract < Integer.MAX_VALUE ? (int) maxExtract : Integer.MAX_VALUE;
-				extract -= receiver.extractEnergy(dir.getOpposite(), transferRF, action.shouldSimulate());
+				transfer.stored -= receiver.extractEnergy(dir.getOpposite(), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE, action.shouldSimulate());
 			}
 		}
-		return extract;
+		if (transfer.stored == 0)
+			transfer = null;
+		return transfer;
 	}
 
 	@Override

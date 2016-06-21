@@ -34,7 +34,7 @@ repositories {
 }
 
 dependencies {
-compile files('lib/jei_1.8.9-2.28.9.176.jar')
+compile files('lib/jei_1.8.9-2.28.18.186.jar')
 compile files('lib/StorageDrawers-1.8.9-2.6.3.jar')
 compile files('lib/Waila-1.6.0-B3_1.8.8.jar')
 }

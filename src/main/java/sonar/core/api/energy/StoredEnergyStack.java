@@ -166,14 +166,18 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack> {
 		return StorageTypes.ENERGY;
 	}
 
-	@Override
 	public StoredEnergyStack copy() {
-		StoredEnergyStack copy = new StoredEnergyStack(energyType);
-		copy.setStorageValues(stored, capacity);
-		copy.setMaxInput(input);
-		copy.setMaxOutput(output);
-		copy.setUsage(usage);
-		return copy;
+		StoredEnergyStack stack = new StoredEnergyStack(energyType);
+		stack.stored = stored;
+		stack.capacity = stored;
+		stack.input = input;
+		stack.output = output;
+		stack.usage = usage;
+		stack.hasStorage = hasStorage;
+		stack.hasInput = hasInput;
+		stack.hasOutput = hasOutput;
+		stack.hasUsage = hasUsage;
+		return stack;
 	}
 
 	@Override
@@ -209,18 +213,16 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack> {
 		return stored;
 	}
 
-	public StoredEnergyStack convert(EnergyType type) {
-		StoredEnergyStack stack = copy();
-		if (this.energyType.getRFConversion() != type.getRFConversion()) {
-			stack.energyType = type;
-			stack.stored = convert(stack.stored, this.energyType, type);
-			stack.capacity = convert(stack.capacity, this.energyType, type);
-			stack.input = convert(stack.input, this.energyType, type);
-			stack.output = convert(stack.output, this.energyType, type);
-			stack.usage = convert(stack.usage, this.energyType, type);
+	public StoredEnergyStack convertEnergyType(EnergyType newFormat) {
+		if (energyType != newFormat) {
+			input = (long) ((long) (input / energyType.getRFConversion()) * newFormat.getRFConversion());
+			output = (long) ((long) (output / energyType.getRFConversion()) * newFormat.getRFConversion());
+			stored = (long) ((long) (stored / energyType.getRFConversion()) * newFormat.getRFConversion());
+			capacity = (long) ((long) (capacity / energyType.getRFConversion()) * newFormat.getRFConversion());
+			usage = (long) ((long) (usage / energyType.getRFConversion()) * newFormat.getRFConversion());
+			energyType = newFormat;
 		}
-		return stack;
-
+		return this;
 	}
 
 	public static long convert(long val, EnergyType current, EnergyType type) {

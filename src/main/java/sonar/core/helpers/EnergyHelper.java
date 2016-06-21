@@ -21,7 +21,8 @@ public class EnergyHelper extends EnergyWrapper {
 					// maxReceive is converted from RF to the handlers type
 					maxReceive = StoredEnergyStack.convert(maxReceive, EnergyType.RF, handler.getProvidedType());
 					// the receiving is performed in the correct format
-					maxReceive = handler.receiveEnergy(maxReceive, tile, dir, type);
+					StoredEnergyStack stack = handler.addEnergy(new StoredEnergyStack(EnergyType.RF).setStackSize(maxReceive), tile, dir, type);
+					maxReceive = stack == null ? maxReceive : stack.getStackSize();
 					// then converted back to RF
 					maxReceive = StoredEnergyStack.convert(maxReceive, handler.getProvidedType(), EnergyType.RF);
 					return maxReceive;
@@ -32,14 +33,15 @@ public class EnergyHelper extends EnergyWrapper {
 	}
 
 	public long extractEnergy(TileEntity tile, long maxExtract, EnumFacing dir, ActionType type) {
-		if (maxExtract !=0 && tile != null) {
+		if (maxExtract != 0 && tile != null) {
 			List<EnergyHandler> handlers = SonarCore.energyProviders.getObjects();
 			for (EnergyHandler handler : handlers) {
 				if (handler.canProvideEnergy(tile, dir)) {
 					// maxReceive is converted from RF to the handlers type
 					maxExtract = StoredEnergyStack.convert(maxExtract, EnergyType.RF, handler.getProvidedType());
 					// the extracting is performed in the correct format
-					maxExtract = handler.extractEnergy(maxExtract, tile, dir, type);
+					StoredEnergyStack stack = handler.removeEnergy(new StoredEnergyStack(EnergyType.RF).setStackSize(maxExtract), tile, dir, type);
+					maxExtract = stack == null ? maxExtract : stack.getStackSize();
 					// then converted back to RF
 					maxExtract = StoredEnergyStack.convert(maxExtract, handler.getProvidedType(), EnergyType.RF);
 					return maxExtract;
@@ -51,10 +53,12 @@ public class EnergyHelper extends EnergyWrapper {
 
 	public long transferEnergy(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, final long maxTransferRF) {
 		if (from != null && !from.getWorld().isRemote && to != null && maxTransferRF != 0) {
-			long maxExtract = extractEnergy(from, maxTransferRF, dirFrom, ActionType.SIMULATE);
-			long maxReceive = receiveEnergy(to, maxTransferRF, dirTo, ActionType.SIMULATE);
-			long maxTransfer = Math.min(maxTransferRF - maxExtract, maxTransferRF - maxReceive);
-			// System.out.print(maxTransfer);
+			long max = maxTransferRF;
+			long maxExtract = maxTransferRF;
+			long maxReceive = maxTransferRF;			
+			maxExtract = extractEnergy(from, maxExtract, dirFrom, ActionType.SIMULATE);
+			maxReceive = receiveEnergy(to, maxReceive, dirTo, ActionType.SIMULATE);
+			long maxTransfer = Math.min(max - maxExtract, max - maxReceive);
 			if (maxTransfer != 0) {
 				receiveEnergy(to, maxTransfer, dirTo, ActionType.PERFORM);
 				extractEnergy(from, maxTransfer, dirFrom, ActionType.PERFORM);
@@ -63,6 +67,5 @@ public class EnergyHelper extends EnergyWrapper {
 		}
 		return 0;
 	}
-	
-	
+
 }
