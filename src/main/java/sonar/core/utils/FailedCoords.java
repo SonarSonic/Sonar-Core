@@ -1,12 +1,18 @@
 package sonar.core.utils;
 
+import net.minecraft.util.math.BlockPos;
 import sonar.core.api.utils.BlockCoords;
 
 public class FailedCoords {
 	private boolean objectBoolean;
 	private BlockCoords coords;
 	private String blockName;
-
+	
+	public FailedCoords(boolean objectReturn, BlockPos pos, String block) {
+		this.objectBoolean = objectReturn;
+		this.coords = new BlockCoords(pos);
+		this.blockName = block;
+	}
 	public FailedCoords(boolean objectReturn, BlockCoords coords, String block) {
 		this.objectBoolean = objectReturn;
 		this.coords = coords;

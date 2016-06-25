@@ -8,10 +8,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
@@ -30,12 +30,12 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	protected boolean load, forceSync;
 	protected BlockCoords coords = BlockCoords.EMPTY;
 
-	public TileEntitySonar(){
+	public TileEntitySonar() {
 		ArrayList<ISyncPart> parts = new ArrayList();
 		this.addSyncParts(parts);
-		this.parts=parts;
+		this.parts = parts;
 	}
-	
+
 	public boolean isClient() {
 		return worldObj.isRemote;
 	}
@@ -52,7 +52,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 			load = false;
 			this.onLoaded();
 		}
-		/*List<ISyncPart> parts = new ArrayList(); this.addSyncParts(parts); boolean markDirty = false; for (ISyncPart part : parts) { if (part.hasChanged()) { markDirty = true; break; } } if (markDirty) { markDirty(); } */
+		/* List<ISyncPart> parts = new ArrayList(); this.addSyncParts(parts); boolean markDirty = false; for (ISyncPart part : parts) { if (part.hasChanged()) { markDirty = true; break; } } if (markDirty) { markDirty(); } */
 		markDirty();
 	}
 
@@ -65,35 +65,36 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 		super.readFromNBT(nbt);
 		ArrayList<ISyncPart> parts = new ArrayList();
 		this.addSyncParts(parts);
-		this.parts=parts;
+		this.parts = parts;
 		this.readData(nbt, SyncType.SAVE);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		ArrayList<ISyncPart> parts = new ArrayList();
 		this.addSyncParts(parts);
-		this.parts=parts;
+		this.parts = parts;
 		this.writeData(nbt, SyncType.SAVE);
+		return nbt;
 	}
 
 	public void addSyncParts(List<ISyncPart> parts) {
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		writeToNBT(nbtTag);
-		return new S35PacketUpdateTileEntity(pos, 0, nbtTag);
+		return new SPacketUpdateTileEntity(pos, 0, nbtTag);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
 		readFromNBT(packet.getNbtCompound());
 	}
 
-	public void validate() {		
+	public void validate() {
 		super.validate();
 		coords = new BlockCoords(this);
 		this.load = true;
@@ -137,9 +138,14 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 		}
 	}
 
+	public void markBlockForUpdate() {
+		this.markDirty();
+		this.worldObj.markBlockRangeForRenderUpdate(pos, pos);
+		// may need some more stuff, here to make life easier
+	}
+
 	public boolean maxRender() {
 		return false;
-
 	}
 
 	@SideOnly(Side.CLIENT)

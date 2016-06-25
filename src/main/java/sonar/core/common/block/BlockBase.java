@@ -12,7 +12,7 @@ public class BlockBase extends Block {
 	}
 
 	public BlockBase(float hardness, float resistance) {
-		this(Material.rock, hardness, resistance);
+		this(Material.ROCK, hardness, resistance);
 	}
 
 	public BlockBase() {

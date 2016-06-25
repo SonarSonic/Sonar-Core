@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import sonar.core.SonarCore;
 import sonar.core.api.nbt.INBTSaveable;
@@ -75,7 +75,7 @@ public class MachineSides implements INBTSaveable {
 			} else {
 				configs[side.getIndex()] = allowedSides.get(pos - 1);
 			}
-			sendPacket(tile.getWorld().provider.getDimensionId(), side);
+			sendPacket(tile.getWorld().provider.getDimension(), side);
 		}
 		return true;
 	}
@@ -98,7 +98,7 @@ public class MachineSides implements INBTSaveable {
 			} else {
 				configs[side.getIndex()] = allowedSides.get(pos + 1);
 			}
-			sendPacket(tile.getWorld().provider.getDimensionId(), side);
+			sendPacket(tile.getWorld().provider.getDimension(), side);
 		}
 		return true;
 	}

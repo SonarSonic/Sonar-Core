@@ -6,8 +6,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import sonar.core.SonarCore;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.inventory.ISonarInventory;
@@ -101,8 +101,8 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 		return false;
 	}
 
-	public IChatComponent getDisplayName() {
-		return new ChatComponentText(this.blockType.getLocalizedName());
+	public ITextComponent getDisplayName() {
+		return new TextComponentTranslation(this.blockType.getLocalizedName());
 	}
 
 	public int getField(int id) {

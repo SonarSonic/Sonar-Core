@@ -8,7 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import sonar.core.utils.ISpecialTooltip;
@@ -20,13 +20,13 @@ public abstract class SonarMachineBlock extends SonarBlock implements ITileEntit
 	}
 
 	public abstract TileEntity createNewTileEntity(World world, int i);
-
-	public boolean onBlockEventReceived(World world, BlockPos pos, IBlockState state, int eventID, int eventParam) {
-		super.onBlockEventReceived(world, pos, state, eventID, eventParam);
+	/*
+    public boolean eventReceived(IBlockState state, World world, BlockPos pos, int id, int param){
+		super.eventReceived(state, world, pos, id, param);
 		TileEntity tileentity = world.getTileEntity(pos);
-		return tileentity != null ? tileentity.receiveClientEvent(eventID, eventParam) : false;
+		return tileentity != null ? tileentity.receiveClientEvent(id, param) : false;
 	}
-
+	*/
 	public void addSpecialToolTip(ItemStack stack, EntityPlayer player, List list) {
 	}
 

@@ -5,8 +5,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentBase;
+import net.minecraft.util.text.TextComponentTranslation;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.inventory.SonarInventory;
 
@@ -91,8 +92,8 @@ public abstract class InventoryTileHandler extends TileHandler implements IInven
 		return false;
 	}
 
-	public IChatComponent getDisplayName() {
-		return new ChatComponentText(tile.getBlockType().getLocalizedName());
+	public ITextComponent getDisplayName() {
+		return new TextComponentTranslation(tile.getBlockType().getLocalizedName());
 	}
 
 	public int getField(int id) {

@@ -5,8 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import sonar.core.helpers.NBTHelper.SyncType;
 
 public class SonarInventory implements ISonarInventory {
@@ -123,8 +123,8 @@ public class SonarInventory implements ISonarInventory {
 		return false;
 	}
 
-	public IChatComponent getDisplayName() {
-		return new ChatComponentTranslation(tile.getBlockType().getUnlocalizedName());
+	public ITextComponent getDisplayName() {
+		return new TextComponentTranslation(tile.getBlockType().getUnlocalizedName());
 	}
 
 	public int getField(int id) {

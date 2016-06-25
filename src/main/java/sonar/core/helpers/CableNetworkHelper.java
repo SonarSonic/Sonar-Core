@@ -5,7 +5,6 @@ import gnu.trove.map.hash.THashMap;
 import java.util.ArrayList;
 import java.util.Map;
 
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.cabling.ISonarCable;
 import sonar.core.api.utils.BlockCoords;

@@ -6,11 +6,7 @@
         "transform":"forge:default-block"
      },
     "variants": {
-        "inventory": [{
-            "transform": {
-                "gui": {"rotation": { "y": 90 }}     
-           }
-        }],
+        "inventory": [{}],
         "facing=south,in_wall=false,open=false,powered=true": { "model":"fence_gate_closed" },
         "facing=west,in_wall=false,open=false,powered=true":  { "model":"fence_gate_closed", "y": 90, "uvlock": true },
         "facing=north,in_wall=false,open=false,powered=true": { "model":"fence_gate_closed", "y": 180, "uvlock": true },

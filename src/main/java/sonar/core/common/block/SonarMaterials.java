@@ -8,10 +8,10 @@ import net.minecraft.block.material.Material;
 public class SonarMaterials extends Material {
 
 	/**standard machine material*/
-	public static final Material machine = (new Material(MapColor.blackColor));
+	public static final Material machine = (new Material(MapColor.BLACK));
 
 	public SonarMaterials() {
-		super(MapColor.blackColor);
+		super(MapColor.BLACK);
 	}
 
 

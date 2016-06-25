@@ -3,124 +3,86 @@ package sonar.core.common.block;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
+import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockSlab;
-import net.minecraft.block.BlockSlab.EnumBlockHalf;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class SonarSlab extends Block {
-	public static final PropertyEnum<BlockSlab.EnumBlockHalf> HALF = PropertyEnum.<BlockSlab.EnumBlockHalf> create("half", BlockSlab.EnumBlockHalf.class);
+public abstract class SonarSlab extends BlockSlab {
+	public static final PropertyBool SEAMLESS = PropertyBool.create("seamless");
+	public static final PropertyEnum<SonarSlab.EnumType> VARIANT = PropertyEnum.<SonarSlab.EnumType> create("variant", SonarSlab.EnumType.class);
 
-	public SonarSlab(Block block) {
-		super(block.getMaterial());
+	public SonarSlab(Material material) {
+		super(material);
+		IBlockState iblockstate = this.blockState.getBaseState();
 
 		if (this.isDouble()) {
-			this.fullBlock = true;
+			iblockstate = iblockstate.withProperty(SEAMLESS, Boolean.valueOf(false));
 		} else {
-			this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
+			iblockstate = iblockstate.withProperty(HALF, BlockSlab.EnumBlockHalf.BOTTOM);
 		}
 
-		if (!this.isDouble()) {
-			this.setDefaultState(blockState.getBaseState().withProperty(HALF, BlockSlab.EnumBlockHalf.BOTTOM));
-		}
-
-		this.setLightOpacity(255);
+		this.setDefaultState(iblockstate.withProperty(VARIANT, SonarSlab.EnumType.STONE));
+		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 	}
 
-	protected boolean canSilkHarvest() {
-		return false;
+	/** Get the Item that this Block should drop when harvested. */
+	@Nullable
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+		return Item.getItemFromBlock(Blocks.STONE_SLAB);
 	}
 
-	public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos) {
-		if (this.isDouble()) {
-			this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-		} else {
-			IBlockState iblockstate = worldIn.getBlockState(pos);
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+		return new ItemStack(Blocks.STONE_SLAB, 1, ((SonarSlab.EnumType) state.getValue(VARIANT)).getMetadata());
+	}
 
-			if (iblockstate.getBlock() == this) {
-				if (iblockstate.getValue(HALF) == BlockSlab.EnumBlockHalf.TOP) {
-					this.setBlockBounds(0.0F, 0.5F, 0.0F, 1.0F, 1.0F, 1.0F);
-				} else {
-					this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
+	/** Returns the slab block name with the type associated with it */
+	public String getUnlocalizedName(int meta) {
+		return super.getUnlocalizedName() + "." + SonarSlab.EnumType.byMetadata(meta).getUnlocalizedName();
+	}
+
+	public IProperty<?> getVariantProperty() {
+		return VARIANT;
+	}
+
+	public Comparable<?> getTypeForItem(ItemStack stack) {
+		return SonarSlab.EnumType.byMetadata(stack.getMetadata() & 7);
+	}
+
+	/** returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks) */
+	@SideOnly(Side.CLIENT)
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+		if (itemIn != Item.getItemFromBlock(Blocks.DOUBLE_STONE_SLAB)) {
+			for (SonarSlab.EnumType blockstoneslab$enumtype : SonarSlab.EnumType.values()) {
+				if (blockstoneslab$enumtype != SonarSlab.EnumType.WOOD) {
+					list.add(new ItemStack(itemIn, 1, blockstoneslab$enumtype.getMetadata()));
 				}
 			}
 		}
 	}
 
-	public void setBlockBoundsForItemRender() {
-		if (this.isDouble()) {
-			this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-		} else {
-			this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
-		}
-	}
-
-	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity) {
-		this.setBlockBoundsBasedOnState(worldIn, pos);
-		super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
-	}
-
-	public boolean isOpaqueCube() {
-		return this.isDouble();
-	}
-
-	@Override
-	public boolean doesSideBlockRendering(IBlockAccess world, BlockPos pos, EnumFacing face) {
-		if (isOpaqueCube())
-			return true;
-
-		EnumBlockHalf side = world.getBlockState(pos).getValue(HALF);
-		return (side == EnumBlockHalf.TOP && face == EnumFacing.DOWN) || (side == EnumBlockHalf.BOTTOM && face == EnumFacing.UP);
-	}
-
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		IBlockState iblockstate = super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(HALF, BlockSlab.EnumBlockHalf.BOTTOM);
-		return this.isDouble() ? iblockstate : (facing != EnumFacing.DOWN && (facing == EnumFacing.UP || (double) hitY <= 0.5D) ? iblockstate : iblockstate.withProperty(HALF, BlockSlab.EnumBlockHalf.TOP));
-	}
-
-	public int quantityDropped(Random random) {
-		return this.isDouble() ? 2 : 1;
-	}
-
-	public boolean isFullCube() {
-		return this.isDouble();
-	}
-
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
-		if (this.isDouble()) {
-			return super.shouldSideBeRendered(worldIn, pos, side);
-		} else if (side != EnumFacing.UP && side != EnumFacing.DOWN && !super.shouldSideBeRendered(worldIn, pos, side)) {
-			return false;
-		}
-		return super.shouldSideBeRendered(worldIn, pos, side);
-	}
-
-	@SideOnly(Side.CLIENT)
-	protected static boolean isSlab(Block blockIn) {
-		return blockIn == Blocks.stone_slab || blockIn == Blocks.wooden_slab || blockIn == Blocks.stone_slab2 || blockIn instanceof SonarSlab;
-	}
-
-	public int getDamageValue(World worldIn, BlockPos pos) {
-		return super.getDamageValue(worldIn, pos) & 7;
-	}
-
+	/** Convert the given metadata into a BlockState for this Block */
 	public IBlockState getStateFromMeta(int meta) {
-		IBlockState iblockstate = this.getDefaultState();
-		if (!this.isDouble()) {
+		IBlockState iblockstate = this.getDefaultState().withProperty(VARIANT, SonarSlab.EnumType.byMetadata(meta & 7));
+
+		if (this.isDouble()) {
+			iblockstate = iblockstate.withProperty(SEAMLESS, Boolean.valueOf((meta & 8) != 0));
+		} else {
 			iblockstate = iblockstate.withProperty(HALF, (meta & 8) == 0 ? BlockSlab.EnumBlockHalf.BOTTOM : BlockSlab.EnumBlockHalf.TOP);
 		}
 
@@ -130,42 +92,84 @@ public abstract class SonarSlab extends Block {
 	/** Convert the BlockState into the correct metadata value */
 	public int getMetaFromState(IBlockState state) {
 		int i = 0;
-		if (!this.isDouble() && state.getValue(HALF) == BlockSlab.EnumBlockHalf.TOP) {
+		i = i | ((SonarSlab.EnumType) state.getValue(VARIANT)).getMetadata();
+
+		if (this.isDouble()) {
+			if (((Boolean) state.getValue(SEAMLESS)).booleanValue()) {
+				i |= 8;
+			}
+		} else if (state.getValue(HALF) == BlockSlab.EnumBlockHalf.TOP) {
 			i |= 8;
 		}
 
 		return i;
 	}
 
-	protected BlockState createBlockState() {
-		return this.isDouble() ? new BlockState(this) : new BlockState(this, new IProperty[] { HALF });
+	protected BlockStateContainer createBlockState() {
+		return this.isDouble() ? new BlockStateContainer(this, new IProperty[] { SEAMLESS, VARIANT }) : new BlockStateContainer(this, new IProperty[] { HALF, VARIANT });
 	}
 
-	public abstract boolean isDouble();
-
-	public static class Half extends SonarSlab {
-
-		public Half(Block block) {
-			super(block);
-		}
-
-		@Override
-		public boolean isDouble() {
-			return false;
-		}
-
+	public int damageDropped(IBlockState state) {
+		return ((SonarSlab.EnumType) state.getValue(VARIANT)).getMetadata();
 	}
 
-	public static class Double extends SonarSlab {
-
-		public Double(Block block) {
-			super(block);
-		}
-
-		@Override
-		public boolean isDouble() {
-			return true;
-		}
-
+	public MapColor getMapColor(IBlockState state) {
+		return ((SonarSlab.EnumType) state.getValue(VARIANT)).getMapColor();
 	}
+
+	public static enum EnumType implements IStringSerializable {
+		STONE(0, MapColor.STONE, "stone"), SAND(1, MapColor.SAND, "sandstone", "sand"), WOOD(2, MapColor.WOOD, "wood_old", "wood"), COBBLESTONE(3, MapColor.STONE, "cobblestone", "cobble"), BRICK(4, MapColor.RED, "brick"), SMOOTHBRICK(5, MapColor.STONE, "stone_brick", "smoothStoneBrick"), NETHERBRICK(6, MapColor.NETHERRACK, "nether_brick", "netherBrick"), QUARTZ(7, MapColor.QUARTZ, "quartz");
+
+		private static final SonarSlab.EnumType[] META_LOOKUP = new SonarSlab.EnumType[values().length];
+		private final int meta;
+		private final MapColor mapColor;
+		private final String name;
+		private final String unlocalizedName;
+
+		private EnumType(int p_i46381_3_, MapColor p_i46381_4_, String p_i46381_5_) {
+			this(p_i46381_3_, p_i46381_4_, p_i46381_5_, p_i46381_5_);
+		}
+
+		private EnumType(int p_i46382_3_, MapColor p_i46382_4_, String p_i46382_5_, String p_i46382_6_) {
+			this.meta = p_i46382_3_;
+			this.mapColor = p_i46382_4_;
+			this.name = p_i46382_5_;
+			this.unlocalizedName = p_i46382_6_;
+		}
+
+		public int getMetadata() {
+			return this.meta;
+		}
+
+		public MapColor getMapColor() {
+			return this.mapColor;
+		}
+
+		public String toString() {
+			return this.name;
+		}
+
+		public static SonarSlab.EnumType byMetadata(int meta) {
+			if (meta < 0 || meta >= META_LOOKUP.length) {
+				meta = 0;
+			}
+
+			return META_LOOKUP[meta];
+		}
+
+		public String getName() {
+			return this.name;
+		}
+
+		public String getUnlocalizedName() {
+			return this.unlocalizedName;
+		}
+
+		static {
+			for (SonarSlab.EnumType blockstoneslab$enumtype : values()) {
+				META_LOOKUP[blockstoneslab$enumtype.getMetadata()] = blockstoneslab$enumtype;
+			}
+		}
+	}
+
 }

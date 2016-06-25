@@ -26,7 +26,7 @@ public class SonarCrafting extends SonarCore {
 		for (int i = 0; i < 16; i++) {
 			int meta = ~i & 15;
 			if (meta != 0) {
-				addShaped(new ItemStack(SonarCore.stableStone, 8, meta), new Object[] { "SSS", "SDS", "SSS", 'D', new ItemStack(Items.dye, 1, i), 'S', new ItemStack(SonarCore.stableStone, 1, 0) });
+				addShaped(new ItemStack(SonarCore.stableStone, 8, meta), new Object[] { "SSS", "SDS", "SSS", 'D', new ItemStack(Items.DYE, 1, i), 'S', new ItemStack(SonarCore.stableStone, 1, 0) });
 			}
 		}
 

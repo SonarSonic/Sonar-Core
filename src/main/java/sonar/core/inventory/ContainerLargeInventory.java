@@ -1,6 +1,7 @@
 package sonar.core.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -117,17 +118,18 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 	}
 
 	/** special implementation which accommodates for a {@link ILargeInventory} */
-	public ItemStack slotClick(int slotID, int var, int button, EntityPlayer player) {
-		if (!(slotID < entity.getTileInv().size) || button == 1) {
-			return super.slotClick(slotID, var, button, player);
+    public ItemStack slotClick(int slotID, int dragType, ClickType button, EntityPlayer player){
+	//public ItemStack slotClick(int slotID, int dragType, int button, EntityPlayer player) {
+		if (!(slotID < entity.getTileInv().size) || button == ClickType.QUICK_MOVE) {
+			return super.slotClick(slotID, dragType, button, player);
 		}
 		if (slotID >= 0) {
 			StoredItemStack clicked = entity.getTileInv().buildItemStack(entity.getTileInv().slots[slotID]);
-			if ((var == 0 || var == 1) && button == 0) {
+			if ((dragType == 0 || dragType == 1) && button == ClickType.PICKUP) {
 				ItemStack held = player.inventory.getItemStack();
 				if (held == null && clicked != null && clicked.getItemStack() != null) {
 					int toRemove = (int) Math.min(clicked.getItemStack().getMaxStackSize(), clicked.stored);
-					if (var == 1 && toRemove != 1) {
+					if (dragType == 1 && toRemove != 1) {
 						toRemove = (int) Math.ceil(toRemove / 2);
 					}
 					if (toRemove != 0) {

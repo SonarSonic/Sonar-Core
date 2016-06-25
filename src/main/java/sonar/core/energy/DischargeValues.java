@@ -15,10 +15,10 @@ public class DischargeValues implements IRecipeHelper {
 	public static Map<ItemStack, Integer> dischargeList = new HashMap<ItemStack, Integer>();
 
 	public static void addValues() {
-		addValue(Items.redstone, 1000);
-		addValue(Items.coal, 500);
-		addValue(Blocks.coal_block, 4500);
-		addValue(Blocks.redstone_block, 9000);
+		addValue(Items.REDSTONE, 1000);
+		addValue(Items.COAL, 500);
+		addValue(Blocks.COAL_BLOCK, 4500);
+		addValue(Blocks.REDSTONE_BLOCK, 9000);
 	}
 
 	private static void clearList() {

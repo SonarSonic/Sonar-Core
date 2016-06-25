@@ -13,9 +13,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /** an object with a blocks x, y and z coordinates */
 public class BlockCoords {
@@ -56,7 +57,7 @@ public class BlockCoords {
 			this.hasDimension = false;
 		} else {
 			this.hasDimension = true;
-			this.dimension = tile.getWorld().provider.getDimensionId();
+			this.dimension = tile.getWorld().provider.getDimension();
 		}
 	}
 
@@ -133,7 +134,7 @@ public class BlockCoords {
 	}
 
 	public World getWorld() {
-		MinecraftServer server = MinecraftServer.getServer();
+		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 		World world = server.worldServerForDimension(getDimension());
 		return world;
 	}

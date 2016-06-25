@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -52,8 +52,8 @@ public class StableStone extends ConnectedBlock{
 		//return this.getDefaultState().withProperty(VARIANT, Variants.values()[meta]);
 	}
 
-	protected BlockState createBlockState() {
-		return new BlockState(this, new IProperty[] { NORTH, EAST, SOUTH, WEST, DOWN, UP});
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[] { NORTH, EAST, SOUTH, WEST, DOWN, UP});
 	}
 /*
 	@Override

@@ -3,12 +3,14 @@ package sonar.core;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.FMLFileResourcePack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -53,7 +55,7 @@ import sonar.core.upgrades.MachineUpgradeRegistry;
 public class SonarCore {
 
 	public static final String modid = "SonarCore";
-	public static final String version = "2.0.1";
+	public static final String version = "3.0.0";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -162,7 +164,7 @@ public class SonarCore {
 
 		if (object != null && object instanceof IByteBufTile) {
 			if (!tile.getWorld().isRemote) {
-				SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) object, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
+				SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) object, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 			} else {
 				SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) object, tile.getPos(), id));
 			}
@@ -171,7 +173,7 @@ public class SonarCore {
 			if (handler != null && handler instanceof IByteBufTile) {
 
 				if (!tile.getWorld().isRemote) {
-					SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) handler, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
+					SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) handler, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 				} else {
 					SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) handler, tile.getPos(), id));
 				}
@@ -185,7 +187,7 @@ public class SonarCore {
 			NBTTagCompound tag = new NBTTagCompound();
 			((INBTSyncable) object).writeData(tag, SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
-				SonarCore.network.sendToAllAround(new PacketTileSync(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
+				SonarCore.network.sendToAllAround(new PacketTileSync(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 			}
 		}
 	}

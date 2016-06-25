@@ -10,9 +10,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import sonar.core.api.utils.BlockCoords;
@@ -72,25 +72,26 @@ public class SonarHelper {
 	 * } */
 	/** checks if a tile implements IWrench and IDropTile and drops it accordingly */
 	public static void dropTile(EntityPlayer player, Block block, World world, BlockPos pos) {
+		ItemStack stack = player.getActiveItemStack();
 		TileEntity te = world.getTileEntity(pos);
 		if (SonarLoader.calculatorLoaded() && block == GameRegistry.findBlock("Calculator", "ConductorMastBlock")) {
 			if (world.getBlockState(pos.offset(EnumFacing.DOWN, 1)).getBlock() == GameRegistry.findBlock("Calculator", "ConductorMast")) {
-				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 1), world.getBlockState(pos.offset(EnumFacing.DOWN, 1)), te);
+				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 1), world.getBlockState(pos.offset(EnumFacing.DOWN, 1)), te, stack);
 			} else if (world.getBlockState(pos.offset(EnumFacing.DOWN, 2)).getBlock() == GameRegistry.findBlock("Calculator", "ConductorMast")) {
-				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 2), world.getBlockState(pos.offset(EnumFacing.DOWN, 3)), te);
+				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 2), world.getBlockState(pos.offset(EnumFacing.DOWN, 3)), te, stack);
 			} else if (world.getBlockState(pos.offset(EnumFacing.DOWN, 3)).getBlock() == GameRegistry.findBlock("Calculator", "ConductorMast")) {
 
-				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 3), world.getBlockState(pos.offset(EnumFacing.DOWN, 3)), te);
+				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 3), world.getBlockState(pos.offset(EnumFacing.DOWN, 3)), te, stack);
 			}
 		} else {
-			block.harvestBlock(world, player, pos, world.getBlockState(pos), te);
+			block.harvestBlock(world, player, pos, world.getBlockState(pos), te, stack);
 		}
 
 	}
 
 	public static Entity getNearestEntity(Class entityClass, TileEntity tile, int range) {
 
-		AxisAlignedBB aabb = AxisAlignedBB.fromBounds(tile.getPos().getX() - range, tile.getPos().getY() - range, tile.getPos().getZ() - range, tile.getPos().getX() + range, tile.getPos().getY() + range, tile.getPos().getZ() + range);
+		AxisAlignedBB aabb = new AxisAlignedBB(tile.getPos().getX() - range, tile.getPos().getY() - range, tile.getPos().getZ() - range, tile.getPos().getX() + range, tile.getPos().getY() + range, tile.getPos().getZ() + range);
 
 		List<Entity> entities = tile.getWorld().getEntitiesWithinAABB(entityClass, aabb);
 		Entity entity = null;

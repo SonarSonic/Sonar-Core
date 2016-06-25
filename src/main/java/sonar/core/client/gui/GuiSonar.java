@@ -1,27 +1,33 @@
 package sonar.core.client.gui;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
 
 import sonar.core.SonarCore;
+import sonar.core.api.machines.IProcessMachine;
 import sonar.core.helpers.FontHelper;
 import sonar.core.network.PacketByteBufServer;
 import sonar.core.network.utils.IByteBufTile;
-
+import sonar.core.upgrades.UpgradeInventory;
 
 public abstract class GuiSonar extends GuiContainer {
 
@@ -44,9 +50,7 @@ public abstract class GuiSonar extends GuiContainer {
 	public void drawNormalToolTip(ItemStack stack, int x, int y) {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_LIGHTING);
-
 		this.renderToolTip(stack, x - guiLeft, y - guiTop);
-
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
@@ -88,19 +92,20 @@ public abstract class GuiSonar extends GuiContainer {
 
 		boolean paused;
 		public int id;
+		public IProcessMachine machine;
 
-		public PauseButton(int id, int x, int y, boolean paused) {
+		public PauseButton(IProcessMachine machine, int id, int x, int y, boolean paused) {
 			super(id, x, y, new ResourceLocation("Calculator:textures/gui/buttons/buttons.png"), paused ? 51 : 34, 0, 16, 16);
 			this.paused = paused;
 			this.id = id;
+			this.machine = machine;
 		}
 
 		public void drawButtonForegroundLayer(int x, int y) {
-			if (paused) {
-				drawCreativeTabHoveringText(FontHelper.translate("buttons.resume"), x, y);
-			} else {
-				drawCreativeTabHoveringText(FontHelper.translate("buttons.pause"), x, y);
-			}
+			ArrayList list = new ArrayList();
+			list.add(TextFormatting.BLUE + "" + TextFormatting.UNDERLINE + (paused ? FontHelper.translate("buttons.resume") : FontHelper.translate("buttons.pause")));
+			list.add("Current: " + (int)((double)machine.getCurrentProcessTime()/machine.getProcessTime() *100) + " %");
+			drawHoveringText(list, x, y, fontRendererObj);
 		}
 
 		@Override
@@ -108,21 +113,28 @@ public abstract class GuiSonar extends GuiContainer {
 			SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) entity, entity.getPos(), id));
 			buttonList.clear();
 			initGui();
-			// updateScreen();
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
 	public class CircuitButton extends SonarButtons.ImageButton {
 		public int id;
+		public UpgradeInventory upgrades;
 
-		public CircuitButton(int id, int x, int y) {
+		public CircuitButton(UpgradeInventory upgrades, int id, int x, int y) {
 			super(id, x, y, new ResourceLocation("Calculator:textures/gui/buttons/buttons.png"), 0, 0, 16, 16);
+			this.upgrades = upgrades;
 			this.id = id;
 		}
 
 		public void drawButtonForegroundLayer(int x, int y) {
-			drawCreativeTabHoveringText(FontHelper.translate("buttons.circuits"), x, y);
+			ArrayList list = new ArrayList();
+			list.add(TextFormatting.BLUE + "" + TextFormatting.UNDERLINE + FontHelper.translate("buttons.circuits"));
+			for (Entry<String, Integer> entry : upgrades.getInstalledUpgrades().entrySet()) {
+				int max = upgrades.maxUpgrades.get(entry.getKey());
+				list.add(entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().toLowerCase().substring(1) + ": " + entry.getValue() + "/" + max);
+			}
+			drawHoveringText(list, x, y, fontRendererObj);
 		}
 
 		@Override

@@ -6,14 +6,16 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -88,8 +90,8 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 		return state.withProperty(NORTH, checkBlockInDirection(w, x, y, z, EnumFacing.NORTH)).withProperty(SOUTH, checkBlockInDirection(w, x, y, z, EnumFacing.SOUTH)).withProperty(WEST, checkBlockInDirection(w, x, y, z, EnumFacing.WEST)).withProperty(EAST, checkBlockInDirection(w, x, y, z, EnumFacing.EAST)).withProperty(UP, checkBlockInDirection(w, x, y, z, EnumFacing.UP)).withProperty(DOWN, checkBlockInDirection(w, x, y, z, EnumFacing.DOWN));
 	}
 
-	protected BlockState createBlockState() {
-		return new BlockState(this, new IProperty[] { NORTH, EAST, SOUTH, WEST, DOWN, UP });
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[] { NORTH, EAST, SOUTH, WEST, DOWN, UP });
 	}
 
 	@Override
@@ -103,32 +105,29 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 			super(material, target);
 		}
 
-		public EnumWorldBlockLayer getBlockLayer() {
-			return EnumWorldBlockLayer.CUTOUT_MIPPED;
+		public BlockRenderLayer getBlockLayer() {
+			return BlockRenderLayer.TRANSLUCENT;
 		}
 
-		public boolean isOpaqueCube() {
+		@Override
+		public EnumBlockRenderType getRenderType(IBlockState state) {
+			return EnumBlockRenderType.MODEL;
+		}
+
+		public boolean isFullCube(IBlockState state) {
 			return false;
 		}
 
-		public boolean isFullCube() {
+		@Override
+		public boolean isOpaqueCube(IBlockState state) {
 			return false;
 		}
 
 		@SideOnly(Side.CLIENT)
-		public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
-			IBlockState iblockstate = worldIn.getBlockState(pos);
+		public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+			IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
 			Block block = iblockstate.getBlock();
-
-			if (worldIn.getBlockState(pos.offset(side.getOpposite())) != iblockstate) {
-				return true;
-			}
-
-			if (block == this) {
-				return false;
-			}
-
-			return super.shouldSideBeRendered(worldIn, pos, side);
+			return block == this ? false : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
 		}
 	}
 

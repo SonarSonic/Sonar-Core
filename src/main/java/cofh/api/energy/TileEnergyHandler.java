@@ -18,16 +18,15 @@ public class TileEnergyHandler extends TileEntity implements IEnergyReceiver, IE
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-
 		super.readFromNBT(nbt);
 		storage.readFromNBT(nbt);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		storage.writeToNBT(nbt);
+		return nbt;
 	}
 
 	/* IEnergyConnection */

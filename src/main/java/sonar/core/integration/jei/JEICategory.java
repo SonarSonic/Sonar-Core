@@ -1,9 +1,9 @@
 package sonar.core.integration.jei;
 
+import sonar.core.helpers.FontHelper;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.util.StatCollector;
 
 public abstract class JEICategory extends BlankRecipeCategory implements IRecipeHandler<JEIRecipe> {
 
@@ -20,7 +20,7 @@ public abstract class JEICategory extends BlankRecipeCategory implements IRecipe
 
 	@Override
 	public String getTitle() {
-		return StatCollector.translateToLocal(handler.getTitle());
+		return FontHelper.translate(handler.getTitle());
 	}
 
 	@Override
@@ -43,4 +43,8 @@ public abstract class JEICategory extends BlankRecipeCategory implements IRecipe
 		return recipe.recipeID.equals(getUid());
 	}
 
+	@Override
+	public String getRecipeCategoryUid(JEIRecipe id) {
+		return getRecipeCategoryUid();
+	}
 }

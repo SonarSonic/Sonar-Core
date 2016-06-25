@@ -5,8 +5,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants;
 
 public class InventoryItem implements IInventory {
@@ -83,8 +83,8 @@ public class InventoryItem implements IInventory {
 		return name.length() > 0;
 	}
 
-	public IChatComponent getDisplayName() {
-		return new ChatComponentText(name);
+	public ITextComponent getDisplayName() {
+		return new TextComponentTranslation(name);
 	}
 
 	public boolean hasCustomInventoryName() {

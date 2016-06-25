@@ -2,6 +2,7 @@ package sonar.core.inventory;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import sonar.core.SonarCore;
@@ -31,13 +32,13 @@ public abstract class ContainerSync extends Container {
 		if (syncInventory()){
 			super.detectAndSendChanges();
 		}
-		if (sync != null && crafters != null) {
+		if (sync != null && this.listeners != null) {
 			NBTTagCompound syncData = new NBTTagCompound();
 			SyncType[] types = getSyncTypes();
 			for (SyncType type : types) {
 				sync.writeData(syncData, type);
 				if (!syncData.hasNoTags()) {
-					for (Object o : crafters) {
+					for (IContainerListener o : listeners) {
 						if (o != null && o instanceof EntityPlayerMP) {
 							SonarCore.network.sendTo(new PacketTileSync(tile.getPos(), syncData, type), (EntityPlayerMP) o);
 						}

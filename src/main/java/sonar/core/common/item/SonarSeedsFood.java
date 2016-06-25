@@ -8,8 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
@@ -55,27 +57,28 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitx, float hity, float hitz) {
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if (this.greenhouseTier == 0 || !SonarLoader.calculatorLoaded()) {
 			if (side != EnumFacing.UP) {
-				return false;
+				return EnumActionResult.PASS;
 			} else if (player.canPlayerEdit(pos, side, stack) && player.canPlayerEdit(pos.offset(EnumFacing.UP), side, stack)) {
-				if (world.getBlockState(pos).getBlock().canSustainPlant(world, pos, EnumFacing.UP, this) && world.isAirBlock(pos.offset(EnumFacing.UP))) {
+				IBlockState state = world.getBlockState(pos);
+				if (state.getBlock().canSustainPlant(state, world, pos, EnumFacing.UP, this) && world.isAirBlock(pos.offset(EnumFacing.UP))) {
 					world.setBlockState(pos.offset(side), cropBlock.getDefaultState());
 					--stack.stackSize;
-					return true;
+					return EnumActionResult.SUCCESS;
 				} else {
-					return false;
+					return EnumActionResult.PASS;
 				}
 			} else {
-				return false;
+				return EnumActionResult.PASS;
 			}
 		}
-		return false;
+		return EnumActionResult.PASS;
 	}
 
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
-		return cropBlock == Blocks.nether_wart ? EnumPlantType.Nether : EnumPlantType.Crop;
+		return cropBlock == Blocks.NETHER_WART ? EnumPlantType.Nether : EnumPlantType.Crop;
 	}
 
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos) {

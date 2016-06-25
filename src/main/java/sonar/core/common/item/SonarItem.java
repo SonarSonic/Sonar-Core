@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,7 +35,7 @@ public class SonarItem extends Item {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
 		super.addInformation(stack, player, list, par4);
 		if (isNew)
-			list.add(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.ITALIC + "New Feature!");
+			list.add(TextFormatting.YELLOW + "" + TextFormatting.ITALIC + "New Feature!");
 	}
 
 }

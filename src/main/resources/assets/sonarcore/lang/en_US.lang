@@ -1,4 +1,4 @@
-itemGroup.SonarCore=Sonar Core
+//**SONAR CORE**//
 
 //machine upgrades
 upgrade.maximum=Maximum Installed
@@ -86,3 +86,8 @@ tile.StableStoneBlackRimmed_Brown.name=Brown Rimmed Black Stable Stone
 tile.StableStoneBlackRimmed_Green.name=Green Rimmed Black Stable Stone
 tile.StableStoneBlackRimmed_Red.name=Red Rimmed Black Stable Stone
 tile.StableStoneBlackRimmed_Black.name=Black Rimmed Black Stable Stone
+
+tile.StableGlass.name=Stable Glass
+tile.ClearStableGlass.name=Clear Stable Glass
+
+itemGroup.SonarCore=Sonar Core

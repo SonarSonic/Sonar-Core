@@ -6,10 +6,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.LanguageRegistry;
 
 public class FontHelper {
 
@@ -78,10 +77,16 @@ public class FontHelper {
 		}
 	}
 
-	/** sends a chat message to the Player */
+	/** sends a chat message to the Player & translates it */
 	public static void sendMessage(String string, World world, EntityPlayer player) {
 		if (!world.isRemote) {
-			player.addChatComponentMessage(new ChatComponentText(string));
+			player.addChatComponentMessage(new TextComponentTranslation(string));
+		}
+	}
+
+	public static void sendMessage(ITextComponent component, World world, EntityPlayer player) {
+		if (!world.isRemote) {
+			player.addChatComponentMessage(component);
 		}
 	}
 
@@ -169,24 +174,11 @@ public class FontHelper {
 		}
 		return false;
 	}
+	/*public static String translate(String string) { String local = StatCollector.translateToLocal(string); if (!local.equals(string)) { return local; } else { return StatCollector.translateToFallback(string); } }
+	 * 
+	 * public static String fullTranslate(String s) { String ret = LanguageRegistry.instance().getStringLocalization(s); if (ret.length() == 0) ret = LanguageRegistry.instance().getStringLocalization(s, "en_US"); if (ret.length() == 0) ret = translate(s); if (ret.length() == 0) return s; return ret; } */
 
-	public static String translate(String string) {
-		String local = StatCollector.translateToLocal(string);
-		if (!local.equals(string)) {
-			return local;
-		} else {
-			return StatCollector.translateToFallback(string);
-		}
-	}
-
-	public static String fullTranslate(String s) {
-		String ret = LanguageRegistry.instance().getStringLocalization(s);
-		if (ret.length() == 0)
-			ret = LanguageRegistry.instance().getStringLocalization(s, "en_US");
-		if (ret.length() == 0)
-			ret = translate(s);
-		if (ret.length() == 0)
-			return s;
-		return ret;
+	public static String translate(String string) {		
+		return new TextComponentTranslation(string).getFormattedText();
 	}
 }

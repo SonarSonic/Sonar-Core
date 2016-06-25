@@ -4,8 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import sonar.core.energy.ChargingUtils;
 import sonar.core.energy.EnergyCharge;
 import sonar.core.helpers.NBTHelper.SyncType;
@@ -110,8 +110,8 @@ public class TileEntityEnergyInventory extends TileEntityEnergy implements IInve
 		return false;
 	}
 
-	public IChatComponent getDisplayName() {
-		return new ChatComponentText(this.blockType.getLocalizedName());
+	public ITextComponent getDisplayName() {
+		return new TextComponentTranslation(this.blockType.getLocalizedName());
 	}
 
 	public int getField(int id) {

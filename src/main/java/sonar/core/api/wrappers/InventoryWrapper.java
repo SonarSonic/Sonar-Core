@@ -27,8 +27,7 @@ public class InventoryWrapper {
 	/** convenient method, adds the given stack to the list, used by {@link InventoryHandler}
 	 * @param list {@link StoredItemStack} list to add to
 	 * @param stack {@link StoredItemStack} to combine */
-	public void addStackToList(List<StoredItemStack> list, StoredItemStack stack) {
-	}
+	public void addStackToList(List<StoredItemStack> list, StoredItemStack stack) {}
 
 	/** convenient method, adds the given inventory {@link IInventory} to the list, used by {@link InventoryHandler}
 	 * @param list {@link StoredItemStack} list to add to
@@ -45,8 +44,7 @@ public class InventoryWrapper {
 	 * @param y the Y coordinate it will be dropped from
 	 * @param z the Z coordinate it will be dropped from
 	 * @param side side to drop from */
-	public void spawnStoredItemStack(StoredItemStack drop, World world, int x, int y, int z, EnumFacing side) {
-	}
+	public void spawnStoredItemStack(StoredItemStack drop, World world, int x, int y, int z, EnumFacing side) {}
 
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
 		return stack;

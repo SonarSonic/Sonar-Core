@@ -4,13 +4,13 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.integration.SonarLoader;
 
 public class ItemStackHelper {
 
 	/** checks if the two itemstacks are equal and can be merged
+	 * 
 	 * @param stack1 first stack your checking
 	 * @param stack2 second stack your checking
 	 * @return if they are equal and can be merged */
@@ -19,6 +19,7 @@ public class ItemStackHelper {
 	}
 
 	/** checks if two itemstacks are the same (and nothing more!)
+	 * 
 	 * @param stack1 first stack your checking
 	 * @param stack2second stack your checking
 	 * @return if they are equal and can be merged */
@@ -67,15 +68,14 @@ public class ItemStackHelper {
 	}
 
 	/** checks if the two input itemstacks come from the same mod.
-	 * 
 	 * @param target
 	 * @param stack
 	 * @return */
 	public static boolean matchingModid(ItemStack target, ItemStack stack) {
-		UniqueIdentifier targetID = GameRegistry.findUniqueIdentifierFor(target.getItem());
-		UniqueIdentifier stackID = GameRegistry.findUniqueIdentifierFor(stack.getItem());
-		if (targetID != null && stackID != null && targetID.modId != null && stackID.modId != null) {
-			return targetID.modId.equals(stackID.modId);
+		String targetID = target.getItem().getRegistryName().getResourceDomain();
+		String stackID = stack.getItem().getRegistryName().getResourceDomain();
+		if (targetID != null && stackID != null && !targetID.isEmpty() && !stackID.isEmpty()) {
+			return targetID.equals(stackID);
 		}
 		return false;
 	}
