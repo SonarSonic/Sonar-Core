@@ -89,11 +89,11 @@ public class SonarBlocks extends SonarCore {
 			Block normal = registerBlock("StableStone" + "_" + variant.name(), new StableStone(Material.ROCK, 100 + pos).setHardness(2.0F));
 			Block rimmed = registerBlock("StableStoneRimmed" + "_" + variant.name(), new StableStone(Material.ROCK, 200 + pos).setHardness(2.0F));
 			Block black = registerBlock("StableStoneBlackRimmed" + "_" + variant.name(), new StableStone(Material.ROCK, 300 + pos).setHardness(2.0F));
-			if (pos == 0) {
-				stableStone = normal;
-				stablestonerimmedBlock = rimmed;
-				stablestonerimmedblackBlock = black;
-			}
+			//if (pos == 0) {
+				stableStone[pos] = normal;
+				stablestonerimmedBlock[pos] = rimmed;
+				stablestonerimmedblackBlock[pos] = black;
+			//}
 			pos++;
 		}
 		stableGlass = registerBlock("StableGlass", new ConnectedBlock.Glass(Material.GLASS, 1)).setLightLevel(0.625F).setHardness(0.6F);

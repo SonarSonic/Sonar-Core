@@ -22,19 +22,20 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.IWailaInfo;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketTileSync;
+import sonar.core.network.sync.DirtyPart;
+import sonar.core.network.sync.IDirtyPart;
 import sonar.core.network.sync.ISyncPart;
 
 public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncable, IWailaInfo {
 
-	protected ArrayList<ISyncPart> parts;
-	protected boolean load, forceSync;
+	public ArrayList<ISyncPart> syncParts = new ArrayList();
+	public ArrayList<IDirtyPart> dirtyParts = new ArrayList();
+	protected boolean forceSync;
 	protected BlockCoords coords = BlockCoords.EMPTY;
+	public boolean loaded = true;
+	protected DirtyPart isDirty = new DirtyPart();
 
-	public TileEntitySonar() {
-		ArrayList<ISyncPart> parts = new ArrayList();
-		this.addSyncParts(parts);
-		this.parts = parts;
-	}
+	public TileEntitySonar() {}
 
 	public boolean isClient() {
 		return worldObj.isRemote;
@@ -44,16 +45,36 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 		return !worldObj.isRemote;
 	}
 
-	public void onLoaded() {
+	public final void onLoad() {
+		isDirty.setChanged(true);
+	}
+	
+	public void onFirstTick(){
+		
 	}
 
 	public void update() {
-		if (load) {
-			load = false;
-			this.onLoaded();
+		boolean markDirty = false;
+		if(loaded){
+			onFirstTick();
+			loaded=!loaded;
 		}
-		/* List<ISyncPart> parts = new ArrayList(); this.addSyncParts(parts); boolean markDirty = false; for (ISyncPart part : parts) { if (part.hasChanged()) { markDirty = true; break; } } if (markDirty) { markDirty(); } */
-		markDirty();
+		
+		for (ISyncPart part : syncParts) {
+			if (part!=null && part.hasChanged()) {
+				markDirty = true;
+				break;
+			}
+		}
+		for (IDirtyPart part : dirtyParts) {
+			if (part!=null && part.hasChanged()) {
+				markDirty = true;
+				part.setChanged(false);
+			}
+		}
+		if (markDirty) {
+			markDirty();
+		}
 	}
 
 	public BlockCoords getCoords() {
@@ -63,25 +84,19 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		ArrayList<ISyncPart> parts = new ArrayList();
-		this.addSyncParts(parts);
-		this.parts = parts;
 		this.readData(nbt, SyncType.SAVE);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		ArrayList<ISyncPart> parts = new ArrayList();
-		this.addSyncParts(parts);
-		this.parts = parts;
 		this.writeData(nbt, SyncType.SAVE);
 		return nbt;
 	}
 
-	public void addSyncParts(List<ISyncPart> parts) {
-	}
-
+	/*
+	 * public void addSyncParts(List<ISyncPart> parts) { }
+	 */
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
@@ -97,19 +112,19 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	public void validate() {
 		super.validate();
 		coords = new BlockCoords(this);
-		this.load = true;
 	}
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		NBTHelper.readSyncParts(nbt, type, this.parts);
+		NBTHelper.readSyncParts(nbt, type, this.syncParts);
 	}
 
-	public void writeData(NBTTagCompound nbt, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		if (forceSync && type == SyncType.DEFAULT_SYNC) {
 			type = SyncType.SYNC_OVERRIDE;
 			forceSync = false;
 		}
-		NBTHelper.writeSyncParts(nbt, type, this.parts, forceSync);
+		NBTHelper.writeSyncParts(nbt, type, this.syncParts, forceSync);
+		return nbt;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -119,6 +134,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 
 	public void forceNextSync() {
 		forceSync = true;
+		isDirty.setChanged(true);
 	}
 
 	public void requestSyncPacket() {
@@ -139,8 +155,9 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	}
 
 	public void markBlockForUpdate() {
-		this.markDirty();
+		isDirty.setChanged(true);
 		this.worldObj.markBlockRangeForRenderUpdate(pos, pos);
+		SonarCore.sendFullSyncAround(this, 128);
 		// may need some more stuff, here to make life easier
 	}
 

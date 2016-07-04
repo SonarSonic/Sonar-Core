@@ -46,10 +46,11 @@ public class InventoryWrapper {
 	 * @param side side to drop from */
 	public void spawnStoredItemStack(StoredItemStack drop, World world, int x, int y, int z, EnumFacing side) {}
 
+	/**returns what was added*/
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
 		return stack;
 	}
-
+	/**returns what was extracted*/
 	public StoredItemStack removeItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
 		return stack;
 	}

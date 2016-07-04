@@ -90,19 +90,20 @@ public class UpgradeInventory implements IUpgradeInventory {
 	}
 
 	@Override
-	public void writeData(NBTTagCompound tag, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		if (type == SyncType.SAVE || (type.isType(SyncType.DEFAULT_SYNC) && markDirty)) {
 			NBTTagCompound upgradeTag = new NBTTagCompound();
 			for (Entry<String, Integer> entry : upgrades.entrySet()) {
 				upgradeTag.setInteger(entry.getKey(), entry.getValue());
 			}
 			if (!upgradeTag.hasNoTags()) {
-				tag.setTag("Upgrades", upgradeTag);
+				nbt.setTag("Upgrades", upgradeTag);
 			}
 			if (type.isType(SyncType.DEFAULT_SYNC)) {
 				markDirty = false;
 			}
 		}
+		return nbt;
 	}
 
 	@Override

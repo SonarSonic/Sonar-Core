@@ -47,9 +47,9 @@ public final class SonarButtons {
 	@SideOnly(Side.CLIENT)
 	public static abstract class ImageButton extends SonarButton {
 		private final ResourceLocation texture;
-		private final int textureX;
-		private final int textureY;
-		private final int sizeX, sizeY;
+		protected int textureX;
+		protected int textureY;
+		protected int sizeX, sizeY;
 		private boolean bool;
 
 		protected ImageButton(int id, int x, int y, ResourceLocation texture, int textureX, int textureY, int sizeX, int sizeY) {

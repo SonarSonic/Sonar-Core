@@ -1,6 +1,7 @@
 package sonar.core;
 
 import java.util.Map;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -22,6 +23,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.OreDictionary;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -73,7 +75,8 @@ public class SonarCore {
 	public static Logger logger = (Logger) LogManager.getLogger(modid);
 
 	// common blocks
-	public static Block reinforcedStoneBlock, reinforcedStoneBrick, reinforcedDirtBlock, reinforcedDirtBrick, stableStone, stablestonerimmedBlock, stablestonerimmedblackBlock, stableGlass, clearStableGlass;
+	public static Block reinforcedStoneBlock, reinforcedStoneBrick, reinforcedDirtBlock, reinforcedDirtBrick, stableGlass, clearStableGlass;
+	public static Block[] stableStone=new Block[16], stablestonerimmedBlock=new Block[16], stablestonerimmedblackBlock=new Block[16];
 	//public static Block toughenedStoneBlock, toughenedStoneBrick;
 	//public static Block toughenedDirtBlock, toughenedDirtBrick;
 	public static Block reinforcedStoneStairs, reinforcedStoneBrickStairs, reinforcedDirtStairs, reinforcedDirtBrickStairs;
@@ -82,6 +85,8 @@ public class SonarCore {
 	public static Block reinforcedStoneSlab_half, reinforcedStoneBrickSlab_half, reinforcedDirtSlab_half, reinforcedDirtBrickSlab_half;
 	public static Block reinforcedStoneSlab_double, reinforcedStoneBrickSlab_double, reinforcedDirtSlab_double, reinforcedDirtBrickSlab_double;
 
+	public static final Random rand = new Random();
+	
 	public static CreativeTabs tab = new CreativeTabs("SonarCore") {
 		@Override
 		public Item getTabIconItem() {
@@ -110,6 +115,14 @@ public class SonarCore {
 		logger.info("Registering Renderers");
 		proxy.registerRenderThings();
 		logger.info("Registered Renderers");
+		
+
+		for (int i = 0; i < 16; i++) {
+			OreDictionary.registerOre("sonarStableStone", SonarCore.stableStone[i]);
+			OreDictionary.registerOre("sonarStableStone", SonarCore.stablestonerimmedBlock[i]);
+			OreDictionary.registerOre("sonarStableStone", SonarCore.stablestonerimmedblackBlock[i]);
+		}
+
 	}
 
 	@EventHandler
@@ -184,12 +197,17 @@ public class SonarCore {
 	public static void sendFullSyncAround(TileEntity tile, int spread) {
 		Object object = FMPHelper.checkObject(tile);
 		if (object != null && object instanceof INBTSyncable) {
-			NBTTagCompound tag = new NBTTagCompound();
-			((INBTSyncable) object).writeData(tag, SyncType.SYNC_OVERRIDE);
+			NBTTagCompound tag = ((INBTSyncable) object).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendToAllAround(new PacketTileSync(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 			}
 		}
 	}
+	public static void sendPacketToServer(TileEntity tile, int id){
+		SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) tile, tile.getPos(), id));
+	}
 
+	public static int randInt(int min, int max) {
+	    return rand.nextInt((max - min) + 1) + min;
+	}
 }

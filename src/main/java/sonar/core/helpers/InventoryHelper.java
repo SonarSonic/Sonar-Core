@@ -97,10 +97,10 @@ public class InventoryHelper extends InventoryWrapper {
 			world.spawnEntityInWorld(item);
 		}
 	}
-
+	
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
 		if(stack==null){
-			return stack;
+			return null;
 		}
 		if (tile != null && (filter == null || filter.allowed(stack.getFullStack()))) {
 			List<InventoryHandler> handlers = SonarCore.inventoryProviders.getObjects();
@@ -112,7 +112,7 @@ public class InventoryHelper extends InventoryWrapper {
 				}
 			}
 		}
-		return stack;
+		return null;
 	}
 
 	public StoredItemStack removeItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
@@ -146,7 +146,6 @@ public class InventoryHelper extends InventoryWrapper {
 					if (add != null) {
 						removeItems(from, add.copy(), dirFrom, ActionType.PERFORM, filter);						
 						addItems(to, removed.copy(), dirTo, ActionType.PERFORM, filter);
-						//System.out.print(removed.getStackSize());
 					}
 				}
 			}

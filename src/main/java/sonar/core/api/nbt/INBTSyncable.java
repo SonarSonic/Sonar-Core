@@ -10,6 +10,7 @@ public interface INBTSyncable {
 	public void readData(NBTTagCompound nbt, SyncType type);
 
 	/** @param nbt the tag you wish to write the data to
-	 * @param type the data type you are trying to sync */
-	public void writeData(NBTTagCompound nbt, SyncType type);
+	 * @param type the data type you are trying to sync 
+	 * @return TODO*/
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type);
 }

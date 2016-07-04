@@ -104,13 +104,13 @@ public class FontHelper {
 
 	public static String formatOutput(long power) {
 		if ((power < 1000)) {
-			return power + " RF/T";
+			return power + " RF/t";
 		} else if ((power < 1000000)) {
-			return roundValue(1, (float) power / 1000) + " KRF/T";
+			return roundValue(1, (float) power / 1000) + " KRF/t";
 		} else if ((power < 1000000000)) {
-			return roundValue(1, (float) power / 1000000) + " MRF/T";
+			return roundValue(1, (float) power / 1000000) + " MRF/t";
 		}
-		return roundValue(2, (float) power / 1000000000) + " BRF/T";
+		return roundValue(2, (float) power / 1000000000) + " BRF/t";
 
 	}
 
@@ -174,11 +174,21 @@ public class FontHelper {
 		}
 		return false;
 	}
-	/*public static String translate(String string) { String local = StatCollector.translateToLocal(string); if (!local.equals(string)) { return local; } else { return StatCollector.translateToFallback(string); } }
+	
+	
+	/*public static String translate(String string) { String local = FontHelper.translate(string); if (!local.equals(string)) { return local; } else { return StatCollector.translateToFallback(string); } }
 	 * 
 	 * public static String fullTranslate(String s) { String ret = LanguageRegistry.instance().getStringLocalization(s); if (ret.length() == 0) ret = LanguageRegistry.instance().getStringLocalization(s, "en_US"); if (ret.length() == 0) ret = translate(s); if (ret.length() == 0) return s; return ret; } */
 
 	public static String translate(String string) {		
 		return new TextComponentTranslation(string).getFormattedText();
+	}
+	
+	public static int getIntFromColor(int red, int green, int blue){
+		red = (red << 16) & 0x00FF0000;
+		green = (green << 8) & 0x0000FF00;
+		blue = blue & 0x000000FF;
+
+	    return 0xFF000000 | red | green | blue;
 	}
 }

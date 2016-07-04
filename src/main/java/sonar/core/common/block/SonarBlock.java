@@ -49,7 +49,6 @@ import com.google.common.collect.Lists;
 public abstract class SonarBlock extends Block implements IWrenchable, IInteractBlock {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-	protected Random rand = new Random();
 	public boolean orientation = true, wrenchable = true;
 	public AxisAlignedBB customBB = null;
 
@@ -246,9 +245,9 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 		for (ItemStack stack : drops) {
 			if (stack != null) {
-				float f = this.rand.nextFloat() * 0.8F + 0.1F;
-				float f1 = this.rand.nextFloat() * 0.8F + 0.1F;
-				float f2 = this.rand.nextFloat() * 0.8F + 0.1F;
+				float f = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
+				float f1 = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
+				float f2 = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
 
 				EntityItem dropStack = new EntityItem(world, pos.getX() + f, pos.getY() + f1, pos.getZ() + f2, stack);
 				world.spawnEntityInWorld(dropStack);

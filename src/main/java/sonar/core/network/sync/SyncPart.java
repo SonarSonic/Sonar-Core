@@ -9,11 +9,10 @@ import sonar.core.helpers.NBTHelper.SyncType;
 
 import com.google.common.collect.Lists;
 
-public abstract class SyncPart implements ISyncPart {
+public abstract class SyncPart extends DirtyPart implements ISyncPart {
 	private byte id = -1;
 	private String name;
 	private List<SyncType> types = Lists.newArrayList(SyncType.SAVE, SyncType.DEFAULT_SYNC);
-	private boolean hasChanged = true;
 
 	public SyncPart(int id) {
 		this.id = (byte) id;
@@ -81,13 +80,4 @@ public abstract class SyncPart implements ISyncPart {
 	 * 
 	 * public abstract void readObject(NBTTagCompound nbt, SyncType type); */
 
-	@Override
-	public void setChanged(boolean set) {
-		hasChanged = set;
-	}
-
-	@Override
-	public boolean hasChanged() {
-		return hasChanged;
-	}
 }

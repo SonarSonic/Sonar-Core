@@ -9,6 +9,10 @@ import sonar.core.network.sync.ISyncPart;
 
 public abstract class TileEntityHandler extends TileEntitySonar implements ITileHandler {
 
+	public TileEntityHandler(){
+		this.getTileHandler().addSyncParts(syncParts);
+	}
+	
 	public void update() {
 		super.update();
 		this.getTileHandler().update(this);
@@ -20,13 +24,9 @@ public abstract class TileEntityHandler extends TileEntitySonar implements ITile
 		this.getTileHandler().readData(nbt, type);
 	}
 
-	public void writeData(NBTTagCompound nbt, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
 		this.getTileHandler().writeData(nbt, type);
-	}
-
-	public void addSyncParts(List<ISyncPart> parts) {
-		super.addSyncParts(parts);
-		this.getTileHandler().addSyncParts(parts);
+		return nbt;
 	}
 }

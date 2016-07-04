@@ -9,7 +9,7 @@ public class SonarCrafting extends SonarCore {
 
 	public static void registerCraftingRecipes() {		
 		addShapeless(new ItemStack(SonarCore.reinforcedStoneBrick, 2), new Object[]{SonarCore.reinforcedStoneBlock, SonarCore.reinforcedStoneBlock});
-		addShapeless(new ItemStack(SonarCore.stableStone, 2), new Object[]{SonarCore.reinforcedStoneBrick, SonarCore.reinforcedStoneBrick});
+		addShapeless(new ItemStack(SonarCore.stableStone[0], 2), new Object[]{SonarCore.reinforcedStoneBrick, SonarCore.reinforcedStoneBrick});
 		
 		addShapeless(new ItemStack(SonarCore.stableGlass, 1), new Object[] { SonarCore.clearStableGlass });
 		addShapeless(new ItemStack(SonarCore.clearStableGlass, 1), new Object[] { SonarCore.stableGlass });				
@@ -26,15 +26,15 @@ public class SonarCrafting extends SonarCore {
 		for (int i = 0; i < 16; i++) {
 			int meta = ~i & 15;
 			if (meta != 0) {
-				addShaped(new ItemStack(SonarCore.stableStone, 8, meta), new Object[] { "SSS", "SDS", "SSS", 'D', new ItemStack(Items.DYE, 1, i), 'S', new ItemStack(SonarCore.stableStone, 1, 0) });
+				addShaped(new ItemStack(SonarCore.stableStone[meta], 8), new Object[] { "SSS", "SDS", "SSS", 'D', new ItemStack(Items.DYE, 1, i), 'S', new ItemStack(SonarCore.stableStone[0], 1) });
 			}
 		}
 
-		//for (int i = 0; i < 16; i++) {
-			//addShapeless(new ItemStack(stablestonerimmedBlock, 1), new Object[] { new ItemStack(stableStone, 1) });
-			//addShapeless(new ItemStack(stablestonerimmedblackBlock, 1), new Object[] { new ItemStack(stablestonerimmedBlock, 1) });
-			addShapeless(new ItemStack(SonarCore.stableStone, 1), new Object[] { new ItemStack(SonarCore.stablestonerimmedblackBlock, 1) });
-		//}
+		for (int i = 0; i < 16; i++) {
+			addShapeless(new ItemStack(stablestonerimmedBlock[i], 1), new Object[] { new ItemStack(stableStone[i], 1) });
+			addShapeless(new ItemStack(stablestonerimmedblackBlock[i], 1), new Object[] { new ItemStack(stablestonerimmedBlock[i], 1) });
+			addShapeless(new ItemStack(SonarCore.stableStone[i], 1), new Object[] { new ItemStack(SonarCore.stablestonerimmedblackBlock[i], 1) });
+		}
 
 	}
 

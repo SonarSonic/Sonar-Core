@@ -32,7 +32,8 @@ public abstract class TileHandler implements INBTSyncable {
 
 	public void readData(NBTTagCompound nbt, SyncType type) {}
 
-	public void writeData(NBTTagCompound nbt, SyncType type) {}
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
+		return nbt;}
 	
 	public void removed(World world, int x, int y, int z, int meta) {}
 

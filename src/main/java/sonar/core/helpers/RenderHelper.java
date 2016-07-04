@@ -2,7 +2,11 @@ package sonar.core.helpers;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -76,6 +80,43 @@ public class RenderHelper {
 		return null;
 
 	}
+	
+	public static void drawRect(float left, float top, float right, float bottom, int color)
+    {
+        if (left < right)
+        {
+        	float i = left;
+            left = right;
+            right = i;
+        }
+
+        if (top < bottom)
+        {
+        	float j = top;
+            top = bottom;
+            bottom = j;
+        }
+
+        float f3 = (float)(color >> 24 & 255) / 255.0F;
+        float f = (float)(color >> 16 & 255) / 255.0F;
+        float f1 = (float)(color >> 8 & 255) / 255.0F;
+        float f2 = (float)(color & 255) / 255.0F;
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.color(f, f1, f2, f3);
+        vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
+        vertexbuffer.pos((double)left, (double)bottom, 0.0D).endVertex();
+        vertexbuffer.pos((double)right, (double)bottom, 0.0D).endVertex();
+        vertexbuffer.pos((double)right, (double)top, 0.0D).endVertex();
+        vertexbuffer.pos((double)left, (double)top, 0.0D).endVertex();
+        tessellator.draw();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+    }
+	
 	/*
 	public static boolean renderItem(ItemStack item, float bobing, float rotation, Random random, TextureManager engine, RenderBlocks renderBlocks, int count) {
 		IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(item, ENTITY);
@@ -290,7 +331,7 @@ public class RenderHelper {
 				GL11.glScalef(1.0f, 1.0f, normalSize ? 1.0f : 0.01f);
 
 				RenderItem.renderInFrame = false;
-				final FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+				final FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 				if (!ForgeHooksClient.renderInventoryItem(RenderBlocks.getInstance(), Minecraft.getMinecraft().renderEngine, itemstack, true, 0, 0, 0)) {
 					RenderItem.getInstance().renderItemIntoGUI(fr, Minecraft.getMinecraft().renderEngine, itemstack, 0, 0, false);
 				}

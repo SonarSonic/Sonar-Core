@@ -21,7 +21,7 @@ public abstract class TileEntityHandlerInventory extends TileEntityHandler imple
 		return getInv().decrStackSize(slot, var2);
 	}
 
-	public ItemStack getStackInSlotOnClosing(int i) {
+	public ItemStack removeStackFromSlot(int i) {
 		return getInv().getStackInSlot(i);
 	}
 

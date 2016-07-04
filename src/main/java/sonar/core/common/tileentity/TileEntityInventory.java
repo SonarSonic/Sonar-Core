@@ -18,6 +18,10 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 
 	public ISonarInventory inv;
 
+	public TileEntityInventory(){
+		dirtyParts.add(inv);
+	}
+	
 	public ISonarInventory getTileInv() {
 		return inv;
 	}
@@ -45,9 +49,10 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 		getTileInv().readData(nbt, type);
 	}
 
-	public void writeData(NBTTagCompound nbt, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
 		getTileInv().writeData(nbt, type);
+		return nbt;
 	}
 
 	public int getSizeInventory() {

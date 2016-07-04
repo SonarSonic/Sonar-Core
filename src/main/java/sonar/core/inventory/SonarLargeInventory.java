@@ -11,8 +11,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.network.sync.DirtyPart;
 
-public class SonarLargeInventory implements ISonarInventory {
+public class SonarLargeInventory extends DirtyPart implements ISonarInventory {
 
 	// public StoredItemStack[] slots;
 	public ArrayList<ItemStack>[] slots;
@@ -118,6 +119,7 @@ public class SonarLargeInventory implements ISonarInventory {
 	public ItemStack decrStackSize(int slot, int var2) {
 		ItemStack stack = getStackInSlot(slot);
 		if (stack != null) {
+			setChanged(true);
 			if (stack.stackSize <= var2) {
 				ItemStack itemstack = stack;
 				setInventorySlotContents(slot, null);
@@ -136,6 +138,7 @@ public class SonarLargeInventory implements ISonarInventory {
 	public ItemStack removeStackFromSlot(int i) {
 		ItemStack stack = getStackInSlot(i);
 		if (stack != null) {
+			setChanged(true);
 			ItemStack itemstack = stack;
 			setInventorySlotContents(i, null);
 			return itemstack;
@@ -164,6 +167,7 @@ public class SonarLargeInventory implements ISonarInventory {
 				slots[target].add(itemstack);
 			}
 		}
+		setChanged(true);
 	}
 
 	public int getInventoryStackLimit() {
@@ -214,6 +218,7 @@ public class SonarLargeInventory implements ISonarInventory {
 	public void clear() {
 		for (int i = 0; i < this.getSizeInventory(); i++)
 			this.setInventorySlotContents(i, null);
+		setChanged(true);
 	}
 
 	@Override

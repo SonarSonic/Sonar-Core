@@ -8,8 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.network.sync.DirtyPart;
 
-public class SonarInventory implements ISonarInventory {
+public class SonarInventory extends DirtyPart implements ISonarInventory {
 
 	public ItemStack[] slots;
 	public int limit = 64;
@@ -64,7 +65,7 @@ public class SonarInventory implements ISonarInventory {
 
 	public ItemStack decrStackSize(int slot, int var2) {
 		if (this.slots[slot] != null) {
-
+			setChanged(true);
 			if (this.slots[slot].stackSize <= var2) {
 				ItemStack itemstack = this.slots[slot];
 				this.slots[slot] = null;
@@ -75,7 +76,6 @@ public class SonarInventory implements ISonarInventory {
 			if (this.slots[slot].stackSize == 0) {
 				this.slots[slot] = null;
 			}
-
 			return itemstack;
 		}
 
@@ -84,6 +84,7 @@ public class SonarInventory implements ISonarInventory {
 
 	public ItemStack removeStackFromSlot(int i) {
 		if (this.slots[i] != null) {
+			setChanged(true);
 			ItemStack itemstack = this.slots[i];
 			this.slots[i] = null;
 			return itemstack;
@@ -97,6 +98,7 @@ public class SonarInventory implements ISonarInventory {
 		if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit())) {
 			itemstack.stackSize = getInventoryStackLimit();
 		}
+		setChanged(true);
 	}
 
 	public int getInventoryStackLimit() {

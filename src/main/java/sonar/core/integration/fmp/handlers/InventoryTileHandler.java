@@ -35,10 +35,11 @@ public abstract class InventoryTileHandler extends TileHandler implements IInven
 	}
 
 	@Override
-	public void writeData(NBTTagCompound nbt, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
 		if (type == SyncType.SAVE)
 			getTileInv().writeData(nbt, type);
+		return nbt;
 	}
 
 	public int getSizeInventory() {
@@ -53,7 +54,7 @@ public abstract class InventoryTileHandler extends TileHandler implements IInven
 		return getTileInv().decrStackSize(slot, var2);
 	}
 
-	public ItemStack getStackInSlotOnClosing(int slot) {
+	public ItemStack removeStackFromSlot(int slot) {
 		return getTileInv().getStackInSlot(slot);
 	}
 

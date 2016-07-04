@@ -17,6 +17,10 @@ import cofh.api.energy.IEnergyReceiver;
 
 public class TileEntityEnergySidedInventory extends TileEntitySidedInventory implements IEnergyReceiver, IEnergyProvider {
 
+	public TileEntityEnergySidedInventory() {
+		syncParts.add(storage);
+	}
+
 	public static enum EnergyMode {
 		RECIEVE, SEND, SEND_RECIEVE, BLOCKED;
 
@@ -30,7 +34,7 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	}
 
 	public EnergyMode energyMode = EnergyMode.RECIEVE;
-	public SyncEnergyStorage storage;
+	public final SyncEnergyStorage storage = new SyncEnergyStorage(0);
 	public int maxTransfer;
 
 	public void setEnergyMode(EnergyMode mode) {
@@ -44,16 +48,12 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 		}
 	}
 
-	public void writeData(NBTTagCompound nbt, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
 		if (type == SyncType.DROP) {
 			nbt.setInteger("energy", this.storage.getEnergyStored());
 		}
-	}
-
-	public void addSyncParts(List<ISyncPart> parts) {
-		super.addSyncParts(parts);
-		parts.add(storage);
+		return nbt;
 	}
 
 	@Override

@@ -22,7 +22,6 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 		super.writeToNBT(nbt);
 		sides.writeToNBT(nbt);
 		return nbt;
-
 	}
 
 	@Override

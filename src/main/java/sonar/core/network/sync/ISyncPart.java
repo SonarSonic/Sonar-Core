@@ -4,11 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.helpers.NBTHelper.SyncType;
 
-public interface ISyncPart{
-	
-	public void setChanged(boolean set);
-	
-	public boolean hasChanged();
+public interface ISyncPart extends IDirtyPart{
 	
 	public void writeToBuf(ByteBuf buf);	
 

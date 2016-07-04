@@ -85,7 +85,7 @@ public abstract class SonarTilePart extends McMetaPart implements INBTSyncable {
 		}
 		if (player != null && player instanceof EntityPlayerMP) {
 			NBTTagCompound tag = new NBTTagCompound();
-			writeData(tag, SyncType.SYNC);
+			writeData(tag, SyncType.DEFAULT_SYNC);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendTo(new PacketTileSync(x(), y(), z(), tag), (EntityPlayerMP) player);
 			}
