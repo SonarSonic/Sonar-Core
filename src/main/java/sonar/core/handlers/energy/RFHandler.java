@@ -6,6 +6,7 @@ import sonar.core.api.energy.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
+import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 
@@ -44,11 +45,12 @@ public class RFHandler extends EnergyHandler {
 
 	@Override
 	public StoredEnergyStack addEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
+		EnumFacing side = dir;
 		if (tile instanceof IEnergyReceiver) {
 			IEnergyReceiver receiver = (IEnergyReceiver) tile;
-			if (receiver.canConnectEnergy(dir.getOpposite())) {
+			if (side==null || receiver.canConnectEnergy(side = side.getOpposite())) {
 				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-				transfer.stored -= receiver.receiveEnergy(dir.getOpposite(), transferRF, action.shouldSimulate());
+				transfer.stored -= receiver.receiveEnergy(side, transferRF, action.shouldSimulate());
 			}
 		}
 		if (transfer.stored == 0)
@@ -58,10 +60,12 @@ public class RFHandler extends EnergyHandler {
 
 	@Override
 	public StoredEnergyStack removeEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
+		EnumFacing side = dir;
 		if (tile instanceof IEnergyProvider) {
 			IEnergyProvider receiver = (IEnergyProvider) tile;
-			if (receiver.canConnectEnergy(dir.getOpposite())) {
-				transfer.stored -= receiver.extractEnergy(dir.getOpposite(), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE, action.shouldSimulate());
+			
+			if (side==null || receiver.canConnectEnergy(side = side.getOpposite())) {
+				transfer.stored -= receiver.extractEnergy(side, transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE, action.shouldSimulate());
 			}
 		}
 		if (transfer.stored == 0)

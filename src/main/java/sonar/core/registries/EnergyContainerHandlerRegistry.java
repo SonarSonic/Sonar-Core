@@ -1,6 +1,9 @@
 package sonar.core.registries;
 
 import sonar.core.api.energy.EnergyHandler;
+import sonar.core.api.energy.EnergyContainerHandler;
+import sonar.core.handlers.container.RFItemHandler;
+import sonar.core.handlers.container.TeslaItemHandler;
 /*
 import sonar.core.handlers.energy.AEProvider;
 import sonar.core.handlers.energy.EUProvider;
@@ -10,21 +13,16 @@ import sonar.core.handlers.energy.RFHandler;
 import sonar.core.handlers.energy.TeslaHandler;
 import sonar.core.helpers.RegistryHelper;
 
-public class EnergyProviderRegistry extends RegistryHelper<EnergyHandler> {
+public class EnergyContainerHandlerRegistry extends RegistryHelper<EnergyContainerHandler> {
 
 	@Override
 	public void register() {
-		/*
-		registerObject(new AEProvider());
-		registerObject(new MekanismProvider());
-		registerObject(new EUProvider());
-		*/
-		registerObject(new RFHandler());
-		registerObject(new TeslaHandler());
+		registerObject(new RFItemHandler());
+		registerObject(new TeslaItemHandler());
 	}
 
 	@Override
 	public String registeryType() {
-		return "Energy Provider";
+		return "Energy Container Handler";
 	}
 }

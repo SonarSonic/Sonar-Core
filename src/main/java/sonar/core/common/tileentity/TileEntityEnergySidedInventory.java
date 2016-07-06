@@ -2,35 +2,27 @@ package sonar.core.common.tileentity;
 
 import java.util.List;
 
+import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import sonar.core.api.SonarAPI;
-import sonar.core.energy.ChargingUtils;
+import sonar.core.api.energy.ISonarEnergyTile;
+import sonar.core.common.tileentity.TileEntityEnergy.EnergyMode;
 import sonar.core.energy.EnergyCharge;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.helpers.SonarHelper;
+import sonar.core.integration.SonarLoader;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncEnergyStorage;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 
-public class TileEntityEnergySidedInventory extends TileEntitySidedInventory implements IEnergyReceiver, IEnergyProvider {
+public class TileEntityEnergySidedInventory extends TileEntitySidedInventory implements IEnergyReceiver, IEnergyProvider, ISonarEnergyTile {
 
 	public TileEntityEnergySidedInventory() {
 		syncParts.add(storage);
-	}
-
-	public static enum EnergyMode {
-		RECIEVE, SEND, SEND_RECIEVE, BLOCKED;
-
-		public boolean canSend() {
-			return this == SEND || this == SEND_RECIEVE;
-		}
-
-		public boolean canRecieve() {
-			return this == RECIEVE || this == SEND_RECIEVE;
-		}
 	}
 
 	public EnergyMode energyMode = EnergyMode.RECIEVE;
@@ -86,29 +78,11 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	}
 
 	public void discharge(int id) {
-		if (ChargingUtils.canDischarge(slots()[id], this.storage)) {
-			EnergyCharge discharge = ChargingUtils.discharge(slots()[id], storage);
-			if (discharge.getEnergyStack() != null && discharge.getEnergyUsage() != 0) {
-				slots()[id] = discharge.getEnergyStack();
-				this.storage.modifyEnergyStored(discharge.getEnergyUsage());
-				if (discharge.stackUsed()) {
-					slots()[id].stackSize--;
-					if (slots()[id].stackSize <= 0) {
-						slots()[id] = null;
-					}
-				}
-			}
-		}
+		slots()[id] = SonarAPI.getEnergyHelper().dischargeItem(slots()[id], this, Math.min(maxTransfer, this.getStorage().getMaxExtract()));
 	}
 
 	public void charge(int id) {
-		if (ChargingUtils.canCharge(slots()[id], this.storage)) {
-			EnergyCharge charge = ChargingUtils.charge(slots()[id], storage, maxTransfer);
-			if (charge.getEnergyStack() != null && charge.getEnergyUsage() != 0) {
-				slots()[id] = charge.getEnergyStack();
-				this.storage.modifyEnergyStored(charge.getEnergyUsage());
-			}
-		}
+		slots()[id] = SonarAPI.getEnergyHelper().chargeItem(slots()[id], this, Math.min(maxTransfer, this.getStorage().getMaxExtract()));
 	}
 
 	public void addEnergy(EnumFacing... faces) {
@@ -116,5 +90,31 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 			TileEntity entity = SonarHelper.getAdjacentTileEntity(this, dir);
 			SonarAPI.getEnergyHelper().transferEnergy(this, entity, dir.getOpposite(), dir, maxTransfer);
 		}
+	}
+
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if(SonarLoader.teslaLoaded && this.canConnectEnergy(facing)){
+			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && energyMode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && energyMode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+	            return true;
+		}		
+		return super.hasCapability(capability, facing);
+	}
+
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if(SonarLoader.teslaLoaded && this.canConnectEnergy(facing)){
+			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && energyMode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && energyMode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+	            return (T) storage;
+		}	
+		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public SyncEnergyStorage getStorage() {
+		return storage;
+	}
+	
+	@Override
+	public EnergyMode getMode() {
+		return energyMode;
 	}
 }

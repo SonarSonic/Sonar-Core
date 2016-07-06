@@ -7,6 +7,18 @@ import net.minecraftforge.fml.common.Loader;
 
 public class SonarLoader {
 
+	public static boolean wailaLoaded = false;	
+	public static boolean teslaLoaded = false;	
+	public static boolean calculatorLoaded = false;	
+	public static boolean logisticsLoaded = false;	
+	
+	public static void initLoader(){
+		wailaLoaded=Loader.isModLoaded("Waila");
+		teslaLoaded=Loader.isModLoaded("Tesla");
+		calculatorLoaded=Loader.isModLoaded("Calculator");
+		logisticsLoaded=Loader.isModLoaded("PracticalLogistics");
+	}	
+	
 	/** @returns if Industrial Craft is installed */
 	public static boolean ic2Loaded() {
 		return Loader.isModLoaded("IC2");

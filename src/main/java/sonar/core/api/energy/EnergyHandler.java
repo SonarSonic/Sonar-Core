@@ -37,7 +37,7 @@ public abstract class EnergyHandler extends SonarHandler {
 	public abstract StoredEnergyStack removeEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action);
 
 	/** only called if canProvideEnergy is true
-	 * @param storedStacks current list of energy for the block, providers only add to this and don't remove.
+	 * @param energyStack current list of energy for the block, providers only add to this and don't remove.
 	 * @param tile the {@link TileEntity} to check
 	 * @param dir the {@link EnumFacing} to check from */
 	public abstract void getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir);

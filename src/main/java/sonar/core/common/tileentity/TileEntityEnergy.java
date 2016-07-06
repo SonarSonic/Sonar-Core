@@ -2,18 +2,23 @@ package sonar.core.common.tileentity;
 
 import java.util.List;
 
+import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import sonar.core.api.SonarAPI;
+import sonar.core.api.energy.ISonarEnergyTile;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.helpers.SonarHelper;
+import sonar.core.integration.SonarLoader;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncEnergyStorage;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import cofh.api.energy.IEnergyStorage;
 
-public class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver, IEnergyProvider {
+public class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver, IEnergyProvider,ISonarEnergyTile {
 
 	public TileEntityEnergy() {
 		syncParts.add(storage);
@@ -56,7 +61,7 @@ public class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver
 
 	@Override
 	public boolean canConnectEnergy(EnumFacing from) {
-		if(energyMode==EnergyMode.BLOCKED){
+		if (energyMode == EnergyMode.BLOCKED) {
 			return false;
 		}
 		return true;
@@ -81,16 +86,42 @@ public class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver
 
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		if (energyMode.canRecieve()){
+		if (energyMode.canRecieve()) {
 			return storage.receiveEnergy(maxReceive, simulate);
 		}
 		return 0;
 	}
 
-	public void addEnergy(EnumFacing ...faces) {
+	public void addEnergy(EnumFacing... faces) {
 		for (EnumFacing dir : faces) {
 			TileEntity entity = SonarHelper.getAdjacentTileEntity(this, dir);
 			SonarAPI.getEnergyHelper().transferEnergy(this, entity, dir.getOpposite(), dir, maxTransfer);
 		}
+	}
+
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if(SonarLoader.teslaLoaded && this.canConnectEnergy(facing)){
+			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && energyMode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && energyMode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+	            return true;
+		}		
+		return super.hasCapability(capability, facing);
+	}
+
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if(SonarLoader.teslaLoaded && this.canConnectEnergy(facing)){
+			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && energyMode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && energyMode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+	            return (T) storage;
+		}	
+		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public SyncEnergyStorage getStorage() {
+		return storage;
+	}
+	
+	@Override
+	public EnergyMode getMode() {
+		return energyMode;
 	}
 }

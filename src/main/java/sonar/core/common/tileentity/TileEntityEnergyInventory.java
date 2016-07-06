@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-import sonar.core.energy.ChargingUtils;
+import sonar.core.api.SonarAPI;
 import sonar.core.energy.EnergyCharge;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.inventory.SonarInventory;
@@ -14,29 +14,11 @@ import sonar.core.inventory.SonarInventory;
 public class TileEntityEnergyInventory extends TileEntityEnergy implements IInventory {
 
 	public void discharge(int id) {
-		if (ChargingUtils.canDischarge(slots()[id], this.storage)) {
-			EnergyCharge discharge = ChargingUtils.discharge(slots()[id], storage);
-			if (discharge.getEnergyStack() != null && discharge.getEnergyUsage() != 0) {
-				slots()[id] = discharge.getEnergyStack();
-				this.storage.modifyEnergyStored(discharge.getEnergyUsage());
-				if (discharge.stackUsed()) {
-					slots()[id].stackSize--;
-					if (slots()[id].stackSize <= 0) {
-						slots()[id] = null;
-					}
-				}
-			}
-		}
+		slots()[id] = SonarAPI.getEnergyHelper().dischargeItem(slots()[id], this, Math.min(maxTransfer, this.getStorage().getMaxExtract()));
 	}
 
 	public void charge(int id) {
-		if (ChargingUtils.canCharge(slots()[id], this.storage)) {
-			EnergyCharge charge = ChargingUtils.charge(slots()[id], storage, maxTransfer);
-			if (charge.getEnergyStack() != null && charge.getEnergyUsage() != 0) {
-				slots()[id] = charge.getEnergyStack();
-				this.storage.modifyEnergyStored(charge.getEnergyUsage());
-			}
-		}
+		slots()[id] = SonarAPI.getEnergyHelper().chargeItem(slots()[id], this, Math.min(maxTransfer, this.getStorage().getMaxExtract()));
 	}
 
 	public SonarInventory inv;

@@ -225,5 +225,4 @@ public class SonarLargeInventory extends DirtyPart implements ISonarInventory {
 	public void markDirty() {
 		tile.markDirty();
 	}
-
 }

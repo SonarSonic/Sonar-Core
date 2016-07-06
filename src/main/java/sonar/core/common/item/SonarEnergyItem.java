@@ -5,20 +5,27 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.helpers.FontHelper;
+import sonar.core.network.sync.SyncEnergyStorage;
+import sonar.core.network.sync.SyncItemEnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 
 public class SonarEnergyItem extends SonarItem implements IEnergyContainerItem {
 
-	protected int capacity = 1000;
-	protected int maxReceive = 200;
-	protected int maxExtract = 200;
-	protected int maxTransfer = 200;
+	public SyncItemEnergyStorage storage;
+	public int capacity, maxReceive, maxExtract;
 
-	public SonarEnergyItem() {
+	public SonarEnergyItem(int capacity, int maxReceive, int maxExtract) {
 		super();
+		this.capacity = capacity;
+		this.maxReceive = maxReceive;
+		this.maxExtract = maxExtract;
+		storage = new SyncItemEnergyStorage(null, capacity, maxReceive, maxExtract);
 		setMaxStackSize(1);
 	}
 
@@ -31,45 +38,28 @@ public class SonarEnergyItem extends SonarItem implements IEnergyContainerItem {
 
 	@Override
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
-		if (container.getTagCompound() == null) {
-			container.setTagCompound(new NBTTagCompound());
-		}
-		int energy = container.getTagCompound().getInteger("Energy");
-		int energyReceived = Math.min(this.capacity - energy, Math.min(this.maxReceive, maxReceive));
-
-		if (!simulate) {
-			energy += energyReceived;
-			container.getTagCompound().setInteger("Energy", energy);
-		}
-		return energyReceived;
+		return storage.receiveEnergy(maxReceive, simulate);
 	}
 
 	@Override
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
-		if ((container.getTagCompound() == null) || (!container.getTagCompound().hasKey("Energy"))) {
-			return 0;
-		}
-		int energy = container.getTagCompound().getInteger("Energy");
-		int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
-
-		if (!simulate) {
-			energy -= energyExtracted;
-			container.getTagCompound().setInteger("Energy", energy);
-		}
-		return energyExtracted;
+		return storage.extractEnergy(maxExtract, simulate);
 	}
 
 	@Override
 	public int getEnergyStored(ItemStack container) {
-		if ((!container.hasTagCompound())) {
-			return 0;
-		}
-		return container.getTagCompound().getInteger("Energy");
+		return storage.getEnergyStored();
 	}
 
 	@Override
 	public int getMaxEnergyStored(ItemStack container) {
-		return capacity;
+		return storage.getMaxEnergyStored();
+	}
+
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
+		storage = new SyncItemEnergyStorage(null, capacity, maxReceive, maxExtract);
+		return storage;
 	}
 
 }

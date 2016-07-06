@@ -47,6 +47,7 @@ import sonar.core.network.PacketStackUpdate;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
+import sonar.core.registries.EnergyContainerHandlerRegistry;
 import sonar.core.registries.EnergyProviderRegistry;
 import sonar.core.registries.EnergyTypeRegistry;
 import sonar.core.registries.FluidProviderRegistry;
@@ -57,7 +58,7 @@ import sonar.core.upgrades.MachineUpgradeRegistry;
 public class SonarCore {
 
 	public static final String modid = "SonarCore";
-	public static final String version = "3.0.0";
+	public static final String version = "3.0.2";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -68,6 +69,7 @@ public class SonarCore {
 	public static InventoryProviderRegistry inventoryProviders = new InventoryProviderRegistry();
 	public static FluidProviderRegistry fluidProviders = new FluidProviderRegistry();
 	public static EnergyProviderRegistry energyProviders = new EnergyProviderRegistry();
+	public static EnergyContainerHandlerRegistry energyContainerHandlers = new EnergyContainerHandlerRegistry();
 	public static EnergyTypeRegistry energyTypes = new EnergyTypeRegistry();
 	public static MachineUpgradeRegistry machineUpgrades = new MachineUpgradeRegistry();
 	public static SimpleNetworkWrapper network;
@@ -127,7 +129,10 @@ public class SonarCore {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		if (SonarLoader.wailaLoaded()) {
+		logger.info("Checking Loaded Mods");
+		SonarLoader.initLoader();
+		
+		if (SonarLoader.wailaLoaded) {
 			SonarWailaModule.register();
 			logger.info("Integrated with WAILA");
 		} else {
@@ -139,6 +144,7 @@ public class SonarCore {
 		inventoryProviders.register();
 		fluidProviders.register();
 		energyProviders.register();
+		energyContainerHandlers.register();
 		machineUpgrades.register();
 	}
 
@@ -154,6 +160,7 @@ public class SonarCore {
 		logger.info("Registered " + inventoryProviders.getObjects().size() + " Inventory Providers");
 		logger.info("Registered " + fluidProviders.getObjects().size() + " Fluid Providers");
 		logger.info("Registered " + energyProviders.getObjects().size() + " Energy Providers");
+		logger.info("Registered " + energyContainerHandlers.getObjects().size() + " Energy Container Providers");
 		logger.info("Registered " + machineUpgrades.getMap().size() + " Machine Upgrades");
 	}
 

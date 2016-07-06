@@ -10,6 +10,7 @@ public class EnergyTypeRegistry extends RegistryHelper<EnergyType> {
 		registerObject(EnergyType.AE);
 		registerObject(EnergyType.MJ);
 		registerObject(EnergyType.EU);
+		registerObject(EnergyType.TESLA);
 		registerObject(EnergyType.RF);
 	}
 

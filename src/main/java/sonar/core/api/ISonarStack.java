@@ -1,6 +1,5 @@
 package sonar.core.api;
 
-
 public interface ISonarStack<T extends ISonarStack> {
 
 	public enum StorageTypes {

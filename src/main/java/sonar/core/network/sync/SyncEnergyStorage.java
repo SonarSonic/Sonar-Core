@@ -1,11 +1,20 @@
 package sonar.core.network.sync;
 
 import io.netty.buffer.ByteBuf;
+import net.darkhax.tesla.api.ITeslaConsumer;
+import net.darkhax.tesla.api.ITeslaHolder;
+import net.darkhax.tesla.api.ITeslaProducer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.INBTSerializable;
 import sonar.core.helpers.NBTHelper.SyncType;
 import cofh.api.energy.EnergyStorage;
+import net.minecraftforge.fml.common.Optional;
 
-public class SyncEnergyStorage extends EnergyStorage implements ISyncPart {
+@Optional.InterfaceList({		
+	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "Tesla"),
+	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "Tesla"),
+	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaProducer", modid = "Tesla")})				
+public class SyncEnergyStorage extends EnergyStorage implements ISyncPart, ITeslaConsumer, ITeslaProducer, ITeslaHolder, INBTSerializable<NBTTagCompound> {
 
 	private String tagName = "energyStorage";
 	private boolean hasChanged;
@@ -103,4 +112,34 @@ public class SyncEnergyStorage extends EnergyStorage implements ISyncPart {
 		return hasChanged;
 	}
 
+	//TESLA
+	@Override
+	public long getStoredPower() {
+		return this.getEnergyStored();
+	}
+
+	@Override
+	public long getCapacity() {
+		return this.getMaxEnergyStored();
+	}
+
+	@Override
+	public long takePower(long power, boolean simulated) {
+		return extractEnergy((int) Math.min(Integer.MAX_VALUE, power), simulated);
+	}
+
+	@Override
+	public long givePower(long power, boolean simulated) {
+		return receiveEnergy((int) Math.min(Integer.MAX_VALUE, power), simulated);
+	}
+
+	@Override
+	public NBTTagCompound serializeNBT() {
+		return this.writeToNBT(new NBTTagCompound());
+	}
+
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt) {
+		this.readFromNBT(nbt, SyncType.SAVE);		
+	}
 }
