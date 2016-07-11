@@ -70,7 +70,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 			}
 			return operateBlock(world, pos, state, player, player.getActiveHand(), new BlockInteraction(side.getIndex(), hitX, hitY, hitZ, player.isSneaking() ? BlockInteractionType.SHIFT_RIGHT : BlockInteractionType.RIGHT));
 		}
-		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
+		return false;
 
 	}
 
@@ -282,7 +282,16 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	public boolean isOpaqueCube(IBlockState state) {
 		return hasSpecialRenderer() ? false : true;
 	}
-
+	
+	@Override
+	public boolean isNormalCube(IBlockState state) {
+		return hasSpecialRenderer() ? false : true;
+	}
+	
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return hasSpecialRenderer() ? false : true;
+	}
 	/* public List<AxisAlignedBB> getCollisionBoxes(World world, BlockPos pos, List<AxisAlignedBB> list) { list.add(AxisAlignedBB.fromBounds(pos.getX() + this.minX, pos.getY() + this.minY, pos.getZ() + this.minZ, pos.getX() + this.maxX, pos.getY() + this.maxY, pos.getZ() + this.maxZ)); return list; }
 	 * 
 	 * public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB axis, List list, Entity entity) { if (hasSpecialCollisionBox()) { List<AxisAlignedBB> collisionList = this.getCollisionBoxes(world, pos, new ArrayList()); for (AxisAlignedBB collision : collisionList) { collision.offset(pos.getX(), pos.getY(), pos.getZ()); if (collision != null && collision.intersectsWith(axis)) { list.add(collision); } } } else { super.addCollisionBoxesToList(world, pos, state, axis, list, entity); } } public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) { return AxisAlignedBB.fromBounds(pos.getX() + this.minX, pos.getY() + this.minY, pos.getZ() + this.minZ, pos.getX() + this.maxX, pos.getY() + this.maxY, pos.getZ() + this.maxZ); } */

@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -14,6 +15,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.integration.SonarLoader;
@@ -110,7 +112,16 @@ public class SonarHelper {
 
 		}
 		return entity;
-
+	}
+	
+	public static EntityPlayerMP getPlayerFromName(String player){
+		List<EntityPlayerMP> server = FMLCommonHandler.instance().getMinecraftServerInstance().getServer().getPlayerList().getPlayerList();
+		for (EntityPlayerMP entityPlayer : server) {
+			if (entityPlayer.getName().equals(player)) {
+				return entityPlayer;
+			}
+		}
+		return null;		
 	}
 
 	public static EnumFacing getForward(int meta) {

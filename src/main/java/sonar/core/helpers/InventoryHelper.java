@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
 import sonar.core.SonarCore;
 import sonar.core.api.inventories.InventoryHandler;
 import sonar.core.api.inventories.InventoryHandler.StorageSize;
@@ -39,7 +40,19 @@ public class InventoryHelper extends InventoryWrapper {
 		}
 		return new StorageSize(stored, inv.getInventoryStackLimit() * inv.getSizeInventory());
 	}
-
+	
+	public StorageSize addItemHandlerToList(List<StoredItemStack> list, IItemHandler inv) {
+		long stored = 0;
+		for (int i = 0; i < inv.getSlots(); i++) {
+			ItemStack stack = inv.getStackInSlot(i);
+			if (stack != null) {
+				stored += stack.stackSize;
+				addStackToList(list, inv.getStackInSlot(i));
+			}
+		}
+		return new StorageSize(stored, inv.getSlots() * 64); //guessing the max size is 64...
+	}
+	
 	private void addStackToList(List<StoredItemStack> list, ItemStack stack) {
 		int pos = 0;
 		for (StoredItemStack storedStack : list) {

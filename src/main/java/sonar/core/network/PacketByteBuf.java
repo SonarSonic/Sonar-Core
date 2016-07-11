@@ -8,16 +8,16 @@ import sonar.core.integration.fmp.FMPHelper;
 import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.network.utils.IByteBufTile;
 
-public class PacketByteBufServer extends PacketCoords<PacketByteBufServer> {
+public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 
 	public int id;
 	public IByteBufTile tile;
 	public ByteBuf buf;
 
-	public PacketByteBufServer() {
+	public PacketByteBuf() {
 	}
 
-	public PacketByteBufServer(IByteBufTile tile, BlockPos pos, int id) {
+	public PacketByteBuf(IByteBufTile tile, BlockPos pos, int id) {
 		super(pos);
 		this.tile = tile;
 		this.id = id;
@@ -37,11 +37,11 @@ public class PacketByteBufServer extends PacketCoords<PacketByteBufServer> {
 		tile.writePacket(buf, id);
 	}
 
-	public static class Handler extends PacketTileEntityHandler<PacketByteBufServer> {
+	public static class Handler extends PacketTileEntityHandler<PacketByteBuf> {
 
 		@Override
-		public IMessage processMessage(PacketByteBufServer message, TileEntity tile) {
-			if (!tile.getWorld().isRemote) {
+		public IMessage processMessage(PacketByteBuf message, TileEntity tile) {
+			//if (!tile.getWorld().isRemote) {
 				if (tile instanceof IByteBufTile) {
 					IByteBufTile packet = (IByteBufTile) tile;
 					packet.readPacket(message.buf, message.id);
@@ -51,7 +51,7 @@ public class PacketByteBufServer extends PacketCoords<PacketByteBufServer> {
 						((IByteBufTile) handler).readPacket(message.buf, message.id);
 					}
 				}
-			}
+			//}
 			return null;
 		}
 	}

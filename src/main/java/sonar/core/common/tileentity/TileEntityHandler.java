@@ -10,7 +10,7 @@ import sonar.core.network.sync.ISyncPart;
 public abstract class TileEntityHandler extends TileEntitySonar implements ITileHandler {
 
 	public TileEntityHandler(){
-		this.getTileHandler().addSyncParts(syncParts);
+		getTileHandler().addSyncParts(syncParts);
 	}
 	
 	public void update() {
@@ -26,6 +26,10 @@ public abstract class TileEntityHandler extends TileEntitySonar implements ITile
 
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
+		if(forceSync){
+			type = SyncType.SYNC_OVERRIDE;
+			forceSync=false;
+		}
 		this.getTileHandler().writeData(nbt, type);
 		return nbt;
 	}

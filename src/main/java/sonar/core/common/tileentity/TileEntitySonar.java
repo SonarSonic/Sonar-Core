@@ -3,6 +3,7 @@ package sonar.core.common.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -128,7 +129,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	}
 
 	@SideOnly(Side.CLIENT)
-	public List<String> getWailaInfo(List<String> currenttip) {
+	public List<String> getWailaInfo(List<String> currenttip, IBlockState state) {
 		return currenttip;
 	}
 

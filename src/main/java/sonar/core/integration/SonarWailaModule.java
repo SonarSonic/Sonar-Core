@@ -48,11 +48,11 @@ public class SonarWailaModule {
 			TileHandler handler = FMPHelper.getHandler(te);
 			if (handler != null && handler instanceof IWailaInfo) {
 				IWailaInfo tile = (IWailaInfo) handler;
-				tile.getWailaInfo(currenttip);
+				tile.getWailaInfo(currenttip, accessor.getBlockState());
 			}
 			if (te instanceof IWailaInfo) {
 				IWailaInfo tile = (IWailaInfo) te;
-				tile.getWailaInfo(currenttip);
+				tile.getWailaInfo(currenttip, accessor.getBlockState());
 			}
 
 			return currenttip;
@@ -91,7 +91,7 @@ public class SonarWailaModule {
 
 			if (handler instanceof IWailaInfo) {
 				IWailaInfo tile = (IWailaInfo) handler;
-				tile.getWailaInfo(currenttip);
+				tile.getWailaInfo(currenttip, null);
 			}
 
 			return currenttip;

@@ -10,6 +10,10 @@ public class BlockInteraction {
 	public float hitx, hity, hitz;
 	public BlockInteractionType type;
 
+	public BlockInteraction(EnumFacing side, float hitX, float hitY, float hitZ, BlockInteractionType interact) {
+		this(side.ordinal(), hitX, hitY, hitZ, interact);
+	}
+
 	public BlockInteraction(int side, float hitX, float hitY, float hitZ, BlockInteractionType interact) {
 		this.side = side;
 		this.hitx = hitX;

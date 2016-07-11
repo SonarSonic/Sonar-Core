@@ -7,6 +7,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
 import sonar.core.api.inventories.InventoryHandler;
 import sonar.core.api.inventories.InventoryHandler.StorageSize;
 import sonar.core.api.inventories.StoredItemStack;
@@ -35,6 +36,14 @@ public class InventoryWrapper {
 	 * @return returns how many item */
 	public StorageSize addInventoryToList(List<StoredItemStack> list, IInventory inv) {
 		return StorageSize.EMPTY;
+	}
+
+	/** convenient method, adds the given ItemHandler {@link IItemHandler} to the list, used by {@link InventoryHandler}
+	 * @param list {@link StoredItemStack} list to add to
+	 * @param inv {@link IItemHandler} to combine
+	 * @return returns how many item */
+	public StorageSize addItemHandlerToList(List<StoredItemStack> list, IItemHandler inv) {
+		return StorageSize.EMPTY;		
 	}
 
 	/** drops a full StoredItemStack on the floor

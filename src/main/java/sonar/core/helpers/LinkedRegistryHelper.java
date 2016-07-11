@@ -48,9 +48,9 @@ public abstract class LinkedRegistryHelper<S, P> {
 			if (primary != null && secondary != null) {
 				objects.put(secondary, primary);
 				objectsReversed.put(primary, secondary);
-				SonarCore.logger.info("Loaded " + registeryType() + ": " + primary.toString() + " = " + secondary.toString());
+				SonarCore.logger.info("Loaded " + registeryType() + ": " + primaryToString(primary) + " = " + secondaryToString(secondary));
 			} else {
-				SonarCore.logger.warn(registeryType() + " wasn't loadable: " + primary.toString() + " = " + secondary.toString());
+				SonarCore.logger.warn(registeryType() + " wasn't loadable: " + primaryToString(primary) + " = " + secondaryToString(secondary));
 				return;
 			}
 		} catch (Exception exception) {
@@ -64,5 +64,13 @@ public abstract class LinkedRegistryHelper<S, P> {
 
 	public S getSecondaryDefault() {
 		return null;
+	}
+	
+	public String primaryToString(P primary){
+		return primary.toString();
+	}
+	
+	public String secondaryToString(S secondary){
+		return secondary.toString();
 	}
 }

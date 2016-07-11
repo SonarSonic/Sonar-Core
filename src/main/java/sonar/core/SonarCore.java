@@ -37,8 +37,8 @@ import sonar.core.integration.SonarWailaModule;
 import sonar.core.integration.fmp.FMPHelper;
 import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.network.PacketBlockInteraction;
-import sonar.core.network.PacketByteBufClient;
-import sonar.core.network.PacketByteBufServer;
+import sonar.core.network.PacketByteBuf;
+import sonar.core.network.PacketByteBufString;
 import sonar.core.network.PacketInvUpdate;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketSonarSides;
@@ -58,7 +58,7 @@ import sonar.core.upgrades.MachineUpgradeRegistry;
 public class SonarCore {
 
 	public static final String modid = "SonarCore";
-	public static final String version = "3.0.2";
+	public static final String version = "3.0.4";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -108,7 +108,7 @@ public class SonarCore {
 
 		logger.info("Registering Blocks");
 		SonarBlocks.registerBlocks();
-		logger.info("Register Blocks");
+		logger.info("Loaded Blocks");
 
 		logger.info("Registering Crafting Recipes");
 		SonarCrafting.registerCraftingRecipes();
@@ -116,8 +116,7 @@ public class SonarCore {
 
 		logger.info("Registering Renderers");
 		proxy.registerRenderThings();
-		logger.info("Registered Renderers");
-		
+		logger.info("Registered Renderers");		
 
 		for (int i = 0; i < 16; i++) {
 			OreDictionary.registerOre("sonarStableStone", SonarCore.stableStone[i]);
@@ -171,8 +170,8 @@ public class SonarCore {
 			network.registerMessage(PacketSonarSides.Handler.class, PacketSonarSides.class, 1, Side.CLIENT);
 			network.registerMessage(PacketRequestSync.Handler.class, PacketRequestSync.class, 2, Side.SERVER);
 			//network.registerMessage(PacketTextField.Handler.class, PacketTextField.class, 3, Side.SERVER);
-			network.registerMessage(PacketByteBufClient.Handler.class, PacketByteBufClient.class, 4, Side.CLIENT);
-			network.registerMessage(PacketByteBufServer.Handler.class, PacketByteBufServer.class, 5, Side.SERVER);
+			network.registerMessage(PacketByteBuf.Handler.class, PacketByteBuf.class, 4, Side.CLIENT);
+			network.registerMessage(PacketByteBuf.Handler.class, PacketByteBuf.class, 5, Side.SERVER);
 			network.registerMessage(PacketBlockInteraction.Handler.class, PacketBlockInteraction.class, 6, Side.SERVER);
 			network.registerMessage(PacketStackUpdate.Handler.class, PacketStackUpdate.class, 7, Side.CLIENT);
 			network.registerMessage(PacketInvUpdate.Handler.class, PacketInvUpdate.class, 8, Side.CLIENT);
@@ -184,18 +183,18 @@ public class SonarCore {
 
 		if (object != null && object instanceof IByteBufTile) {
 			if (!tile.getWorld().isRemote) {
-				SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) object, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
+				SonarCore.network.sendToAllAround(new PacketByteBuf((IByteBufTile) object, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 			} else {
-				SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) object, tile.getPos(), id));
+				SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) object, tile.getPos(), id));
 			}
 		} else {
 			TileHandler handler = FMPHelper.getHandler(object);
 			if (handler != null && handler instanceof IByteBufTile) {
 
 				if (!tile.getWorld().isRemote) {
-					SonarCore.network.sendToAllAround(new PacketByteBufClient((IByteBufTile) handler, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
+					SonarCore.network.sendToAllAround(new PacketByteBuf((IByteBufTile) handler, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 				} else {
-					SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) handler, tile.getPos(), id));
+					SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) handler, tile.getPos(), id));
 				}
 			}
 		}
@@ -211,9 +210,11 @@ public class SonarCore {
 		}
 	}
 	public static void sendPacketToServer(TileEntity tile, int id){
-		SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) tile, tile.getPos(), id));
+		SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) tile, tile.getPos(), id));
 	}
-
+	public static void sendPacketToServer(TileEntity tile, String string, int id){
+		SonarCore.network.sendToServer(new PacketByteBufString((IByteBufTile) tile, string, tile.getPos(), id));
+	}
 	public static int randInt(int min, int max) {
 	    return rand.nextInt((max - min) + 1) + min;
 	}

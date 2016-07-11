@@ -25,6 +25,7 @@ public class BlockCoords {
 	private BlockPos pos;
 	private int dimension;
 	private boolean hasDimension;
+	private World world;
 
 	/** @param x block x coordinate
 	 * @param y block y coordinate
@@ -34,6 +35,13 @@ public class BlockCoords {
 		this.hasDimension = false;
 	}
 
+	public BlockCoords(int x, int y, int z, World world) {
+		this.pos = new BlockPos(x, y, z);
+		this.hasDimension = true;
+		this.dimension = world.provider.getDimension();
+		this.world = world;
+	}
+	
 	public BlockCoords(int x, int y, int z, int dimension) {
 		this.pos = new BlockPos(x, y, z);
 		this.hasDimension = true;
@@ -87,6 +95,18 @@ public class BlockCoords {
 		return pos.getZ();
 	}
 
+	public void setX(int x) {
+		this.pos = new BlockPos(x, pos.getY(), pos.getZ());
+	}
+
+	public void setY(int y) {
+		this.pos = new BlockPos(pos.getX(), y, pos.getZ());
+	}
+
+	public void setZ(int z) {
+		this.pos = new BlockPos(pos.getX(), pos.getY(), z);
+	}
+
 	/** @return dimension */
 	public int getDimension() {
 		return this.dimension;
@@ -101,7 +121,6 @@ public class BlockCoords {
 	}
 
 	public TileEntity getTileEntity(World world) {
-
 		return world.getTileEntity(pos);
 	}
 
@@ -134,6 +153,9 @@ public class BlockCoords {
 	}
 
 	public World getWorld() {
+		if(world!=null){
+			return world;
+		}
 		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 		World world = server.worldServerForDimension(getDimension());
 		return world;

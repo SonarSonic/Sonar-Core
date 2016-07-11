@@ -25,7 +25,7 @@ import org.lwjgl.opengl.GL11;
 import sonar.core.SonarCore;
 import sonar.core.api.machines.IProcessMachine;
 import sonar.core.helpers.FontHelper;
-import sonar.core.network.PacketByteBufServer;
+import sonar.core.network.PacketByteBuf;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.upgrades.UpgradeInventory;
 
@@ -47,6 +47,10 @@ public abstract class GuiSonar extends GuiContainer {
 
 	public void initGui(boolean pause) {}
 
+	public void setZLevel(float zLevel){
+		this.zLevel=zLevel;
+	}
+	
 	public void drawNormalToolTip(ItemStack stack, int x, int y) {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -110,7 +114,7 @@ public abstract class GuiSonar extends GuiContainer {
 
 		@Override
 		public void onClicked() {
-			SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) entity, entity.getPos(), id));
+			SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) entity, entity.getPos(), id));
 			buttonList.clear();
 			initGui();
 		}
@@ -139,7 +143,7 @@ public abstract class GuiSonar extends GuiContainer {
 
 		@Override
 		public void onClicked() {
-			SonarCore.network.sendToServer(new PacketByteBufServer((IByteBufTile) entity, entity.getPos(), id));
+			SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) entity, entity.getPos(), id));
 		}
 	}
 

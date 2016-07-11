@@ -65,24 +65,20 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-		if (energyMode.canSend())
-			return storage.extractEnergy(maxExtract, simulate);
-		return 0;
+		return energyMode.canSend() ? storage.extractEnergy(maxExtract, simulate) : 0;
 	}
 
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		if (energyMode.canRecieve())
-			return storage.receiveEnergy(maxReceive, simulate);
-		return 0;
+		return energyMode.canRecieve() ? storage.receiveEnergy(maxReceive, simulate) : 0;
 	}
 
 	public void discharge(int id) {
-		slots()[id] = SonarAPI.getEnergyHelper().dischargeItem(slots()[id], this, Math.min(maxTransfer, this.getStorage().getMaxExtract()));
+		slots()[id] = SonarAPI.getEnergyHelper().dischargeItem(slots()[id], this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
 	}
 
 	public void charge(int id) {
-		slots()[id] = SonarAPI.getEnergyHelper().chargeItem(slots()[id], this, Math.min(maxTransfer, this.getStorage().getMaxExtract()));
+		slots()[id] = SonarAPI.getEnergyHelper().chargeItem(slots()[id], this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
 	}
 
 	public void addEnergy(EnumFacing... faces) {
@@ -93,18 +89,18 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	}
 
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if(SonarLoader.teslaLoaded && this.canConnectEnergy(facing)){
+		if (SonarLoader.teslaLoaded && this.canConnectEnergy(facing)) {
 			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && energyMode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && energyMode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
-	            return true;
-		}		
+				return true;
+		}
 		return super.hasCapability(capability, facing);
 	}
 
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if(SonarLoader.teslaLoaded && this.canConnectEnergy(facing)){
+		if (SonarLoader.teslaLoaded && this.canConnectEnergy(facing)) {
 			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && energyMode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && energyMode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
-	            return (T) storage;
-		}	
+				return (T) storage;
+		}
 		return super.getCapability(capability, facing);
 	}
 
@@ -112,7 +108,7 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	public SyncEnergyStorage getStorage() {
 		return storage;
 	}
-	
+
 	@Override
 	public EnergyMode getMode() {
 		return energyMode;
