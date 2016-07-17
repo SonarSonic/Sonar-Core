@@ -3,6 +3,7 @@ package sonar.core.network.sync;
 import sonar.core.integration.SonarLoader;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -27,15 +28,24 @@ public class SyncItemEnergyStorage extends SyncEnergyStorage implements ICapabil
 	}
 
 	public SyncItemEnergyStorage setItemStack(ItemStack stack) {
-		this.stack = stack;
+		if (stack != null) {
+			this.stack = stack;
+			if (stack.hasTagCompound()){
+				readFromNBT(stack.getTagCompound());
+			}
+		}
 		return this;
 	}
 
 	@Override
 	public void setChanged(boolean set) {
 		super.setChanged(set);
-		if (stack != null)
-			this.writeToNBT(stack.getTagCompound());
+		if (stack != null){
+			if(!stack.hasTagCompound()){
+				stack.setTagCompound(new NBTTagCompound());
+			}
+			stack.setTagCompound(writeToNBT(stack.getTagCompound()));
+		}
 	}
 
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {

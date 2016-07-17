@@ -7,72 +7,135 @@ import net.darkhax.tesla.api.ITeslaProducer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 import sonar.core.helpers.NBTHelper.SyncType;
-import cofh.api.energy.EnergyStorage;
+import cofh.api.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.Optional;
+import sonar.core.api.energy.ISonarEnergyStorage;
+import sonar.core.api.utils.ActionType;
 
 @Optional.InterfaceList({		
 	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "Tesla"),
 	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "Tesla"),
-	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaProducer", modid = "Tesla")})				
-public class SyncEnergyStorage extends EnergyStorage implements ISyncPart, ITeslaConsumer, ITeslaProducer, ITeslaHolder, INBTSerializable<NBTTagCompound> {
+	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaProducer", modid = "Tesla"),
+	@Optional.Interface (iface = "cofh.api.energy.IEnergyStorage", modid = "CoFHAPI")})				
+public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, ISyncPart, ITeslaConsumer, ITeslaProducer, ITeslaHolder, INBTSerializable<NBTTagCompound> {
+
+	protected long energy;
+	protected long capacity;
+	protected long maxReceive;
+	protected long maxExtract;
 
 	private String tagName = "energyStorage";
 	private boolean hasChanged;
 
+
 	public SyncEnergyStorage(int capacity) {
-		super(capacity);
+
+		this(capacity, capacity, capacity);
 	}
 
 	public SyncEnergyStorage(int capacity, int maxTransfer) {
-		super(capacity, maxTransfer);
+
+		this(capacity, maxTransfer, maxTransfer);
 	}
 
 	public SyncEnergyStorage(int capacity, int maxReceive, int maxExtract) {
-		super(capacity, maxReceive, maxExtract);
+
+		this.capacity = capacity;
+		this.maxReceive = maxReceive;
+		this.maxExtract = maxExtract;
 	}
 
-	public void setEnergyStored(int energy) {
-		super.setEnergyStored(energy);
-		this.setChanged(true);
-	}
+	public SyncEnergyStorage setCapacity(int capacity) {
+		this.capacity = capacity;
 
-	public void modifyEnergyStored(int energy) {
-		super.modifyEnergyStored(energy);
-		this.setChanged(true);
-	}
-
-	public int receiveEnergy(int maxReceive, boolean simulate) {
-		if (!simulate) {
-			this.setChanged(true);
+		if (energy > capacity) {
+			energy = capacity;
 		}
-		return super.receiveEnergy(maxReceive, simulate);
-
+		return this;
 	}
 
-	public int extractEnergy(int maxExtract, boolean simulate) {
-		if (!simulate) {
-			this.setChanged(true);
-		}
-		return super.extractEnergy(maxExtract, simulate);
+	public SyncEnergyStorage setMaxTransfer(int maxTransfer) {
+		setMaxReceive(maxTransfer);
+		setMaxExtract(maxTransfer);
+		return this;
+	}
+
+	public SyncEnergyStorage setMaxReceive(int maxReceive) {
+		this.maxReceive = maxReceive;
+		return this;
+	}
+
+	public SyncEnergyStorage setMaxExtract(int maxExtract) {
+		this.maxExtract = maxExtract;
+		return this;
+	}
+
+	public long getMaxReceive() {
+		return maxReceive;
+	}
+
+	public long getMaxExtract() {
+		return maxExtract;
 	}
 	
+	public void setEnergyStored(int energy) {
+		this.energy = energy;
+
+		if (this.energy > capacity) {
+			this.energy = capacity;
+		} else if (this.energy < 0) {
+			this.energy = 0;
+		}
+		this.setChanged(true);
+	}
+
+	
+	public void modifyEnergyStored(int energy) {
+
+		this.energy += energy;
+
+		if (this.energy > capacity) {
+			this.energy = capacity;
+		} else if (this.energy < 0) {
+			this.energy = 0;
+		}
+		this.setChanged(true);
+	}
 	
 	@Override
 	public void writeToBuf(ByteBuf buf) {
 		if (energy < 0) {
 			energy = 0;
 		}
-		buf.writeInt(energy);
+		buf.writeLong(energy);
 	}
 
 	@Override
 	public void readFromBuf(ByteBuf buf) {
-		this.energy = buf.readInt();
+		this.energy = buf.readLong();
 
 		if (energy > capacity) {
 			energy = capacity;
 		}
 	}
+		
+	public SyncEnergyStorage readFromNBT(NBTTagCompound nbt) {
+		this.energy = nbt.getLong("Energy");
+
+		if (energy > capacity) {
+			energy = capacity;
+		}
+		return this;
+	}
+
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		if (energy < 0) {
+			energy = 0;
+		}
+		nbt.setLong("Energy", energy);
+		return nbt;
+	}
+	
 
 	public final void writeToNBT(NBTTagCompound nbt, SyncType type) {
 		/*NBTTagCompound energyTag = new NBTTagCompound(); if (type.isType(SyncType.DEFAULT_SYNC)) { if (type.mustSync() || !equal()) { this.writeToNBT(energyTag); lastEnergy = this.getEnergyStored(); } } else if (type == SyncType.SAVE) { this.writeToNBT(energyTag); lastEnergy = this.getEnergyStored(); } if (!energyTag.hasNoTags()) nbt.setTag(getTagName(), energyTag); */
@@ -112,25 +175,72 @@ public class SyncEnergyStorage extends EnergyStorage implements ISyncPart, ITesl
 		return hasChanged;
 	}
 
-	//TESLA
+	/////* SONAR *//////
+	public long addEnergy(long maxReceive, ActionType action) {
+		long add = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
+
+		if (!action.shouldSimulate()) {
+			energy += add;
+			this.setChanged(true);
+		}
+		return add;
+	}
+	
+	public long removeEnergy(long maxExtract, ActionType action){
+
+		long energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
+
+		if (!action.shouldSimulate()) {
+			energy -= energyExtracted;
+			this.setChanged(true);
+		}
+		return energyExtracted;
+	}
+
+	public long getEnergyLevel() {
+		return energy;
+	}
+
+	public long getFullCapacity() {
+		return capacity;
+	}		
+
+	/////* CoFH *//////
+	public int receiveEnergy(int maxReceive, boolean simulate) {
+		return (int) addEnergy(maxReceive, ActionType.getTypeForAction(simulate));
+	}
+
+	public int extractEnergy(int maxExtract, boolean simulate) {
+		return (int) removeEnergy(maxExtract, ActionType.getTypeForAction(simulate));
+	}
+
+	public int getEnergyStored() {
+		return (int) Math.min(getEnergyLevel(), Integer.MAX_VALUE);
+	}
+
+	public int getMaxEnergyStored() {
+		return (int) Math.min(getFullCapacity(), Integer.MAX_VALUE);
+	}	
+
+	/////* TESLA *//////
 	@Override
 	public long getStoredPower() {
-		return this.getEnergyStored();
+		return getEnergyStored();
 	}
 
 	@Override
 	public long getCapacity() {
-		return this.getMaxEnergyStored();
+		return getMaxEnergyStored();
 	}
 
 	@Override
 	public long takePower(long power, boolean simulated) {
-		return extractEnergy((int) Math.min(Integer.MAX_VALUE, power), simulated);
+		return removeEnergy(Math.min(Integer.MAX_VALUE, power), ActionType.getTypeForAction(simulated));
 	}
 
 	@Override
 	public long givePower(long power, boolean simulated) {
-		return receiveEnergy((int) Math.min(Integer.MAX_VALUE, power), simulated);
+		return addEnergy(Math.min(Integer.MAX_VALUE, power), ActionType.getTypeForAction(simulated));
 	}
 
 	@Override

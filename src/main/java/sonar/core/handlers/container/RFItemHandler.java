@@ -2,6 +2,7 @@ package sonar.core.handlers.container;
 
 import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
 import sonar.core.api.energy.EnergyContainerHandler;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.StoredEnergyStack;

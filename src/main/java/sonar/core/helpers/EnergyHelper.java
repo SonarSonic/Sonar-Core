@@ -2,7 +2,6 @@ package sonar.core.helpers;
 
 import java.util.List;
 
-import cofh.api.energy.IEnergyStorage;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -16,13 +15,13 @@ import sonar.core.api.utils.ActionType;
 import sonar.core.api.wrappers.EnergyWrapper;
 import sonar.core.energy.DischargeValues;
 import sonar.core.energy.EnergyCharge;
-import sonar.core.handlers.energy.SpecialSonarHandler;
+import sonar.core.handlers.energy.SonarHandler;
 import sonar.core.network.sync.SyncEnergyStorage;
 
 public class EnergyHelper extends EnergyWrapper {
 	/** changes = returns amount remaining */
 
-	public static final SpecialSonarHandler chargingHandler = new SpecialSonarHandler();
+	public static final SonarHandler chargingHandler = new SonarHandler();
 	
 	public long receiveEnergy(TileEntity tile, long maxReceive, EnumFacing dir, ActionType type) {
 		if (maxReceive != 0 && tile != null) {
@@ -93,6 +92,16 @@ public class EnergyHelper extends EnergyWrapper {
 		return 0;
 	}
 
+	public StoredEnergyStack getEnergyStored(ItemStack stack, EnergyType format) {
+		EnergyContainerHandler handler = this.canTransferEnergy(stack);
+		if (handler != null) {
+			StoredEnergyStack energy = new StoredEnergyStack(handler.getProvidedType());
+			handler.getEnergy(energy, stack);
+			return energy.convertEnergyType(format);
+		}
+		return new StoredEnergyStack(format);		
+	}
+	
 	/** returns amount transferred **/
 	public long transferEnergy(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, final long maxTransferRF) {
 		if (from != null && !from.getWorld().isRemote && to != null && maxTransferRF != 0) {

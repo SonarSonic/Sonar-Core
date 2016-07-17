@@ -15,4 +15,12 @@ public enum ActionType {
 			return true;
 		}
 	}
+	
+	public static ActionType getTypeForAction(boolean simulate){
+		if(simulate==true){
+			return SIMULATE;
+		}			
+		return PERFORM;
+		
+	}
 }

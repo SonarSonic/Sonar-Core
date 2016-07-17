@@ -7,9 +7,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.Optional;
 import sonar.core.api.SonarAPI;
+import sonar.core.api.energy.EnergyMode;
 import sonar.core.api.energy.ISonarEnergyTile;
-import sonar.core.common.tileentity.TileEntityEnergy.EnergyMode;
 import sonar.core.energy.EnergyCharge;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.helpers.SonarHelper;
@@ -19,6 +20,9 @@ import sonar.core.network.sync.SyncEnergyStorage;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 
+@Optional.InterfaceList({ 
+	@Optional.Interface(iface = "cofh.api.energy.IEnergyProvider", modid = "CoFHAPI"), 
+	@Optional.Interface(iface = "cofh.api.energy.IEnergyReceiver", modid = "CoFHAPI") })
 public class TileEntityEnergySidedInventory extends TileEntitySidedInventory implements IEnergyReceiver, IEnergyProvider, ISonarEnergyTile {
 
 	public TileEntityEnergySidedInventory() {
@@ -48,31 +52,6 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 		return nbt;
 	}
 
-	@Override
-	public boolean canConnectEnergy(EnumFacing from) {
-		return true;
-	}
-
-	@Override
-	public int getEnergyStored(EnumFacing from) {
-		return storage.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(EnumFacing from) {
-		return storage.getMaxEnergyStored();
-	}
-
-	@Override
-	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-		return energyMode.canSend() ? storage.extractEnergy(maxExtract, simulate) : 0;
-	}
-
-	@Override
-	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		return energyMode.canRecieve() ? storage.receiveEnergy(maxReceive, simulate) : 0;
-	}
-
 	public void discharge(int id) {
 		slots()[id] = SonarAPI.getEnergyHelper().dischargeItem(slots()[id], this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
 	}
@@ -89,19 +68,29 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	}
 
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if (SonarLoader.teslaLoaded && this.canConnectEnergy(facing)) {
-			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && energyMode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && energyMode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+		EnergyMode mode = getModeForSide(facing);
+		if (SonarLoader.teslaLoaded && mode.canConnect()) {
+			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
 				return true;
 		}
 		return super.hasCapability(capability, facing);
 	}
 
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (SonarLoader.teslaLoaded && this.canConnectEnergy(facing)) {
-			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && energyMode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && energyMode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {	
+		EnergyMode mode = getModeForSide(facing);
+		if (SonarLoader.teslaLoaded && mode.canConnect()) {
+			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
 				return (T) storage;
 		}
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public EnergyMode getModeForSide(EnumFacing side) {
+		if(side==null){
+			return EnergyMode.SEND_RECIEVE;
+		}
+		return energyMode;
 	}
 
 	@Override
@@ -112,5 +101,32 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	@Override
 	public EnergyMode getMode() {
 		return energyMode;
+	}
+	
+
+	/////* CoFH *//////
+	@Override
+	public final boolean canConnectEnergy(EnumFacing from) {
+		return getModeForSide(from).canConnect();
+	}
+
+	@Override
+	public final int getEnergyStored(EnumFacing from) {
+		return storage.getEnergyStored();
+	}
+
+	@Override
+	public final int getMaxEnergyStored(EnumFacing from) {
+		return storage.getMaxEnergyStored();
+	}
+
+	@Override
+	public final int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
+		return getModeForSide(from).canSend() ? storage.extractEnergy(maxExtract, simulate) : 0;
+	}
+
+	@Override
+	public final int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
+		return getModeForSide(from).canRecieve() ? storage.receiveEnergy(maxReceive, simulate) : 0;
 	}
 }

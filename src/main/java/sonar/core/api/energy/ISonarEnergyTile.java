@@ -1,10 +1,12 @@
 package sonar.core.api.energy;
 
-import sonar.core.common.tileentity.TileEntityEnergy.EnergyMode;
+import net.minecraft.util.EnumFacing;
 import sonar.core.network.sync.SyncEnergyStorage;
 
 public interface ISonarEnergyTile {
 
+	public EnergyMode getModeForSide(EnumFacing side);
+	
 	public SyncEnergyStorage getStorage();
 	
 	public EnergyMode getMode();

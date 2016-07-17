@@ -43,7 +43,6 @@ import sonar.core.network.PacketInvUpdate;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketSonarSides;
 import sonar.core.network.PacketStackUpdate;
-//import sonar.core.network.PacketTextField;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
@@ -58,7 +57,7 @@ import sonar.core.upgrades.MachineUpgradeRegistry;
 public class SonarCore {
 
 	public static final String modid = "SonarCore";
-	public static final String version = "3.0.4";
+	public static final String version = "3.0.5";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -169,7 +168,6 @@ public class SonarCore {
 			network.registerMessage(PacketTileSync.Handler.class, PacketTileSync.class, 0, Side.CLIENT);
 			network.registerMessage(PacketSonarSides.Handler.class, PacketSonarSides.class, 1, Side.CLIENT);
 			network.registerMessage(PacketRequestSync.Handler.class, PacketRequestSync.class, 2, Side.SERVER);
-			//network.registerMessage(PacketTextField.Handler.class, PacketTextField.class, 3, Side.SERVER);
 			network.registerMessage(PacketByteBuf.Handler.class, PacketByteBuf.class, 4, Side.CLIENT);
 			network.registerMessage(PacketByteBuf.Handler.class, PacketByteBuf.class, 5, Side.SERVER);
 			network.registerMessage(PacketBlockInteraction.Handler.class, PacketBlockInteraction.class, 6, Side.SERVER);

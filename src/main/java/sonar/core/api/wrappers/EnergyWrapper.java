@@ -5,6 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.energy.EnergyContainerHandler;
 import sonar.core.api.energy.EnergyHandler;
+import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.api.energy.ISonarEnergyTile;
@@ -87,6 +88,10 @@ public class EnergyWrapper {
 	 * @return the discharged item */
 	public ItemStack dischargeItem(ItemStack item, TileEntity tile, final long maxTransferRF) {
 		return item;
+	}
+	
+	public StoredEnergyStack getEnergyStored(ItemStack stack, EnergyType format){
+		return new StoredEnergyStack(format);	
 	}
 	
 	/**gets the {@link EnergyHandler} to use with a specific TileEntity from a specific side */

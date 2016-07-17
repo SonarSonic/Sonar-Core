@@ -7,6 +7,7 @@ import sonar.core.handlers.energy.EUProvider;
 import sonar.core.handlers.energy.MekanismProvider;
 */
 import sonar.core.handlers.energy.RFHandler;
+import sonar.core.handlers.energy.SonarHandler;
 import sonar.core.handlers.energy.TeslaHandler;
 import sonar.core.helpers.RegistryHelper;
 
@@ -19,6 +20,7 @@ public class EnergyProviderRegistry extends RegistryHelper<EnergyHandler> {
 		registerObject(new MekanismProvider());
 		registerObject(new EUProvider());
 		*/
+		registerObject(new SonarHandler());
 		registerObject(new RFHandler());
 		registerObject(new TeslaHandler());
 	}

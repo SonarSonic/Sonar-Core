@@ -6,7 +6,7 @@ import net.minecraft.util.EnumFacing;
 
 /**
  * Reference implementation of {@link IEnergyReceiver} and {@link IEnergyProvider}. Use/extend this or implement your own.
- * 
+ *
  * This class is really meant to summarize how each interface is properly used.
  *
  * @author King Lemming
@@ -18,15 +18,16 @@ public class TileEnergyHandler extends TileEntity implements IEnergyReceiver, IE
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
+
 		super.readFromNBT(nbt);
 		storage.readFromNBT(nbt);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+
 		super.writeToNBT(nbt);
-		storage.writeToNBT(nbt);
-		return nbt;
+		return storage.writeToNBT(nbt);
 	}
 
 	/* IEnergyConnection */
