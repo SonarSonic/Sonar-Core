@@ -28,12 +28,13 @@ import sonar.core.helpers.FontHelper;
 import sonar.core.network.PacketByteBuf;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.upgrades.UpgradeInventory;
+import sonar.core.utils.IWorldPosition;
 
 public abstract class GuiSonar extends GuiContainer {
 
-	public TileEntity entity;
+	public IWorldPosition entity;
 
-	public GuiSonar(Container container, TileEntity entity) {
+	public GuiSonar(Container container, IWorldPosition entity) {
 		super(container);
 		this.entity = entity;
 	}
@@ -114,7 +115,7 @@ public abstract class GuiSonar extends GuiContainer {
 
 		@Override
 		public void onClicked() {
-			SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) entity, entity.getPos(), id));
+			SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) entity, entity.getCoords().getBlockPos(), id));
 			buttonList.clear();
 			initGui();
 		}
@@ -143,7 +144,7 @@ public abstract class GuiSonar extends GuiContainer {
 
 		@Override
 		public void onClicked() {
-			SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) entity, entity.getPos(), id));
+			SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) entity, entity.getCoords().getBlockPos(), id));
 		}
 	}
 

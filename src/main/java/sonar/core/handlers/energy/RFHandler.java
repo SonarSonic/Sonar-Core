@@ -50,8 +50,8 @@ public class RFHandler extends EnergyHandler {
 		if (tile instanceof IEnergyReceiver) {
 			IEnergyReceiver receiver = (IEnergyReceiver) tile;
 			if (side==null || receiver.canConnectEnergy(side = side.getOpposite())) {
-				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-				transfer.stored -= receiver.receiveEnergy(side, transferRF, action.shouldSimulate());
+				int transferRF = Math.min(receiver.getMaxEnergyStored(dir), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+				//transfer.stored -= receiver.receiveEnergy(side, transferRF, action.shouldSimulate());
 			}
 		}
 		if (transfer.stored == 0)
@@ -63,10 +63,10 @@ public class RFHandler extends EnergyHandler {
 	public StoredEnergyStack removeEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
 		EnumFacing side = dir;
 		if (tile instanceof IEnergyProvider) {
-			IEnergyProvider receiver = (IEnergyProvider) tile;
-			
+			IEnergyProvider receiver = (IEnergyProvider) tile;			
 			if (side==null || receiver.canConnectEnergy(side = side.getOpposite())) {
-				transfer.stored -= receiver.extractEnergy(side, transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE, action.shouldSimulate());
+				int transferRF = Math.min(receiver.getMaxEnergyStored(dir), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+				transfer.stored -= receiver.extractEnergy(side, transferRF, action.shouldSimulate());
 			}
 		}
 		if (transfer.stored == 0)

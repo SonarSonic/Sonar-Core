@@ -5,10 +5,11 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import sonar.core.common.tileentity.TileEntitySonar;
 
 public class ContainerEmpty extends ContainerSync {
 
-	public ContainerEmpty(InventoryPlayer player, TileEntity tile) {
+	public ContainerEmpty(InventoryPlayer player, TileEntitySonar tile) {
 		super(tile);
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {

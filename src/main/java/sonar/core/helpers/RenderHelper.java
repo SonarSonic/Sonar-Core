@@ -1,32 +1,40 @@
 package sonar.core.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import org.lwjgl.opengl.GL11;
-
+import net.minecraftforge.client.model.pipeline.LightUtil;
+import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import sonar.core.client.gui.GuiSonar;
+import sonar.core.client.renderers.TransformationMatrix;
+import sonar.core.client.renderers.Vector;
 
 public class RenderHelper {
-	
+
 	public static final RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
 	public static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 
@@ -77,23 +85,11 @@ public class RenderHelper {
 		GL11.glPopMatrix();
 	}
 
-	public static EnumFacing getHorizontal(EnumFacing forward) {
-		if (forward == EnumFacing.NORTH) {
-			return EnumFacing.EAST;
-		}
-		if (forward == EnumFacing.EAST) {
-			return EnumFacing.SOUTH;
-		}
-		if (forward == EnumFacing.SOUTH) {
-			return EnumFacing.WEST;
-		}
-		if (forward == EnumFacing.WEST) {
-			return EnumFacing.NORTH;
-		}
-		return null;
-
-	}
-
+	/*
+	 * public static EnumFacing getHorizontal(EnumFacing forward) { if (forward == EnumFacing.NORTH) { return EnumFacing.EAST; } if (forward == EnumFacing.EAST) { return EnumFacing.SOUTH; } if (forward == EnumFacing.SOUTH) { return EnumFacing.WEST; } if (forward == EnumFacing.WEST) { return EnumFacing.NORTH; } return null;
+	 * 
+	 * }
+	 */
 	public static void drawRect(float left, float top, float right, float bottom, int color) {
 		if (left < right) {
 			float i = left;
@@ -203,15 +199,6 @@ public class RenderHelper {
 		vertexbuffer.pos(x, y, z).tex(u, v).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
 	}
 
-	/*
-	 * public static void doRenderItem(ItemStack item, World world, boolean b) { // TODO Auto-generated method stub
-	 * 
-	 * }
-	 * 
-	 * public static void renderItemInGui(ItemStack stack, int x, int y) {
-	 * 
-	 * }
-	 */
 	public static void renderItem(GuiSonar screen, int x, int y, ItemStack stack) {
 		GlStateManager.translate(0.0F, 0.0F, 32.0F);
 		screen.setZLevel(200.0F);
@@ -220,7 +207,7 @@ public class RenderHelper {
 		//itemRender.renderItemOverlayIntoGUI(getFontFromStack(stack), stack, x, y, "");
 		screen.setZLevel(0.0F);
 		itemRender.zLevel = 0.0F;
-		//GlStateManager.translate(0.0F, 0.0F, -32.0F);
+		GlStateManager.translate(0.0F, 0.0F, -32.0F);
 	}
 
 	public static void renderStoredItemStackOverlay(ItemStack stack, long stored, int x, int y, String string) {
@@ -253,47 +240,28 @@ public class RenderHelper {
 
 	public static void drawTexturedModalRect(float minX, float minY, float maxY, float width, float height) {
 		float f = 0.00390625F;
-        float f1 = 0.00390625F;
-        Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
-        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        float x = minX;
-        float y = minY;
-        float textureX=0;
-        float textureY=0;
-		double widthnew = (0 + (width * (2)));
-		double heightnew = (0 + ((height) * (2)));
-        
-        vertexbuffer.pos((double)(x + 0), (double)(y + height), (double)0).tex((double)((float)(textureX + 0) * f), (double)((float)(textureY + height) * f1)).endVertex();
-        vertexbuffer.pos((double)(x + width), (double)(y + height), (double)0).tex((double)((float)(textureX + width) * f), (double)((float)(textureY + height) * f1)).endVertex();
-        vertexbuffer.pos((double)(x + width), (double)(y + 0), (double)0).tex((double)((float)(textureX + width) * f), (double)((float)(textureY + 0) * f1)).endVertex();
-        vertexbuffer.pos((double)(x + 0), (double)(y + 0), (double)0).tex((double)((float)(textureX + 0) * f), (double)((float)(textureY + 0) * f1)).endVertex();
-        tessellator.draw();
-        
-        
-		/*
+		float f1 = 0.00390625F;
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertex = tessellator.getBuffer();
-		vertex.begin(7, DefaultVertexFormats.POSITION_TEX);
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		float x = minX;
+		float y = minY;
+		float textureX = 0;
+		float textureY = 0;
 		double widthnew = (0 + (width * (2)));
 		double heightnew = (0 + ((height) * (2)));
-		addVertexWithUV(vertex, (minX + 0), maxY / 2, 0, 0, heightnew);
-		addVertexWithUV(vertex, (minX + width), maxY / 2, 0, widthnew, heightnew);
-		addVertexWithUV(vertex, (minX + width), (minY + 0), 0, widthnew, 0);
-		addVertexWithUV(vertex, (minX + 0), (minY + 0), 0, 0, 0);
+
+		vertexbuffer.pos((double) (x + 0), (double) (y + height), (double) 0).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + height) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) (y + height), (double) 0).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + height) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) (y + 0), (double) 0).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + 0) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + 0), (double) (y + 0), (double) 0).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + 0) * f1)).endVertex();
 		tessellator.draw();
-		
-        float f = 1.0F / textureWidth;
-        float f1 = 1.0F / textureHeight;
-        Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
-        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vertexbuffer.pos((double)x, (double)(y + height), 0.0D).tex((double)(u * f), (double)((v + (float)height) * f1)).endVertex();
-        vertexbuffer.pos((double)(x + width), (double)(y + height), 0.0D).tex((double)((u + (float)width) * f), (double)((v + (float)height) * f1)).endVertex();
-        vertexbuffer.pos((double)(x + width), (double)y, 0.0D).tex((double)((u + (float)width) * f), (double)(v * f1)).endVertex();
-        vertexbuffer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex();
-        tessellator.draw();
-        */
+
+		/*
+		 * Tessellator tessellator = Tessellator.getInstance(); VertexBuffer vertex = tessellator.getBuffer(); vertex.begin(7, DefaultVertexFormats.POSITION_TEX); double widthnew = (0 + (width * (2))); double heightnew = (0 + ((height) * (2))); addVertexWithUV(vertex, (minX + 0), maxY / 2, 0, 0, heightnew); addVertexWithUV(vertex, (minX + width), maxY / 2, 0, widthnew, heightnew); addVertexWithUV(vertex, (minX + width), (minY + 0), 0, widthnew, 0); addVertexWithUV(vertex, (minX + 0), (minY + 0), 0, 0, 0); tessellator.draw();
+		 * 
+		 * float f = 1.0F / textureWidth; float f1 = 1.0F / textureHeight; Tessellator tessellator = Tessellator.getInstance(); VertexBuffer vertexbuffer = tessellator.getBuffer(); vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX); vertexbuffer.pos((double)x, (double)(y + height), 0.0D).tex((double)(u * f), (double)((v + (float)height) * f1)).endVertex(); vertexbuffer.pos((double)(x + width), (double)(y + height), 0.0D).tex((double)((u + (float)width) * f), (double)((v + (float)height) * f1)).endVertex(); vertexbuffer.pos((double)(x + width), (double)y, 0.0D).tex((double)((u + (float)width) * f), (double)(v * f1)).endVertex(); vertexbuffer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex(); tessellator.draw();
+		 */
 		//Gui.drawModalRectWithCustomSizedTexture(0, 0, width, height, 16, 16, minX, minY);
 	}
 
@@ -303,18 +271,15 @@ public class RenderHelper {
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
 		GlStateManager.translate(-6.4F, -6.5F, -0.245F);
 		GlStateManager.scale(0.8, 0.8, 0.01);
-		
+
 		renderItem(stack, ItemCameraTransforms.TransformType.NONE);
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();
-		
+
 		/*
-		net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
-		itemRender.renderItemAndEffectIntoGUI(stack, 0, 0);
-		itemRender.renderItemOverlayIntoGUI(getFontFromStack(stack), stack, 0, 0, "");
-		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-		*/
+		 * net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting(); itemRender.renderItemAndEffectIntoGUI(stack, 0, 0); itemRender.renderItemOverlayIntoGUI(getFontFromStack(stack), stack, 0, 0, ""); net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+		 */
 	}
 
 	public static IBakedModel getBakedModel(IBlockState state) {
@@ -329,7 +294,7 @@ public class RenderHelper {
 		GlStateManager.scale(0.5F, 0.5F, 0.5F);
 		IBakedModel ibakedmodel = itemRender.getItemModelMesher().getItemModel(itemStack);
 		if (ibakedmodel.isGui3d()) {
-			GlStateManager.scale(40/64F, 40/64F, 40/64F);
+			GlStateManager.scale(40 / 64F, 40 / 64F, 40 / 64F);
 			GlStateManager.rotate(210.0F, 1.0F, 0.0F, 0.0F);
 			GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
 			GlStateManager.enableLighting();
@@ -339,6 +304,68 @@ public class RenderHelper {
 			GlStateManager.disableLighting();
 		}
 		itemRender.renderItem(itemStack, transformType);
+	}
+
+	/** all credit to InfinityRaider */
+	public static List<BakedQuad> transformQuads(List<BakedQuad> quads, TransformationMatrix matrix) {
+		List<BakedQuad> newQuads = new ArrayList<>();
+		for (BakedQuad quad : quads) {
+			VertexFormat format = quad.getFormat();
+			float[][][] vertexData = new float[4][format.getElementCount()][];
+			//unpack and transform vertex data
+			for (int v = 0; v < 4; v++) {
+				for (int e = 0; e < format.getElementCount(); e++) {
+					float[] data = new float[4];
+					LightUtil.unpack(quad.getVertexData(), data, format, v, e);		
+					vertexData[v][e] = transformUnpackedVertexDataElement(matrix, format.getElement(e).getUsage(), data);
+				}
+			}
+			//create new quad with the transformed vertex data
+			newQuads.add(new UnpackedBakedQuad(vertexData, quad.getTintIndex(), EnumFacing.UP, quad.getSprite(), true, format));
+		}
+		return newQuads;
+	}
+
+	/** all credit to InfinityRaider */
+	public static float[] transformUnpackedVertexDataElement(TransformationMatrix matrix, VertexFormatElement.EnumUsage type, float[] data) {
+		switch (type) {
+		case POSITION:
+		case NORMAL:
+			double[] pos = matrix.transform(data[0], data[1], data[2]);
+			data[0] = (float) pos[0];
+			data[1] = (float) pos[1];
+			data[2] = (float) pos[2];
+			break;
+		case COLOR:
+			/*
+			 * data[0] = getRedValueFloat(); data[1] = getGreenValueFloat(); data[2] = getBlueValueFloat(); data[3] = getAlphaValueFloat();
+			 */
+			break;
+		default:
+			break;
+		}
+		return data;
+	}
+
+	public static Vector getOffsetForFace(EnumFacing face) {
+		switch (face) {
+		case DOWN:
+			return new Vector(0, 0, 0);
+		case EAST:
+			return new Vector(0, 0, 1);
+		case NORTH:
+			return new Vector(1, 0, 1);
+		case SOUTH:
+			return new Vector(0, 0, 0);
+		case UP:
+			return new Vector(0, 0, 1);
+		case WEST:
+			return new Vector(1, 0, 0);
+		default:
+			return new Vector(0, 0, 0);
+
+		}
+
 	}
 
 }

@@ -2,9 +2,10 @@ package sonar.core.common.block;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.Nullable;
+
+import com.google.common.collect.Lists;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -13,7 +14,6 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +21,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -37,6 +36,7 @@ import sonar.core.api.blocks.IWrenchable;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.utils.BlockInteraction;
 import sonar.core.api.utils.BlockInteractionType;
+import sonar.core.common.block.properties.IBlockRotated;
 import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.helpers.SonarHelper;
@@ -44,9 +44,7 @@ import sonar.core.inventory.IAdditionalInventory;
 import sonar.core.inventory.IDropInventory;
 import sonar.core.network.PacketBlockInteraction;
 
-import com.google.common.collect.Lists;
-
-public abstract class SonarBlock extends Block implements IWrenchable, IInteractBlock {
+public abstract class SonarBlock extends Block implements IWrenchable, IInteractBlock, IBlockRotated {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public boolean orientation = true, wrenchable = true;
@@ -297,7 +295,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	 */
 
 	public void setBlockBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
-		customBB = new AxisAlignedBB(minX,minY,minZ,maxX,maxY,maxZ);
+		customBB = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
@@ -337,5 +335,12 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[] { FACING });
+	}
+
+	public EnumFacing getRotation(IBlockState state) {
+		if (orientation)
+			return state.getValue(FACING);
+		else
+			return EnumFacing.NORTH;
 	}
 }

@@ -22,9 +22,9 @@ public abstract class RecipeHelper implements IRecipeHelper {
 
 	/** add all your recipes here */
 	public abstract void addRecipes();
-	
-	public abstract String getRecipeID(); 
-	
+
+	public abstract String getRecipeID();
+
 	/** @param inputSize number of stacks required in the input
 	 * @param outputSize number of stacks to be created
 	 * @param shapeless does the order matter? */
@@ -49,12 +49,13 @@ public abstract class RecipeHelper implements IRecipeHelper {
 	public void addRecipe(Object... objects) {
 		Object[] stack = new Object[objects.length];
 		if (objects.length != this.inputSize + this.outputSize) {
-			SonarCore.logger.error("RecipeHelper - A recipeOutput wasn't added because the size didn't match!");
+			SonarCore.logger.error("RecipeHelper: $s - A recipeOutput wasn't added because the size didn't match!", this.getRecipeID());
 			return;
 		}
 		try {
 			for (int i = 0; i < objects.length; i++) {
 				if (objects[i] == null) {
+					SonarCore.logger.error("RecipeHelper: $s - Inputs cannot be null!", this.getRecipeID());
 					return;
 				}
 				if (objects[i] instanceof String) {
@@ -65,6 +66,7 @@ public abstract class RecipeHelper implements IRecipeHelper {
 						if (ores.size() > 0) {
 							stack[i] = ores.get(0);
 						} else {
+							SonarCore.logger.error("RecipeHelper: $s - An OreDictionry output returned no results!", this.getRecipeID());
 							return;
 						}
 					}
@@ -74,12 +76,14 @@ public abstract class RecipeHelper implements IRecipeHelper {
 						if (ores.size() > 0) {
 							stack[i] = new ItemStack(ores.get(0).getItem(), ((OreStack) objects[i]).stackSize, ores.get(0).getItemDamage());
 						} else {
+							SonarCore.logger.error("RecipeHelper: $s - An OreStack output returned no results!", this.getRecipeID());
 							return;
 						}
 					}
 				} else if (objects[i] instanceof ItemStack[]) {
 					for (ItemStack checkStack : (ItemStack[]) objects[i]) {
 						if (checkStack == null) {
+							SonarCore.logger.error("RecipeHelper: $s - An ItemStack[] contained null entries!", this.getRecipeID());
 							return;
 						}
 					}
@@ -92,7 +96,7 @@ public abstract class RecipeHelper implements IRecipeHelper {
 			}
 			addFinal(stack);
 		} catch (Exception exception) {
-			SonarCore.logger.error("RecipeHelper : Exception Loading Recipe : " + exception.getLocalizedMessage());
+			SonarCore.logger.error(String.format("RecipeHelper: %s -  Exception Loading Recipe", this.getRecipeID()), exception);
 		}
 	}
 
@@ -113,7 +117,7 @@ public abstract class RecipeHelper implements IRecipeHelper {
 	}
 
 	/** adds the two input and output lists */
-	public void addRecipe(Object[] input, Object[] output) {
+	private void addRecipe(Object[] input, Object[] output) {
 		recipeList.put(input, output);
 	}
 
@@ -439,9 +443,10 @@ public abstract class RecipeHelper implements IRecipeHelper {
 	 * @return if the recipeOutput was found and removed */
 	public boolean removeRecipe(Object... inputs) {
 		if (inputs.length != inputSize) {
-			FMLLog.severe("Attempted to remove a recipeOutput but input amount doesn't match recipeOutput input");
+			SonarCore.logger.error(String.format("RecipeHelper: %s - Attempted to remove recipe but input sizes didn't match - Inputs: %s", this.getRecipeID(), inputs.toString()));
 			return false;
 		}
+		boolean removed = false;
 		for (Map.Entry<Object[], Object[]> entry : recipeList.entrySet()) {
 			boolean[] found = new boolean[inputSize];
 			for (int i = 0; i < inputSize; i++) {
@@ -449,17 +454,27 @@ public abstract class RecipeHelper implements IRecipeHelper {
 				Object input = inputs[i];
 				for (int ii = 0; ii < inputSize; ii++) {
 					Object recipeInput = entry.getKey()[ii];
-
 					if (input instanceof ItemStack && recipeInput instanceof ItemStack && ItemStackHelper.equalStacksRegular((ItemStack) input, (ItemStack) recipeInput)) {
 						found[i] = true;
 					}
-
 					if (input instanceof OreStack && recipeInput instanceof OreStack && ((OreStack) input).oreString.equals(((OreStack) recipeInput).oreString)) {
 						found[i] = true;
 					}
-
 					if (input == recipeInput)
 						found[i] = true;
+					if (found[i] == false) {
+						if (input instanceof ItemStack){
+							int pos = containsStack((ItemStack) input, entry.getKey(), false);
+							if(pos!=-1){
+								found[i] = true;
+							}
+						}else if(recipeInput instanceof ItemStack){
+							int pos = containsStack((ItemStack) recipeInput, inputs, false);
+							if(pos!=-1){
+								found[i] = true;
+							}
+						}
+					}
 				}
 			}
 
@@ -471,15 +486,12 @@ public abstract class RecipeHelper implements IRecipeHelper {
 			}
 			if (remove) {
 				recipeList.remove(entry.getKey());
-				return true;
+				removed = true;
 			}
-
 		}
-		return false;
+		return removed;
 	}
 
-	
-	
 	/** used for inputs/outputs using OreDict which require a custom stack size instead of 1. */
 	public static class OreStack {
 		public String oreString;
@@ -493,7 +505,7 @@ public abstract class RecipeHelper implements IRecipeHelper {
 
 		@Override
 		public String toString() {
-			return String.format("%dx%s", stackSize, oreString);
+			return String.format("Ore Stack: " + "%dx%s", stackSize, oreString);
 		}
 
 		public List<ItemStack> getStacks() {

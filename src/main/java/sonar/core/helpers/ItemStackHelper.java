@@ -56,12 +56,16 @@ public class ItemStackHelper {
 	/** turns blocks/items into ItemStacks */
 	public static ItemStack createStack(Object obj) {
 		if (obj instanceof ItemStack) {
-			return ((ItemStack) obj).copy();
+			ItemStack stack = ((ItemStack) obj).copy();
+			if (stack.stackSize == 0) {
+				stack.stackSize = 1;
+			}
+			return stack;
 		} else if (obj instanceof Item) {
 			return new ItemStack((Item) obj, 1);
 		} else {
 			if (!(obj instanceof Block)) {
-				throw new RuntimeException("Invalid ItemStack!");
+				throw new RuntimeException(String.format("Invalid ItemStack: %s", obj));
 			}
 			return new ItemStack((Block) obj, 1);
 		}

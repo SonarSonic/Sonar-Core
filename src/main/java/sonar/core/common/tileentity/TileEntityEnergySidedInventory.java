@@ -39,14 +39,14 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		super.readData(nbt, type);
-		if (type == SyncType.DROP) {
+		if (type.isType(SyncType.DROP)) {
 			this.storage.setEnergyStored(nbt.getInteger("energy"));
 		}
 	}
 
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
-		if (type == SyncType.DROP) {
+		if (type.isType(SyncType.DROP)) {
 			nbt.setInteger("energy", this.storage.getEnergyStored());
 		}
 		return nbt;

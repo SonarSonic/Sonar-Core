@@ -6,13 +6,14 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import sonar.core.api.inventories.StoredItemStack;
+import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.inventory.slots.SlotLarge;
 
 public abstract class ContainerLargeInventory extends ContainerSync {
 
 	ILargeInventory entity;
 
-	public ContainerLargeInventory(TileEntity tile) {
+	public ContainerLargeInventory(TileEntitySonar tile) {
 		super(tile);
 		entity = (ILargeInventory) tile;
 	}

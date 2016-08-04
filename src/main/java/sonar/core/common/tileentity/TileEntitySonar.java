@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -26,8 +25,9 @@ import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.IDirtyPart;
 import sonar.core.network.sync.ISyncPart;
+import sonar.core.utils.IWorldPosition;
 
-public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncable, IWailaInfo {
+public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncable, IWailaInfo, IWorldPosition {
 
 	public ArrayList<ISyncPart> syncParts = new ArrayList();
 	public ArrayList<IDirtyPart> dirtyParts = new ArrayList();

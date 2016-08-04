@@ -11,10 +11,12 @@ public class SonarLoader {
 	public static boolean teslaLoaded = false;	
 	public static boolean calculatorLoaded = false;	
 	public static boolean logisticsLoaded = false;	
+	public static boolean mcmultipartLoaded = false;	
 	
 	public static void initLoader(){
+		mcmultipartLoaded=Loader.isModLoaded("mcmultipart");
 		wailaLoaded=Loader.isModLoaded("Waila");
-		teslaLoaded=Loader.isModLoaded("Tesla");
+		teslaLoaded=Loader.isModLoaded("Tesla")||Loader.isModLoaded("tesla");
 		calculatorLoaded=Loader.isModLoaded("Calculator");
 		logisticsLoaded=Loader.isModLoaded("PracticalLogistics");
 	}	

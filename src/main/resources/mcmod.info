@@ -11,7 +11,7 @@
 "logoFile": "",
 "screenshots": [],
 "dependencies": ["CoFHLib","CoFHCore","CoFHAPI","WailaAPI","ForgeMultipart"],
-"dependants": ["Calculator","PracticalLogistics"],
+"dependants": ["Calculator","PracticalLogistics","FluxNetworks"],
 "useDependencyInformation": true
 }
 ]

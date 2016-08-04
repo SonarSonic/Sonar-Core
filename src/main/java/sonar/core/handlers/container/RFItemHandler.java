@@ -25,8 +25,10 @@ public class RFItemHandler extends EnergyContainerHandler {
 		IEnergyContainerItem item = (IEnergyContainerItem) stack.getItem();
 		if (item instanceof IEnergyContainerItem) {
 			IEnergyContainerItem receiver = (IEnergyContainerItem) item;
-			int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-			transfer.stored -= receiver.receiveEnergy(stack, transferRF, action.shouldSimulate());
+			if (receiver.getMaxEnergyStored(stack) > 0) {
+				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
+				transfer.stored -= receiver.receiveEnergy(stack, transferRF, action.shouldSimulate());
+			}
 		}
 		if (transfer.stored == 0)
 			transfer = null;
@@ -38,8 +40,10 @@ public class RFItemHandler extends EnergyContainerHandler {
 		IEnergyContainerItem item = (IEnergyContainerItem) stack.getItem();
 		if (item instanceof IEnergyContainerItem) {
 			IEnergyContainerItem receiver = (IEnergyContainerItem) item;
-			int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-			transfer.stored -= receiver.extractEnergy(stack, transferRF, action.shouldSimulate());
+			if (receiver.getMaxEnergyStored(stack) > 0) {
+				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
+				transfer.stored -= receiver.extractEnergy(stack, transferRF, action.shouldSimulate());
+			}
 		}
 		if (transfer.stored == 0)
 			transfer = null;
@@ -53,10 +57,12 @@ public class RFItemHandler extends EnergyContainerHandler {
 			return;
 		}
 		if (item instanceof IEnergyContainerItem) {
-			IEnergyContainerItem receiver = (IEnergyContainerItem) item;
-			energyStack.setStorageValues(receiver.getEnergyStored(stack), receiver.getMaxEnergyStored(stack));
-			energyStack.setMaxInput(receiver.receiveEnergy(stack, Integer.MAX_VALUE, true));
-			energyStack.setMaxOutput(receiver.extractEnergy(stack, Integer.MAX_VALUE, true));
+			if (item.getMaxEnergyStored(stack) > 0) {
+				IEnergyContainerItem receiver = (IEnergyContainerItem) item;
+				energyStack.setStorageValues(receiver.getEnergyStored(stack), receiver.getMaxEnergyStored(stack));
+				energyStack.setMaxInput(receiver.receiveEnergy(stack, Integer.MAX_VALUE, true));
+				energyStack.setMaxOutput(receiver.extractEnergy(stack, Integer.MAX_VALUE, true));
+			}
 		}
 	}
 

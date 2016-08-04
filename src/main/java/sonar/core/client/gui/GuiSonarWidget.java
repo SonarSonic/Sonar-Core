@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 import sonar.core.client.gui.widgets.IWidget;
+import sonar.core.utils.IWorldPosition;
 
 public abstract class GuiSonarWidget extends GuiSonar {
 
@@ -31,7 +32,7 @@ public abstract class GuiSonarWidget extends GuiSonar {
 		widgets.put(new WidgetPos(x, y), widget);
 	}
 
-	public GuiSonarWidget(Container container, TileEntity entity) {
+	public GuiSonarWidget(Container container, IWorldPosition entity) {
 		super(container, entity);
 	}
 

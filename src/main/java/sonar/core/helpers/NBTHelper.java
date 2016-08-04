@@ -266,6 +266,18 @@ public class NBTHelper {
 			}
 			return false;
 		}
+
+		public static boolean isGivenType(SyncType current, SyncType... types) {
+			if(current==null){
+				return false;
+			}
+			for (SyncType type : types) {
+				if (type.type == current.type) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 	public static void writeNBTBase(NBTTagCompound nbt, int type, Object object, String tagName) {

@@ -21,7 +21,8 @@ plugins {
 version = "${minecraft_version}-${mod_version}"
 group= "sonar.core"
 archivesBaseName = "SonarCore"
-
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
     version = "1.9.4-12.17.0.1968"

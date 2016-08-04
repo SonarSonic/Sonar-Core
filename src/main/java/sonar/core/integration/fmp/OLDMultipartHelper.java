@@ -7,7 +7,8 @@ import net.minecraft.world.World;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.integration.fmp.handlers.TileHandler;
 
-public class FMPHelper {
+@Deprecated
+public class OLDMultipartHelper {
 
 	public static Object getAdjacentTile(TileEntity tile, EnumFacing side) {
 		if (tile == null || side == null) {
@@ -31,7 +32,7 @@ public class FMPHelper {
 	}
 
 	public static TileHandler getHandler(Object te) {
-		te = FMPHelper.checkObject(te);
+		te = OLDMultipartHelper.checkObject(te);
 		if (te != null && te instanceof ITileHandler) {
 			return ((ITileHandler) te).getTileHandler();
 		}
@@ -42,8 +43,12 @@ public class FMPHelper {
 		return world != null ? checkObject(world.getTileEntity(pos)) : null;
 	}
 
+	public static Object getTile(BlockCoords coords) {
+		return getTile(coords.getWorld(), coords.getBlockPos());
+	}
+
 	public static Object getTile(Object tile) {
-		tile = FMPHelper.checkObject(tile);
+		tile = OLDMultipartHelper.checkObject(tile);
 		return tile;
 	}
 

@@ -53,6 +53,13 @@ public class BlockCoords {
 		this.hasDimension = false;
 	}
 
+	public BlockCoords(BlockPos pos, World world) {
+		this.pos = pos;
+		this.hasDimension = true;
+		this.dimension = world.provider.getDimension();
+		this.world = world;
+	}
+
 	public BlockCoords(BlockPos pos, int dimension) {
 		this.pos = pos;
 		this.hasDimension = true;

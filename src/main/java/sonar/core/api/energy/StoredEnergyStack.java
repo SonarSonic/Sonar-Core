@@ -215,19 +215,19 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack> {
 
 	public StoredEnergyStack convertEnergyType(EnergyType newFormat) {
 		if (energyType != newFormat) {
-			input = (long) ((long) (input / energyType.getRFConversion()) * newFormat.getRFConversion());
-			output = (long) ((long) (output / energyType.getRFConversion()) * newFormat.getRFConversion());
-			stored = (long) ((long) (stored / energyType.getRFConversion()) * newFormat.getRFConversion());
-			capacity = (long) ((long) (capacity / energyType.getRFConversion()) * newFormat.getRFConversion());
-			usage = (long) ((long) (usage / energyType.getRFConversion()) * newFormat.getRFConversion());
+			input = (long) ((long) (input / energyType.toRFConversion()) * newFormat.toRFConversion());
+			output = (long) ((long) (output / energyType.toRFConversion()) * newFormat.toRFConversion());
+			stored = (long) ((long) (stored / energyType.toRFConversion()) * newFormat.toRFConversion());
+			capacity = (long) ((long) (capacity / energyType.toRFConversion()) * newFormat.toRFConversion());
+			usage = (long) ((long) (usage / energyType.toRFConversion()) * newFormat.toRFConversion());
 			energyType = newFormat;
 		}
 		return this;
 	}
 
 	public static long convert(long val, EnergyType current, EnergyType type) {
-		double inRF = (val / current.getRFConversion());
-		return (long) (inRF * type.getRFConversion());
+		double inRF = (val / current.toRFConversion());
+		return (long) (inRF * type.toRFConversion());
 	}
 
 }

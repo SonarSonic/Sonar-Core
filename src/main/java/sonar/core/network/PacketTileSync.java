@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.integration.fmp.FMPHelper;
+import sonar.core.integration.fmp.OLDMultipartHelper;
 
 public class PacketTileSync extends PacketCoords<PacketTileSync> {
 
@@ -54,7 +54,7 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 		@Override
 		public IMessage processMessage(PacketTileSync message, TileEntity tile) {
 			if (tile.getWorld().isRemote) {
-				Object te = FMPHelper.checkObject(tile);
+				Object te = OLDMultipartHelper.checkObject(tile);
 				if (te == null) {
 					return null;
 				}

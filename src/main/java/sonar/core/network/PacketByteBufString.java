@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import sonar.core.integration.fmp.FMPHelper;
+import sonar.core.integration.fmp.OLDMultipartHelper;
 import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.network.utils.IByteBufTile;
 
@@ -49,7 +49,7 @@ public class PacketByteBufString extends PacketCoords<PacketByteBufString> {
 				IByteBufTile packet = (IByteBufTile) tile;
 				packet.readPacket(message.buf, message.id);
 			} else {
-				TileHandler handler = FMPHelper.getHandler(tile);
+				TileHandler handler = OLDMultipartHelper.getHandler(tile);
 				if (handler != null && handler instanceof IByteBufTile) {
 					((IByteBufTile) handler).readPacket(message.buf, message.id);
 				}

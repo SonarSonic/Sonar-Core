@@ -14,11 +14,11 @@ import sonar.core.inventory.SonarInventory;
 public class TileEntityEnergyInventory extends TileEntityEnergy implements IInventory {
 
 	public void discharge(int id) {
-		slots()[id] = SonarAPI.getEnergyHelper().dischargeItem(slots()[id], this, Math.min(maxTransfer, this.getStorage().getMaxExtract()));
+		slots()[id] = SonarAPI.getEnergyHelper().dischargeItem(slots()[id], this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
 	}
 
 	public void charge(int id) {
-		slots()[id] = SonarAPI.getEnergyHelper().chargeItem(slots()[id], this, Math.min(maxTransfer, this.getStorage().getMaxExtract()));
+		slots()[id] = SonarAPI.getEnergyHelper().chargeItem(slots()[id], this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
 	}
 
 	public SonarInventory inv;

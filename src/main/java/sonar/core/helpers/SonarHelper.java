@@ -2,6 +2,9 @@ package sonar.core.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import com.mojang.authlib.GameProfile;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -26,7 +29,8 @@ public class SonarHelper {
 	/** @param tile Tile Entity you're checking from
 	 * @param side side to find IEnergyHandler
 	 * @return if there is an adjacent Energy Hander */
-	/* public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, int side) { TileEntity handler = getAdjacentTileEntity(tile, EnumFacing.getFront(side)); return isEnergyHandlerFromSide(handler, EnumFacing.VALUES[side ^ 1]); }
+	/*
+	 * public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, int side) { TileEntity handler = getAdjacentTileEntity(tile, EnumFacing.getFront(side)); return isEnergyHandlerFromSide(handler, EnumFacing.VALUES[side ^ 1]); }
 	 * 
 	 * /* public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, EnumFacing side) { TileEntity handler = getAdjacentTileEntity(tile, side); return isEnergyHandlerFromSide(handler, side.getOpposite()); }
 	 * 
@@ -34,7 +38,8 @@ public class SonarHelper {
 	 * 
 	 * @param from direction your adding from
 	 * 
-	 * @return if Handler can connect */
+	 * @return if Handler can connect
+	 */
 	/* public static boolean isEnergyHandlerFromSide(TileEntity tile, EnumFacing from) { if (tile instanceof IEnergyProvider || tile instanceof IEnergyReceiver) { IEnergyConnection handler = (IEnergyConnection) tile; return handler.canConnectEnergy(from); } return false; } */
 	/** @param tile Tile Entity you're checking from
 	 * @param side direction from Tile Entity your checking from
@@ -48,10 +53,13 @@ public class SonarHelper {
 		return world.getBlockState(pos.offset(side)).getBlock();
 	}
 
-	/* /** @param tile Tile Entity you are checking
+	/*
+	 * /** @param tile Tile Entity you are checking
 	 * 
-	 * @return if the Tile is an Energy Handler */
-	/* public static boolean isEnergyHandler(TileEntity tile) { if (tile instanceof IEnergyHandler) { return true; } return false; } /** Add energy to an IEnergyReciever, internal distribution is left entirely to the IEnergyReciever.
+	 * @return if the Tile is an Energy Handler
+	 */
+	/*
+	 * public static boolean isEnergyHandler(TileEntity tile) { if (tile instanceof IEnergyHandler) { return true; } return false; } /** Add energy to an IEnergyReciever, internal distribution is left entirely to the IEnergyReciever.
 	 * 
 	 * @param from Orientation the energy is received from.
 	 * 
@@ -59,22 +67,28 @@ public class SonarHelper {
 	 * 
 	 * @param simulate If TRUE, the charge will only be simulated.
 	 * 
-	 * @return Amount of energy that was (or would have been, if simulated) received. */
-	/* public static int pushEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyReceiver) { IEnergyReceiver handler = (IEnergyReceiver) tile; return handler.receiveEnergy(dir, amount, simulate); } return 0;
+	 * @return Amount of energy that was (or would have been, if simulated) received.
+	 */
+	/*
+	 * public static int pushEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyReceiver) { IEnergyReceiver handler = (IEnergyReceiver) tile; return handler.receiveEnergy(dir, amount, simulate); } return 0;
 	 * 
-	 * } */
+	 * }
+	 */
 	/** Remove energy from an IEnergyProvider, internal distribution is left entirely to the IEnergyProvider.
 	 * 
 	 * @param from Orientation the energy is extracted from.
 	 * @param maxExtract Maximum amount of energy to extract.
 	 * @param simulate If TRUE, the extraction will only be simulated.
 	 * @return Amount of energy that was (or would have been, if simulated) extracted. */
-	/* public static int pullEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyProvider) { IEnergyProvider handler = (IEnergyProvider) tile; return handler.extractEnergy(dir, amount, simulate); } return 0;
+
+	/*
+	 * public static int pullEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyProvider) { IEnergyProvider handler = (IEnergyProvider) tile; return handler.extractEnergy(dir, amount, simulate); } return 0;
 	 * 
-	 * } */
+	 * }
+	 */
 	/** checks if a tile implements IWrench and IDropTile and drops it accordingly */
 	public static void dropTile(EntityPlayer player, Block block, World world, BlockPos pos) {
-		ItemStack stack = player.getActiveItemStack();
+		ItemStack stack = player.getHeldItemMainhand();
 		TileEntity te = world.getTileEntity(pos);
 		if (SonarLoader.calculatorLoaded() && block == GameRegistry.findBlock("Calculator", "ConductorMastBlock")) {
 			if (world.getBlockState(pos.offset(EnumFacing.DOWN, 1)).getBlock() == GameRegistry.findBlock("Calculator", "ConductorMast")) {
@@ -113,15 +127,32 @@ public class SonarHelper {
 		}
 		return entity;
 	}
-	
-	public static EntityPlayerMP getPlayerFromName(String player){
+
+	public static EntityPlayerMP getPlayerFromName(String player) {
 		List<EntityPlayerMP> server = FMLCommonHandler.instance().getMinecraftServerInstance().getServer().getPlayerList().getPlayerList();
 		for (EntityPlayerMP entityPlayer : server) {
 			if (entityPlayer.getName().equals(player)) {
 				return entityPlayer;
 			}
 		}
-		return null;		
+		return null;
+	}
+
+	public static EntityPlayer getPlayerFromUUID(UUID player) {
+		EntityPlayer fromUUID = null;
+		Entity entity = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityFromUuid(player);
+		if (entity instanceof EntityPlayer) {
+			fromUUID = (EntityPlayer) entity;
+		}
+		return fromUUID;
+	}
+
+	public static GameProfile getProfileByUUID(UUID playerUUID) {
+		return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerProfileCache().getProfileByUUID(playerUUID);
+	}
+
+	public static GameProfile getGameProfileForUsername(String playerName) {
+		return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerProfileCache().getGameProfileForUsername(playerName);
 	}
 
 	public static EnumFacing getForward(int meta) {

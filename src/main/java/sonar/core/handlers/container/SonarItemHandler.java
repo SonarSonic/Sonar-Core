@@ -24,8 +24,10 @@ public class SonarItemHandler extends EnergyContainerHandler {
 		ISonarEnergyItem item = (ISonarEnergyItem) stack.getItem();
 		if (item instanceof ISonarEnergyItem) {
 			ISonarEnergyItem receiver = (ISonarEnergyItem) item;
-			int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-			transfer.stored -= receiver.addEnergy(stack, transferRF, action);
+			if (receiver.getFullCapacity(stack) > 0) {
+				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
+				transfer.stored -= receiver.addEnergy(stack, transferRF, action);
+			}
 		}
 		if (transfer.stored == 0)
 			transfer = null;
@@ -37,8 +39,10 @@ public class SonarItemHandler extends EnergyContainerHandler {
 		ISonarEnergyItem item = (ISonarEnergyItem) stack.getItem();
 		if (item instanceof ISonarEnergyItem) {
 			ISonarEnergyItem receiver = (ISonarEnergyItem) item;
-			int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-			transfer.stored -= receiver.removeEnergy(stack, transferRF, action);
+			if (receiver.getFullCapacity(stack) > 0) {
+				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
+				transfer.stored -= receiver.removeEnergy(stack, transferRF, action);
+			}
 		}
 		if (transfer.stored == 0)
 			transfer = null;
@@ -53,9 +57,11 @@ public class SonarItemHandler extends EnergyContainerHandler {
 		}
 		if (item instanceof ISonarEnergyItem) {
 			ISonarEnergyItem receiver = (ISonarEnergyItem) item;
-			energyStack.setStorageValues(receiver.getEnergyLevel(stack), receiver.getFullCapacity(stack));
-			energyStack.setMaxInput(receiver.addEnergy(stack, Integer.MAX_VALUE, ActionType.SIMULATE));
-			energyStack.setMaxOutput(receiver.removeEnergy(stack, Integer.MAX_VALUE, ActionType.SIMULATE));
+			if (receiver.getFullCapacity(stack) > 0) {
+				energyStack.setStorageValues(receiver.getEnergyLevel(stack), receiver.getFullCapacity(stack));
+				energyStack.setMaxInput(receiver.addEnergy(stack, Integer.MAX_VALUE, ActionType.SIMULATE));
+				energyStack.setMaxOutput(receiver.removeEnergy(stack, Integer.MAX_VALUE, ActionType.SIMULATE));
+			}
 		}
 	}
 

@@ -12,13 +12,11 @@ public abstract class SyncTagType<T> extends SyncPart {
 		public BOOLEAN(int id) {
 			super(NBT.TAG_END, id);
 			this.current = false;
-			this.last = false;
 		}
 
 		public BOOLEAN(String name) {
 			super(NBT.TAG_END, name);
 			this.current = false;
-			this.last = false;
 		}
 
 		public void invert() {
@@ -31,13 +29,11 @@ public abstract class SyncTagType<T> extends SyncPart {
 		public BYTE(int id) {
 			super(NBT.TAG_BYTE, id);
 			this.current = 0;
-			this.last = 0;
 		}
 
 		public BYTE(String name) {
 			super(NBT.TAG_BYTE, name);
 			this.current = 0;
-			this.last = 0;
 		}
 	}
 
@@ -45,23 +41,21 @@ public abstract class SyncTagType<T> extends SyncPart {
 		public SHORT(int id) {
 			super(NBT.TAG_SHORT, id);
 			this.current = 0;
-			this.last = 0;
 		}
 
 		public SHORT(String name) {
 			super(NBT.TAG_SHORT, name);
 			this.current = 0;
-			this.last = 0;
 		}
 
 		public void increaseBy(int i) {
 			setObject((short) (getObject() + i));
-			this.setChanged(true);
+			setChanged(true);
 		}
 
 		public void decreaseBy(int i) {
 			setObject((short) (getObject() - i));
-			this.setChanged(true);
+			setChanged(true);
 		}
 	}
 
@@ -69,13 +63,11 @@ public abstract class SyncTagType<T> extends SyncPart {
 		public INT(int id) {
 			super(NBT.TAG_INT, id);
 			this.current = 0;
-			this.last = 0;
 		}
 
 		public INT(String name) {
 			super(NBT.TAG_INT, name);
 			this.current = 0;
-			this.last = 0;
 		}
 
 		public void increaseBy(int i) {
@@ -93,13 +85,11 @@ public abstract class SyncTagType<T> extends SyncPart {
 		public LONG(int id) {
 			super(NBT.TAG_LONG, id);
 			this.current = (long) 0;
-			this.last = (long) 0;
 		}
 
 		public LONG(String name) {
 			super(NBT.TAG_LONG, name);
 			this.current = (long) 0;
-			this.last = (long) 0;
 		}
 
 		public void increaseBy(int i) {
@@ -117,13 +107,11 @@ public abstract class SyncTagType<T> extends SyncPart {
 		public FLOAT(int id) {
 			super(NBT.TAG_FLOAT, id);
 			this.current = (float) 0;
-			this.last = (float) 0;
 		}
 
 		public FLOAT(String name) {
 			super(NBT.TAG_FLOAT, name);
 			this.current = (float) 0;
-			this.last = (float) 0;
 		}
 	}
 
@@ -131,13 +119,11 @@ public abstract class SyncTagType<T> extends SyncPart {
 		public DOUBLE(int id) {
 			super(NBT.TAG_DOUBLE, id);
 			this.current = (double) 0;
-			this.last = (double) 0;
 		}
 
 		public DOUBLE(String name) {
 			super(NBT.TAG_DOUBLE, name);
 			this.current = (double) 0;
-			this.last = (double) 0;
 		}
 	}
 
@@ -145,13 +131,11 @@ public abstract class SyncTagType<T> extends SyncPart {
 		public BYTE_ARRAY(int id, int size) {
 			super(NBT.TAG_BYTE_ARRAY, id);
 			this.current = new Byte[size];
-			this.last = new Byte[size];
 		}
 
 		public BYTE_ARRAY(String name, int size) {
 			super(NBT.TAG_BYTE_ARRAY, name);
 			this.current = new Byte[size];
-			this.last = new Byte[size];
 		}
 	}
 
@@ -159,13 +143,11 @@ public abstract class SyncTagType<T> extends SyncPart {
 		public STRING(int id) {
 			super(NBT.TAG_STRING, id);
 			this.current = "";
-			this.last = "";
 		}
 
 		public STRING(String name) {
 			super(NBT.TAG_STRING, name);
 			this.current = "";
-			this.last = "";
 		}
 	}
 
@@ -173,13 +155,11 @@ public abstract class SyncTagType<T> extends SyncPart {
 		public COMPOUND(int id) {
 			super(NBT.TAG_COMPOUND, id);
 			this.current = new NBTTagCompound();
-			this.last = new NBTTagCompound();
 		}
 
 		public COMPOUND(String name) {
 			super(NBT.TAG_COMPOUND, name);
 			this.current = new NBTTagCompound();
-			this.last = new NBTTagCompound();
 		}
 	}
 
@@ -187,18 +167,15 @@ public abstract class SyncTagType<T> extends SyncPart {
 		public INT_ARRAY(int id, int size) {
 			super(NBT.TAG_INT_ARRAY, id);
 			this.current = new Integer[size];
-			this.last = new Integer[size];
 		}
 
 		public INT_ARRAY(String name, int size) {
 			super(NBT.TAG_INT_ARRAY, name);
 			this.current = new Integer[size];
-			this.last = new Integer[size];
 		}
 	}
 
 	public T current;
-	public T last;
 	private int nbtType = -1;
 
 	public SyncTagType(int nbtType, int id) {
@@ -236,7 +213,6 @@ public abstract class SyncTagType<T> extends SyncPart {
 
 	public SyncTagType<T> setDefault(T def) {
 		current = def;
-		last = def;
 		return this;
 	}
 

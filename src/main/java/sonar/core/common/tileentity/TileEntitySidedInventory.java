@@ -23,7 +23,7 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 		sides.writeToNBT(nbt);
 		return nbt;
 	}
-
+	
 	@Override
 	public int[] getSlotsForFace(EnumFacing side) {
 		return sides.getSideConfig(side).isInput() ? input : output;
