@@ -1,11 +1,10 @@
 package sonar.core.helpers;
 
-import gnu.trove.map.hash.THashMap;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import gnu.trove.map.hash.THashMap;
 import sonar.core.SonarCore;
 import sonar.core.api.IRegistryObject;
 

@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.FMLFileResourcePack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -26,13 +27,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import mcmultipart.multipart.IMultipartContainer;
-import mcmultipart.multipart.ISlottedPart;
-import mcmultipart.multipart.PartSlot;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.energy.DischargeValues;
@@ -40,12 +34,12 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.SonarLoader;
 import sonar.core.integration.SonarWailaModule;
 import sonar.core.integration.fmp.OLDMultipartHelper;
-import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.integration.planting.FertiliserRegistry;
 import sonar.core.integration.planting.HarvesterRegistry;
 import sonar.core.integration.planting.PlanterRegistry;
 import sonar.core.network.PacketBlockInteraction;
 import sonar.core.network.PacketByteBuf;
+import sonar.core.network.PacketByteBufMultipart;
 import sonar.core.network.PacketByteBufString;
 import sonar.core.network.PacketInvUpdate;
 import sonar.core.network.PacketMultipartSync;
@@ -69,7 +63,7 @@ import sonar.core.upgrades.MachineUpgradeRegistry;
 public class SonarCore {
 
 	public static final String modid = "SonarCore";
-	public static final String version = "3.0.8";
+	public static final String version = "3.1.0";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -94,8 +88,8 @@ public class SonarCore {
 	// common blocks
 	public static Block reinforcedStoneBlock, reinforcedStoneBrick, reinforcedDirtBlock, reinforcedDirtBrick, stableGlass, clearStableGlass;
 	public static Block[] stableStone = new Block[16], stablestonerimmedBlock = new Block[16], stablestonerimmedblackBlock = new Block[16];
-	//public static Block toughenedStoneBlock, toughenedStoneBrick;
-	//public static Block toughenedDirtBlock, toughenedDirtBrick;
+	// public static Block toughenedStoneBlock, toughenedStoneBrick;
+	// public static Block toughenedDirtBlock, toughenedDirtBrick;
 	public static Block reinforcedStoneStairs, reinforcedStoneBrickStairs, reinforcedDirtStairs, reinforcedDirtBrickStairs;
 	public static Block reinforcedStoneFence, reinforcedStoneBrickFence, reinforcedDirtFence, reinforcedDirtBrickFence;
 	public static Block reinforcedStoneGate, reinforcedStoneBrickGate, reinforcedDirtGate, reinforcedDirtBrickGate;
@@ -181,7 +175,7 @@ public class SonarCore {
 		logger.info("Registered " + machineUpgrades.getMap().size() + " Machine Upgrades");
 	}
 
-	private static void registerPackets() {
+	private void registerPackets() {
 		if (network == null) {
 			network = NetworkRegistry.INSTANCE.newSimpleChannel("Sonar-Packets");
 			network.registerMessage(PacketTileSync.Handler.class, PacketTileSync.class, 0, Side.CLIENT);
@@ -193,9 +187,11 @@ public class SonarCore {
 			network.registerMessage(PacketStackUpdate.Handler.class, PacketStackUpdate.class, 7, Side.CLIENT);
 			network.registerMessage(PacketInvUpdate.Handler.class, PacketInvUpdate.class, 8, Side.CLIENT);
 			network.registerMessage(PacketTileSyncUpdate.Handler.class, PacketTileSyncUpdate.class, 9, Side.CLIENT);
-			if (SonarLoader.mcmultipartLoaded)
+			if (SonarLoader.mcmultipartLoaded) {
 				network.registerMessage(PacketMultipartSync.Handler.class, PacketMultipartSync.class, 10, Side.CLIENT);
-
+				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 11, Side.CLIENT);
+				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 12, Side.SERVER);
+			}
 		}
 	}
 

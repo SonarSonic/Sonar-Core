@@ -1,6 +1,10 @@
 package sonar.core.network;
 
+import java.util.UUID;
+
 import io.netty.buffer.ByteBuf;
+import mcmultipart.multipart.IMultipart;
+import mcmultipart.multipart.IMultipartContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -10,21 +14,21 @@ import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.network.utils.IByteBufTile;
 
-public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
+public class PacketByteBufMultipart extends PacketMultipart {
 
 	public int id;
 	public IByteBufTile tile;
 	public ByteBuf buf;
 
-	public PacketByteBuf() {
+	public PacketByteBufMultipart() {
 	}
 
-	public PacketByteBuf(IByteBufTile tile, BlockPos pos, int id) {
-		super(pos);
+	public PacketByteBufMultipart(UUID partUUID, IByteBufTile tile, BlockPos pos, int id) {
+		super(partUUID, pos);
 		this.tile = tile;
 		this.id = id;
 	}
-			
+
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		super.fromBytes(buf);
@@ -39,21 +43,13 @@ public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 		tile.writePacket(buf, id);
 	}
 
-	public static class Handler extends PacketTileEntityHandler<PacketByteBuf> {
+	public static class Handler extends PacketMultipartHandler<PacketByteBufMultipart> {
 
 		@Override
-		public IMessage processMessage(PacketByteBuf message, TileEntity tile) {
-			//if (!tile.getWorld().isRemote) {
-				if (tile instanceof IByteBufTile) {
-					IByteBufTile packet = (IByteBufTile) tile;
-					packet.readPacket(message.buf, message.id);
-				}else{					
-					TileHandler handler = OLDMultipartHelper.getHandler(tile);
-					if (handler != null && handler instanceof IByteBufTile) {
-						((IByteBufTile) handler).readPacket(message.buf, message.id);
-					}
-				}
-			//}
+		public IMessage processMessage(PacketByteBufMultipart message, IMultipartContainer tile, IMultipart part) {
+			if (part != null && part instanceof IByteBufTile) {
+				((IByteBufTile) part).readPacket(message.buf, message.id);
+			}
 			return null;
 		}
 	}

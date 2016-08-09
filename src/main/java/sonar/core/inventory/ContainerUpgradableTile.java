@@ -1,7 +1,6 @@
 package sonar.core.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import sonar.core.api.upgrades.IUpgradableTile;
 import sonar.core.api.upgrades.IUpgradeInventory;
 import sonar.core.common.tileentity.TileEntitySonar;

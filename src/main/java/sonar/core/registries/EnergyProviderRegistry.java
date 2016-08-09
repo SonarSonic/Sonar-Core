@@ -2,7 +2,6 @@ package sonar.core.registries;
 
 import sonar.core.api.energy.EnergyHandler;
 import sonar.core.handlers.energy.EUProvider;
-import sonar.core.handlers.energy.FluxedRedstoneHandler;
 import sonar.core.handlers.energy.MekanismProvider;
 /*
 import sonar.core.handlers.energy.AEProvider;
@@ -25,7 +24,6 @@ public class EnergyProviderRegistry extends RegistryHelper<EnergyHandler> {
 		registerObject(new SonarHandler());
 		registerObject(new RFHandler());
 		registerObject(new TeslaHandler());
-		registerObject(new FluxedRedstoneHandler());
 		registerObject(new EUProvider());
 	}
 

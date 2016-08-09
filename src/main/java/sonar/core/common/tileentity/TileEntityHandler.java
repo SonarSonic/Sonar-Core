@@ -1,11 +1,8 @@
 package sonar.core.common.tileentity;
 
-import java.util.List;
-
 import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.fmp.ITileHandler;
-import sonar.core.network.sync.ISyncPart;
 
 public abstract class TileEntityHandler extends TileEntitySonar implements ITileHandler {
 

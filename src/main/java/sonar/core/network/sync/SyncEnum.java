@@ -34,7 +34,7 @@ public class SyncEnum<E extends Enum> extends SyncPart {
 	@Override
 	public void writeToNBT(NBTTagCompound nbt, SyncType type) {
 		if (current != null) {
-			nbt.setInteger("num", current.ordinal());
+			nbt.setInteger(getTagName(), current.ordinal());
 		}
 	}
 

@@ -1,7 +1,6 @@
 package sonar.core.api.energy;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.SonarHandler;
 import sonar.core.api.utils.ActionType;

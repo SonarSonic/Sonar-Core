@@ -2,6 +2,8 @@ package sonar.core.utils;
 
 import java.util.ArrayList;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -10,8 +12,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import sonar.core.SonarCore;
 import sonar.core.api.nbt.INBTSaveable;
 import sonar.core.network.PacketSonarSides;
-
-import com.google.common.collect.Lists;
 
 public class MachineSides implements INBTSaveable {
 
@@ -141,7 +141,7 @@ public class MachineSides implements INBTSaveable {
 		NBTTagCompound sideNBT = nbt.getCompoundTag("sides");
 		for (int i = 0; i < 6; i++) {
 			if (sideNBT.hasKey("" + i)) {
-				MachineSideConfig side = MachineSideConfig.valueOf(sideNBT.getString("" + i));
+				MachineSideConfig side = MachineSideConfig.values()[sideNBT.getInteger("" + i)];
 				if (side != null)
 					configs[i] = side;
 			}
@@ -151,7 +151,7 @@ public class MachineSides implements INBTSaveable {
 	public void writeToNBT(NBTTagCompound nbt) {
 		NBTTagCompound sideNBT = new NBTTagCompound();
 		for (int i = 0; i < 6; i++) {
-			sideNBT.setString("" + i, configs[i].name());
+			sideNBT.setInteger("" + i, configs[i].ordinal());
 		}
 		nbt.setTag("sides", sideNBT);
 	}

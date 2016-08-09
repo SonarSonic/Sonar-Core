@@ -1,16 +1,12 @@
 package sonar.core.common.block;
 
-import sonar.core.api.utils.BlockInteraction;
-import sonar.core.common.block.properties.BlockStateSpecial;
-import sonar.core.common.block.properties.IBlockStateSpecial;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import sonar.core.common.block.properties.BlockStateSpecial;
+import sonar.core.common.block.properties.IBlockStateSpecial;
 
 public abstract class SonarCustomRendererBlock<T extends TileEntity> extends SonarMachineBlock {
 

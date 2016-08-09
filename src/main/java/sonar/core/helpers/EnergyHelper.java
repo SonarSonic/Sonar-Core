@@ -14,7 +14,6 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.api.wrappers.EnergyWrapper;
 import sonar.core.energy.DischargeValues;
-import sonar.core.energy.EnergyCharge;
 import sonar.core.handlers.energy.SonarHandler;
 import sonar.core.network.sync.SyncEnergyStorage;
 

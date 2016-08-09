@@ -1,11 +1,10 @@
 package sonar.core.helpers;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;

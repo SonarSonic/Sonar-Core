@@ -36,7 +36,8 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	public boolean loaded = true;
 	protected DirtyPart isDirty = new DirtyPart();
 
-	public TileEntitySonar() {}
+	public TileEntitySonar() {
+	}
 
 	public boolean isClient() {
 		return worldObj.isRemote;
@@ -49,26 +50,26 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	public final void onLoad() {
 		isDirty.setChanged(true);
 	}
-	
-	public void onFirstTick(){
-		
+
+	public void onFirstTick() {
+		this.markBlockForUpdate();
 	}
 
 	public void update() {
 		boolean markDirty = false;
-		if(loaded){
+		if (loaded) {
 			onFirstTick();
-			loaded=!loaded;
+			loaded = !loaded;
 		}
-		
+
 		for (ISyncPart part : syncParts) {
-			if (part!=null && part.hasChanged()) {
+			if (part != null && part.hasChanged()) {
 				markDirty = true;
 				break;
 			}
 		}
 		for (IDirtyPart part : dirtyParts) {
-			if (part!=null && part.hasChanged()) {
+			if (part != null && part.hasChanged()) {
 				markDirty = true;
 				part.setChanged(false);
 			}
@@ -95,11 +96,8 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 		return nbt;
 	}
 
-	/*
-	 * public void addSyncParts(List<ISyncPart> parts) { }
-	 */
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
+	public final SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		writeToNBT(nbtTag);
 		return new SPacketUpdateTileEntity(pos, 0, nbtTag);
@@ -156,9 +154,13 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	}
 
 	public void markBlockForUpdate() {
-		isDirty.setChanged(true);
-		this.worldObj.markBlockRangeForRenderUpdate(pos, pos);
-		SonarCore.sendFullSyncAround(this, 128);
+		if (this.isServer()){
+			isDirty.setChanged(true);
+			SonarCore.sendFullSyncAroundWithRenderUpdate(this, 128);
+		}else{
+			getWorld().markBlockRangeForRenderUpdate(pos, pos);
+			getWorld().getChunkFromBlockCoords(getPos()).setChunkModified();
+		}
 		// may need some more stuff, here to make life easier
 	}
 

@@ -5,11 +5,9 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
-import net.minecraft.inventory.Container;
-import net.minecraft.tileentity.TileEntity;
-
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.inventory.Container;
 import sonar.core.client.gui.widgets.IWidget;
 import sonar.core.utils.IWorldPosition;
 

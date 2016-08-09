@@ -1,13 +1,12 @@
 package sonar.core.network.sync;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.helpers.NBTHelper.SyncType;
-
-import com.google.common.collect.Lists;
 
 public abstract class SyncPart extends DirtyPart implements ISyncPart {
 	private byte id = -1;

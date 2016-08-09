@@ -1,9 +1,8 @@
 package sonar.core.api.upgrades;
 
-import gnu.trove.map.hash.THashMap;
-
 import java.util.ArrayList;
 
+import gnu.trove.map.hash.THashMap;
 import net.minecraft.item.ItemStack;
 import sonar.core.api.nbt.INBTSyncable;
 

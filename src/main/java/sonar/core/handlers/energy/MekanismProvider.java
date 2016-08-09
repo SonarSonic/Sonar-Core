@@ -2,10 +2,8 @@ package sonar.core.handlers.energy;
 
 import mekanism.api.energy.IStrictEnergyAcceptor;
 import mekanism.api.energy.IStrictEnergyStorage;
-import mekanism.api.transmitters.TransmissionType;
 import mekanism.api.util.CapabilityUtils;
 import mekanism.common.capabilities.Capabilities;
-import mekanism.common.util.CableUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Loader;
@@ -44,7 +42,7 @@ public class MekanismProvider extends EnergyHandler {
 
 	@Override
 	public StoredEnergyStack addEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
-		IStrictEnergyAcceptor acceptor = CapabilityUtils.getCapability(tile, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, null);
+		IStrictEnergyAcceptor acceptor = CapabilityUtils.getCapability(tile, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, dir);
 		if (acceptor == null && tile instanceof IStrictEnergyAcceptor) {
 			acceptor = (IStrictEnergyAcceptor) tile;
 		}

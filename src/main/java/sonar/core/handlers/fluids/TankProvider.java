@@ -12,6 +12,7 @@ import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.inventories.InventoryHandler.StorageSize;
 import sonar.core.api.utils.ActionType;
 
+@Deprecated
 public class TankProvider extends FluidHandler {
 
 	public static String name = "Tank-Inventory";

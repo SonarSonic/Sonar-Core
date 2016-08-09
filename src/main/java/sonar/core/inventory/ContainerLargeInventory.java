@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.inventory.slots.SlotLarge;

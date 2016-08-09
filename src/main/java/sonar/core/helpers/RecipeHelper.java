@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.SonarCore;
 

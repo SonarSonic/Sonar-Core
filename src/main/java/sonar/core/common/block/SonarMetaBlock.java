@@ -1,11 +1,11 @@
 package sonar.core.common.block;
 
+import com.google.common.base.Function;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
 import sonar.core.common.block.properties.IMetaRenderer;
-
-import com.google.common.base.Function;
 
 public class SonarMetaBlock extends ItemMultiTexture {
 

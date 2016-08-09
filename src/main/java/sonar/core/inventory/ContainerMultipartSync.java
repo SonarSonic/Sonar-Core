@@ -1,23 +1,20 @@
 package sonar.core.inventory;
 
 import mcmultipart.multipart.ISlottedPart;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import sonar.core.SonarCore;
-import sonar.core.api.nbt.INBTSyncable;
-import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.multipart.SonarMultipart;
 import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.network.PacketMultipartSync;
-import sonar.core.network.PacketTileSync;
-import sonar.core.utils.IWorldPosition;
 
-public abstract class ContainerMultipartSync extends Container {
+public class ContainerMultipartSync extends Container {
 
+	SyncType[] types = new SyncType[] { SyncType.DEFAULT_SYNC };
 	public SonarMultipart multipart;
 
 	public ContainerMultipartSync(SonarMultipart multipart) {
@@ -37,7 +34,7 @@ public abstract class ContainerMultipartSync extends Container {
 				if (!syncData.hasNoTags()) {
 					for (IContainerListener o : listeners) {
 						if (o != null && o instanceof EntityPlayerMP) {
-							SonarCore.network.sendTo(new PacketMultipartSync(multipart.getPos(), syncData, type, ((ISlottedPart) multipart).getSlotMask().iterator().next()), (EntityPlayerMP) o);
+							SonarCore.network.sendTo(new PacketMultipartSync(multipart.getPos(), syncData, type, multipart.getUUID()), (EntityPlayerMP) o);
 						}
 					}
 				}
@@ -46,10 +43,20 @@ public abstract class ContainerMultipartSync extends Container {
 	}
 
 	public SyncType[] getSyncTypes() {
-		return new SyncType[] { SyncType.DEFAULT_SYNC };
+		return types;
 	}
 
 	public boolean syncInventory() {
 		return true;
+	}
+
+	@Override
+	public boolean canInteractWith(EntityPlayer playerIn) {
+		return true;
+	}
+
+	public ContainerMultipartSync setTypes(SyncType[] syncTypes) {
+		this.types = syncTypes;
+		return this;
 	}
 }

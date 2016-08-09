@@ -7,6 +7,13 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.vecmath.Matrix4f;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.opengl.GL11;
+
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -24,12 +31,10 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -40,18 +45,8 @@ import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
-
-import sonar.core.common.block.SonarBlock;
 import sonar.core.common.block.properties.IBlockRotated;
-import sonar.core.common.block.properties.IBlockStateSpecial;
 import sonar.core.helpers.RenderHelper;
-
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
 
 @SideOnly(Side.CLIENT)
 @MethodsReturnNonnullByDefault

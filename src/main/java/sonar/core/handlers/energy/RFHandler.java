@@ -1,15 +1,13 @@
 package sonar.core.handlers.energy;
 
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.Loader;
 import sonar.core.api.energy.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
 
 public class RFHandler extends EnergyHandler {
 

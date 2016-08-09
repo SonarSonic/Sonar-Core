@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
-import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;

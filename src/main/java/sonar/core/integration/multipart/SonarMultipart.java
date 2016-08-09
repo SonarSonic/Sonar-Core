@@ -2,6 +2,7 @@ package sonar.core.integration.multipart;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import mcmultipart.multipart.Multipart;
 import mcmultipart.raytrace.PartMOP;
@@ -52,6 +53,10 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 	public void onFirstTick() {
 	}
 
+	public UUID getUUID() {
+		return this.getContainer().getPartID(this);
+	}
+
 	public void addSelectionBoxes(List<AxisAlignedBB> list) {
 		if (collisionBox != null)
 			list.add(collisionBox);
@@ -100,18 +105,46 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 		return nbt;
 	}
 
+	public void sendSyncPacket() {
+		if (!this.getWorld().isRemote) {
+			SonarMultipartHelper.sendMultipartSyncAround(this, 64);
+		} else {
+			SonarMultipartHelper.sendMultipartSyncToServer(this);
+		}
+	}
+
+	public void sendByteBufPacket(int id) {
+		if (!this.getWorld().isRemote) {
+			SonarMultipartHelper.sendMultipartPacketAround(this, id, 64);
+		} else {
+			SonarMultipartHelper.sendMultipartPacketToServer(this, id);
+		}
+	}
+
 	@Override
 	public ItemStack getPickBlock(EntityPlayer player, PartMOP hit) {
 		return getItemStack();
 	}
-	
+
 	public abstract ItemStack getItemStack();
-	
+
 	public void forceNextSync() {
 		forceSync = true;
 	}
 
 	public boolean wasRemoved() {
 		return wasRemoved;
+	}
+
+	public boolean isClient() {
+		return this.getWorld().isRemote;
+	}
+
+	public boolean isServer() {
+		return !this.getWorld().isRemote;
+	}
+
+	public void openGui(EntityPlayer player, Object mod) {
+		player.openGui(mod, this.getUUID().hashCode(), this.getWorld(), getPos().getX(), getPos().getY(), getPos().getZ());
 	}
 }

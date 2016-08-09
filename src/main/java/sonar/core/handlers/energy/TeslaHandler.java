@@ -6,12 +6,13 @@ import net.darkhax.tesla.api.ITeslaProducer;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.Loader;
 import sonar.core.api.energy.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
+import sonar.core.integration.SonarLoader;
+import sonar.core.integration.multipart.SonarMultipartHelper;
 
 public class TeslaHandler extends EnergyHandler {
 
@@ -82,7 +83,7 @@ public class TeslaHandler extends EnergyHandler {
 	}
 
 	public boolean isLoadable() {
-		return Loader.isModLoaded("Tesla");
+		return Loader.isModLoaded("tesla");
 	}
 
 	@Override

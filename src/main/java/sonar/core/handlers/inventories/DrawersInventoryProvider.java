@@ -2,6 +2,9 @@ package sonar.core.handlers.inventories;
 
 import java.util.List;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -10,9 +13,6 @@ import sonar.core.api.SonarAPI;
 import sonar.core.api.inventories.InventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
-
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 
 public class DrawersInventoryProvider extends InventoryHandler {
 

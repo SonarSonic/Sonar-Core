@@ -18,8 +18,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.integration.SonarLoader;
 
@@ -148,7 +151,14 @@ public class SonarHelper {
 	}
 
 	public static GameProfile getProfileByUUID(UUID playerUUID) {
-		return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerProfileCache().getProfileByUUID(playerUUID);
+		if(playerUUID==null){
+			return new GameProfile(UUID.randomUUID(), "ERROR: UUID IS INCORRECT");
+		}
+		if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
+			return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerProfileCache().getProfileByUUID(playerUUID);
+		} else {
+			return new GameProfile(playerUUID, UsernameCache.containsUUID(playerUUID) ? UsernameCache.getLastKnownUsername(playerUUID) : "PLAYER ERROR!");
+		}
 	}
 
 	public static GameProfile getGameProfileForUsername(String playerName) {

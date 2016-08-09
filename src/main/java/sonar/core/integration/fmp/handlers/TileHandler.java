@@ -16,7 +16,7 @@ import sonar.core.network.sync.IDirtyPart;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncTagType;
 
-/** used for creating embedded handlers for blocks to allow easier alteration for Forge Multipart components */
+@Deprecated
 public abstract class TileHandler extends DirtyPart implements INBTSyncable {
 
 	public final TileEntity tile;

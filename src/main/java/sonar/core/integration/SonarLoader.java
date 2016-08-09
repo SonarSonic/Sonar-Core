@@ -12,6 +12,7 @@ public class SonarLoader {
 	public static boolean calculatorLoaded = false;	
 	public static boolean logisticsLoaded = false;	
 	public static boolean mcmultipartLoaded = false;	
+	public static boolean fluxedRedstone = false;	
 	
 	public static void initLoader(){
 		mcmultipartLoaded=Loader.isModLoaded("mcmultipart");
@@ -19,6 +20,8 @@ public class SonarLoader {
 		teslaLoaded=Loader.isModLoaded("Tesla")||Loader.isModLoaded("tesla");
 		calculatorLoaded=Loader.isModLoaded("Calculator");
 		logisticsLoaded=Loader.isModLoaded("PracticalLogistics");
+		fluxedRedstone=Loader.isModLoaded("fluxedredstone");
+		
 	}	
 	
 	/** @returns if Industrial Craft is installed */

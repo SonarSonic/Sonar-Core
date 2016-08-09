@@ -1,10 +1,9 @@
 package sonar.core.upgrades;
 
-import gnu.trove.map.hash.THashMap;
-
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
+import gnu.trove.map.hash.THashMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

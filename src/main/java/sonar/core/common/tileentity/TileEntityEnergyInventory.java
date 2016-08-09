@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import sonar.core.api.SonarAPI;
-import sonar.core.energy.EnergyCharge;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.inventory.SonarInventory;
 

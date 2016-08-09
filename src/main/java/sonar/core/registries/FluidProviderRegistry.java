@@ -1,6 +1,7 @@
 package sonar.core.registries;
 
 import sonar.core.api.fluids.FluidHandler;
+import sonar.core.handlers.fluids.FluidCapabilityHandler;
 /*
 import sonar.core.handlers.fluids.AE2FluidProvider;
 */
@@ -16,6 +17,7 @@ public class FluidProviderRegistry extends RegistryHelper<FluidHandler> {
 			registerObject(new AE2FluidProvider());
 		}
 		*/
+		registerObject(new FluidCapabilityHandler());
 		registerObject(new TankProvider());
 	}
 

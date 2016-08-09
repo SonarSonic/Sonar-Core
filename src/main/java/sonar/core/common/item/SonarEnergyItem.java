@@ -2,21 +2,17 @@ package sonar.core.common.item;
 
 import java.util.List;
 
+import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.api.energy.ISonarEnergyItem;
-import sonar.core.api.energy.ISonarEnergyStorage;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.FontHelper;
-import sonar.core.network.sync.SyncEnergyStorage;
 import sonar.core.network.sync.SyncItemEnergyStorage;
-import cofh.api.energy.IEnergyContainerItem;
 
 public class SonarEnergyItem extends SonarItem implements ISonarEnergyItem, IEnergyContainerItem {
 

@@ -16,6 +16,9 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		sides.readFromNBT(nbt);
+		if(this.isClient()){
+			this.markBlockForUpdate();
+		}
 	}
 
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {

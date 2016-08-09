@@ -6,9 +6,9 @@ import net.minecraft.util.EnumFacing;
 import sonar.core.api.energy.EnergyContainerHandler;
 import sonar.core.api.energy.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.ISonarEnergyTile;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
-import sonar.core.api.energy.ISonarEnergyTile;
 
 public class EnergyWrapper {
 

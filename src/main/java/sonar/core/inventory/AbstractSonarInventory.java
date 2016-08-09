@@ -4,10 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.items.IItemHandler;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.DirtyPart;
 

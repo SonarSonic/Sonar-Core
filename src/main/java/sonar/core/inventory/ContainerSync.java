@@ -4,17 +4,16 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import sonar.core.SonarCore;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.integration.multipart.SonarMultipart;
 import sonar.core.network.PacketTileSync;
 import sonar.core.utils.IWorldPosition;
 
 public abstract class ContainerSync extends Container {
 
+	SyncType[] types = new SyncType[] { SyncType.DEFAULT_SYNC };
 	public INBTSyncable sync;
 	public IWorldPosition tile;
 
@@ -32,7 +31,7 @@ public abstract class ContainerSync extends Container {
 
 	@Override
 	public void detectAndSendChanges() {
-		if (syncInventory()){
+		if (syncInventory()) {
 			super.detectAndSendChanges();
 		}
 		if (sync != null && this.listeners != null) {
@@ -52,7 +51,12 @@ public abstract class ContainerSync extends Container {
 	}
 
 	public SyncType[] getSyncTypes() {
-		return new SyncType[] { SyncType.DEFAULT_SYNC };
+		return types;
+	}
+
+	public ContainerSync setTypes(SyncType[] types) {
+		this.types = types;
+		return this;
 	}
 
 	public boolean syncInventory() {

@@ -5,8 +5,6 @@ import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.api.ITeslaProducer;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Loader;
 import sonar.core.api.energy.EnergyContainerHandler;
 import sonar.core.api.energy.EnergyType;
@@ -80,7 +78,7 @@ public class TeslaItemHandler extends EnergyContainerHandler {
 	}
 
 	public boolean isLoadable() {
-		return Loader.isModLoaded("Tesla");
+		return Loader.isModLoaded("tesla");
 	}
 
 	@Override

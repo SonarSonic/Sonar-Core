@@ -1,22 +1,22 @@
 package sonar.core.network.sync;
 
+import cofh.api.energy.IEnergyStorage;
 import io.netty.buffer.ByteBuf;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.api.ITeslaProducer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
-import sonar.core.helpers.NBTHelper.SyncType;
-import cofh.api.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.Optional;
 import sonar.core.api.energy.ISonarEnergyStorage;
 import sonar.core.api.utils.ActionType;
+import sonar.core.helpers.NBTHelper.SyncType;
 
 @Optional.InterfaceList({		
-	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "Tesla"),
-	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "Tesla"),
-	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaProducer", modid = "Tesla"),
-	@Optional.Interface (iface = "cofh.api.energy.IEnergyStorage", modid = "CoFHAPI")})				
+	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "tesla"),
+	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "tesla"),
+	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaProducer", modid = "tesla")	
+})				
 public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, ISyncPart, ITeslaConsumer, ITeslaProducer, ITeslaHolder, INBTSerializable<NBTTagCompound> {
 
 	protected long energy;
@@ -240,7 +240,7 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 
 	@Override
 	public long givePower(long power, boolean simulated) {
-		return addEnergy(Math.min(Integer.MAX_VALUE, power), ActionType.getTypeForAction(simulated));
+		return addEnergy(power, ActionType.getTypeForAction(simulated));
 	}
 
 	@Override
