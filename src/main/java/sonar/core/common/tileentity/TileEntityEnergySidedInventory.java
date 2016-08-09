@@ -22,13 +22,10 @@ import sonar.core.api.energy.ISonarEnergyTile;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.helpers.SonarHelper;
+import sonar.core.integration.EUHelper;
 import sonar.core.integration.SonarLoader;
 import sonar.core.network.sync.SyncEnergyStorage;
 
-@Optional.InterfaceList({ 
-	@Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "IC2"),
-	@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2"),
-	@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")})
 public class TileEntityEnergySidedInventory extends TileEntitySidedInventory implements IEnergyReceiver, IEnergyProvider, ISonarEnergyTile, IEnergySource, IEnergySink {
 
 	public TileEntityEnergySidedInventory() {
@@ -154,25 +151,21 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	}
 
 	/////* IC2 *//////	
-	@Method(modid = "IC2")
 	@Override
 	public double getDemandedEnergy() {
-		return this.storage.addEnergy(this.storage.getMaxReceive(), ActionType.getTypeForAction(true)) / 4;
+		return Math.min(EUHelper.getVoltage(this.getSinkTier()),this.storage.addEnergy(this.storage.getMaxReceive(), ActionType.getTypeForAction(true)) / 4);
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public int getSinkTier() {
 		return 4;
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
 		return this.getModeForSide(side).canRecieve();
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
 		int addRF = this.storage.receiveEnergy((int) amount * 4, true);
@@ -180,26 +173,22 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 		return amount - (addRF / 4);
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing side) {
-		return this.getModeForSide(side).canSend();
+		return getModeForSide(side).canSend();
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public double getOfferedEnergy() {
-		return this.storage.removeEnergy(maxTransfer, ActionType.getTypeForAction(true)) / 4;
+		return Math.min(EUHelper.getVoltage(this.getSourceTier()),this.storage.removeEnergy(maxTransfer, ActionType.getTypeForAction(true)) / 4);
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public void drawEnergy(double amount) {
 		this.storage.removeEnergy((long) (amount * 4), ActionType.getTypeForAction(false));
 
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public int getSourceTier() {
 		return 4;

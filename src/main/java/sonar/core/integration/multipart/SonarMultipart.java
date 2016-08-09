@@ -17,12 +17,13 @@ import sonar.core.api.utils.BlockCoords;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.ISyncPart;
+import sonar.core.network.sync.SyncPartsList;
 import sonar.core.utils.IRemovable;
 import sonar.core.utils.IWorldPosition;
 
 public abstract class SonarMultipart extends Multipart implements ITickable, INBTSyncable, IWorldPosition, IRemovable {
 
-	public ArrayList<ISyncPart> syncParts = new ArrayList();
+	public final SyncPartsList syncParts = new SyncPartsList(this.getClass().getName());
 	public AxisAlignedBB collisionBox = null;
 	public boolean wasRemoved = false;
 	public boolean firstTick = false;

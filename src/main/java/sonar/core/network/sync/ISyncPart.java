@@ -15,4 +15,6 @@ public interface ISyncPart extends IDirtyPart{
 	public void readFromNBT(NBTTagCompound nbt, SyncType type);
 	
 	public boolean canSync(SyncType sync);
+	
+	public String getTagName();
 }

@@ -10,6 +10,7 @@ import sonar.core.api.energy.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
+import sonar.core.integration.EUHelper;
 
 public class EUProvider extends EnergyHandler {
 
@@ -55,9 +56,9 @@ public class EUProvider extends EnergyHandler {
 		} else if (tile instanceof IEnergySink) {
 			IEnergySink sink = (IEnergySink) tile;
 			if (!action.shouldSimulate()) {
-				transfer.stored -= (sink.injectEnergy(dir, transfer.stored, getVoltage(sink.getSinkTier())));
+				transfer.stored -= (sink.injectEnergy(dir, transfer.stored, EUHelper.getVoltage(sink.getSinkTier())));
 			} else {
-				transfer.stored -= Math.min(sink.getDemandedEnergy(), getVoltage(sink.getSinkTier()));
+				transfer.stored -= Math.min(sink.getDemandedEnergy(), EUHelper.getVoltage(sink.getSinkTier()));
 			}
 		}
 		if (transfer.stored == 0)
@@ -77,7 +78,7 @@ public class EUProvider extends EnergyHandler {
 			}
 		} else if (tile instanceof IEnergySource) {
 			IEnergySource source = (IEnergySource) tile;
-			double amount = Math.min(getVoltage(source.getSourceTier()),Math.min(transfer.stored, source.getOfferedEnergy()));
+			double amount = Math.min(EUHelper.getVoltage(source.getSourceTier()),Math.min(transfer.stored, source.getOfferedEnergy()));
 			if (!action.shouldSimulate()) {
 				source.drawEnergy(amount);
 				transfer.stored -= amount;
@@ -88,21 +89,6 @@ public class EUProvider extends EnergyHandler {
 		if (transfer.stored == 0)
 			transfer = null;
 		return transfer;
-	}
-
-	public double getVoltage(int tier) {
-		switch (tier) {
-		case 1:
-			return 32;
-		case 2:
-			return 128;
-		case 3:
-			return 512;
-		case 4:
-			return 2048;
-		default:
-			return 8192;
-		}
 	}
 
 	public boolean isLoadable() {

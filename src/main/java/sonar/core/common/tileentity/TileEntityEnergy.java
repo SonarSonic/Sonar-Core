@@ -15,22 +15,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional.Method;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.energy.EnergyMode;
 import sonar.core.api.energy.ISonarEnergyTile;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.helpers.SonarHelper;
+import sonar.core.integration.EUHelper;
 import sonar.core.integration.SonarLoader;
 import sonar.core.network.sync.SyncEnergyStorage;
 
-@Optional.InterfaceList({ 
-	@Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "IC2"),
-	@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2"),
-	@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2")})
-public class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver, IEnergyProvider, ISonarEnergyTile, IEnergyTile, IEnergySink, IEnergySource {
+public abstract class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver, IEnergyProvider, ISonarEnergyTile, IEnergyTile, IEnergySink, IEnergySource {
 
 	public TileEntityEnergy() {
 		syncParts.add(storage);
@@ -152,25 +149,21 @@ public class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver
 		}
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public double getDemandedEnergy() {
-		return this.storage.addEnergy(this.storage.getMaxReceive(), ActionType.getTypeForAction(true)) / 4;
+		return Math.min(EUHelper.getVoltage(this.getSinkTier()),this.storage.addEnergy(this.storage.getMaxReceive(), ActionType.getTypeForAction(true)) / 4);
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public int getSinkTier() {
 		return 4;
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
 		return this.getModeForSide(side).canRecieve();
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
 		int addRF = this.storage.receiveEnergy((int) amount * 4, true);
@@ -178,26 +171,22 @@ public class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver
 		return amount - (addRF / 4);
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing side) {
-		return this.getModeForSide(side).canSend();
+		return getModeForSide(side).canSend();
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public double getOfferedEnergy() {
-		return this.storage.removeEnergy(maxTransfer, ActionType.getTypeForAction(true)) / 4;
+		return Math.min(EUHelper.getVoltage(this.getSourceTier()),this.storage.removeEnergy(maxTransfer, ActionType.getTypeForAction(true)) / 4);
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public void drawEnergy(double amount) {
 		this.storage.removeEnergy((long) (amount * 4), ActionType.getTypeForAction(false));
 
 	}
 
-	@Method(modid = "IC2")
 	@Override
 	public int getSourceTier() {
 		return 4;
