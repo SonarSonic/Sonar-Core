@@ -281,6 +281,16 @@ public class SonarHelper {
 					addCoords(block, w, current, max, handlers, dirs);
 				}
 			}
-		}
+		}		
 	}
+	
+	public static <E extends Enum> E incrementEnum(E enumObj, E[] values){
+		int ordinal = enumObj.ordinal() + 1;
+		if (ordinal < values.length) {
+			return values[ordinal];
+		} else {
+			return values[0];
+		}
+	}	
+	
 }

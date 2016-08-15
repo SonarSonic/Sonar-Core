@@ -25,7 +25,7 @@ public class SonarHandler extends EnergyHandler {
 	}
 
 	@Override
-	public void getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
+	public StoredEnergyStack getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
 		SyncEnergyStorage storage = (SyncEnergyStorage) ((ISonarEnergyTile) tile).getStorage();
 		energyStack.setStorageValues(storage.getEnergyStored(), storage.getMaxEnergyStored());
 		EnergyMode mode = dir==null? ((ISonarEnergyTile) tile).getModeForSide(dir) : EnergyMode.SEND_RECIEVE;
@@ -35,6 +35,7 @@ public class SonarHandler extends EnergyHandler {
 		if (mode.canSend()) {
 			energyStack.setMaxOutput(storage.removeEnergy(Long.MAX_VALUE, ActionType.SIMULATE));
 		}
+		return energyStack;
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class ContainerMultipartSync extends Container {
 				multipart.writeData(syncData, type);
 				if (!syncData.hasNoTags()) {
 					for (IContainerListener o : listeners) {
-						if (o != null && o instanceof EntityPlayerMP) {
+						if (o != null && o instanceof EntityPlayerMP && multipart.getUUID() != null) {
 							SonarCore.network.sendTo(new PacketMultipartSync(multipart.getPos(), syncData, type, multipart.getUUID()), (EntityPlayerMP) o);
 						}
 					}

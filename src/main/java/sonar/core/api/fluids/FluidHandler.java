@@ -6,7 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.SonarHandler;
-import sonar.core.api.inventories.InventoryHandler.StorageSize;
+import sonar.core.api.StorageSize;
 import sonar.core.api.utils.ActionType;
 
 /** used for providing information on Fluids stored in TileEntities for the Fluid Reader to read, the Provider must be registered in the {@link SonarAPI} to be used */

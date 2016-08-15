@@ -41,11 +41,11 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	}
 	
 	public boolean isClient() {
-		return worldObj.isRemote;
+		return worldObj==null ? false : worldObj.isRemote;
 	}
 
 	public boolean isServer() {
-		return !worldObj.isRemote;
+		return worldObj==null ? true : !worldObj.isRemote;
 	}
 
 	public final void onLoad() {

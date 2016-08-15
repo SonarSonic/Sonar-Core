@@ -13,11 +13,11 @@ public abstract class NBTRegistryHelper<T extends INBTObject> extends RegistryHe
 		return (T) NBTHelper.readNBTObject(tag, this);
 	}
 
-	public void writeToNBT(NBTTagCompound tag, T object) {
-		NBTHelper.writeNBTObject(object, tag);
+	public NBTTagCompound writeToNBT(NBTTagCompound tag, T object) {
+		return NBTHelper.writeNBTObject(object, tag);
 	}
 
-	//public abstract boolean equalTypes(T target, T current);
+	// public abstract boolean equalTypes(T target, T current);
 
 	public static abstract class Buf<T extends IBufObject> extends NBTRegistryHelper<T> implements IBufManager<T> {
 		public T readFromBuf(ByteBuf buf) {

@@ -72,9 +72,10 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 		return new StoredItemStack(ItemStack.loadItemStackFromNBT(tag), tag.getLong("stored"));
 	}
 
-	public static void writeToNBT(NBTTagCompound tag, StoredItemStack storedStack) {
+	public static NBTTagCompound writeToNBT(NBTTagCompound tag, StoredItemStack storedStack) {
 		storedStack.item.writeToNBT(tag);
 		tag.setLong("stored", storedStack.stored);
+		return tag;
 	}
 
 	public static StoredItemStack readFromBuf(ByteBuf buf) {

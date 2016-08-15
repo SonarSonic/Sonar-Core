@@ -1,13 +1,16 @@
 package sonar.core.inventory;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.DirtyPart;
+import sonar.core.network.sync.ISyncPart;
 
-public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> extends DirtyPart implements ISonarInventory{
+public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> extends DirtyPart implements ISonarInventory, ISyncPart{
 
 	public ItemStack[] slots;
 	public int limit = 64;
@@ -23,7 +26,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (type == SyncType.SAVE) {
-			NBTTagList list = nbt.getTagList("Items", 10);
+			NBTTagList list = nbt.getTagList(getTagName(), 10);
 			this.slots = new ItemStack[this.getSizeInventory()];
 			for (int i = 0; i < list.tagCount(); i++) {
 				NBTTagCompound compound = list.getCompoundTagAt(i);
@@ -46,7 +49,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 					list.appendTag(compound);
 				}
 			}
-			nbt.setTag("Items", list);
+			nbt.setTag(getTagName(), list);
 		}
 	}
 
@@ -126,5 +129,38 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	public void clear() {
 		for (int i = 0; i < this.getSizeInventory(); i++)
 			this.setInventorySlotContents(i, null);
+	}
+
+
+	@Override
+	public void writeToBuf(ByteBuf buf) {
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToNBT(tag, SyncType.SAVE);
+		ByteBufUtils.writeTag(buf, tag);		
+	}
+
+	@Override
+	public void readFromBuf(ByteBuf buf) {	
+		readData(ByteBufUtils.readTag(buf), SyncType.SAVE);	
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt, SyncType type) {
+		writeData(nbt, type);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt, SyncType type) {
+		readData(nbt, type);		
+	}
+
+	@Override
+	public boolean canSync(SyncType sync) {
+		return SyncType.isGivenType(SyncType.SAVE);
+	}
+
+	@Override
+	public String getTagName() {
+		return "Items";
 	}
 }

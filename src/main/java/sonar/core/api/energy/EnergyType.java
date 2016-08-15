@@ -45,4 +45,11 @@ public class EnergyType implements IRegistryObject {
 	public double toRFConversion() {
 		return rfConversion;
 	}
+	
+	public boolean equals(Object obj){
+		if(obj instanceof EnergyType){
+			return getName().equals(((EnergyType)obj).getName());
+		}
+		return false;
+	}
 }

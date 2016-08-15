@@ -62,10 +62,11 @@ public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 		return new StoredFluidStack(FluidStack.loadFluidStackFromNBT(tag), tag.getLong("stored"), tag.getLong("capacity"));
 	}
 
-	public static void writeToNBT(NBTTagCompound tag, StoredFluidStack storedStack) {
+	public static NBTTagCompound writeToNBT(NBTTagCompound tag, StoredFluidStack storedStack) {
 		storedStack.fluid.writeToNBT(tag);
 		tag.setLong("stored", storedStack.stored);
 		tag.setLong("capacity", storedStack.capacity);
+		return tag;
 	}
 
 	public static StoredFluidStack readFromBuf(ByteBuf buf) {

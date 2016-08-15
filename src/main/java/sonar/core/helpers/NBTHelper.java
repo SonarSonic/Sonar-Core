@@ -28,14 +28,15 @@ public class NBTHelper {
 			}
 		}
 	}
-	
-	public static void writeSyncParts(NBTTagCompound nbt, SyncType type, Iterable<ISyncPart> parts, boolean forceSync) {
+
+	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, Iterable<ISyncPart> parts, boolean forceSync) {
 		for (ISyncPart part : parts) {
 			if (part != null && (forceSync || type.mustSync() || part.hasChanged()) && part.canSync(type)) {
 				part.writeToNBT(nbt, type);
 				part.setChanged(false);
 			}
 		}
+		return nbt;
 	}
 
 	public static void readSyncedNBTObjectList(String tagName, NBTTagCompound tag, NBTRegistryHelper<? extends INBTObject> helper, List objectList) {
@@ -77,7 +78,7 @@ public class NBTHelper {
 		}
 	}
 
-	public static void writeSyncedNBTObjectList(String tagName, NBTTagCompound tag, NBTRegistryHelper helper, List objectList, List lastList) {
+	public static NBTTagCompound writeSyncedNBTObjectList(String tagName, NBTTagCompound tag, NBTRegistryHelper helper, List objectList, List lastList) {
 		if (objectList == null) {
 			objectList = new ArrayList();
 		}
@@ -122,8 +123,8 @@ public class NBTHelper {
 		}
 		if (list.tagCount() != 0) {
 			tag.setTag(tagName, list);
-
 		}
+		return tag;
 	}
 
 	public static List<? extends INBTObject> readNBTObjectList(String tagName, NBTTagCompound tag, RegistryHelper<? extends INBTObject> helper) {
@@ -138,9 +139,9 @@ public class NBTHelper {
 		return objects;
 	}
 
-	public static void writeNBTObjectList(String tagName, NBTTagCompound tag, List<? extends INBTObject> objects) {
+	public static NBTTagCompound writeNBTObjectList(String tagName, NBTTagCompound tag, List<? extends INBTObject> objects) {
 		if (objects == null || objects.isEmpty() || objects.size() == 0) {
-			return;
+			return tag;
 		}
 		NBTTagList list = new NBTTagList();
 		for (int i = 0; i < objects.size(); i++) {
@@ -152,6 +153,7 @@ public class NBTHelper {
 		}
 
 		tag.setTag(tagName, list);
+		return tag;
 	}
 
 	public static INBTObject readNBTObject(NBTTagCompound tag, RegistryHelper<? extends INBTObject> helper) {
@@ -172,13 +174,14 @@ public class NBTHelper {
 		}
 	}
 
-	public static void writeNBTObject(INBTObject object, NBTTagCompound tag) {
+	public static NBTTagCompound writeNBTObject(INBTObject object, NBTTagCompound tag) {
 		if (object != null) {
 			tag.setString("type", object.getName());
 			object.writeToNBT(tag);
 		} else {
 			tag.setString("type", "NULLED");
 		}
+		return tag;
 	}
 
 	public static IBufObject readBufObject(ByteBuf buf, RegistryHelper<? extends IBufObject> helper) {
@@ -267,7 +270,7 @@ public class NBTHelper {
 		}
 
 		public static boolean isGivenType(SyncType current, SyncType... types) {
-			if(current==null){
+			if (current == null) {
 				return false;
 			}
 			for (SyncType type : types) {
@@ -279,53 +282,54 @@ public class NBTHelper {
 		}
 	}
 
-	public static void writeNBTBase(NBTTagCompound nbt, int type, Object object, String tagName) {
+	public static NBTTagCompound writeNBTBase(NBTTagCompound nbt, int type, Object object, String tagName) {
 		if (object == null) {
 			SonarCore.logger.error("NBT ERROR: Can't write NULL");
-			return;
+			return nbt;
 		}
 		if (tagName == null) {
 			SonarCore.logger.error("NBT ERROR: Can't write with a no TAG NAME");
-			return;
+			return nbt;
 		}
 		switch (type) {
 		case NBT.TAG_END:
 			nbt.setBoolean(tagName, (Boolean) object);
-			return;
+			break;
 		case NBT.TAG_BYTE:
 			nbt.setByte(tagName, (Byte) object);
-			return;
+			break;
 		case NBT.TAG_SHORT:
 			nbt.setShort(tagName, (Short) object);
-			return;
+			break;
 		case NBT.TAG_INT:
 			nbt.setInteger(tagName, (Integer) object);
-			return;
+			break;
 		case NBT.TAG_LONG:
 			nbt.setLong(tagName, (Long) object);
-			return;
+			break;
 		case NBT.TAG_FLOAT:
 			nbt.setFloat(tagName, (Float) object);
-			return;
+			break;
 		case NBT.TAG_DOUBLE:
 			nbt.setDouble(tagName, (Double) object);
-			return;
+			break;
 		case NBT.TAG_BYTE_ARRAY:
 			nbt.setByteArray(tagName, (byte[]) object);
-			return;
+			break;
 		case NBT.TAG_STRING:
 			nbt.setString(tagName, (String) object);
-			return;
+			break;
 		case NBT.TAG_LIST:
 			nbt.setTag(tagName, (NBTBase) object);
-			return;
+			break;
 		case NBT.TAG_COMPOUND:
 			nbt.setTag(tagName, (NBTTagCompound) object);
-			return;
+			break;
 		case NBT.TAG_INT_ARRAY:
 			nbt.setIntArray(tagName, (int[]) object);
-			return;
+			break;
 		}
+		return nbt;
 	}
 
 	public static Object readNBTBase(NBTTagCompound nbt, int type, String tagName) {

@@ -1,5 +1,6 @@
 package sonar.core.client.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,7 +12,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.Profile;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -20,6 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
 import sonar.core.api.machines.IProcessMachine;
+import sonar.core.client.gui.widgets.SonarScroller;
 import sonar.core.helpers.FontHelper;
 import sonar.core.network.PacketByteBuf;
 import sonar.core.network.utils.IByteBufTile;
@@ -42,10 +50,11 @@ public abstract class GuiSonar extends GuiContainer {
 		this.initGui();
 	}
 
-	public void initGui(boolean pause) {}
+	public void initGui(boolean pause) {
+	}
 
-	public void setZLevel(float zLevel){
-		this.zLevel=zLevel;
+	public void setZLevel(float zLevel) {
+		this.zLevel = zLevel;
 	}
 	
 	public void drawNormalToolTip(ItemStack stack, int x, int y) {
@@ -64,6 +73,40 @@ public abstract class GuiSonar extends GuiContainer {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+	}
+
+	public static void drawTransparentRect(int left, int top, int right, int bottom, int color) {
+		if (left < right) {
+			int i = left;
+			left = right;
+			right = i;
+		}
+
+		if (top < bottom) {
+			int j = top;
+			top = bottom;
+			bottom = j;
+		}
+
+		float f3 = (float) (color >> 24 & 255) / 255.0F;
+		float f = (float) (color >> 16 & 255) / 255.0F;
+		float f1 = (float) (color >> 8 & 255) / 255.0F;
+		float f2 = (float) (color & 255) / 255.0F;
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
+        GlStateManager.enableBlend();
+        GlStateManager.color(f, f1, f2, f3);
+		GlStateManager.disableTexture2D();
+		OpenGlHelper.glBlendFunc(770, 1, 1, 0);       
+		GlStateManager.color(f, f1, f2, f3);
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
+		vertexbuffer.pos((double) left, (double) bottom, 0.0D).endVertex();
+		vertexbuffer.pos((double) right, (double) bottom, 0.0D).endVertex();
+		vertexbuffer.pos((double) right, (double) top, 0.0D).endVertex();
+		vertexbuffer.pos((double) left, (double) top, 0.0D).endVertex();
+		tessellator.draw();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
 	}
 
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
@@ -105,7 +148,7 @@ public abstract class GuiSonar extends GuiContainer {
 		public void drawButtonForegroundLayer(int x, int y) {
 			ArrayList list = new ArrayList();
 			list.add(TextFormatting.BLUE + "" + TextFormatting.UNDERLINE + (paused ? FontHelper.translate("buttons.resume") : FontHelper.translate("buttons.pause")));
-			list.add("Current: " + (int)((double)machine.getCurrentProcessTime()/machine.getProcessTime() *100) + " %");
+			list.add("Current: " + (int) ((double) machine.getCurrentProcessTime() / machine.getProcessTime() * 100) + " %");
 			drawHoveringText(list, x, y, fontRendererObj);
 		}
 

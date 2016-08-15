@@ -30,7 +30,7 @@ public class MekanismProvider extends EnergyHandler {
 	}
 
 	@Override
-	public void getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
+	public StoredEnergyStack getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
 		IStrictEnergyStorage storage = CapabilityUtils.getCapability(tile, Capabilities.ENERGY_STORAGE_CAPABILITY, null);
 		if (storage == null && tile instanceof IStrictEnergyStorage) {
 			storage = (IStrictEnergyStorage) tile;
@@ -38,6 +38,7 @@ public class MekanismProvider extends EnergyHandler {
 		if (storage != null) {
 			energyStack.setStorageValues((long) (storage.getEnergy() / 10), (long) (storage.getMaxEnergy() / 10));
 		}
+		return energyStack;
 	}
 
 	@Override

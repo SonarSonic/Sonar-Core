@@ -13,6 +13,14 @@ public abstract class SyncPart extends DirtyPart implements ISyncPart {
 	private String name;
 	private List<SyncType> types = Lists.newArrayList(SyncType.SAVE, SyncType.DEFAULT_SYNC);
 
+	public abstract void writeToBuf(ByteBuf buf);
+
+	public abstract void readFromBuf(ByteBuf buf);
+
+	public abstract void writeToNBT(NBTTagCompound nbt, SyncType type);
+
+	public abstract void readFromNBT(NBTTagCompound nbt, SyncType type);
+	
 	public SyncPart(int id) {
 		this.id = (byte) id;
 	}
@@ -28,21 +36,6 @@ public abstract class SyncPart extends DirtyPart implements ISyncPart {
 			return name;
 		}
 	}
-
-	/*public final void writeToBuf(ByteBuf buf) { if (!equal()) { buf.writeBoolean(true); writeObject(buf); updateSync(); } else buf.writeBoolean(false); }
-	 * 
-	 * @Override public final void readFromBuf(ByteBuf buf) { if (buf.readBoolean()) { readObject(buf); } } */
-	public abstract void writeToBuf(ByteBuf buf);
-
-	public abstract void readFromBuf(ByteBuf buf);
-
-	public abstract void writeToNBT(NBTTagCompound nbt, SyncType type);
-
-	public abstract void readFromNBT(NBTTagCompound nbt, SyncType type);
-
-	/*public final void writeToNBT(NBTTagCompound nbt, SyncType type) { /* if (type.isType(SyncType.DEFAULT_SYNC)) { if (type.mustSync() || !equal()) { writeObject(nbt, type); updateSync(); } } else if (type == SyncType.SAVE) { writeObject(nbt, type); updateSync(); } writeObject(nbt, type); }
-	 * 
-	 * public final void readFromNBT(NBTTagCompound nbt, SyncType type) { if (type.isType(SyncType.DEFAULT_SYNC)) { if (nbt.hasKey(getTagName())) { this.readObject(nbt, type); } } else if (type == SyncType.SAVE && nbt.hasKey(getTagName())) { this.readObject(nbt, type); } } */
 	public boolean canSync(SyncType syncType) {
 		SyncType[] array = new SyncType[types.size()];
 		if (syncType.isType(types.toArray(array))) {
@@ -51,7 +44,7 @@ public abstract class SyncPart extends DirtyPart implements ISyncPart {
 		return false;
 	}
 
-	public SyncPart addSyncType(SyncType ...add) {
+	public SyncPart addSyncType(SyncType... add) {
 		SyncType[] array = types.toArray(new SyncType[types.size()]);
 		for (SyncType type : add) {
 			if (!type.isType(array)) {
@@ -61,8 +54,8 @@ public abstract class SyncPart extends DirtyPart implements ISyncPart {
 		return this;
 	}
 
-	public SyncPart removeSyncType(SyncType ...remove) {
-		SyncType[] array = types.toArray(new SyncType[types.size()]);		
+	public SyncPart removeSyncType(SyncType... remove) {
+		SyncType[] array = types.toArray(new SyncType[types.size()]);
 		for (SyncType type : remove) {
 			if (type.isType(array)) {
 				types.remove(type);
@@ -70,13 +63,5 @@ public abstract class SyncPart extends DirtyPart implements ISyncPart {
 		}
 		return this;
 	}
-
-	/*public abstract void writeObject(ByteBuf buf);
-	 * 
-	 * public abstract void readObject(ByteBuf buf);
-	 * 
-	 * public abstract void writeObject(NBTTagCompound nbt, SyncType type);
-	 * 
-	 * public abstract void readObject(NBTTagCompound nbt, SyncType type); */
 
 }

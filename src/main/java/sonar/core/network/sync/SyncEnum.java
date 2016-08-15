@@ -6,15 +6,15 @@ import sonar.core.helpers.NBTHelper.SyncType;
 
 public class SyncEnum<E extends Enum> extends SyncPart {
 
-	public E[] values=null;
+	public E[] values = null;
 	public E current;
-	
+
 	public SyncEnum(E[] values, int id) {
 		super(id);
 		this.values = values;
 		this.current = values[0];
 	}
-	
+
 	public SyncEnum(E[] values, String name) {
 		super(name);
 		this.values = values;
@@ -42,6 +42,15 @@ public class SyncEnum<E extends Enum> extends SyncPart {
 	public void readFromNBT(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(getTagName()))
 			current = values.clone()[nbt.getInteger(getTagName())];
+	}
+
+	public void incrementEnum() {
+		int ordinal = current.ordinal() + 1;
+		if (ordinal < values.length) {
+			current = values[ordinal];
+		} else {
+			current = values[0];
+		}
 	}
 
 	public SyncEnum<E> setDefault(E def) {

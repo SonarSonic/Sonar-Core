@@ -29,9 +29,9 @@ public class TeslaHandler extends EnergyHandler {
 	}
 
 	@Override
-	public void getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
+	public StoredEnergyStack getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
 		if (tile == null) {
-			return;
+			return energyStack;
 		}
 		if (tile.hasCapability(TeslaCapabilities.CAPABILITY_HOLDER, dir)) {
 			ITeslaHolder holder = (ITeslaHolder) tile.getCapability(TeslaCapabilities.CAPABILITY_HOLDER, dir);
@@ -52,6 +52,7 @@ public class TeslaHandler extends EnergyHandler {
 				energyStack.setMaxInput(simulateAdd);
 			}
 		}
+		return energyStack;
 	}
 
 	@Override

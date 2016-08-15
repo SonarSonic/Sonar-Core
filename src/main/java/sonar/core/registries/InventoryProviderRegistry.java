@@ -21,10 +21,10 @@ public class InventoryProviderRegistry extends RegistryHelper<InventoryHandler> 
 		}
 		registerObject(new LPInventoryProvider());
 		*/
-		registerObject(new ItemHandlerProvider());
 		registerObject(new DSUInventoryProvider());
 		registerObject(new DrawersInventoryProvider());
 		registerObject(new IInventoryProvider());
+		registerObject(new ItemHandlerProvider());
 	}
 
 	@Override

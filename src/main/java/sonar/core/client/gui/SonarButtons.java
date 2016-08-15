@@ -20,7 +20,8 @@ public final class SonarButtons {
 
 		}
 
-		public void onClicked() {}
+		public void onClicked() {
+		}
 
 		public boolean mousePressed(Minecraft minecraft, int x, int y) {
 			isButtonDown = this.enabled && this.visible && x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
@@ -32,18 +33,18 @@ public final class SonarButtons {
 		}
 
 	}
-	
-	public static class HoverButton extends SonarButton{
+
+	public static class HoverButton extends SonarButton {
 
 		public HoverButton(int id, int x, int y, int textureX, int textureY, String display) {
 			super(id, x, y, textureX, textureY, display);
 		}
-		
-		public String getHoverText(){
+
+		public String getHoverText() {
 			return "";
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static abstract class ImageButton extends SonarButton {
 		public final ResourceLocation texture;
@@ -61,9 +62,7 @@ public final class SonarButtons {
 			this.sizeY = sizeY;
 		}
 
-		/**
-		 * Draws this button to the screen.
-		 */
+		/** Draws this button to the screen. */
 		public void drawButton(Minecraft mc, int x, int y) {
 			if (this.visible) {
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

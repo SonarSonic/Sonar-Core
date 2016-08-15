@@ -5,13 +5,12 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import sonar.core.api.StorageSize;
 import sonar.core.api.fluids.FluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
-import sonar.core.api.inventories.InventoryHandler.StorageSize;
 import sonar.core.api.utils.ActionType;
 
 public class FluidCapabilityHandler extends FluidHandler {

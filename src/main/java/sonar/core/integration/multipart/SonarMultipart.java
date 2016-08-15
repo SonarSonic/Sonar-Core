@@ -55,7 +55,10 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 	}
 
 	public UUID getUUID() {
-		return this.getContainer().getPartID(this);
+		if (getContainer() != null){
+			return getContainer().getPartID(this);
+		}
+		return null;
 	}
 
 	public void addSelectionBoxes(List<AxisAlignedBB> list) {
@@ -146,6 +149,6 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 	}
 
 	public void openGui(EntityPlayer player, Object mod) {
-		player.openGui(mod, this.getUUID().hashCode(), this.getWorld(), getPos().getX(), getPos().getY(), getPos().getZ());
+		player.openGui(mod, getUUID().hashCode(), this.getWorld(), getPos().getX(), getPos().getY(), getPos().getZ());
 	}
 }

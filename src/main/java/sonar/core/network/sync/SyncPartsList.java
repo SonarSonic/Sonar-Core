@@ -31,4 +31,17 @@ public class SyncPartsList extends ArrayList<ISyncPart> {
 		}
 		return super.addAll(parts);
 	}
+	
+	public ISyncPart getPartByID(int id){
+		return getPartByTagName(String.valueOf(id));
+	}
+	
+	public ISyncPart getPartByTagName(String tag){
+		for(ISyncPart part :this){
+			if(part.getTagName().equals(tag)){
+				return part;
+			}
+		}
+		return null;
+	}
 }

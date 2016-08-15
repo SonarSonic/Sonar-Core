@@ -7,39 +7,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.SonarHandler;
+import sonar.core.api.StorageSize;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.InventoryHelper.IInventoryFilter;
 
 /** used for providing information on Inventories for the Inventory Reader to read, the Provider must be registered in the {@link SonarAPI} to be used */
 public abstract class InventoryHandler extends SonarHandler {
-
-	public static class StorageSize {
-
-		public static final StorageSize EMPTY = new StorageSize(0, 0);
-
-		private long stored, max;
-
-		public StorageSize(long stored, long max) {
-			this.stored = stored;
-			this.max = max;
-		}
-
-		public long getStoredFluids() {
-			return stored;
-		}
-
-		public long getMaxFluids() {
-			return max;
-		}
-
-		public void addItems(long add) {
-			stored += add;
-		}
-
-		public void addStorage(long add) {
-			max += add;
-		}
-	}
 
 	/** gets the ID of this handler, shouldn't be required outside of this class **/
 	public int getID() {

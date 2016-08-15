@@ -85,7 +85,7 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack> {
 		return stored;
 	}
 
-	public static void writeToNBT(NBTTagCompound tag, StoredEnergyStack storedStack) {
+	public static NBTTagCompound writeToNBT(NBTTagCompound tag, StoredEnergyStack storedStack) {
 		tag.setString("energytype", storedStack.energyType.getStorageSuffix());
 		tag.setBoolean("hS", storedStack.hasStorage);
 		tag.setBoolean("hI", storedStack.hasInput);
@@ -105,6 +105,7 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack> {
 		if (storedStack.hasUsage) {
 			tag.setLong("u", storedStack.usage);
 		}
+		return tag;
 	}
 
 	public static StoredEnergyStack readFromBuf(ByteBuf buf) {

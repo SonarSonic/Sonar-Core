@@ -178,12 +178,13 @@ public class BlockCoords {
 		return new BlockCoords(tag.readInt(), tag.readInt(), tag.readInt(), tag.readInt());
 	}
 
-	public static void writeToNBT(NBTTagCompound tag, BlockCoords coords) {
+	public static NBTTagCompound writeToNBT(NBTTagCompound tag, BlockCoords coords) {
 		tag.setInteger("x", coords.getX());
 		tag.setInteger("y", coords.getY());
 		tag.setInteger("z", coords.getZ());
 		tag.setBoolean("hasDimension", coords.hasDimension);
 		tag.setInteger("dimension", coords.dimension);
+		return tag;
 	}
 
 	public static BlockCoords readFromNBT(NBTTagCompound tag) {
@@ -193,7 +194,7 @@ public class BlockCoords {
 		return new BlockCoords(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z"));
 	}
 
-	public static void writeBlockCoords(NBTTagCompound tag, List<BlockCoords> coords, String tagName) {
+	public static NBTTagCompound writeBlockCoords(NBTTagCompound tag, List<BlockCoords> coords, String tagName) {
 		NBTTagList list = new NBTTagList();
 		if (coords != null) {
 			for (int i = 0; i < coords.size(); i++) {
@@ -205,9 +206,10 @@ public class BlockCoords {
 			}
 		}
 		tag.setTag(tagName, list);
+		return tag;
 	}
 
-	public static void writeBlockCoords(NBTTagCompound tag, BlockCoords[] coords) {
+	public static NBTTagCompound writeBlockCoords(NBTTagCompound tag, BlockCoords[] coords) {
 		NBTTagList list = new NBTTagList();
 		if (coords != null) {
 			for (int i = 0; i < coords.length; i++) {
@@ -220,6 +222,7 @@ public class BlockCoords {
 			}
 		}
 		tag.setTag("BlockCoords", list);
+		return tag;
 
 	}
 

@@ -27,7 +27,7 @@ public class EUProvider extends EnergyHandler {
 	}
 
 	@Override
-	public void getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
+	public StoredEnergyStack getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
 		if (tile instanceof IEnergyStorage) {
 			IEnergyStorage storage = (IEnergyStorage) tile;
 			energyStack.setStorageValues(storage.getStored() * 4, storage.getCapacity() * 4);
@@ -41,6 +41,7 @@ public class EUProvider extends EnergyHandler {
 			IEnergySource source = (IEnergySource) tile;
 			energyStack.setMaxOutput((long) (source.getOfferedEnergy() * 4));
 		}
+		return energyStack;
 	}
 
 	@Override

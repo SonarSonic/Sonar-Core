@@ -24,9 +24,9 @@ public class RFHandler extends EnergyHandler {
 	}
 
 	@Override
-	public void getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
+	public StoredEnergyStack getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
 		if (tile == null) {
-			return;
+			return energyStack;
 		}
 		if (tile instanceof IEnergyReceiver) {
 			IEnergyReceiver receiver = (IEnergyReceiver) tile;
@@ -40,6 +40,7 @@ public class RFHandler extends EnergyHandler {
 			int simulateRemove = provider.extractEnergy(dir, Integer.MAX_VALUE, true);
 			energyStack.setMaxOutput(simulateRemove);
 		}
+		return energyStack;
 	}
 
 	@Override
