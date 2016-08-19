@@ -199,14 +199,15 @@ public abstract class SyncTagType<T> extends SyncPart {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		if (current != null) {
 			NBTHelper.writeNBTBase(nbt, nbtType, current, getTagName());
 		}
+		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt, SyncType type) {
+	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(getTagName()))
 			current = (T) NBTHelper.readNBTBase(nbt, nbtType, getTagName());
 	}

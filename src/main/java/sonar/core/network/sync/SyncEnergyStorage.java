@@ -137,15 +137,16 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 	}
 	
 
-	public final void writeToNBT(NBTTagCompound nbt, SyncType type) {
+	public final NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		/*NBTTagCompound energyTag = new NBTTagCompound(); if (type.isType(SyncType.DEFAULT_SYNC)) { if (type.mustSync() || !equal()) { this.writeToNBT(energyTag); lastEnergy = this.getEnergyStored(); } } else if (type == SyncType.SAVE) { this.writeToNBT(energyTag); lastEnergy = this.getEnergyStored(); } if (!energyTag.hasNoTags()) nbt.setTag(getTagName(), energyTag); */
 		NBTTagCompound energyTag = new NBTTagCompound();
 		this.writeToNBT(energyTag);
 		nbt.setTag(getTagName(), energyTag);
+		return nbt;
 
 	}
 
-	public final void readFromNBT(NBTTagCompound nbt, SyncType type) {
+	public final void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(getTagName())) {
 			this.readFromNBT(nbt.getCompoundTag(getTagName()));
 		}
@@ -250,6 +251,6 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		this.readFromNBT(nbt, SyncType.SAVE);		
+		this.readData(nbt, SyncType.SAVE);		
 	}
 }

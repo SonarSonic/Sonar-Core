@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import mcmultipart.multipart.IMultipart;
 import mcmultipart.multipart.IMultipartContainer;
-import mcmultipart.multipart.ISlottedPart;
 import mcmultipart.multipart.MultipartHelper;
 import mcmultipart.multipart.PartSlot;
 import net.minecraft.nbt.NBTTagCompound;

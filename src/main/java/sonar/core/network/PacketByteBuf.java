@@ -4,10 +4,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import sonar.core.integration.SonarLoader;
 import sonar.core.integration.fmp.OLDMultipartHelper;
 import sonar.core.integration.fmp.handlers.TileHandler;
-import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.network.utils.IByteBufTile;
 
 public class PacketByteBuf extends PacketCoords<PacketByteBuf> {

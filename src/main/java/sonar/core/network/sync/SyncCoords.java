@@ -43,16 +43,17 @@ public class SyncCoords extends SyncPart {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		if (c != null) {
 			NBTTagCompound infoTag = new NBTTagCompound();
 			BlockCoords.writeToNBT(infoTag, c);
 			nbt.setTag(this.getTagName(), infoTag);
 		}
+		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt, SyncType type) {
+	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(getTagName()))
 			this.c = BlockCoords.readFromNBT(nbt.getCompoundTag(this.getTagName()));
 	}

@@ -9,7 +9,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.SonarCore;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.multipart.SonarMultipart;
-import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.network.PacketMultipartSync;
 
 public class ContainerMultipartSync extends Container {

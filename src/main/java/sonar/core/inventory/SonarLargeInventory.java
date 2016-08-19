@@ -21,10 +21,10 @@ public class SonarLargeInventory extends DirtyPart implements ISonarInventory {
 	public final TileEntity tile;
 	public int numStacks = 4;
 	public int size;
-	//public int max;
+	// public int max;
 
 	public SonarLargeInventory(TileEntity tile, int size, int numStacks) {
-		this.size=size;
+		this.size = size;
 		this.slots = new ArrayList[size];
 		this.tile = tile;
 		this.numStacks = numStacks;
@@ -76,7 +76,7 @@ public class SonarLargeInventory extends DirtyPart implements ISonarInventory {
 		}
 	}
 
-	public void writeData(NBTTagCompound nbt, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		if (type == SyncType.SAVE) {
 			NBTTagList list = new NBTTagList();
 			for (int i = 0; i < this.slots.length; i++) {
@@ -84,7 +84,7 @@ public class SonarLargeInventory extends DirtyPart implements ISonarInventory {
 					NBTTagCompound compound = new NBTTagCompound();
 					compound.setByte("Slot", (byte) i);
 					StoredItemStack stack = buildItemStack(this.slots[i]);
-					if (stack!=null && stack.stored != 0 && stack.item != null) {
+					if (stack != null && stack.stored != 0 && stack.item != null) {
 						StoredItemStack.writeToNBT(compound, stack);
 						list.appendTag(compound);
 					}
@@ -92,6 +92,7 @@ public class SonarLargeInventory extends DirtyPart implements ISonarInventory {
 			}
 			nbt.setTag("Items", list);
 		}
+		return nbt;
 	}
 
 	public int getSizeInventory() {
@@ -106,8 +107,8 @@ public class SonarLargeInventory extends DirtyPart implements ISonarInventory {
 			return null;
 		} else {
 			StoredItemStack stack = buildItemStack(stacks);
-			int pos = slot - target*numStacks;
-			//int pos = slot - target;			
+			int pos = slot - target * numStacks;
+			// int pos = slot - target;
 			if (pos < stacks.size()) {
 				return stacks.get(pos);
 			} else {
@@ -157,7 +158,7 @@ public class SonarLargeInventory extends DirtyPart implements ISonarInventory {
 			slots[target] = new ArrayList();
 			slots[target].add(itemstack);
 		} else {
-			int pos = i - target*numStacks;
+			int pos = i - target * numStacks;
 			if (pos < stacks.size()) {
 				stacks.set(pos, itemstack);
 			} else {
@@ -178,9 +179,11 @@ public class SonarLargeInventory extends DirtyPart implements ISonarInventory {
 		return true;
 	}
 
-	public void openInventory(EntityPlayer player) {}
+	public void openInventory(EntityPlayer player) {
+	}
 
-	public void closeInventory(EntityPlayer player) {}
+	public void closeInventory(EntityPlayer player) {
+	}
 
 	public boolean isItemValidForSlot(int slot, ItemStack item) {
 		int target = (int) Math.floor(slot / numStacks);
@@ -209,7 +212,8 @@ public class SonarLargeInventory extends DirtyPart implements ISonarInventory {
 		return 0;
 	}
 
-	public void setField(int id, int value) {}
+	public void setField(int id, int value) {
+	}
 
 	public int getFieldCount() {
 		return 0;

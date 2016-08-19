@@ -5,10 +5,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.FontHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.network.sync.ISyncPart;
 
 public class CustomColour implements INBTSyncable {
 
 	public int red, green, blue;
+	public Integer rgb = null;
 
 	public CustomColour(int r, int g, int b) {
 		red = r;
@@ -17,7 +19,10 @@ public class CustomColour implements INBTSyncable {
 	}
 
 	public int getRGB() {
-		return FontHelper.getIntFromColor(red, green, blue);
+		if(rgb==null){
+			rgb = FontHelper.getIntFromColor(red, green, blue);
+		}
+		return rgb;
 	}
 
 	@Override
@@ -34,14 +39,14 @@ public class CustomColour implements INBTSyncable {
 		nbt.setInteger("blue", blue);
 		return nbt;
 	}
-	
-	public static void writeToBuf(CustomColour colour, ByteBuf buf){
+
+	public static void writeToBuf(CustomColour colour, ByteBuf buf) {
 		buf.writeInt(colour.red);
 		buf.writeInt(colour.green);
 		buf.writeInt(colour.blue);
 	}
-	
-	public static CustomColour readFromBuf(ByteBuf buf){
-		return new CustomColour(buf.readInt(),buf.readInt(),buf.readInt());
+
+	public static CustomColour readFromBuf(ByteBuf buf) {
+		return new CustomColour(buf.readInt(), buf.readInt(), buf.readInt());
 	}
 }

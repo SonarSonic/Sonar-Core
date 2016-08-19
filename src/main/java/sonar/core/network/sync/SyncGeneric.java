@@ -44,16 +44,17 @@ public class SyncGeneric<T extends IBufObject> extends SyncPart {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		NBTTagCompound infoTag = new NBTTagCompound();
 		manager.writeToNBT(infoTag, c);
 		if (!infoTag.hasNoTags())
 			nbt.setTag(this.getTagName(), infoTag);
 
+		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt, SyncType type) {
+	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(this.getTagName()))
 			this.c = manager.readFromNBT(nbt.getCompoundTag(this.getTagName()));
 	}

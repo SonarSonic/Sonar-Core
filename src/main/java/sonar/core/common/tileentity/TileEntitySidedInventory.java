@@ -2,7 +2,6 @@ package sonar.core.common.tileentity;
 
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import sonar.core.utils.IMachineSides;
 import sonar.core.utils.MachineSideConfig;
@@ -13,15 +12,9 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 	public MachineSides sides = new MachineSides(MachineSideConfig.INPUT, this, MachineSideConfig.NONE);
 	public int[] input, output;
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		sides.readFromNBT(nbt);
-	}
-
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		sides.writeToNBT(nbt);
-		return nbt;
+	public TileEntitySidedInventory(){
+		super();
+		syncParts.add(sides);
 	}
 	
 	@Override

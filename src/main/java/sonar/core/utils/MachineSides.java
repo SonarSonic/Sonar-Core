@@ -4,16 +4,20 @@ import java.util.ArrayList;
 
 import com.google.common.collect.Lists;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import sonar.core.SonarCore;
-import sonar.core.api.nbt.INBTSaveable;
+import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.PacketSonarSides;
+import sonar.core.network.sync.DirtyPart;
+import sonar.core.network.sync.ISyncPart;
 
-public class MachineSides implements INBTSaveable {
+public class MachineSides extends DirtyPart implements ISyncPart {
 
 	public MachineSideConfig[] configs;
 	public ArrayList<EnumFacing> allowedDirs;
@@ -70,13 +74,10 @@ public class MachineSides implements INBTSaveable {
 				}
 				pos++;
 			}
-			if (pos == 0) {
-				configs[side.getIndex()] = allowedSides.get(allowedSides.size() - 1);
-			} else {
-				configs[side.getIndex()] = allowedSides.get(pos - 1);
-			}
+			configs[side.getIndex()] = allowedSides.get((pos == 0 ? allowedSides.size() : pos) - 1);
 			sendPacket(tile.getWorld().provider.getDimension(), side);
 		}
+		setChanged(true);
 		return true;
 	}
 
@@ -93,19 +94,17 @@ public class MachineSides implements INBTSaveable {
 				}
 				pos++;
 			}
-			if (allowedSides.size() <= pos + 1) {
-				configs[side.getIndex()] = allowedSides.get(0);
-			} else {
-				configs[side.getIndex()] = allowedSides.get(pos + 1);
-			}
+			configs[side.getIndex()] = allowedSides.get(allowedSides.size() <= pos + 1 ? 0 : pos + 1);
 			sendPacket(tile.getWorld().provider.getDimension(), side);
 		}
+		setChanged(true);
 		return true;
 	}
 
 	public boolean setSide(EnumFacing side, MachineSideConfig config) {
 		if (allowedDirs.contains(side) && allowedSides.contains(config)) {
 			configs[side.getIndex()] = config;
+			setChanged(true);
 			return true;
 		}
 		return false;
@@ -137,8 +136,29 @@ public class MachineSides implements INBTSaveable {
 		return configs;
 	}
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		NBTTagCompound sideNBT = nbt.getCompoundTag("sides");
+	@Override
+	public void writeToBuf(ByteBuf buf) {
+		ByteBufUtils.writeTag(buf, writeData(new NBTTagCompound(), SyncType.SAVE));
+	}
+
+	@Override
+	public void readFromBuf(ByteBuf buf) {
+		readData(ByteBufUtils.readTag(buf), SyncType.SAVE);
+	}
+
+	@Override
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
+		NBTTagCompound sideNBT = new NBTTagCompound();
+		for (int i = 0; i < 6; i++) {
+			sideNBT.setInteger("" + i, configs[i].ordinal());
+		}
+		nbt.setTag(getTagName(), sideNBT);
+		return nbt;
+	}
+
+	@Override
+	public void readData(NBTTagCompound nbt, SyncType type) {
+		NBTTagCompound sideNBT = nbt.getCompoundTag(getTagName());
 		for (int i = 0; i < 6; i++) {
 			if (sideNBT.hasKey("" + i)) {
 				MachineSideConfig side = MachineSideConfig.values()[sideNBT.getInteger("" + i)];
@@ -148,12 +168,13 @@ public class MachineSides implements INBTSaveable {
 		}
 	}
 
-	public void writeToNBT(NBTTagCompound nbt) {
-		NBTTagCompound sideNBT = new NBTTagCompound();
-		for (int i = 0; i < 6; i++) {
-			sideNBT.setInteger("" + i, configs[i].ordinal());
-		}
-		nbt.setTag("sides", sideNBT);
+	@Override
+	public boolean canSync(SyncType sync) {
+		return sync.isType(SyncType.SAVE, SyncType.DEFAULT_SYNC);
 	}
 
+	@Override
+	public String getTagName() {
+		return "sides";
+	}
 }

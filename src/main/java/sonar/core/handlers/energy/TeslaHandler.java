@@ -11,8 +11,6 @@ import sonar.core.api.energy.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
-import sonar.core.integration.SonarLoader;
-import sonar.core.integration.multipart.SonarMultipartHelper;
 
 public class TeslaHandler extends EnergyHandler {
 

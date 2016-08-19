@@ -50,7 +50,7 @@ public class RFHandler extends EnergyHandler {
 			IEnergyReceiver receiver = (IEnergyReceiver) tile;
 			if (side==null || receiver.canConnectEnergy(side = side.getOpposite())) {
 				int transferRF = Math.min(receiver.getMaxEnergyStored(dir), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
-				//transfer.stored -= receiver.receiveEnergy(side, transferRF, action.shouldSimulate());
+				transfer.stored -= receiver.receiveEnergy(side, transferRF, action.shouldSimulate());
 			}
 		}
 		if (transfer.stored == 0)

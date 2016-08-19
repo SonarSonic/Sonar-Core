@@ -5,13 +5,8 @@ import java.util.UUID;
 import io.netty.buffer.ByteBuf;
 import mcmultipart.multipart.IMultipart;
 import mcmultipart.multipart.IMultipartContainer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import sonar.core.integration.SonarLoader;
-import sonar.core.integration.fmp.OLDMultipartHelper;
-import sonar.core.integration.fmp.handlers.TileHandler;
-import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.network.utils.IByteBufTile;
 
 public class PacketByteBufMultipart extends PacketMultipart {

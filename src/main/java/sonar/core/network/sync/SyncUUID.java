@@ -39,13 +39,14 @@ public class SyncUUID extends SyncPart {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		if (current != null)
 			nbt.setUniqueId(getTagName(), current);
+		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt, SyncType type) {
+	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasUniqueId(getTagName())) {
 			current = nbt.getUniqueId(getTagName());
 		}else if(nbt.hasKey(getTagName())){

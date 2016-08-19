@@ -14,8 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.Optional.Method;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.energy.EnergyMode;
 import sonar.core.api.energy.ISonarEnergyTile;
@@ -29,6 +27,7 @@ import sonar.core.network.sync.SyncEnergyStorage;
 public class TileEntityEnergySidedInventory extends TileEntitySidedInventory implements IEnergyReceiver, IEnergyProvider, ISonarEnergyTile, IEnergySource, IEnergySink {
 
 	public TileEntityEnergySidedInventory() {
+		super();
 		syncParts.add(storage);
 	}
 

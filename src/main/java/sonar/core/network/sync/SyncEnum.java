@@ -32,14 +32,15 @@ public class SyncEnum<E extends Enum> extends SyncPart {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		if (current != null) {
 			nbt.setInteger(getTagName(), current.ordinal());
 		}
+		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt, SyncType type) {
+	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(getTagName()))
 			current = values.clone()[nbt.getInteger(getTagName())];
 	}

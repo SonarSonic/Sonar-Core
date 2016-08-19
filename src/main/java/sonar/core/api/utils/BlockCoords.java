@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 /** an object with a blocks x, y and z coordinates */
 public class BlockCoords {
 
+	public static final String X = "x", Y = "y", Z = "z", HAS_DIMENSION = "hasDimension", DIMENSION = "dimension";
 	public static final BlockCoords EMPTY = new BlockCoords(0, 0, 0);
 	private BlockPos pos;
 	private int dimension;
@@ -40,7 +41,7 @@ public class BlockCoords {
 		this.dimension = world.provider.getDimension();
 		this.world = world;
 	}
-	
+
 	public BlockCoords(int x, int y, int z, int dimension) {
 		this.pos = new BlockPos(x, y, z);
 		this.hasDimension = true;
@@ -159,7 +160,7 @@ public class BlockCoords {
 	}
 
 	public World getWorld() {
-		if(world!=null){
+		if (world != null) {
 			return world;
 		}
 		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
@@ -179,19 +180,23 @@ public class BlockCoords {
 	}
 
 	public static NBTTagCompound writeToNBT(NBTTagCompound tag, BlockCoords coords) {
-		tag.setInteger("x", coords.getX());
-		tag.setInteger("y", coords.getY());
-		tag.setInteger("z", coords.getZ());
-		tag.setBoolean("hasDimension", coords.hasDimension);
-		tag.setInteger("dimension", coords.dimension);
+		tag.setInteger(X, coords.getX());
+		tag.setInteger(Y, coords.getY());
+		tag.setInteger(Z, coords.getZ());
+		tag.setBoolean(HAS_DIMENSION, coords.hasDimension);
+		tag.setInteger(DIMENSION, coords.dimension);
 		return tag;
 	}
 
+	public static boolean hasCoords(NBTTagCompound tag) {
+		return tag.hasKey(X) && tag.hasKey(Y) && tag.hasKey("z");
+	}
+
 	public static BlockCoords readFromNBT(NBTTagCompound tag) {
-		if (tag.getBoolean("hasDimension")) {
-			return new BlockCoords(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z"), tag.getInteger("dimension"));
+		if (tag.getBoolean(HAS_DIMENSION)) {
+			return new BlockCoords(tag.getInteger(X), tag.getInteger(Y), tag.getInteger(Z), tag.getInteger(DIMENSION));
 		}
-		return new BlockCoords(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z"));
+		return new BlockCoords(tag.getInteger(X), tag.getInteger(Y), tag.getInteger(Z));
 	}
 
 	public static NBTTagCompound writeBlockCoords(NBTTagCompound tag, List<BlockCoords> coords, String tagName) {
@@ -300,7 +305,7 @@ public class BlockCoords {
 	}
 
 	public String toString() {
-		return "X: " + getX() + " Y: " + getY() + " Z: " + getZ() + " D: " + this.dimension;
+		return "X: " + getX() + " Y: " + getY() + " Z: " + getZ() + " D: " + dimension;
 	}
 
 	public BlockCoords fromString(String string) {

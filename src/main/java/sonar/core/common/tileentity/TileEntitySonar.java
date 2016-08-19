@@ -36,16 +36,16 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	protected BlockCoords coords = BlockCoords.EMPTY;
 	public boolean loaded = true;
 	protected DirtyPart isDirty = new DirtyPart();
-	
+
 	public TileEntitySonar() {
 	}
-	
+
 	public boolean isClient() {
-		return worldObj==null ? false : worldObj.isRemote;
+		return worldObj == null ? false : worldObj.isRemote;
 	}
 
 	public boolean isServer() {
-		return worldObj==null ? true : !worldObj.isRemote;
+		return worldObj == null ? true : !worldObj.isRemote;
 	}
 
 	public final void onLoad() {
@@ -97,11 +97,19 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 		return nbt;
 	}
 
+	public NBTTagCompound getUpdateTag() {
+		return writeData(super.getUpdateTag(), SyncType.SYNC_OVERRIDE);
+	}
+
+	public void handleUpdateTag(NBTTagCompound tag) {
+		super.handleUpdateTag(tag);
+		this.readData(tag, SyncType.SYNC_OVERRIDE);
+	}
+
 	@Override
 	public final SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbtTag = new NBTTagCompound();
-		writeToNBT(nbtTag);
-		return new SPacketUpdateTileEntity(pos, 0, nbtTag);
+		NBTTagCompound tag = writeToNBT(new NBTTagCompound());
+		return new SPacketUpdateTileEntity(pos, 0, tag);
 	}
 
 	@Override
@@ -155,10 +163,10 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	}
 
 	public void markBlockForUpdate() {
-		if (this.isServer()){
+		if (this.isServer()) {
 			isDirty.setChanged(true);
 			SonarCore.sendFullSyncAroundWithRenderUpdate(this, 128);
-		}else{
+		} else {
 			getWorld().markBlockRangeForRenderUpdate(pos, pos);
 			getWorld().getChunkFromBlockCoords(getPos()).setChunkModified();
 		}

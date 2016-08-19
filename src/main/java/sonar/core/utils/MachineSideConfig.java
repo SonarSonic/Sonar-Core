@@ -39,4 +39,8 @@ public enum MachineSideConfig implements IStringSerializable {
 		return this.name().toLowerCase();
 	}
 
+	public String toString() {
+		return this.getName();
+	}
+
 }

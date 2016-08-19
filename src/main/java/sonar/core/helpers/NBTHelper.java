@@ -20,19 +20,19 @@ import sonar.core.network.sync.ISyncPart;
 
 public class NBTHelper {
 
-	public static void readSyncParts(NBTTagCompound nbt, SyncType type, ArrayList<ISyncPart> parts) {
+	public static void readSyncParts(NBTTagCompound nbt, SyncType type, List<ISyncPart> parts) {
 		for (ISyncPart part : parts) {
 			if (part != null && part.canSync(type)) {
-				part.readFromNBT(nbt, type);
+				part.readData(nbt, type);
 				part.setChanged(false);
 			}
 		}
 	}
 
-	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, Iterable<ISyncPart> parts, boolean forceSync) {
+	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, List<ISyncPart> parts, boolean forceSync) {
 		for (ISyncPart part : parts) {
 			if (part != null && (forceSync || type.mustSync() || part.hasChanged()) && part.canSync(type)) {
-				part.writeToNBT(nbt, type);
+				part.writeData(nbt, type);
 				part.setChanged(false);
 			}
 		}
@@ -279,6 +279,12 @@ public class NBTHelper {
 				}
 			}
 			return false;
+		}
+	}
+
+	public void getAndCheck(Object obj, NBTTagCompound tag, String key, boolean shouldCheck) {
+		if (!shouldCheck || tag.hasKey(key)) {
+			obj = readNBTBase(tag, tag.getTag(key).getId(), key);
 		}
 	}
 

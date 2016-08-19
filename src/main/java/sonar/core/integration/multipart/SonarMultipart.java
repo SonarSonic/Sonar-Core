@@ -1,6 +1,5 @@
 package sonar.core.integration.multipart;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

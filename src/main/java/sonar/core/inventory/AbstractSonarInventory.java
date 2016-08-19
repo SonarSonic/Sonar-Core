@@ -38,7 +38,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		}
 	}
 
-	public void writeData(NBTTagCompound nbt, SyncType type) {
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		if (type == SyncType.SAVE) {
 			NBTTagList list = new NBTTagList();
 			for (int i = 0; i < this.slots.length; i++) {
@@ -51,6 +51,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 			}
 			nbt.setTag(getTagName(), list);
 		}
+		return nbt;
 	}
 
 	public int getSizeInventory() {
@@ -135,23 +136,13 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	@Override
 	public void writeToBuf(ByteBuf buf) {
 		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag, SyncType.SAVE);
+		writeData(tag, SyncType.SAVE);
 		ByteBufUtils.writeTag(buf, tag);		
 	}
 
 	@Override
 	public void readFromBuf(ByteBuf buf) {	
 		readData(ByteBufUtils.readTag(buf), SyncType.SAVE);	
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt, SyncType type) {
-		writeData(nbt, type);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt, SyncType type) {
-		readData(nbt, type);		
 	}
 
 	@Override

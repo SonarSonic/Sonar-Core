@@ -17,9 +17,9 @@ public abstract class SyncPart extends DirtyPart implements ISyncPart {
 
 	public abstract void readFromBuf(ByteBuf buf);
 
-	public abstract void writeToNBT(NBTTagCompound nbt, SyncType type);
+	public abstract NBTTagCompound writeData(NBTTagCompound nbt, SyncType type);
 
-	public abstract void readFromNBT(NBTTagCompound nbt, SyncType type);
+	public abstract void readData(NBTTagCompound nbt, SyncType type);
 	
 	public SyncPart(int id) {
 		this.id = (byte) id;
