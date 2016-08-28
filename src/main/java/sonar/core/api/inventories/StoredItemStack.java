@@ -5,12 +5,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.api.ISonarStack;
-
+import sonar.core.api.nbt.INBTSyncable;
+import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.network.sync.SyncNBTAbstract;
 
 public class StoredItemStack implements ISonarStack<StoredItemStack> {
 
 	public ItemStack item;
 	public long stored;
+
+	public StoredItemStack() {
+	}
 
 	public StoredItemStack(ItemStack stack) {
 		this.item = stack.copy();
@@ -68,14 +73,17 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 		return true;
 	}
 
-	public static StoredItemStack readFromNBT(NBTTagCompound tag) {
-		return new StoredItemStack(ItemStack.loadItemStackFromNBT(tag), tag.getLong("stored"));
+	@Override
+	public void readData(NBTTagCompound nbt, SyncType type) {
+		item = ItemStack.loadItemStackFromNBT(nbt);
+		stored = nbt.getLong("stored");
 	}
 
-	public static NBTTagCompound writeToNBT(NBTTagCompound tag, StoredItemStack storedStack) {
-		storedStack.item.writeToNBT(tag);
-		tag.setLong("stored", storedStack.stored);
-		return tag;
+	@Override
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
+		item.writeToNBT(nbt);
+		nbt.setLong("stored", stored);
+		return nbt;
 	}
 
 	public static StoredItemStack readFromBuf(ByteBuf buf) {
@@ -105,6 +113,10 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 		return stored;
 	}
 
+	public int getValidStackSize() {
+		return (int) Math.min(stored, item.getMaxStackSize());
+	}
+
 	public int getItemDamage() {
 		return item.getItemDamage();
 	}
@@ -114,14 +126,38 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 	}
 
 	public ItemStack getFullStack() {
-		int min = (int) Math.min(stored, item.getMaxStackSize());
+		int min = getValidStackSize();
 		ItemStack stack = item.copy();
 		stack.stackSize = min;
 		return stack;
+	}
+
+	public ItemStack getActualStack() {
+		ItemStack fullStack = getFullStack();
+		if (fullStack.stackSize <= 0) {
+			return null;
+		}
+		return fullStack;
+	}
+
+	public static ItemStack getActualStack(StoredItemStack stack) {
+		if (stack == null) {
+			return null;
+		}
+		return stack.getActualStack();
 	}
 
 	@Override
 	public StorageTypes getStorageType() {
 		return StorageTypes.ITEMS;
 	}
+
+	public String toString() {
+		if (item != null) {
+			return this.stored + "x" + this.item.getUnlocalizedName() + "@" + item.getItemDamage();
+		} else {
+			return super.toString() + " : NULL";
+		}
+	}
+
 }

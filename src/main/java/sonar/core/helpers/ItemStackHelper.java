@@ -18,7 +18,7 @@ public class ItemStackHelper {
 		return equalStacksRegular(stack1, stack2) && !isCircuit(stack1.getItem()) && stack1.stackSize < stack1.getMaxStackSize();
 	}
 
-	/** checks if two itemstacks are the same (and nothing more!)
+	/** checks if two itemstacks are the same
 	 * 
 	 * @param stack1 first stack your checking
 	 * @param stack2second stack your checking

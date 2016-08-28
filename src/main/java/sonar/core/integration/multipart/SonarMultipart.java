@@ -1,5 +1,6 @@
 package sonar.core.integration.multipart;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,18 +12,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.ISyncPart;
-import sonar.core.network.sync.SyncPartsList;
 import sonar.core.utils.IRemovable;
 import sonar.core.utils.IWorldPosition;
 
 public abstract class SonarMultipart extends Multipart implements ITickable, INBTSyncable, IWorldPosition, IRemovable {
 
-	public final SyncPartsList syncParts = new SyncPartsList(this.getClass().getName());
+	public ArrayList<ISyncPart> syncParts = new ArrayList<ISyncPart>();
 	public AxisAlignedBB collisionBox = null;
 	public boolean wasRemoved = false;
 	public boolean firstTick = false;
@@ -140,10 +141,16 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 	}
 
 	public boolean isClient() {
+		if(getWorld()==null){
+			return FMLCommonHandler.instance().getEffectiveSide().isClient();
+		}
 		return this.getWorld().isRemote;
 	}
 
 	public boolean isServer() {
+		if(getWorld()==null){
+			return FMLCommonHandler.instance().getEffectiveSide().isServer();
+		}
 		return !this.getWorld().isRemote;
 	}
 

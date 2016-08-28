@@ -46,28 +46,28 @@ public class SonarBlocks extends SonarCore {
 
 	public static void registerBlocks() {
 		// common blocks
-		reinforcedStoneBlock = registerBlock("ReinforcedStoneBlock", new BlockBase(Material.ROCK, 2.0f, 10.0f));
+		reinforcedStoneBlock = registerBlock("ReinforcedStoneBlock", new BlockBase(Material.ROCK, 2.0f, 50.0f));
 		reinforcedStoneStairs = registerBlock("ReinforcedStoneStairs", new SonarStairs(reinforcedStoneBlock));
 		reinforcedStoneFence = registerBlock("ReinforcedStoneFence", new SonarFence(Material.ROCK));
 		reinforcedStoneGate = registerBlock("ReinforcedStoneGate", new SonarGate(reinforcedStoneBlock));
 		//reinforcedStoneSlab_double = new SonarSlab.Double(Material.ROCK).setUnlocalizedName("ReinforcedStoneSlab");
 		//reinforcedStoneSlab_half = registerBlock("ReinforcedStoneSlab", new SonarSlab.Half(Material.ROCK));
 
-		reinforcedStoneBrick = registerBlock("ReinforcedStoneBrick", new BlockBase(Material.ROCK, 2.0f, 10.0f));
+		reinforcedStoneBrick = registerBlock("ReinforcedStoneBrick", new BlockBase(Material.ROCK, 2.0f, 50.0f));
 		reinforcedStoneBrickStairs = registerBlock("ReinforcedStoneBrickStairs", new SonarStairs(reinforcedStoneBrick));
 		reinforcedStoneBrickFence = registerBlock("ReinforcedStoneBrickFence", new SonarFence(Material.ROCK));
 		reinforcedStoneBrickGate = registerBlock("ReinforcedStoneBrickGate", new SonarGate(reinforcedStoneBrick));
 		//reinforcedStoneBrickSlab_double = new SonarSlab.Double(Material.ROCK).setUnlocalizedName("ReinforcedStoneBrickSlab");
 		//reinforcedStoneBrickSlab_half = registerBlock("ReinforcedStoneBrickSlab", new SonarSlab.Half(Material.ROCK));
 
-		reinforcedDirtBlock = registerBlock("ReinforcedDirtBlock", new BlockBase(Material.GROUND, 1.0f, 4.0f));
+		reinforcedDirtBlock = registerBlock("ReinforcedDirtBlock", new BlockBase(Material.GROUND, 1.0f, 20.0f));
 		reinforcedDirtStairs = registerBlock("ReinforcedDirtStairs", new SonarStairs(reinforcedDirtBlock));
 		reinforcedDirtFence = registerBlock("ReinforcedDirtFence", new SonarFence(Material.GROUND));
 		reinforcedDirtGate = registerBlock("ReinforcedDirtGate", new SonarGate(reinforcedDirtBlock));
 		//reinforcedDirtSlab_double = new SonarSlab.Double(Material.GROUND).setUnlocalizedName("ReinforcedDirtSlab");
 		//reinforcedDirtSlab_half = registerBlock("ReinforcedDirtSlab", new SonarSlab.Half(Material.GROUND));
 
-		reinforcedDirtBrick = registerBlock("ReinforcedDirtBrick", new BlockBase(Material.GROUND, 1.0f, 4.0f));
+		reinforcedDirtBrick = registerBlock("ReinforcedDirtBrick", new BlockBase(Material.GROUND, 1.0f, 20.0f));
 		reinforcedDirtBrickStairs = registerBlock("ReinforcedDirtBrickStairs", new SonarStairs(reinforcedDirtBrick));
 		reinforcedDirtBrickFence = registerBlock("ReinforcedDirtBrickFence", new SonarFence(Material.GROUND));
 		reinforcedDirtBrickGate = registerBlock("ReinforcedDirtBrickGate", new SonarGate(reinforcedDirtBrick));

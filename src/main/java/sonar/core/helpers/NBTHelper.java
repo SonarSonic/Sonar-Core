@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,11 +18,12 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.SonarCore;
 import sonar.core.api.nbt.IBufObject;
 import sonar.core.api.nbt.INBTObject;
+import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.network.sync.ISyncPart;
 
 public class NBTHelper {
 
-	public static void readSyncParts(NBTTagCompound nbt, SyncType type, List<ISyncPart> parts) {
+	public static void readSyncParts(NBTTagCompound nbt, SyncType type, ArrayList<ISyncPart> parts) {
 		for (ISyncPart part : parts) {
 			if (part != null && part.canSync(type)) {
 				part.readData(nbt, type);
@@ -29,7 +32,7 @@ public class NBTHelper {
 		}
 	}
 
-	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, List<ISyncPart> parts, boolean forceSync) {
+	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, ArrayList<ISyncPart> parts, boolean forceSync) {
 		for (ISyncPart part : parts) {
 			if (part != null && (forceSync || type.mustSync() || part.hasChanged()) && part.canSync(type)) {
 				part.writeData(nbt, type);
@@ -37,6 +40,29 @@ public class NBTHelper {
 			}
 		}
 		return nbt;
+	}
+
+	public static ISyncPart getSyncPartByID(ArrayList<ISyncPart> parts,int id){
+		String tag = ""+id;
+		for(ISyncPart part : parts){
+			if(part!=null && part.getTagName().equals(tag)){
+				return part;
+			}
+		}
+		return null;
+	}
+	
+	/** typically used for Fluid/item/energy stacks */
+	@Nullable
+	public static <T extends INBTSyncable> T instanceNBTSyncable(Class<T> classType, NBTTagCompound tag) {
+		T obj;
+		try {
+			(obj = classType.newInstance()).readData(tag, SyncType.SAVE);
+			return obj;
+		} catch (InstantiationException | IllegalAccessException e) {
+			SonarCore.logger.error("FAILED TO CREATE NEW INSTANCE OF " + classType.getSimpleName());
+		}
+		return null;
 	}
 
 	public static void readSyncedNBTObjectList(String tagName, NBTTagCompound tag, NBTRegistryHelper<? extends INBTObject> helper, List objectList) {
@@ -67,7 +93,6 @@ public class NBTHelper {
 						objectList.set(slot, helper.readFromNBT(compound));
 					} else {
 						objectList.set(slot, null);
-
 					}
 					break;
 				case 2:

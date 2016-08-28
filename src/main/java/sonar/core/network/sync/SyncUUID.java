@@ -16,6 +16,11 @@ public class SyncUUID extends SyncPart {
 		super(id);
 	}
 
+
+	public SyncUUID(String id) {
+		super(id);
+	}
+
 	public UUID getUUID() {
 		return current;
 	}

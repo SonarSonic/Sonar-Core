@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
 import sonar.core.SonarCore;
+import sonar.core.utils.Pair;
 
 public class ASMLoader {
 
@@ -58,17 +59,17 @@ public class ASMLoader {
 		return instances;
 	}
 
-	public static <T> List<Class<? extends T>> getClasses(@Nonnull ASMDataTable asmDataTable, Class annotation, Class<T> instanceClass, boolean checkModid) {
+	public static <T> List<Pair<ASMDataTable.ASMData, Class<? extends T>>> getClasses(@Nonnull ASMDataTable asmDataTable, Class annotation, Class<T> instanceClass, boolean checkModid) {
 		String annotationClassName = annotation.getCanonicalName();
 		Set<ASMDataTable.ASMData> asmDatas = asmDataTable.getAll(annotationClassName);
-		List<Class<? extends T>> classes = new ArrayList<>();
+		List<Pair<ASMDataTable.ASMData, Class<? extends T>>> classes = new ArrayList<>();
 		for (ASMDataTable.ASMData asmData : asmDatas) {
 			String modid = checkModid ? (String) asmData.getAnnotationInfo().get("modid") : "";
 			if (!checkModid || Loader.isModLoaded(modid)) {
 				try {
 					Class<?> asmClass = Class.forName(asmData.getClassName());
 					Class<? extends T> asmInstanceClass = asmClass.asSubclass(instanceClass);
-					classes.add(asmInstanceClass);
+					classes.add(new Pair(asmData, asmInstanceClass));
 					log(ASMLog.LOADED, instanceClass, asmData, modid);
 					continue;
 				} catch (ClassNotFoundException e) {

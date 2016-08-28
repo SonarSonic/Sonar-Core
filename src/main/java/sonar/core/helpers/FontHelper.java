@@ -9,8 +9,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import sonar.core.utils.CustomColour;
 
 public class FontHelper {
+
+	public static void text(String info, int x, int y, CustomColour colour) {
+		text(info, x, y, colour.getRGB());
+	}
 
 	/** @param colour 0 = grey, 1 = black, 2 = white */
 	public static void text(String info, int x, int y, int colour) {
@@ -29,6 +34,10 @@ public class FontHelper {
 			render.drawString(info, x, y, colour);
 			break;
 		}
+	}
+
+	public static void textCentre(String info, int xSize, int y, CustomColour colour) {
+		textCentre(info, xSize, y, colour.getRGB());
 	}
 
 	/** @param colour 0 = grey, 1 = black, 2 = white */
@@ -53,6 +62,10 @@ public class FontHelper {
 	public static int width(String info) {
 		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		return render.getStringWidth(info);
+	}
+
+	public static void textOffsetCentre(String info, int xCentre, int y, CustomColour colour) {
+		textOffsetCentre(info, xCentre, y, colour.getRGB());
 	}
 
 	/** @param info string information
@@ -174,21 +187,20 @@ public class FontHelper {
 		}
 		return false;
 	}
-	
-	
-	/*public static String translate(String string) { String local = FontHelper.translate(string); if (!local.equals(string)) { return local; } else { return StatCollector.translateToFallback(string); } }
+
+	/* public static String translate(String string) { String local = FontHelper.translate(string); if (!local.equals(string)) { return local; } else { return StatCollector.translateToFallback(string); } }
 	 * 
 	 * public static String fullTranslate(String s) { String ret = LanguageRegistry.instance().getStringLocalization(s); if (ret.length() == 0) ret = LanguageRegistry.instance().getStringLocalization(s, "en_US"); if (ret.length() == 0) ret = translate(s); if (ret.length() == 0) return s; return ret; } */
 
-	public static String translate(String string) {		
+	public static String translate(String string) {
 		return new TextComponentTranslation(string).getFormattedText();
 	}
-	
-	public static int getIntFromColor(int red, int green, int blue){
+
+	public static int getIntFromColor(int red, int green, int blue) {
 		red = (red << 16) & 0x00FF0000;
 		green = (green << 8) & 0x0000FF00;
 		blue = blue & 0x000000FF;
 
-	    return 0xFF000000 | red | green | blue;
+		return 0xFF000000 | red | green | blue;
 	}
 }

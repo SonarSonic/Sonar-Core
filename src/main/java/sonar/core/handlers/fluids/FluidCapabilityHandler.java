@@ -49,7 +49,6 @@ public class FluidCapabilityHandler extends FluidHandler {
 		long maxStorage = 0;
 		IFluidTankProperties[] tankInfo = handler.getTankProperties();
 		if (tankInfo != null) {
-
 			for (IFluidTankProperties info : tankInfo) {
 				FluidStack contents = info.getContents();
 				if (contents != null && contents.amount != 0) {

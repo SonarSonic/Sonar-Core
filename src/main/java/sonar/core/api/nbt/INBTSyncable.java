@@ -3,6 +3,7 @@ package sonar.core.api.nbt;
 import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.helpers.NBTHelper.SyncType;
 
+/**add a empty constructor if you need initialisation to work*/
 public interface INBTSyncable {
 
 	/** @param nbt the tag you wish the data read the data from

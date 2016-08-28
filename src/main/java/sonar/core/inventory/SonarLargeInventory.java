@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import sonar.core.api.inventories.StoredItemStack;
+import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.DirtyPart;
 
@@ -70,7 +71,7 @@ public class SonarLargeInventory extends DirtyPart implements ISonarInventory {
 				NBTTagCompound compound = list.getCompoundTagAt(i);
 				byte b = compound.getByte("Slot");
 				if (b >= 0 && b < this.slots.length) {
-					this.slots[b] = buildArrayList(StoredItemStack.readFromNBT(compound));
+					this.slots[b] = buildArrayList(NBTHelper.instanceNBTSyncable(StoredItemStack.class, compound));
 				}
 			}
 		}
@@ -85,8 +86,7 @@ public class SonarLargeInventory extends DirtyPart implements ISonarInventory {
 					compound.setByte("Slot", (byte) i);
 					StoredItemStack stack = buildItemStack(this.slots[i]);
 					if (stack != null && stack.stored != 0 && stack.item != null) {
-						StoredItemStack.writeToNBT(compound, stack);
-						list.appendTag(compound);
+						list.appendTag(stack.writeData(compound, type));
 					}
 				}
 			}

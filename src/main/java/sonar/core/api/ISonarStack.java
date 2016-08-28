@@ -1,6 +1,8 @@
 package sonar.core.api;
 
-public interface ISonarStack<T extends ISonarStack> {
+import sonar.core.api.nbt.INBTSyncable;
+
+public interface ISonarStack<T extends ISonarStack> extends INBTSyncable  {
 
 	public enum StorageTypes {
 		ITEMS, ENERGY, FLUIDS;

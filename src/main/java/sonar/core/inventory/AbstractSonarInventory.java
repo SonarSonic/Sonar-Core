@@ -25,7 +25,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	}
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		if (type == SyncType.SAVE) {
+		if (type.isType(SyncType.SAVE)) {
 			NBTTagList list = nbt.getTagList(getTagName(), 10);
 			this.slots = new ItemStack[this.getSizeInventory()];
 			for (int i = 0; i < list.tagCount(); i++) {
@@ -39,7 +39,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	}
 
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
-		if (type == SyncType.SAVE) {
+		if (type.isType(SyncType.SAVE)) {
 			NBTTagList list = new NBTTagList();
 			for (int i = 0; i < this.slots.length; i++) {
 				if (this.slots[i] != null) {
@@ -135,9 +135,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 
 	@Override
 	public void writeToBuf(ByteBuf buf) {
-		NBTTagCompound tag = new NBTTagCompound();
-		writeData(tag, SyncType.SAVE);
-		ByteBufUtils.writeTag(buf, tag);		
+		ByteBufUtils.writeTag(buf, writeData(new NBTTagCompound(), SyncType.SAVE));		
 	}
 
 	@Override
@@ -147,7 +145,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 
 	@Override
 	public boolean canSync(SyncType sync) {
-		return SyncType.isGivenType(SyncType.SAVE);
+		return sync.isType(SyncType.SAVE);
 	}
 
 	@Override

@@ -25,12 +25,11 @@ import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.IDirtyPart;
 import sonar.core.network.sync.ISyncPart;
-import sonar.core.network.sync.SyncPartsList;
 import sonar.core.utils.IWorldPosition;
 
 public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncable, IWailaInfo, IWorldPosition {
 
-	public ArrayList<ISyncPart> syncParts = new SyncPartsList(getClass().getName());
+	public ArrayList<ISyncPart> syncParts = new ArrayList<ISyncPart>();
 	public ArrayList<IDirtyPart> dirtyParts = new ArrayList();
 	protected boolean forceSync;
 	protected BlockCoords coords = BlockCoords.EMPTY;

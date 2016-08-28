@@ -6,20 +6,13 @@ import com.google.common.collect.Lists;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
 
 public abstract class SyncPart extends DirtyPart implements ISyncPart {
-	private byte id = -1;
+	public byte id = -1;
 	private String name;
 	private List<SyncType> types = Lists.newArrayList(SyncType.SAVE, SyncType.DEFAULT_SYNC);
-
-	public abstract void writeToBuf(ByteBuf buf);
-
-	public abstract void readFromBuf(ByteBuf buf);
-
-	public abstract NBTTagCompound writeData(NBTTagCompound nbt, SyncType type);
-
-	public abstract void readData(NBTTagCompound nbt, SyncType type);
 	
 	public SyncPart(int id) {
 		this.id = (byte) id;

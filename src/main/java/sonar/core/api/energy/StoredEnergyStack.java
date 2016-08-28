@@ -5,13 +5,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.api.ISonarStack;
 import sonar.core.api.SonarAPI;
+import sonar.core.api.nbt.INBTSyncable;
+import sonar.core.helpers.NBTHelper.SyncType;
 
 /** should only be in RF, inaccuracy due to conversion is a price we must pay at the moment */
-public class StoredEnergyStack implements ISonarStack<StoredEnergyStack> {
+public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 
 	public long stored, capacity, input, output, usage;
 	public boolean hasStorage, hasInput, hasOutput, hasUsage;
 	public EnergyType energyType;
+
+	public StoredEnergyStack() {}
 
 	public StoredEnergyStack(EnergyType type) {
 		this.energyType = type;
@@ -63,49 +67,50 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack> {
 		this.usage += usage;
 	}
 
-	public static StoredEnergyStack readFromNBT(NBTTagCompound tag) {
-		StoredEnergyStack stored = new StoredEnergyStack(SonarAPI.getRegistry().getEnergyType(tag.getString("energytype")));
-		stored.hasStorage = tag.getBoolean("hS");
-		stored.hasInput = tag.getBoolean("hI");
-		stored.hasOutput = tag.getBoolean("hO");
-		stored.hasUsage = tag.getBoolean("hU");
-		if (stored.hasStorage) {
-			stored.stored = tag.getLong("s");
-			stored.capacity = tag.getLong("c");
+	@Override
+	public void readData(NBTTagCompound nbt, SyncType type) {
+		energyType = SonarAPI.getRegistry().getEnergyType(nbt.getString("energytype"));
+		hasStorage = nbt.getBoolean("hS");
+		hasInput = nbt.getBoolean("hI");
+		hasOutput = nbt.getBoolean("hO");
+		hasUsage = nbt.getBoolean("hU");
+		if (hasStorage) {
+			stored = nbt.getLong("s");
+			capacity = nbt.getLong("c");
 		}
-		if (stored.hasInput) {
-			stored.input = tag.getLong("i");
+		if (hasInput) {
+			input = nbt.getLong("i");
 		}
-		if (stored.hasOutput) {
-			stored.output = tag.getLong("o");
+		if (hasOutput) {
+			output = nbt.getLong("o");
 		}
-		if (stored.hasUsage) {
-			stored.usage = tag.getLong("u");
+		if (hasUsage) {
+			usage = nbt.getLong("u");
 		}
-		return stored;
 	}
 
-	public static NBTTagCompound writeToNBT(NBTTagCompound tag, StoredEnergyStack storedStack) {
-		tag.setString("energytype", storedStack.energyType.getStorageSuffix());
-		tag.setBoolean("hS", storedStack.hasStorage);
-		tag.setBoolean("hI", storedStack.hasInput);
-		tag.setBoolean("hO", storedStack.hasOutput);
-		tag.setBoolean("hU", storedStack.hasUsage);
+	@Override
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
+		nbt.setString("energytype", energyType.getStorageSuffix());
+		nbt.setBoolean("hS", hasStorage);
+		nbt.setBoolean("hI", hasInput);
+		nbt.setBoolean("hO", hasOutput);
+		nbt.setBoolean("hU", hasUsage);
 
-		if (storedStack.hasStorage) {
-			tag.setLong("s", storedStack.stored);
-			tag.setLong("c", storedStack.capacity);
+		if (hasStorage) {
+			nbt.setLong("s", stored);
+			nbt.setLong("c", capacity);
 		}
-		if (storedStack.hasInput) {
-			tag.setLong("i", storedStack.input);
+		if (hasInput) {
+			nbt.setLong("i", input);
 		}
-		if (storedStack.hasOutput) {
-			tag.setLong("o", storedStack.output);
+		if (hasOutput) {
+			nbt.setLong("o", output);
 		}
-		if (storedStack.hasUsage) {
-			tag.setLong("u", storedStack.usage);
+		if (hasUsage) {
+			nbt.setLong("u", usage);
 		}
-		return tag;
+		return nbt;
 	}
 
 	public static StoredEnergyStack readFromBuf(ByteBuf buf) {

@@ -10,8 +10,10 @@ import sonar.core.network.sync.ISyncPart;
 public class CustomColour implements INBTSyncable {
 
 	public int red, green, blue;
-	public Integer rgb = null;
+	private Integer rgb = null;
 
+	public CustomColour(){}
+	
 	public CustomColour(int r, int g, int b) {
 		red = r;
 		green = g;

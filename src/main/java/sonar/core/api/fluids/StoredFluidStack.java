@@ -4,12 +4,16 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import sonar.core.api.ISonarStack;
+import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper;
+import sonar.core.helpers.NBTHelper.SyncType;
 
 public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 
 	public FluidStack fluid;
 	public long stored, capacity;
+
+	public StoredFluidStack() {}
 
 	public StoredFluidStack(FluidStack stack) {
 		this.fluid = stack.copy();
@@ -42,8 +46,9 @@ public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 			capacity -= stack.capacity;
 		}
 	}
+
 	public StoredFluidStack copy() {
-		return new StoredFluidStack(this.fluid, this.stored);
+		return new StoredFluidStack(this.fluid, this.stored, this.capacity);
 	}
 
 	public StoredFluidStack setStackSize(long size) {
@@ -58,15 +63,19 @@ public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 		return this.fluid.isFluidEqual(stack);
 	}
 
-	public static StoredFluidStack readFromNBT(NBTTagCompound tag) {
-		return new StoredFluidStack(FluidStack.loadFluidStackFromNBT(tag), tag.getLong("stored"), tag.getLong("capacity"));
+	@Override
+	public void readData(NBTTagCompound nbt, SyncType type) {
+		this.fluid = FluidStack.loadFluidStackFromNBT(nbt);
+		this.stored = nbt.getLong("stored");
+		this.capacity = nbt.getLong("capacity");
 	}
 
-	public static NBTTagCompound writeToNBT(NBTTagCompound tag, StoredFluidStack storedStack) {
-		storedStack.fluid.writeToNBT(tag);
-		tag.setLong("stored", storedStack.stored);
-		tag.setLong("capacity", storedStack.capacity);
-		return tag;
+	@Override
+	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
+		fluid.writeToNBT(nbt);
+		nbt.setLong("stored", stored);
+		nbt.setLong("capacity", capacity);
+		return nbt;
 	}
 
 	public static StoredFluidStack readFromBuf(ByteBuf buf) {
