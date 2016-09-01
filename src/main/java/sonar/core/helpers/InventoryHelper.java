@@ -38,9 +38,10 @@ public class InventoryHelper extends InventoryWrapper {
 				addStackToList(list, inv.getStackInSlot(i));
 			}
 		}
-		return new StorageSize(stored, inv.getInventoryStackLimit() * inv.getSizeInventory());
+		int max = inv.getInventoryStackLimit() * inv.getSizeInventory();
+		return new StorageSize(stored, max);
 	}
-	
+
 	public StorageSize addItemHandlerToList(List<StoredItemStack> list, IItemHandler inv) {
 		long stored = 0;
 		for (int i = 0; i < inv.getSlots(); i++) {
@@ -50,9 +51,9 @@ public class InventoryHelper extends InventoryWrapper {
 				addStackToList(list, inv.getStackInSlot(i));
 			}
 		}
-		return new StorageSize(stored, inv.getSlots() * 64); //guessing the max size is 64...
+		return new StorageSize(stored, inv.getSlots() * 64); // guessing the max size is 64...
 	}
-	
+
 	private void addStackToList(List<StoredItemStack> list, ItemStack stack) {
 		int pos = 0;
 		for (StoredItemStack storedStack : list) {
@@ -110,9 +111,9 @@ public class InventoryHelper extends InventoryWrapper {
 			world.spawnEntityInWorld(item);
 		}
 	}
-	
+
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
-		if(stack==null){
+		if (stack == null) {
 			return null;
 		}
 		if (tile != null && (filter == null || filter.allowed(stack.getFullStack()))) {
@@ -149,15 +150,18 @@ public class InventoryHelper extends InventoryWrapper {
 			for (InventoryHandler handler : handlers) {
 				if (handler.canHandleItems(from, dirFrom)) {
 					handler.getItems(stacks, from, dirFrom);
-					continue;
+					break;
 				}
+			}
+			if(stacks.isEmpty()){
+				return;
 			}
 			for (StoredItemStack stack : stacks) {
 				StoredItemStack removed = removeItems(from, stack.copy(), dirFrom, ActionType.SIMULATE, filter);
-				if (removed != null) {					
+				if (removed != null) {
 					StoredItemStack add = addItems(to, removed.copy(), dirTo, ActionType.SIMULATE, filter);
 					if (add != null) {
-						removeItems(from, add.copy(), dirFrom, ActionType.PERFORM, filter);						
+						removeItems(from, add.copy(), dirFrom, ActionType.PERFORM, filter);
 						addItems(to, removed.copy(), dirTo, ActionType.PERFORM, filter);
 					}
 				}

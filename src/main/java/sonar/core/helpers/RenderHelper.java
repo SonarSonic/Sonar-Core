@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -39,6 +40,7 @@ import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import sonar.core.client.gui.GuiSonar;
 import sonar.core.client.renderers.TransformationMatrix;
 import sonar.core.client.renderers.Vector;
+import sonar.core.utils.IWorldPosition;
 
 public class RenderHelper {
 
@@ -265,15 +267,15 @@ public class RenderHelper {
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		textureManager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 		GlStateManager.enableRescaleNormal();
-		//GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		//GlStateManager.enableNormalize();
+		// GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		// GlStateManager.enableNormalize();
 		GlStateManager.enableAlpha();
 		GlStateManager.alphaFunc(516, 0.1F);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		setupGuiTransform(x, y, bakedmodel.isGui3d());
-		//GL11.glVertex3d(1, 1, 0.04);
+		// GL11.glVertex3d(1, 1, 0.04);
 		GL11.glScaled(1, 1, 0.04);
 		bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
 		itemRender.renderItem(stack, bakedmodel);
@@ -281,7 +283,7 @@ public class RenderHelper {
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.disableLighting();
 		GlStateManager.popMatrix();
-		//GlStateManager.disableNormalize();
+		// GlStateManager.disableNormalize();
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		textureManager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 	}
@@ -293,7 +295,7 @@ public class RenderHelper {
 		GlStateManager.scale(16.0F, 16.0F, 16.0F);
 
 		if (isGui3d) {
-			//GlStateManager.enableLighting();
+			// GlStateManager.enableLighting();
 		} else {
 			GlStateManager.disableLighting();
 		}
@@ -357,6 +359,16 @@ public class RenderHelper {
 
 		}
 
+	}
+
+	/**compensates for the Entity View and applies the right translation. it pushes the matrix once !*/
+	public static void offsetRendering(BlockPos pos, double partialTicks) {
+		Entity view = Minecraft.getMinecraft().getRenderViewEntity();
+		double vX = view.lastTickPosX + (view.posX - view.lastTickPosX) * (double) partialTicks;
+		double vY = view.lastTickPosY + (view.posY - view.lastTickPosY) * (double) partialTicks;
+		double vZ = view.lastTickPosZ + (view.posZ - view.lastTickPosZ) * (double) partialTicks;
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(pos.getX() - vX, pos.getY() - vY, pos.getZ() - vZ);
 	}
 
 	public static void drawBoundingBox(AxisAlignedBB box, BlockPos pos, float partialTicks, float r, float g, float b, float alpha) {

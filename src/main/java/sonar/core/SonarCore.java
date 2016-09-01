@@ -41,6 +41,7 @@ import sonar.core.network.PacketBlockInteraction;
 import sonar.core.network.PacketByteBuf;
 import sonar.core.network.PacketByteBufMultipart;
 import sonar.core.network.PacketByteBufString;
+import sonar.core.network.PacketFlexibleOpenGui;
 import sonar.core.network.PacketInvUpdate;
 import sonar.core.network.PacketMultipartSync;
 import sonar.core.network.PacketRequestSync;
@@ -192,6 +193,7 @@ public class SonarCore {
 				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 11, Side.CLIENT);
 				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 12, Side.SERVER);
 			}
+			network.registerMessage(PacketFlexibleOpenGui.Handler.class, PacketFlexibleOpenGui.class, 13, Side.CLIENT);
 		}
 	}
 

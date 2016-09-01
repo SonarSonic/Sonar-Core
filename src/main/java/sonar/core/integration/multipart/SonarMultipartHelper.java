@@ -6,8 +6,10 @@ import mcmultipart.multipart.IMultipart;
 import mcmultipart.multipart.IMultipartContainer;
 import mcmultipart.multipart.MultipartHelper;
 import mcmultipart.multipart.PartSlot;
+import mcmultipart.raytrace.RayTraceUtils.AdvancedRayTraceResultPart;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import sonar.core.SonarCore;
@@ -19,6 +21,21 @@ import sonar.core.network.PacketMultipartSync;
 import sonar.core.network.utils.IByteBufTile;
 
 public class SonarMultipartHelper {
+
+	public static AdvancedRayTraceResultPart collisionRayTrace(IMultipartContainer container, Vec3d start, Vec3d end) {
+		double dist = Double.POSITIVE_INFINITY;
+		AdvancedRayTraceResultPart current = null;
+		for (IMultipart p : container.getParts()) {
+			AdvancedRayTraceResultPart result = p.collisionRayTrace(start, end);
+			if (result == null) continue;
+			double d = result.squareDistanceTo(start);
+			if (d <= dist) {
+				dist = d;
+				current = result;
+			}
+		}
+		return current;
+	}
 
 	public static Object getTile(World world, BlockPos pos) {
 		if (SonarLoader.mcmultipartLoaded) {

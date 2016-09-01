@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import sonar.core.SonarCore;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.helpers.NBTHelper;
@@ -55,7 +56,7 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 	}
 
 	public UUID getUUID() {
-		if (getContainer() != null){
+		if (getContainer() != null) {
 			return getContainer().getPartID(this);
 		}
 		return null;
@@ -141,20 +142,20 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 	}
 
 	public boolean isClient() {
-		if(getWorld()==null){
+		if (getWorld() == null) {
 			return FMLCommonHandler.instance().getEffectiveSide().isClient();
 		}
 		return this.getWorld().isRemote;
 	}
 
 	public boolean isServer() {
-		if(getWorld()==null){
+		if (getWorld() == null) {
 			return FMLCommonHandler.instance().getEffectiveSide().isServer();
 		}
 		return !this.getWorld().isRemote;
 	}
 
-	public void openGui(EntityPlayer player, Object mod) {
-		player.openGui(mod, getUUID().hashCode(), this.getWorld(), getPos().getX(), getPos().getY(), getPos().getZ());
+	public void openBasicGui(EntityPlayer player, int id) {
+		SonarCore.proxy.openBasicMultipart(getUUID(), player, getWorld(), getPos(), id);
 	}
 }
