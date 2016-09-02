@@ -5,7 +5,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.FontHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.network.sync.ISyncPart;
 
 public class CustomColour implements INBTSyncable {
 

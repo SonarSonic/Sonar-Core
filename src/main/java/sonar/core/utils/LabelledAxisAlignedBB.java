@@ -1,7 +1,6 @@
 package sonar.core.utils;
 
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 
 /** just for identifying what axis aligned BB it is, from a ray trace. */
 public class LabelledAxisAlignedBB extends AxisAlignedBB {

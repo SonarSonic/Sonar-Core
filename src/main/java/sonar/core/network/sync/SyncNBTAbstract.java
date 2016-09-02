@@ -1,7 +1,5 @@
 package sonar.core.network.sync;
 
-import java.lang.reflect.ParameterizedType;
-
 import javax.annotation.Nullable;
 
 import io.netty.buffer.ByteBuf;

@@ -37,6 +37,7 @@ import sonar.core.integration.fmp.OLDMultipartHelper;
 import sonar.core.integration.planting.FertiliserRegistry;
 import sonar.core.integration.planting.HarvesterRegistry;
 import sonar.core.integration.planting.PlanterRegistry;
+import sonar.core.network.FlexibleGuiHandler;
 import sonar.core.network.PacketBlockInteraction;
 import sonar.core.network.PacketByteBuf;
 import sonar.core.network.PacketByteBufMultipart;
@@ -79,6 +80,7 @@ public class SonarCore {
 	public static EnergyTypeRegistry energyTypes = new EnergyTypeRegistry();
 	public static MachineUpgradeRegistry machineUpgrades = new MachineUpgradeRegistry();
 	public static SimpleNetworkWrapper network;
+	public FlexibleGuiHandler guiHandler = new FlexibleGuiHandler();
 
 	public static PlanterRegistry planters = new PlanterRegistry();
 	public static HarvesterRegistry harvesters = new HarvesterRegistry();

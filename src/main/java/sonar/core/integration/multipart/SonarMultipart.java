@@ -155,7 +155,12 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 		return !this.getWorld().isRemote;
 	}
 
+	public void openGui(EntityPlayer player, Object mod) {
+		player.openGui(mod, getUUID().hashCode(), getWorld(), getPos().getX(), getPos().getY(), getPos().getZ());
+	}
+
 	public void openBasicGui(EntityPlayer player, int id) {
-		SonarCore.proxy.openBasicMultipart(getUUID(), player, getWorld(), getPos(), id);
+		SonarCore.instance.guiHandler.openBasicMultipart(getUUID(), player, getWorld(), getPos(), id);
+
 	}
 }

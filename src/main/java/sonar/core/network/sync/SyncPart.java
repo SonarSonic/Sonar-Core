@@ -4,9 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTTagCompound;
-import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
 
 public abstract class SyncPart extends DirtyPart implements ISyncPart {
