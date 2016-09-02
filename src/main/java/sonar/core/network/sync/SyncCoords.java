@@ -26,20 +26,18 @@ public class SyncCoords extends SyncPart {
 	}
 
 	@Override
-	public boolean canSync(SyncType sync) {
-		return false;
-	}
-
-	@Override
 	public void writeToBuf(ByteBuf buf) {
 		if (c != null) {
+			buf.writeBoolean(true);
 			BlockCoords.writeToBuf(buf, c);
+		}else{
+			buf.writeBoolean(false);
 		}
 	}
 
 	@Override
 	public void readFromBuf(ByteBuf buf) {
-		if (buf.isReadable())
+		if (buf.readBoolean())
 			this.c = BlockCoords.readFromBuf(buf);
 	}
 

@@ -58,16 +58,6 @@ public class SyncNBTAbstract<T extends INBTSyncable> extends SyncPart {
 		return nbt;
 	}
 
-	@Nullable
-	public T newInstance() {
-		try {
-			return type.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			SonarCore.logger.debug("FAILED TO CREATE NEW INSTANCE OF " + type.getSimpleName());
-		}
-		return null;
-	}
-
 	public boolean equals(Object obj) {
 		if (obj != null && obj instanceof SyncNBTAbstract) {
 			return ((SyncNBTAbstract) obj).getObject() == this.obj;
