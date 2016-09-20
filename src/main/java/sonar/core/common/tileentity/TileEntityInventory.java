@@ -107,7 +107,7 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 	}
 
 	public ITextComponent getDisplayName() {
-		return new TextComponentTranslation(this.blockType.getLocalizedName());
+		return new TextComponentTranslation(getName());
 	}
 
 	public int getField(int id) {
