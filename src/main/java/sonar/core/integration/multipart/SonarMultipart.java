@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -21,6 +22,7 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.utils.IRemovable;
 import sonar.core.utils.IWorldPosition;
+import sonar.core.utils.Pair;
 
 public abstract class SonarMultipart extends Multipart implements ITickable, INBTSyncable, IWorldPosition, IRemovable {
 
@@ -132,6 +134,28 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 	}
 
 	public abstract ItemStack getItemStack();
+
+	//change it to get the next valid rotation whatever it is;
+	public Pair<Boolean, EnumFacing> rotatePart(EnumFacing face, EnumFacing axis) {
+		EnumFacing[] valid = getValidRotations();
+		if (valid != null) {
+			int pos = -1;
+			for (int i = 0; i < valid.length; i++) {
+				if (valid[i] == face) {
+					pos = i;
+					break;
+				}
+			}
+			if (pos != -1) {
+				pos = pos + 1 < valid.length ? pos + 1 : 0;
+				if (isServer()) {
+					face = valid[pos];
+				}
+				return new Pair(true, face);
+			}
+		}
+		return new Pair(false, face);
+	}
 
 	public void forceNextSync() {
 		forceSync = true;

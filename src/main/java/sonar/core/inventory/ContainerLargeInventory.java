@@ -30,7 +30,7 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 			while (stack.stackSize > 0 && (!reverseDirection && i < endIndex || reverseDirection && i >= startIndex)) {
 				Slot slot = (Slot) this.inventorySlots.get(i);
 				ItemStack itemstack = slot.getStack();
-				StoredItemStack stored = entity.getTileInv().buildItemStack(entity.getTileInv().slots[i]);
+				StoredItemStack stored = entity.getTileInv().getLargeStack(i);
 
 				if (itemstack != null && itemstack.getItem() == stack.getItem() && (!stack.getHasSubtypes() || stack.getMetadata() == itemstack.getMetadata()) && ItemStack.areItemStackTagsEqual(stack, itemstack)) {
 					int j = itemstack.stackSize + stack.stackSize;
@@ -38,7 +38,7 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 					if (j <= maxSize) {
 						stack.stackSize = 0;
 						if (slot instanceof SlotLarge) {
-							entity.getTileInv().slots[i] = entity.getTileInv().buildArrayList(stored.setStackSize(j));
+							entity.getTileInv().setLargeStack(i, stored.setStackSize(j));
 						} else {
 							itemstack.stackSize = j;
 						}
@@ -48,7 +48,7 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 						stack.stackSize -= maxSize - itemstack.stackSize;
 						if (slot instanceof SlotLarge) {
 							stored.add(new StoredItemStack(itemstack.copy()).setStackSize(maxSize));
-							entity.getTileInv().slots[i] = entity.getTileInv().buildArrayList(stored);
+							entity.getTileInv().setLargeStack(i, stored);
 						} else {
 							itemstack.stackSize = maxSize;
 						}
@@ -77,7 +77,7 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 				ItemStack itemstack1 = slot1.getStack();
 				if (slot1.isItemValid(stack)) {
 					if (slot1 instanceof SlotLarge) {
-						StoredItemStack target = entity.getTileInv().buildItemStack(entity.getTileInv().slots[i]);
+						StoredItemStack target = entity.getTileInv().getLargeStack(i);
 						if (target != null) {
 							target = target.copy();
 							itemstack1 = target.getFullStack();
@@ -89,8 +89,7 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 						if (target.stored < max) {
 							int toAdd = (int) Math.min(max - target.stored, stack.stackSize);
 							target.add(new StoredItemStack(stack.copy()).setStackSize(toAdd));
-
-							entity.getTileInv().slots[i] = entity.getTileInv().buildArrayList(target);
+							entity.getTileInv().setLargeStack(i, target);
 							stack.stackSize -= toAdd;
 							if (stack.stackSize == 0) {
 								flag = true;
@@ -118,13 +117,13 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 	}
 
 	/** special implementation which accommodates for a {@link ILargeInventory} */
-    public ItemStack slotClick(int slotID, int dragType, ClickType button, EntityPlayer player){
-	//public ItemStack slotClick(int slotID, int dragType, int button, EntityPlayer player) {
+	public ItemStack slotClick(int slotID, int dragType, ClickType button, EntityPlayer player) {
+		// public ItemStack slotClick(int slotID, int dragType, int button, EntityPlayer player) {
 		if (!(slotID < entity.getTileInv().size) || button == ClickType.QUICK_MOVE) {
 			return super.slotClick(slotID, dragType, button, player);
 		}
 		if (slotID >= 0) {
-			StoredItemStack clicked = entity.getTileInv().buildItemStack(entity.getTileInv().slots[slotID]);
+			StoredItemStack clicked = entity.getTileInv().getLargeStack(slotID);
 			if ((dragType == 0 || dragType == 1) && button == ClickType.PICKUP) {
 				ItemStack held = player.inventory.getItemStack();
 				if (held == null && clicked != null && clicked.getItemStack() != null) {
@@ -133,19 +132,20 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 						toRemove = (int) Math.ceil(toRemove / 2);
 					}
 					if (toRemove != 0) {
-						ItemStack stack = clicked.copy().setStackSize(toRemove).getFullStack();
-						clicked.remove(stack);
-						if (clicked.stored == 0) {
-							entity.getTileInv().slots[slotID] = null;
+						StoredItemStack newStack = clicked.copy();
+						ItemStack stack = newStack.copy().setStackSize(toRemove).getFullStack();
+						newStack.remove(stack);
+						if (newStack.stored == 0) {
+							entity.getTileInv().setLargeStack(slotID, null);
 						}
 						player.inventory.setItemStack(stack);
-						entity.getTileInv().slots[slotID] = entity.getTileInv().buildArrayList(clicked);
+						entity.getTileInv().setLargeStack(slotID, newStack);
 						return null;
 					}
 				} else if (held != null) {
 					if (clicked == null || clicked.getItemStack() == null || clicked.getStackSize() == 0) {
 						if (entity.getTileInv().isItemValidForSlot(slotID * entity.getTileInv().numStacks, held)) {
-							entity.getTileInv().slots[slotID] = entity.getTileInv().buildArrayList(new StoredItemStack(held));
+							entity.getTileInv().setLargeStack(slotID, new StoredItemStack(held));
 							player.inventory.setItemStack(null);
 							return null;
 						}
@@ -153,12 +153,13 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 						if (clicked.equalStack(held)) {
 							int maxAdd = (int) Math.min((held.getMaxStackSize() * entity.getTileInv().numStacks) - clicked.getStackSize(), held.stackSize);
 							if (maxAdd > 0) {
-								clicked.add(new StoredItemStack(held).setStackSize(maxAdd));
+								StoredItemStack newStack = clicked.copy();
+								newStack.add(new StoredItemStack(held).setStackSize(maxAdd));
 								held.stackSize -= maxAdd;
 								if (held.stackSize == 0) {
 									player.inventory.setItemStack(null);
 								}
-								entity.getTileInv().slots[slotID] = entity.getTileInv().buildArrayList(clicked);
+								entity.getTileInv().setLargeStack(slotID, newStack);
 								return null;
 							}
 						}

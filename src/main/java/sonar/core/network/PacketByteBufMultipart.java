@@ -16,8 +16,7 @@ public class PacketByteBufMultipart extends PacketMultipart {
 	public IByteBufTile tile;
 	public ByteBuf buf;
 
-	public PacketByteBufMultipart() {
-	}
+	public PacketByteBufMultipart() {}
 
 	public PacketByteBufMultipart(UUID partUUID, IByteBufTile tile, BlockPos pos, int id) {
 		super(partUUID, pos);

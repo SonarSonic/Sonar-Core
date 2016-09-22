@@ -34,7 +34,7 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 			return new ItemStack[inv.getSizeInventory()];
 		}
 	}
-
+	/*
 	public ArrayList<ItemStack>[] stacks() {
 		if (inv instanceof SonarLargeInventory) {
 			return ((SonarLargeInventory) inv).slots;
@@ -43,7 +43,7 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 			return new ArrayList[inv.getSizeInventory()];
 		}
 	}
-
+	*/
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		super.readData(nbt, type);
 		getTileInv().readData(nbt, type);

@@ -1,5 +1,8 @@
 package sonar.core.inventory.slots;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import sonar.core.api.inventories.StoredItemStack;
@@ -9,7 +12,7 @@ public class SlotLarge extends Slot {
 	public SonarLargeInventory largeInv;
 
 	public SlotLarge(SonarLargeInventory inventoryIn, int index, int xPosition, int yPosition) {
-		super(inventoryIn, index, xPosition, yPosition);
+		super(null, index, xPosition, yPosition);
 		largeInv = inventoryIn;
 	}
 
@@ -18,12 +21,15 @@ public class SlotLarge extends Slot {
 	}
 
 	public boolean isItemValid(ItemStack stack) {
-		return largeInv.isItemValidForSlot(getSlotIndex()*largeInv.numStacks, stack);
+		if (stack == null)
+			return false;
+		StoredItemStack stored = largeInv.getLargeStack(getSlotIndex());
+		return stored == null ? largeInv.isItemValidForSlot(getSlotIndex(), stack) : stored.equalStack(stack);
 	}
 
 	public ItemStack getStack() {
-		StoredItemStack stored = largeInv.buildItemStack(largeInv.slots[this.getSlotIndex()]);
-		if (stored != null) {
+		StoredItemStack stored = largeInv.getLargeStack(getSlotIndex());
+		if (stored != null && stored.getStackSize()!=0) {
 			ItemStack item = stored.getFullStack();
 			item.stackSize = (int) stored.stored;
 			return item;
@@ -32,17 +38,26 @@ public class SlotLarge extends Slot {
 	}
 
 	public void putStack(ItemStack stack) {
-		StoredItemStack stored = largeInv.buildItemStack(largeInv.slots[this.getSlotIndex()]);
-		if (stack != null) {
-			this.largeInv.slots[getSlotIndex()] = largeInv.buildArrayList(new StoredItemStack(stack));
-		} else {
-			this.largeInv.slots[getSlotIndex()] = null;
-		}
-
-		this.onSlotChanged();
+		largeInv.slots[getSlotIndex()] = stack != null && stack.stackSize != 0 ? new StoredItemStack(stack) : null;
+		onSlotChanged();
 	}
 
 	public ItemStack decrStackSize(int amount) {
 		return this.inventory.decrStackSize(getSlotIndex() * largeInv.numStacks, amount);
+	}
+
+	public void onSlotChanged() {
+		largeInv.markDirty();
+	}
+
+	public boolean isHere(IInventory inv, int slotIn) {
+		return slotIn == this.getSlotIndex();
+	}
+
+	public boolean isSameInventory(Slot other) {
+		if (other instanceof SlotLarge) {
+			return this.largeInv == ((SlotLarge) other).largeInv;
+		}
+		return false;
 	}
 }

@@ -9,7 +9,10 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -29,11 +32,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.nbt.INBTSyncable;
+import sonar.core.common.block.SonarBlockTip;
 import sonar.core.energy.DischargeValues;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.SonarLoader;
 import sonar.core.integration.SonarWailaModule;
 import sonar.core.integration.fmp.OLDMultipartHelper;
+import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.integration.planting.FertiliserRegistry;
 import sonar.core.integration.planting.HarvesterRegistry;
 import sonar.core.integration.planting.PlanterRegistry;
@@ -41,7 +46,7 @@ import sonar.core.network.FlexibleGuiHandler;
 import sonar.core.network.PacketBlockInteraction;
 import sonar.core.network.PacketByteBuf;
 import sonar.core.network.PacketByteBufMultipart;
-import sonar.core.network.PacketByteBufString;
+import sonar.core.network.PacketFlexibleContainer;
 import sonar.core.network.PacketFlexibleOpenGui;
 import sonar.core.network.PacketInvUpdate;
 import sonar.core.network.PacketMultipartSync;
@@ -196,18 +201,25 @@ public class SonarCore {
 				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 12, Side.SERVER);
 			}
 			network.registerMessage(PacketFlexibleOpenGui.Handler.class, PacketFlexibleOpenGui.class, 13, Side.CLIENT);
+			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 14, Side.CLIENT);
+			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 15, Side.SERVER);
 		}
 	}
 
 	public static void registerItems(ArrayList<ISonarRegistryItem> items) {
 		for (ISonarRegistryItem item : items) {
-			GameRegistry.registerItem(item.getItem(), item.getRegistryName());
+			Item toRegister = item.getItem();
+			GameRegistry.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(item.getRegistryName()) : toRegister);
+			item.setItem(toRegister);
 		}
 	}
 
 	public static void registerBlocks(ArrayList<ISonarRegistryBlock> blocks) {
 		for (ISonarRegistryBlock block : blocks) {
-			GameRegistry.registerBlock(block.getBlock(), block.getRegistryName());
+			Block toRegister = block.getBlock();
+			GameRegistry.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(block.getRegistryName()) : toRegister);
+			GameRegistry.register(new SonarBlockTip(toRegister).setRegistryName(block.getRegistryName()));
+			block.setBlock(toRegister);
 			if (block.hasTileEntity()) {
 				GameRegistry.registerTileEntity(block.getTileEntity(), block.getRegistryName());
 			}
@@ -215,51 +227,44 @@ public class SonarCore {
 	}
 
 	public static void sendPacketAround(TileEntity tile, int spread, int id) {
-		Object object = OLDMultipartHelper.checkObject(tile);
-		if (object == null || !(object instanceof IByteBufTile)) {
-			object = OLDMultipartHelper.getHandler(object);
-		}
-		if (object != null && object instanceof IByteBufTile) {
+		if (tile != null && tile instanceof IByteBufTile) {
 			if (!tile.getWorld().isRemote) {
-				SonarCore.network.sendToAllAround(new PacketByteBuf((IByteBufTile) object, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
+				SonarCore.network.sendToAllAround(new PacketByteBuf((IByteBufTile) tile, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 			} else {
-				SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) object, tile.getPos(), id));
+				SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) tile, tile.getPos(), id));
 			}
 		}
 	}
 
 	public static void sendFullSyncAround(TileEntity tile, int spread) {
-		if (!tile.getWorld().isRemote) {
-			Object object = OLDMultipartHelper.checkObject(tile);
-			if (object != null && object instanceof INBTSyncable) {
-				NBTTagCompound tag = ((INBTSyncable) object).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
-				if (!tag.hasNoTags()) {
-					SonarCore.network.sendToAllAround(new PacketTileSync(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
-				}
+		if (!tile.getWorld().isRemote && tile instanceof INBTSyncable) {
+			NBTTagCompound tag = ((INBTSyncable) tile).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
+			if (!tag.hasNoTags()) {
+				SonarCore.network.sendToAllAround(new PacketTileSync(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 			}
 		}
 	}
 
 	public static void sendFullSyncAroundWithRenderUpdate(TileEntity tile, int spread) {
-		if (!tile.getWorld().isRemote) {
-			Object object = OLDMultipartHelper.checkObject(tile);
-			if (object != null && object instanceof INBTSyncable) {
-				NBTTagCompound tag = ((INBTSyncable) object).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
-				if (!tag.hasNoTags()) {
-					SonarCore.network.sendToAllAround(new PacketTileSyncUpdate(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
-				}
+		if (!tile.getWorld().isRemote && tile instanceof INBTSyncable) {
+			NBTTagCompound tag = ((INBTSyncable) tile).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
+			if (!tag.hasNoTags()) {
+				SonarCore.network.sendToAllAround(new PacketTileSyncUpdate(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 			}
+		}
+	}
+
+	public static void refreshFlexibleContainer(EntityPlayer player) {
+		if (player.getEntityWorld().isRemote) {
+			SonarCore.network.sendToServer(new PacketFlexibleContainer(player));
+		} else {
+			SonarCore.network.sendTo(new PacketFlexibleContainer(player), (EntityPlayerMP) player);
 		}
 	}
 
 	public static void sendPacketToServer(TileEntity tile, int id) {
 		if (tile.getWorld().isRemote)
 			SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) tile, tile.getPos(), id));
-	}
-
-	public static void sendPacketToServer(TileEntity tile, String string, int id) {
-		if (tile.getWorld().isRemote)
-			SonarCore.network.sendToServer(new PacketByteBufString((IByteBufTile) tile, string, tile.getPos(), id));
 	}
 
 	public static int randInt(int min, int max) {

@@ -12,7 +12,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import sonar.core.SonarCore;
 import sonar.core.api.IFlexibleGui;
 import sonar.core.integration.SonarLoader;
@@ -103,7 +102,7 @@ public class FlexibleGuiHandler {
 				entityPlayerMP.openContainer = container;
 				entityPlayerMP.openContainer.windowId = windowId;
 				entityPlayerMP.openContainer.addListener(entityPlayerMP);
-				MinecraftForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, player.openContainer));
+				//MinecraftForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, player.openContainer)); FIXME
 			}
 		}
 

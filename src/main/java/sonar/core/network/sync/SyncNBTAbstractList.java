@@ -25,6 +25,12 @@ public class SyncNBTAbstractList<T extends INBTSyncable> extends SyncPart {
 		this.type = type;
 	}
 
+	public SyncNBTAbstractList(Class<T> type, int id, int capacity) {
+		super(id);
+		this.type = type;
+		objs = new ArrayList(capacity);
+	}
+
 	public ArrayList<T> getObjects() {
 		return objs;
 	}
@@ -73,7 +79,10 @@ public class SyncNBTAbstractList<T extends INBTSyncable> extends SyncPart {
 	@Override
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		NBTTagList tagList = new NBTTagList();
-		objs.forEach(obj -> tagList.appendTag(obj.writeData(new NBTTagCompound(), SyncType.SAVE)));
+		objs.forEach(obj -> {
+			if (obj != null)
+				tagList.appendTag(obj.writeData(new NBTTagCompound(), SyncType.SAVE));
+		});
 		if (!tagList.hasNoTags()) {
 			nbt.setTag(getTagName(), tagList);
 		} else {
