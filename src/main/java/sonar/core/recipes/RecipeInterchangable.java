@@ -1,11 +1,13 @@
 package sonar.core.recipes;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import sonar.core.registries.ISonarRegistryItem;
 
-public class RecipeInterchangable implements ISonarRecipeObject, IRecipeItemStack {
+public class RecipeInterchangable implements ISonarRecipeObject, ISonarRecipeItem {
 
 	public List<ISonarRecipeObject> validInputs;
 	public List<Object> cachedObjects = new ArrayList();
@@ -21,9 +23,9 @@ public class RecipeInterchangable implements ISonarRecipeObject, IRecipeItemStac
 	}
 
 	@Override
-	public boolean matches(Object object) {
+	public boolean matches(Object object, RecipeObjectType type) {
 		for (ISonarRecipeObject recipeObject : validInputs) {
-			if (recipeObject.matches(object)) {
+			if (recipeObject.matches(object, type)) {
 				return true;
 			}
 		}
@@ -32,12 +34,28 @@ public class RecipeInterchangable implements ISonarRecipeObject, IRecipeItemStac
 
 	@Override
 	public ItemStack getOutputStack() {
+		ISonarRecipeObject obj = validInputs.get(0);
+		if (obj instanceof ISonarRecipeItem) {
+			return ((ISonarRecipeItem) obj).getOutputStack();
+		}
 		for (Object object : cachedObjects) {
 			if (object instanceof ItemStack) {
 				return (ItemStack) object;
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public Collection<ItemStack> getJEIValue() {
+		ArrayList<ItemStack> values = new ArrayList<ItemStack>();
+		validInputs.forEach(obj -> obj.getJEIValue().forEach(stack -> values.add(stack)));
+		return values;
+	}
+
+	@Override
+	public int getStackSize() {
+		return validInputs.get(0).getStackSize();
 	}
 
 }

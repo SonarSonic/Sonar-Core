@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import sonar.core.SonarCore;
 import sonar.core.integration.fmp.OLDMultipartHelper;
 import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.network.utils.ByteBufWritable;
@@ -38,7 +39,7 @@ public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 		super.toBytes(buf);
 		buf.writeInt(id);
 		tile.writePacket(buf, id);
-		
+
 		if (writables != null) {
 			for (ByteBufWritable writable : writables) {
 				writable.writeToBuf(buf);
@@ -50,17 +51,23 @@ public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 
 		@Override
 		public IMessage processMessage(PacketByteBuf message, TileEntity tile) {
-			// if (!tile.getWorld().isRemote) {
-			if (tile instanceof IByteBufTile) {
-				IByteBufTile packet = (IByteBufTile) tile;
-				packet.readPacket(message.buf, message.id);
-			} else {
-				TileHandler handler = OLDMultipartHelper.getHandler(tile);
-				if (handler != null && handler instanceof IByteBufTile) {
-					((IByteBufTile) handler).readPacket(message.buf, message.id);
+
+			SonarCore.proxy.getThreadListener().addScheduledTask(new Runnable() {
+				public void run() {
+					if (tile instanceof IByteBufTile) {
+						IByteBufTile packet = (IByteBufTile) tile;
+						packet.readPacket(message.buf, message.id);
+					}
+					/*
+					else {
+						TileHandler handler = OLDMultipartHelper.getHandler(tile);
+						if (handler != null && handler instanceof IByteBufTile) {
+							((IByteBufTile) handler).readPacket(message.buf, message.id);
+						}
+					}
+					*/
 				}
-			}
-			// }
+			});
 			return null;
 		}
 	}

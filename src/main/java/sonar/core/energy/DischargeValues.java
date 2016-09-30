@@ -33,7 +33,7 @@ public class DischargeValues implements IRecipeHelper {
 		}
 	}
 
-	public static int getValueOf(ItemStack stack) {		
+	public static int getValueOf(ItemStack stack) {
 		Iterator iterator = dischargeList.entrySet().iterator();
 
 		Map.Entry entry;
@@ -46,7 +46,7 @@ public class DischargeValues implements IRecipeHelper {
 
 		return (Integer) entry.getValue();
 	}
-	
+
 	@Override
 	public String getRecipeID() {
 		return "Discharge";

@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import sonar.core.SonarCore;
 import sonar.core.helpers.RecipeHelper;
 
+@Deprecated
 public class SonarAddRecipe implements IUndoableAction {
 	public ArrayList inputs;
 	public ArrayList<ItemStack> outputs;
@@ -68,7 +69,7 @@ public class SonarAddRecipe implements IUndoableAction {
 	@Override
 	public void undo() {
 		if (!wasNull && !liquidStack && !wrongSize) {
-			boolean removed = helper.removeRecipe(inputs.toArray());
+			boolean removed = helper.removeRecipe(inputs);
 			if(!removed){
 				MineTweakerAPI.logError(String.format("%s: Failed to remove recipe %s", helper.getRecipeID(), inputs.toArray()));
 			}

@@ -10,8 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.SonarCore;
+import sonar.core.recipes.RecipeHelperV2;
 
-/** Recipe Template allows gigantic recipes with full Ore Dict compatibility */
+/** NEW VERSION - {@link RecipeHelperV2}*/
+@Deprecated
 public abstract class RecipeHelper implements IRecipeHelper {
 
 	public int outputSize, inputSize;

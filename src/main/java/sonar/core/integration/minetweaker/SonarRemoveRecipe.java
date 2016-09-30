@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.helpers.RecipeHelper;
 
+@Deprecated
 public class SonarRemoveRecipe implements IUndoableAction {
 
 	public ArrayList inputs;

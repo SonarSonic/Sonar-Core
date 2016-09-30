@@ -5,9 +5,11 @@ import java.util.UUID;
 import io.netty.buffer.ByteBuf;
 import mcmultipart.multipart.IMultipart;
 import mcmultipart.multipart.IMultipartContainer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import sonar.core.SonarCore;
 import sonar.core.network.utils.IByteBufTile;
 
 public class PacketByteBufMultipart extends PacketMultipart {
@@ -16,7 +18,8 @@ public class PacketByteBufMultipart extends PacketMultipart {
 	public IByteBufTile tile;
 	public ByteBuf buf;
 
-	public PacketByteBufMultipart() {}
+	public PacketByteBufMultipart() {
+	}
 
 	public PacketByteBufMultipart(UUID partUUID, IByteBufTile tile, BlockPos pos, int id) {
 		super(partUUID, pos);
@@ -42,11 +45,14 @@ public class PacketByteBufMultipart extends PacketMultipart {
 
 		@Override
 		public IMessage processMessage(PacketByteBufMultipart message, IMultipartContainer tile, IMultipart part, MessageContext ctx) {
-			if (part != null && part instanceof IByteBufTile) {
-				((IByteBufTile) part).readPacket(message.buf, message.id);
-			}
+			SonarCore.proxy.getThreadListener().addScheduledTask(new Runnable() {
+				public void run() {
+					if (part != null && part instanceof IByteBufTile) {
+						((IByteBufTile) part).readPacket(message.buf, message.id);
+					}
+				}
+			});
 			return null;
 		}
 	}
-
 }

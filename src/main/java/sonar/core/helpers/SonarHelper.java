@@ -30,8 +30,7 @@ public class SonarHelper {
 	/** @param tile Tile Entity you're checking from
 	 * @param side side to find IEnergyHandler
 	 * @return if there is an adjacent Energy Hander */
-	/*
-	 * public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, int side) { TileEntity handler = getAdjacentTileEntity(tile, EnumFacing.getFront(side)); return isEnergyHandlerFromSide(handler, EnumFacing.VALUES[side ^ 1]); }
+	/* public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, int side) { TileEntity handler = getAdjacentTileEntity(tile, EnumFacing.getFront(side)); return isEnergyHandlerFromSide(handler, EnumFacing.VALUES[side ^ 1]); }
 	 * 
 	 * /* public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, EnumFacing side) { TileEntity handler = getAdjacentTileEntity(tile, side); return isEnergyHandlerFromSide(handler, side.getOpposite()); }
 	 * 
@@ -39,8 +38,7 @@ public class SonarHelper {
 	 * 
 	 * @param from direction your adding from
 	 * 
-	 * @return if Handler can connect
-	 */
+	 * @return if Handler can connect */
 	/* public static boolean isEnergyHandlerFromSide(TileEntity tile, EnumFacing from) { if (tile instanceof IEnergyProvider || tile instanceof IEnergyReceiver) { IEnergyConnection handler = (IEnergyConnection) tile; return handler.canConnectEnergy(from); } return false; } */
 	/** @param tile Tile Entity you're checking from
 	 * @param side direction from Tile Entity your checking from
@@ -54,13 +52,10 @@ public class SonarHelper {
 		return world.getBlockState(pos.offset(side)).getBlock();
 	}
 
-	/*
-	 * /** @param tile Tile Entity you are checking
+	/* /** @param tile Tile Entity you are checking
 	 * 
-	 * @return if the Tile is an Energy Handler
-	 */
-	/*
-	 * public static boolean isEnergyHandler(TileEntity tile) { if (tile instanceof IEnergyHandler) { return true; } return false; } /** Add energy to an IEnergyReciever, internal distribution is left entirely to the IEnergyReciever.
+	 * @return if the Tile is an Energy Handler */
+	/* public static boolean isEnergyHandler(TileEntity tile) { if (tile instanceof IEnergyHandler) { return true; } return false; } /** Add energy to an IEnergyReciever, internal distribution is left entirely to the IEnergyReciever.
 	 * 
 	 * @param from Orientation the energy is received from.
 	 * 
@@ -68,13 +63,10 @@ public class SonarHelper {
 	 * 
 	 * @param simulate If TRUE, the charge will only be simulated.
 	 * 
-	 * @return Amount of energy that was (or would have been, if simulated) received.
-	 */
-	/*
-	 * public static int pushEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyReceiver) { IEnergyReceiver handler = (IEnergyReceiver) tile; return handler.receiveEnergy(dir, amount, simulate); } return 0;
+	 * @return Amount of energy that was (or would have been, if simulated) received. */
+	/* public static int pushEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyReceiver) { IEnergyReceiver handler = (IEnergyReceiver) tile; return handler.receiveEnergy(dir, amount, simulate); } return 0;
 	 * 
-	 * }
-	 */
+	 * } */
 	/** Remove energy from an IEnergyProvider, internal distribution is left entirely to the IEnergyProvider.
 	 * 
 	 * @param from Orientation the energy is extracted from.
@@ -82,11 +74,9 @@ public class SonarHelper {
 	 * @param simulate If TRUE, the extraction will only be simulated.
 	 * @return Amount of energy that was (or would have been, if simulated) extracted. */
 
-	/*
-	 * public static int pullEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyProvider) { IEnergyProvider handler = (IEnergyProvider) tile; return handler.extractEnergy(dir, amount, simulate); } return 0;
+	/* public static int pullEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyProvider) { IEnergyProvider handler = (IEnergyProvider) tile; return handler.extractEnergy(dir, amount, simulate); } return 0;
 	 * 
-	 * }
-	 */
+	 * } */
 	/** checks if a tile implements IWrench and IDropTile and drops it accordingly */
 	public static void dropTile(EntityPlayer player, Block block, World world, BlockPos pos) {
 		ItemStack stack = player.getHeldItemMainhand();
@@ -149,7 +139,7 @@ public class SonarHelper {
 	}
 
 	public static GameProfile getProfileByUUID(UUID playerUUID) {
-		if(playerUUID==null){
+		if (playerUUID == null) {
 			return new GameProfile(UUID.randomUUID(), "ERROR: UUID IS INCORRECT");
 		}
 		if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
@@ -279,16 +269,28 @@ public class SonarHelper {
 					addCoords(block, w, current, max, handlers, dirs);
 				}
 			}
-		}		
+		}
 	}
-	
-	public static <E extends Enum> E incrementEnum(E enumObj, E[] values){
+
+	public static <E extends Enum> E incrementEnum(E enumObj, E[] values) {
 		int ordinal = enumObj.ordinal() + 1;
 		if (ordinal < values.length) {
 			return values[ordinal];
 		} else {
 			return values[0];
 		}
-	}	
-	
+	}
+
+	public static <T> List<T> convertArray(T[] objs) {
+		List<T> inputs = new ArrayList<T>();
+		for (T obj : objs) {
+			inputs.add(obj);
+		}
+		return inputs;
+	}
+
+	public static <T> Object[] convertArray(List<T> objs) {
+		return objs.toArray();
+	}
+
 }

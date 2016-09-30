@@ -41,13 +41,15 @@ public class SyncNBTAbstractList<T extends INBTSyncable> extends SyncPart {
 	}
 
 	public void addObject(T object) {
-		if (!objs.contains(object) && objs.add(object)) {
+		if (!objs.contains(object)) {
+			objs.add(object);
 			setChanged(true);
 		}
 	}
 
 	public void removeObject(T object) {
-		if (objs.contains(object) && objs.remove(object)) {
+		if (objs.contains(object)) {
+			objs.remove(object);
 			setChanged(true);
 		}
 	}

@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import sonar.core.SonarCore;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.fmp.OLDMultipartHelper;
@@ -15,7 +16,8 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 	public NBTTagCompound tag;
 	public SyncType type;
 
-	public PacketTileSync() {}
+	public PacketTileSync() {
+	}
 
 	public PacketTileSync(BlockPos pos, NBTTagCompound tag) {
 		super(pos);
@@ -53,19 +55,20 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 
 		@Override
 		public IMessage processMessage(PacketTileSync message, TileEntity tile) {
-			if (tile.getWorld().isRemote) {
-				Object te = OLDMultipartHelper.checkObject(tile);
-				if (te == null) {
-					return null;
-				}
-				SyncType type = SyncType.DEFAULT_SYNC;
-				if (message.type != null) {
-					type = message.type;
-				}
-				if (te instanceof INBTSyncable) {
-					INBTSyncable sync = (INBTSyncable) te;
-					sync.readData(message.tag, type);
-				}
+			if (tile != null && tile.getWorld().isRemote) {
+				/* Object te = OLDMultipartHelper.checkObject(tile); if (te == null) { return null; } */
+				SonarCore.proxy.getThreadListener().addScheduledTask(new Runnable() {
+					public void run() {
+						SyncType type = SyncType.DEFAULT_SYNC;
+						if (message.type != null) {
+							type = message.type;
+						}
+						if (tile instanceof INBTSyncable) {
+							INBTSyncable sync = (INBTSyncable) tile;
+							sync.readData(message.tag, type);
+						}
+					}
+				});
 			}
 			return null;
 		}

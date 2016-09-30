@@ -122,14 +122,19 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (stack != null && stack.stackSize != 0) {
+		if (stack != null && stack.stackSize != 0 && isItemValidForSlot(slot, stack)) {
 			int target = (int) Math.floor(slot / numStacks);
 			StoredItemStack stored = slots[target];
 			if (stored == null || stored.getStackSize() == 0 || stored.equalStack(stack) && stored.getStackSize() < numStacks * stack.getMaxStackSize()) {
-				int maxAdd = (int) Math.min(numStacks * stack.getMaxStackSize() - stored.getStackSize(), stack.stackSize);
+				int maxAdd = (int) Math.min(numStacks * stack.getMaxStackSize() - (stored != null ? stored.getStackSize() : 0), stack.stackSize);
 				if (maxAdd != 0) {
-					if (!simulate)
-						stored.stored += maxAdd;
+					if (!simulate) {
+						if (stored != null) {
+							stored.stored += maxAdd;
+						} else {
+							stored = slots[target] = new StoredItemStack(stack.copy(), maxAdd);
+						}
+					}
 					return maxAdd == stack.stackSize ? null : new StoredItemStack(stack.copy()).setStackSize(stack.stackSize - maxAdd).getActualStack();
 				}
 			}
@@ -151,6 +156,7 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 				if (stored.stored == 0) {
 					slots[target] = null;
 				}
+
 			}
 			return new StoredItemStack(stack.copy()).setStackSize(toRemove).getActualStack();
 		}

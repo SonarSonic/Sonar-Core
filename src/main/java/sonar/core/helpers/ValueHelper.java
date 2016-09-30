@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+@Deprecated
 public abstract class ValueHelper implements IRecipeHelper {
 
 	protected Map<Object, Integer> recipeList = new HashMap();
