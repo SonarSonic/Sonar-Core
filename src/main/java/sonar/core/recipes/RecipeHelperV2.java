@@ -24,10 +24,10 @@ import sonar.core.utils.Pair;
 public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeHelperV2<T> {
 
 	/** the list of recipes */
-	
+
 	public ArrayList<T> recipes = new ArrayList();
-	public ArrayList<Class<?>> validInputs = Lists.newArrayList(ISonarRecipeObject.class, ItemStack.class, Item.class, Block.class, ItemStack[].class, List.class, String.class);
-	public ArrayList<Class<?>> validOutputs = Lists.newArrayList(ISonarRecipeObject.class, ItemStack.class, Item.class, Block.class, String.class);
+	public ArrayList<Class<?>> validInputs = Lists.newArrayList(ISonarRecipeObject.class, ItemStack.class, Item.class, Block.class, ItemStack[].class, List.class, String.class, Integer.class);
+	public ArrayList<Class<?>> validOutputs = Lists.newArrayList(ISonarRecipeObject.class, ItemStack.class, Item.class, Block.class, String.class, Integer.class);
 
 	/** types which must be adjusted before being added to a recipe */
 	public ArrayList<Class<?>> adjusted = Lists.newArrayList(Item.class, Block.class);
@@ -35,7 +35,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 	public RecipeHelperV2() {
 		// addRecipes();
 	}
-	
+
 	public abstract String getRecipeID();
 
 	public abstract void addRecipes();
@@ -57,7 +57,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 	}
 
 	@Nullable
-	public T getRecipeFromInputs(EntityPlayer player, Object[] inputs) {
+	public T getRecipeFromInputs(@Nullable EntityPlayer player, Object[] inputs) {
 		for (T recipe : recipes) {
 			if ((player == null || recipe.canUseRecipe(player)) && recipe.matchingInputs(inputs)) {
 				return recipe;
@@ -67,7 +67,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 	}
 
 	@Nullable
-	public T getRecipeFromOutputs(EntityPlayer player, Object[] outputs) {
+	public T getRecipeFromOutputs(@Nullable EntityPlayer player, Object[] outputs) {
 		for (T recipe : recipes) {
 			if ((player == null || recipe.canUseRecipe(player)) && recipe.matchingOutputs(outputs)) {
 				return recipe;
@@ -120,7 +120,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 		return false;
 	}
 
-	/**builds a recipe object, can be null, this can be overridden if needed*/
+	/** builds a recipe object, can be null, this can be overridden if needed */
 	@Nullable
 	public ISonarRecipeObject buildRecipeObject(Object obj) {
 		if (requiresAdjustment(obj)) {
@@ -148,6 +148,8 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 			}
 		} else if (obj instanceof String) {
 			return new RecipeOreStack((String) obj, 1);
+		} else if (obj instanceof Integer) {
+			return new RecipeInteger(((Integer) obj));
 		}
 		if (obj instanceof ItemStack) {
 			return new RecipeItemStack((ItemStack) obj);
@@ -156,6 +158,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 	}
 
 	/** adds a recipe to the current recipelist
+	 * 
 	 * @param inputs the inputs of the recipe
 	 * @param outputs the outputs of the recipe
 	 * @param shapeless if the order of the inputs matters or not
@@ -164,7 +167,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 		addRecipe(buildDefaultRecipe(inputs, outputs, additionals, shapeless));
 	}
 
-	/**builds a default recipe, this can also be overridden if needed*/
+	/** builds a default recipe, this can also be overridden if needed */
 	@Nullable
 	public T buildDefaultRecipe(List inputs, List outputs, List additionals, boolean shapeless) {
 		ArrayList<ISonarRecipeObject> recipeInputs = Lists.<ISonarRecipeObject>newArrayList();
@@ -229,8 +232,8 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 		}
 		return false;
 	}
-	
-	/**used on objects which require adjustment, typically used on objects which need to be converted to an itemstack*/
+
+	/** used on objects which require adjustment, typically used on objects which need to be converted to an itemstack */
 	public static Object adjustObject(Object obj) {
 		return ItemStackHelper.createStack(obj);
 	}
@@ -279,20 +282,38 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 				return false;
 			}
 			pos++;
-			if (shapeless) {
-				for (ISonarRecipeObject ingredient : (ArrayList<ISonarRecipeObject>) matches.clone()) {
-					if (ingredient.matches(obj, type)) {
-						matches.remove(ingredient);
+			if (obj instanceof List) {
+				List list = (List) obj;
+				for (Object listObj : list) {
+					if (matchingIngredient(listObj, pos, type, matches, ingredients, shapeless)) {
 						continue inputs;
 					}
 				}
-			} else if (ingredients.get(pos).matches(obj, type)) {
-				matches.remove(ingredients.get(pos));
+			}
+			if (matchingIngredient(obj, pos, type, matches, ingredients, shapeless)) {
 				continue inputs;
 			}
 			return false;
 		}
 		return true;
+	}
+
+	public static boolean matchingIngredient(Object obj, int pos, RecipeObjectType type, ArrayList<ISonarRecipeObject> matches, ArrayList<ISonarRecipeObject> ingredients, boolean shapeless) {
+		if (shapeless) {
+			for (ISonarRecipeObject ingredient : (ArrayList<ISonarRecipeObject>) matches.clone()) {
+				if (ingredient.matches(obj, type)) {
+					matches.remove(ingredient);
+					return true;
+				}
+			}
+		} else if (ingredients.get(pos).matches(obj, type)) {
+			matches.remove(ingredients.get(pos));
+			return true;
+		}
+		if (type == RecipeObjectType.INPUT) {
+			return false;
+		}
+		return false;
 	}
 
 }

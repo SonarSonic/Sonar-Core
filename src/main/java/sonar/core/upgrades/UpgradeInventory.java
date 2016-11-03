@@ -84,13 +84,13 @@ public class UpgradeInventory implements IUpgradeInventory {
 				upgrades.put(entry.getKey(), 0);
 			}
 		}
-		this.markDirty=true;
+		this.markDirty = true;
 		return drops;
 	}
 
 	@Override
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
-		if (type == SyncType.SAVE || (type.isType(SyncType.DEFAULT_SYNC) && markDirty)) {
+		if (type.isType(SyncType.DEFAULT_SYNC, SyncType.SAVE) || markDirty) {
 			NBTTagCompound upgradeTag = new NBTTagCompound();
 			for (Entry<String, Integer> entry : upgrades.entrySet()) {
 				upgradeTag.setInteger(entry.getKey(), entry.getValue());
@@ -107,7 +107,7 @@ public class UpgradeInventory implements IUpgradeInventory {
 
 	@Override
 	public void readData(NBTTagCompound tag, SyncType type) {
-		if (type == SyncType.SAVE || type.isType(SyncType.DEFAULT_SYNC)) {
+		if (type.isType(SyncType.DEFAULT_SYNC, SyncType.SAVE)) {
 			NBTTagCompound upgradeTag = tag.getCompoundTag("Upgrades");
 			if (upgradeTag != null && !upgradeTag.hasNoTags()) {
 				for (String key : upgradeTag.getKeySet()) {

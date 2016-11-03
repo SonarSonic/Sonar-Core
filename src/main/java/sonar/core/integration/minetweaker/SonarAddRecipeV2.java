@@ -21,7 +21,7 @@ import sonar.core.recipes.RecipeItemStack;
 import sonar.core.recipes.RecipeOreStack;
 import sonar.core.recipes.ValueHelperV2;
 
-public class SonarAddRecipeV2<T extends DefinedRecipeHelper> implements IUndoableAction {
+public class SonarAddRecipeV2<T extends RecipeHelperV2> implements IUndoableAction {
 	public ArrayList<ISonarRecipeObject> inputs;
 	public ArrayList<ISonarRecipeObject> outputs;
 	public boolean liquidStack, wasNull, wrongSize;
@@ -29,7 +29,7 @@ public class SonarAddRecipeV2<T extends DefinedRecipeHelper> implements IUndoabl
 
 	public SonarAddRecipeV2(T helper, ArrayList inputs, ArrayList<ItemStack> outputs) {
 		this.helper = helper;
-		if (inputs.size() != helper.inputSize || outputs.size() != helper.outputSize) {
+		if (helper instanceof DefinedRecipeHelper && (inputs.size() != ((DefinedRecipeHelper) helper).getInputSize() || outputs.size() != ((DefinedRecipeHelper) helper).getOutputSize())) {
 			MineTweakerAPI.logError("A " + helper.getRecipeID() + " recipe was the wrong size");
 			wrongSize = true;
 			return;
@@ -70,7 +70,8 @@ public class SonarAddRecipeV2<T extends DefinedRecipeHelper> implements IUndoabl
 	@Override
 	public void apply() {
 		if (!wasNull && !liquidStack && !wrongSize) {
-			helper.addRecipe(helper.buildRecipe((ArrayList<ISonarRecipeObject>) inputs.clone(), (ArrayList<ISonarRecipeObject>) outputs.clone(), new ArrayList(), helper.shapeless));
+			boolean isShapeless = helper instanceof DefinedRecipeHelper ? ((DefinedRecipeHelper) helper).shapeless : true;
+			helper.addRecipe(helper.buildRecipe((ArrayList<ISonarRecipeObject>) inputs.clone(), (ArrayList<ISonarRecipeObject>) outputs.clone(), new ArrayList(), isShapeless));
 		} else {
 			SonarCore.logger.error(String.format("Failed to add %s recipe (%s = %s)", helper.getRecipeID(), inputs, outputs));
 		}

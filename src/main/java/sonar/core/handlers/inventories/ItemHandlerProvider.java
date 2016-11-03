@@ -24,7 +24,7 @@ public class ItemHandlerProvider extends InventoryHandler {
 
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {
-		return tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir);
+		return tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class ItemHandlerProvider extends InventoryHandler {
 			if (add == null || add.stored == 0)
 				return null;
 			ItemStack stack = handler.insertItem(i, add.getFullStack(), action.shouldSimulate());
-			if (stack != null && add.stored!=0) {
+			if (stack != null && add.stored != 0) {
 				add.remove(SonarAPI.getItemHelper().getStackToAdd(add.stored, add, new StoredItemStack(stack)));
 			} else {
 				add.stored -= add.getFullStack().stackSize;

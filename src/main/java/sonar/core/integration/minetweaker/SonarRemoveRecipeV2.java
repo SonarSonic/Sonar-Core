@@ -16,11 +16,12 @@ import sonar.core.SonarCore;
 import sonar.core.recipes.DefinedRecipeHelper;
 import sonar.core.recipes.ISonarRecipe;
 import sonar.core.recipes.ISonarRecipeObject;
+import sonar.core.recipes.RecipeHelperV2;
 import sonar.core.recipes.RecipeObjectType;
 import sonar.core.recipes.RecipeOreStack;
 import sonar.core.recipes.ValueHelperV2;
 
-public class SonarRemoveRecipeV2<T extends DefinedRecipeHelper> implements IUndoableAction {
+public class SonarRemoveRecipeV2<T extends RecipeHelperV2> implements IUndoableAction {
 
 	public ArrayList ingredients;
 	public RecipeObjectType type;
@@ -31,7 +32,7 @@ public class SonarRemoveRecipeV2<T extends DefinedRecipeHelper> implements IUndo
 	public SonarRemoveRecipeV2(T helper, RecipeObjectType type, ArrayList ingredients) {
 		this.helper = helper;
 		this.type = type;
-		if (type == RecipeObjectType.OUTPUT ? ingredients.size() != helper.outputSize : ingredients.size() != helper.inputSize) {
+		if (helper instanceof DefinedRecipeHelper && (type == RecipeObjectType.OUTPUT ? ingredients.size() != ((DefinedRecipeHelper) helper).getOutputSize() : ingredients.size() != ((DefinedRecipeHelper) helper).getInputSize())) {
 			MineTweakerAPI.logError("A " + helper.getRecipeID() + " recipe was the wrong size");
 			wrongSize = true;
 			return;

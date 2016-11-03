@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public abstract class DefinedRecipeHelper<T extends ISonarRecipe> extends RecipeHelperV2<T> {
 
-	public int inputSize, outputSize;
+	private int inputSize, outputSize;
 	public boolean shapeless;
 
 	public DefinedRecipeHelper(int inputSize, int outputSize, boolean shapeless) {
@@ -20,19 +20,31 @@ public abstract class DefinedRecipeHelper<T extends ISonarRecipe> extends Recipe
 		ArrayList additionals = new ArrayList();
 		for (int i = 0; i < objs.length; i++) {
 			Object obj = objs[i];
-			if (i < inputSize) {
+			if (i < (reverseRecipes() ? getOutputSize() : getInputSize())) {
 				inputs.add(obj);
-			} else if (i < inputSize + outputSize) {
+			} else if (i < getInputSize() + getOutputSize()) {
 				outputs.add(obj);
 			} else {
 				additionals.add(obj);
 			}
 		}
 
-		addRecipe(buildDefaultRecipe(inputs, outputs, additionals, shapeless));
+		addRecipe(buildDefaultRecipe(reverseRecipes() ? outputs : inputs, reverseRecipes() ? inputs : outputs, additionals, shapeless));
+	}
+
+	public boolean reverseRecipes() {
+		return false;
 	}
 
 	public boolean isValidRecipe(ArrayList<ISonarRecipeObject> recipeInputs, ArrayList<ISonarRecipeObject> recipeOutputs) {
-		return recipeInputs.size() == inputSize && recipeOutputs.size() == outputSize;
+		return recipeInputs.size() == getInputSize() && recipeOutputs.size() == getOutputSize();
+	}
+
+	public int getInputSize() {
+		return inputSize;
+	}
+
+	public int getOutputSize() {
+		return outputSize;
 	}
 }

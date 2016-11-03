@@ -81,12 +81,12 @@ public class SonarHelper {
 	public static void dropTile(EntityPlayer player, Block block, World world, BlockPos pos) {
 		ItemStack stack = player.getHeldItemMainhand();
 		TileEntity te = world.getTileEntity(pos);
-		if (SonarLoader.calculatorLoaded() && block == GameRegistry.findBlock("Calculator", "ConductorMastBlock")) {
-			if (world.getBlockState(pos.offset(EnumFacing.DOWN, 1)).getBlock() == GameRegistry.findBlock("Calculator", "ConductorMast")) {
+		if (SonarLoader.calculatorLoaded() && block == GameRegistry.findBlock("calculator", "ConductorMastBlock")) {
+			if (world.getBlockState(pos.offset(EnumFacing.DOWN, 1)).getBlock() == GameRegistry.findBlock("calculator", "ConductorMast")) {
 				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 1), world.getBlockState(pos.offset(EnumFacing.DOWN, 1)), te, stack);
-			} else if (world.getBlockState(pos.offset(EnumFacing.DOWN, 2)).getBlock() == GameRegistry.findBlock("Calculator", "ConductorMast")) {
+			} else if (world.getBlockState(pos.offset(EnumFacing.DOWN, 2)).getBlock() == GameRegistry.findBlock("calculator", "ConductorMast")) {
 				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 2), world.getBlockState(pos.offset(EnumFacing.DOWN, 3)), te, stack);
-			} else if (world.getBlockState(pos.offset(EnumFacing.DOWN, 3)).getBlock() == GameRegistry.findBlock("Calculator", "ConductorMast")) {
+			} else if (world.getBlockState(pos.offset(EnumFacing.DOWN, 3)).getBlock() == GameRegistry.findBlock("calculator", "ConductorMast")) {
 
 				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 3), world.getBlockState(pos.offset(EnumFacing.DOWN, 3)), te, stack);
 			}

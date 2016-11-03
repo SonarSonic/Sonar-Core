@@ -42,11 +42,11 @@ public class ItemStackHelper {
 	 * @return if the stack is an circuit */
 	public static boolean isCircuit(Item item) {
 		if (SonarLoader.calculatorLoaded()) {
-			if (item == GameRegistry.findItem("Calculator", "CircuitBoard")) {
+			if (item == GameRegistry.findItem("calculator", "CircuitBoard")) {
 				return true;
-			} else if (item == GameRegistry.findItem("Calculator", "CircuitDamaged")) {
+			} else if (item == GameRegistry.findItem("calculator", "CircuitDamaged")) {
 				return true;
-			} else if (item == GameRegistry.findItem("Calculator", "CircuitDirty")) {
+			} else if (item == GameRegistry.findItem("calculator", "CircuitDirty")) {
 				return true;
 			}
 		}
@@ -72,6 +72,7 @@ public class ItemStackHelper {
 	}
 
 	/** checks if the two input itemstacks come from the same mod.
+	 * 
 	 * @param target
 	 * @param stack
 	 * @return */
@@ -96,6 +97,14 @@ public class ItemStackHelper {
 		}
 		return false;
 	}
-	
-	
+
+	public static ItemStack reduceStackSize(ItemStack stack, int i) {
+		stack.stackSize -= i;
+		if (stack.stackSize <= 0) {
+			stack = null;
+		}
+		return stack;
+
+	}
+
 }

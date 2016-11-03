@@ -38,13 +38,19 @@ public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 	public void toBytes(ByteBuf buf) {
 		super.toBytes(buf);
 		buf.writeInt(id);
-		tile.writePacket(buf, id);
-
 		if (writables != null) {
+			boolean replaces = false;
 			for (ByteBufWritable writable : writables) {
 				writable.writeToBuf(buf);
+				if (writable.replacesDefaults) {
+					replaces = true;
+				}
+			}
+			if (replaces) {
+				return;
 			}
 		}
+		tile.writePacket(buf, id);
 	}
 
 	public static class Handler extends PacketTileEntityHandler<PacketByteBuf> {
@@ -58,14 +64,7 @@ public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 						IByteBufTile packet = (IByteBufTile) tile;
 						packet.readPacket(message.buf, message.id);
 					}
-					/*
-					else {
-						TileHandler handler = OLDMultipartHelper.getHandler(tile);
-						if (handler != null && handler instanceof IByteBufTile) {
-							((IByteBufTile) handler).readPacket(message.buf, message.id);
-						}
-					}
-					*/
+					/* else { TileHandler handler = OLDMultipartHelper.getHandler(tile); if (handler != null && handler instanceof IByteBufTile) { ((IByteBufTile) handler).readPacket(message.buf, message.id); } } */
 				}
 			});
 			return null;

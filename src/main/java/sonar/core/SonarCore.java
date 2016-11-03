@@ -69,7 +69,7 @@ import sonar.core.upgrades.MachineUpgradeRegistry;
 @Mod(modid = SonarCore.modid, name = "SonarCore", version = SonarCore.version)
 public class SonarCore {
 
-	public static final String modid = "SonarCore";
+	public static final String modid = "sonarcore";
 	public static final String version = "3.1.6";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")

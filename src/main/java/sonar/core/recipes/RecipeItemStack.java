@@ -5,8 +5,10 @@ import java.util.Collection;
 import com.google.common.collect.Lists;
 
 import net.minecraft.item.ItemStack;
+import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.helpers.ItemStackHelper;
 
+/**works for matching StoredItemStacks*/
 public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {
 
 	public ItemStack stack;
@@ -31,6 +33,13 @@ public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {
 				return false;
 			}
 			return type.checkStackSize(stack.stackSize, stack2.stackSize);
+		}
+		if (object instanceof StoredItemStack) {
+			StoredItemStack stack2 = (StoredItemStack) object;
+			if (!stack2.equalStack(stack)) {
+				return false;
+			}
+			return type.checkStackSize(stack.stackSize, (int) stack2.stored);
 		}
 		return false;
 	}

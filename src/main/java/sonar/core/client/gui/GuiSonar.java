@@ -53,7 +53,7 @@ public abstract class GuiSonar extends GuiContainer {
 	public void setZLevel(float zLevel) {
 		this.zLevel = zLevel;
 	}
-	
+
 	public void drawNormalToolTip(ItemStack stack, int x, int y) {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -91,10 +91,10 @@ public abstract class GuiSonar extends GuiContainer {
 		float f2 = (float) (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer vertexbuffer = tessellator.getBuffer();
-        GlStateManager.enableBlend();
-        GlStateManager.color(f, f1, f2, f3);
+		GlStateManager.enableBlend();
+		GlStateManager.color(f, f1, f2, f3);
 		GlStateManager.disableTexture2D();
-		OpenGlHelper.glBlendFunc(770, 1, 1, 0);       
+		OpenGlHelper.glBlendFunc(770, 1, 1, 0);
 		GlStateManager.color(f, f1, f2, f3);
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
 		vertexbuffer.pos((double) left, (double) bottom, 0.0D).endVertex();
@@ -102,8 +102,8 @@ public abstract class GuiSonar extends GuiContainer {
 		vertexbuffer.pos((double) right, (double) top, 0.0D).endVertex();
 		vertexbuffer.pos((double) left, (double) top, 0.0D).endVertex();
 		tessellator.draw();
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
+		GlStateManager.enableTexture2D();
+		GlStateManager.disableBlend();
 	}
 
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
@@ -126,6 +126,10 @@ public abstract class GuiSonar extends GuiContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(this.getBackground());
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+	}
+
+	public void bindTexture(ResourceLocation resource) {
+		mc.getTextureManager().bindTexture(resource);
 	}
 
 	@SideOnly(Side.CLIENT)

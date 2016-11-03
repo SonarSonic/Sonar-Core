@@ -39,8 +39,9 @@ public class Planter implements IPlanter {
 	@Override
 	public IBlockState getPlant(ItemStack stack, World world, BlockPos pos) {
 		IPlantable plant = (IPlantable) stack.getItem();
-		Block base = world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock();
-		if (base != null && base.canSustainPlant(base.getDefaultState(), world, pos, EnumFacing.UP, plant)) {
+		IBlockState state = world.getBlockState(pos.offset(EnumFacing.DOWN));
+		Block base = state.getBlock();
+		if (base != null && !base.isAir(state, world, pos) && base.canSustainPlant(state, world, pos, EnumFacing.UP, plant)) {
 			return plant.getPlant(world, pos);
 		}else{
 			return null;

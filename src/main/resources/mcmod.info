@@ -1,6 +1,6 @@
 [
 {
-"modid": "SonarCore",
+"modid": "sonarcore",
 "name": "SonarCore",
 "description": "Sonar's Modding Framework",
 "version": "${version}",
@@ -11,7 +11,7 @@
 "logoFile": "",
 "screenshots": [],
 "dependencies": ["CoFHLib","CoFHCore","CoFHAPI","WailaAPI","ForgeMultipart"],
-"dependants": ["Calculator","PracticalLogistics","FluxNetworks"],
+"dependants": ["calculator","practicallogistics","fluxnetworks"],
 "useDependencyInformation": true
 }
 ]
