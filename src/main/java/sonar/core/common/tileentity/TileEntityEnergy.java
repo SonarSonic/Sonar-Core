@@ -70,24 +70,23 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 		return super.hasCapability(capability, facing);
 	}
 
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {	
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		EnergyMode mode = getModeForSide(facing);
-		if (SonarLoader.teslaLoaded && mode.canConnect()) {
+		if (mode != null && SonarLoader.teslaLoaded && mode.canConnect()) {
 			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
 				return (T) storage;
 		}
 		return super.getCapability(capability, facing);
 	}
 
-
 	@Override
 	public EnergyMode getModeForSide(EnumFacing side) {
-		if(side==null){
+		if (side == null) {
 			return EnergyMode.SEND_RECIEVE;
 		}
 		return energyMode;
 	}
-	
+
 	@Override
 	public SyncEnergyStorage getStorage() {
 		return storage;
@@ -98,7 +97,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 		return energyMode;
 	}
 
-	/////* CoFH *//////
+	///// * CoFH *//////
 	@Override
 	public boolean canConnectEnergy(EnumFacing from) {
 		return getModeForSide(from).canConnect();
@@ -129,7 +128,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 		return 0;
 	}
 
-	/////* IC2 *//////	
+	///// * IC2 *//////
 	public void onFirstTick() {
 		super.onFirstTick();
 		if (!this.worldObj.isRemote && SonarLoader.ic2Loaded()) {
@@ -149,7 +148,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 
 	@Override
 	public double getDemandedEnergy() {
-		return Math.min(EUHelper.getVoltage(this.getSinkTier()),this.storage.addEnergy(this.storage.getMaxReceive(), ActionType.getTypeForAction(true)) / 4);
+		return Math.min(EUHelper.getVoltage(this.getSinkTier()), this.storage.addEnergy(this.storage.getMaxReceive(), ActionType.getTypeForAction(true)) / 4);
 	}
 
 	@Override
@@ -176,7 +175,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 
 	@Override
 	public double getOfferedEnergy() {
-		return Math.min(EUHelper.getVoltage(this.getSourceTier()),this.storage.removeEnergy(maxTransfer, ActionType.getTypeForAction(true)) / 4);
+		return Math.min(EUHelper.getVoltage(this.getSourceTier()), this.storage.removeEnergy(maxTransfer, ActionType.getTypeForAction(true)) / 4);
 	}
 
 	@Override

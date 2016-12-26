@@ -47,10 +47,9 @@ public class MekanismProvider extends EnergyHandler {
 		if (acceptor == null && tile instanceof IStrictEnergyAcceptor) {
 			acceptor = (IStrictEnergyAcceptor) tile;
 		}
-		if (acceptor != null) {
-			if (acceptor.canReceiveEnergy(dir)) {
-				transfer.stored -= action.shouldSimulate() ? Math.min(acceptor.getMaxEnergy() - acceptor.getEnergy(), transfer.stored) : acceptor.transferEnergyToAcceptor(dir, transfer.stored);
-			}
+		if (acceptor != null && acceptor.canReceiveEnergy(dir)) {			
+			transfer.stored -= action.shouldSimulate() ? Math.min(acceptor.getMaxEnergy() - acceptor.getEnergy(), transfer.stored) : acceptor.transferEnergyToAcceptor(dir, transfer.stored);
+	
 		}
 		if (transfer.stored == 0)
 			transfer = null;
@@ -59,6 +58,7 @@ public class MekanismProvider extends EnergyHandler {
 
 	@Override
 	public StoredEnergyStack removeEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
+		/*
 		IStrictEnergyStorage storage = CapabilityUtils.getCapability(tile, Capabilities.ENERGY_STORAGE_CAPABILITY, null);
 		if (storage == null && tile instanceof IStrictEnergyStorage) {
 			storage = (IStrictEnergyStorage) tile;
@@ -69,6 +69,7 @@ public class MekanismProvider extends EnergyHandler {
 			if (!action.shouldSimulate())
 				storage.setEnergy(storage.getEnergy() - maxRemove);
 		}
+		*/
 		return transfer;
 	}
 

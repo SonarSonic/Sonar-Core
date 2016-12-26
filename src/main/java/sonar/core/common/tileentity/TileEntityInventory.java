@@ -6,9 +6,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import sonar.core.SonarCore;
+import sonar.core.api.SonarAPI;
+import sonar.core.api.inventories.StoredItemStack;
+import sonar.core.api.utils.ActionType;
+import sonar.core.helpers.InventoryHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.inventory.ISonarInventory;
 import sonar.core.inventory.SonarInventory;
@@ -18,10 +26,10 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 
 	public ISonarInventory inv;
 
-	public TileEntityInventory(){
+	public TileEntityInventory() {
 		dirtyParts.add(inv);
 	}
-	
+
 	public ISonarInventory getTileInv() {
 		return inv;
 	}
@@ -34,16 +42,21 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 			return new ItemStack[inv.getSizeInventory()];
 		}
 	}
-	/*
-	public ArrayList<ItemStack>[] stacks() {
-		if (inv instanceof SonarLargeInventory) {
-			return ((SonarLargeInventory) inv).slots;
-		} else {
-			SonarCore.logger.error("INV ERROR: The inventory has no slots in " + this);
-			return new ArrayList[inv.getSizeInventory()];
+
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
+			return true;
 		}
+		return super.hasCapability(capability, facing);
 	}
-	*/
+
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
+			return (T) inv.setHandledSide(facing);
+		}
+		return super.getCapability(capability, facing);
+	}
+
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		super.readData(nbt, type);
 		getTileInv().readData(nbt, type);

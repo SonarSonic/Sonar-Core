@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -15,16 +16,22 @@ public abstract class JEIRecipeV2<T extends JEIRecipeV2> implements IRecipeWrapp
 
 	public RecipeHelperV2 helper;
 	public ISonarRecipe recipe;
-	public List<Collection<ItemStack>> inputs;
-	public List<Collection<ItemStack>> outputs;
+	public List<List<ItemStack>> inputs;
+	public List<ItemStack> outputs;
 
 	public JEIRecipeV2(RecipeHelperV2 helper, ISonarRecipe recipe) {
 		this.helper = helper;
 		this.recipe = recipe;
-		this.inputs = helper.getJEIValuesFromList(recipe.inputs());
-		this.outputs = helper.getJEIValuesFromList(recipe.outputs());
+		this.inputs = helper.getJEIInputsFromList(recipe.inputs());
+		this.outputs = helper.getJEIOutputsFromList(recipe.outputs());
 	}
 
+	@Override
+	public void getIngredients(IIngredients ingredients) {
+		ingredients.setInputLists(ItemStack.class, inputs);
+		ingredients.setOutputs(ItemStack.class, outputs);
+	}
+	
 	@Override
 	public List getInputs() {
 		return inputs;

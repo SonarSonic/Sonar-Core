@@ -47,7 +47,7 @@ public class RecipeInterchangable implements ISonarRecipeObject, ISonarRecipeIte
 	}
 
 	@Override
-	public Collection<ItemStack> getJEIValue() {
+	public List<ItemStack> getJEIValue() {
 		ArrayList<ItemStack> values = new ArrayList<ItemStack>();
 		validInputs.forEach(obj -> obj.getJEIValue().forEach(stack -> values.add(stack)));
 		return values;

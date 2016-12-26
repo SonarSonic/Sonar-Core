@@ -5,18 +5,31 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.items.IItemHandler;
+import sonar.core.api.SonarAPI;
+import sonar.core.api.inventories.StoredItemStack;
+import sonar.core.api.utils.ActionType;
+import sonar.core.helpers.InventoryHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.ISyncPart;
 
-public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> extends DirtyPart implements ISonarInventory, ISyncPart{
+public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> extends DirtyPart implements ISonarInventory, ISyncPart, IItemHandler {
 
 	public ItemStack[] slots;
 	public int limit = 64;
+	public EnumFacing face = null;
 
 	public AbstractSonarInventory(int size) {
 		this.slots = new ItemStack[size];
+	}
+
+	@Override
+	public ISonarInventory setHandledSide(EnumFacing side) {
+		this.face = side;
+		return this;
 	}
 
 	public T setStackLimit(int limit) {
@@ -108,20 +121,24 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		return true;
 	}
 
-	public void openInventory(EntityPlayer player) {}
+	public void openInventory(EntityPlayer player) {
+	}
 
-	public void closeInventory(EntityPlayer player) {}
+	public void closeInventory(EntityPlayer player) {
+	}
 
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return true;
 	}
-/*
-	*/
+
+	/*
+		*/
 	public int getField(int id) {
 		return 0;
 	}
 
-	public void setField(int id, int value) {}
+	public void setField(int id, int value) {
+	}
 
 	public int getFieldCount() {
 		return 0;
@@ -132,15 +149,14 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 			this.setInventorySlotContents(i, null);
 	}
 
-
 	@Override
 	public void writeToBuf(ByteBuf buf) {
-		ByteBufUtils.writeTag(buf, writeData(new NBTTagCompound(), SyncType.SAVE));		
+		ByteBufUtils.writeTag(buf, writeData(new NBTTagCompound(), SyncType.SAVE));
 	}
 
 	@Override
-	public void readFromBuf(ByteBuf buf) {	
-		readData(ByteBufUtils.readTag(buf), SyncType.SAVE);	
+	public void readFromBuf(ByteBuf buf) {
+		readData(ByteBufUtils.readTag(buf), SyncType.SAVE);
 	}
 
 	@Override
@@ -151,5 +167,29 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	@Override
 	public String getTagName() {
 		return "Items";
+	}
+
+	@Override
+	public int getSlots() {
+		return getSizeInventory();
+	}
+
+	@Override
+	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		StoredItemStack add = new StoredItemStack(stack);
+		boolean bool = InventoryHelper.addStack(this, add, slot, this.getInventoryStackLimit(), ActionType.getTypeForAction(simulate));
+		return bool ? add.getActualStack() : null;
+	}
+
+	@Override
+	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		final ItemStack stored = getStackInSlot(slot);
+		if (stored == null || stored.stackSize == 0 || amount == 0) {
+			return null;
+		}
+		StoredItemStack remove = new StoredItemStack(stored, amount);
+		boolean bool = InventoryHelper.removeStack(this, remove, stored, slot, ActionType.getTypeForAction(simulate));
+		remove = SonarAPI.getItemHelper().getStackToAdd(amount, new StoredItemStack(stored), remove);
+		return remove.getActualStack();
 	}
 }

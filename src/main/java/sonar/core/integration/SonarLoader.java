@@ -13,25 +13,27 @@ public class SonarLoader {
 	public static boolean logisticsLoaded = false;
 	public static boolean mcmultipartLoaded = false;
 	public static boolean fluxedRedstone = false;
+	public static boolean ic2loaded = false;
 
 	public static void initLoader() {
 		mcmultipartLoaded = Loader.isModLoaded("mcmultipart");
-		wailaLoaded = Loader.isModLoaded("Waila");
+		wailaLoaded = Loader.isModLoaded("Waila") || Loader.isModLoaded("Waila".toLowerCase());
 		teslaLoaded = Loader.isModLoaded("Tesla") || Loader.isModLoaded("tesla");
 		calculatorLoaded = Loader.isModLoaded("calculator") || Loader.isModLoaded("Calculator");
 		logisticsLoaded = Loader.isModLoaded("PracticalLogistics") || Loader.isModLoaded("practicallogistics");
 		fluxedRedstone = Loader.isModLoaded("fluxedredstone");
+		ic2loaded = Loader.isModLoaded("IC2") || Loader.isModLoaded("IC2".toLowerCase());
 
 	}
 
 	/** @returns if Industrial Craft is installed */
 	public static boolean ic2Loaded() {
-		return Loader.isModLoaded("IC2");
+		return ic2loaded;
 	}
 
 	/** @returns if Waila is installed */
 	public static boolean wailaLoaded() {
-		return Loader.isModLoaded("Waila");
+		return wailaLoaded;
 	}
 
 	/** @returns if Calculator is installed */

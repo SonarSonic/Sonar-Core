@@ -47,7 +47,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 		return worldObj == null ? true : !worldObj.isRemote;
 	}
 
-	public final void onLoad() {
+	public void onLoad() {
 		isDirty.setChanged(true);
 	}
 

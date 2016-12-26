@@ -51,7 +51,7 @@ public class RecipeOreStack implements ISonarRecipeObject, ISonarRecipeItem {
 	}
 
 	@Override
-	public Collection<ItemStack> getJEIValue() {
+	public List<ItemStack> getJEIValue() {
 		return cachedRegister;
 	}
 

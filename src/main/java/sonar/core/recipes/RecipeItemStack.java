@@ -1,6 +1,7 @@
 package sonar.core.recipes;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.google.common.collect.Lists;
 
@@ -50,7 +51,7 @@ public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {
 	}
 
 	@Override
-	public Collection<ItemStack> getJEIValue() {
+	public List<ItemStack> getJEIValue() {
 		return Lists.newArrayList(stack);
 	}
 

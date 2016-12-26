@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -55,6 +56,13 @@ public class InventoryWrapper {
 	 * @param side side to drop from */
 	public void spawnStoredItemStack(StoredItemStack drop, World world, int x, int y, int z, EnumFacing side) {}
 
+	public ItemStack addItems(TileEntity tile, StoredItemStack stack, ActionType type) {
+		return null;
+	}
+	
+	public ItemStack removeItems(TileEntity tile, StoredItemStack stack, ActionType type) {
+		return null;
+	}
 	/**returns what was added*/
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
 		return stack;

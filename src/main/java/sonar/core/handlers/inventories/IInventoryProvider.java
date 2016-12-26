@@ -12,6 +12,7 @@ import sonar.core.api.StorageSize;
 import sonar.core.api.inventories.InventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
+import sonar.core.helpers.InventoryHelper;
 
 public class IInventoryProvider extends InventoryHandler {
 
@@ -53,39 +54,15 @@ public class IInventoryProvider extends InventoryHandler {
 		int invSize = inv.getSizeInventory();
 		int limit = inv.getInventoryStackLimit();
 		int[] slots = null;
-		if (tile instanceof ISidedInventory) {
+		if (dir != null && tile instanceof ISidedInventory) {
 			ISidedInventory sidedInv = (ISidedInventory) tile;
 			slots = sidedInv.getSlotsForFace(dir);
 			invSize = slots.length;
 		}
 		for (int i = 0; i < invSize; i++) {
 			final int slot = slots != null ? slots[i] : i;
-			if (inv.isItemValidForSlot(slot, add.item) && (!(tile instanceof ISidedInventory) || ((ISidedInventory) tile).canInsertItem(slot, add.item, dir))) {
-				final ItemStack stored = inv.getStackInSlot(slot);
-				if (stored != null) {
-					ItemStack stack = stored.copy();
-					if (add.equalStack(stack) && stack.stackSize < limit && stack.stackSize < stack.getMaxStackSize()) {
-						long used = Math.min(add.item.getMaxStackSize() - stack.stackSize, Math.min(add.stored, limit - stack.stackSize));
-						if (used > 0) {
-							stack.stackSize += used;
-							add.stored -= used;
-							if (!action.shouldSimulate()) {
-								inv.setInventorySlotContents(slot, stack.copy());
-								inv.markDirty();
-							}
-						}
-					}
-				} else {
-					long used = Math.min(add.item.getMaxStackSize(), Math.min(add.stored, limit));
-					if (used > 0) {
-						add.stored -= used;
-						if (!action.shouldSimulate()) {
-							inv.setInventorySlotContents(slot, new StoredItemStack(add.getFullStack()).setStackSize(used).getFullStack());
-							inv.markDirty();
-						}
-					}
-				}
-				if (add.stored == 0) {
+			if ((!(tile instanceof ISidedInventory) || ((ISidedInventory) tile).canInsertItem(slot, add.item, dir))) {
+				if (!InventoryHelper.addStack(inv, add, slot, limit, action)) {
 					return null;
 				}
 			}
@@ -108,22 +85,9 @@ public class IInventoryProvider extends InventoryHandler {
 			int slot = slots != null ? slots[i] : i;
 			final ItemStack stored = inv.getStackInSlot(slot);
 			if (stored != null) {
-				ItemStack stack = stored.copy();
-				if (!(tile instanceof ISidedInventory) || ((ISidedInventory) tile).canExtractItem(slot, stack, dir)) {
-					if (remove.equalStack(stack)) {
-						long used = (long) Math.min(remove.stored, Math.min(inv.getInventoryStackLimit(), stack.stackSize));
-						stack.stackSize -= used;
-						remove.stored -= used;
-						if (stack.stackSize == 0) {
-							stack = null;
-						}
-						if (!action.shouldSimulate()) {
-							inv.setInventorySlotContents(slot, stack);
-							inv.markDirty();
-						}
-						if (remove.stored == 0) {
-							return null;
-						}
+				if (!(tile instanceof ISidedInventory) || ((ISidedInventory) tile).canExtractItem(slot, stored, dir)) {
+					if (!InventoryHelper.removeStack(inv, remove, stored, slot, action)) {
+						return null;
 					}
 				}
 			}

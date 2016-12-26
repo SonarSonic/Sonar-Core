@@ -30,14 +30,8 @@ public class SonarHelper {
 	/** @param tile Tile Entity you're checking from
 	 * @param side side to find IEnergyHandler
 	 * @return if there is an adjacent Energy Hander */
-	/* public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, int side) { TileEntity handler = getAdjacentTileEntity(tile, EnumFacing.getFront(side)); return isEnergyHandlerFromSide(handler, EnumFacing.VALUES[side ^ 1]); }
-	 * 
-	 * /* public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, EnumFacing side) { TileEntity handler = getAdjacentTileEntity(tile, side); return isEnergyHandlerFromSide(handler, side.getOpposite()); }
-	 * 
-	 * /** @param tile Tile Entity you want to check
-	 * 
+	/* public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, int side) { TileEntity handler = getAdjacentTileEntity(tile, EnumFacing.getFront(side)); return isEnergyHandlerFromSide(handler, EnumFacing.VALUES[side ^ 1]); } /* public static boolean isAdjacentEnergyHandlerFromSide(TileEntity tile, EnumFacing side) { TileEntity handler = getAdjacentTileEntity(tile, side); return isEnergyHandlerFromSide(handler, side.getOpposite()); } /** @param tile Tile Entity you want to check
 	 * @param from direction your adding from
-	 * 
 	 * @return if Handler can connect */
 	/* public static boolean isEnergyHandlerFromSide(TileEntity tile, EnumFacing from) { if (tile instanceof IEnergyProvider || tile instanceof IEnergyReceiver) { IEnergyConnection handler = (IEnergyConnection) tile; return handler.canConnectEnergy(from); } return false; } */
 	/** @param tile Tile Entity you're checking from
@@ -53,20 +47,13 @@ public class SonarHelper {
 	}
 
 	/* /** @param tile Tile Entity you are checking
-	 * 
 	 * @return if the Tile is an Energy Handler */
 	/* public static boolean isEnergyHandler(TileEntity tile) { if (tile instanceof IEnergyHandler) { return true; } return false; } /** Add energy to an IEnergyReciever, internal distribution is left entirely to the IEnergyReciever.
-	 * 
 	 * @param from Orientation the energy is received from.
-	 * 
 	 * @param maxReceive Maximum amount of energy to receive.
-	 * 
 	 * @param simulate If TRUE, the charge will only be simulated.
-	 * 
 	 * @return Amount of energy that was (or would have been, if simulated) received. */
-	/* public static int pushEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyReceiver) { IEnergyReceiver handler = (IEnergyReceiver) tile; return handler.receiveEnergy(dir, amount, simulate); } return 0;
-	 * 
-	 * } */
+	/* public static int pushEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyReceiver) { IEnergyReceiver handler = (IEnergyReceiver) tile; return handler.receiveEnergy(dir, amount, simulate); } return 0; } */
 	/** Remove energy from an IEnergyProvider, internal distribution is left entirely to the IEnergyProvider.
 	 * 
 	 * @param from Orientation the energy is extracted from.
@@ -74,9 +61,7 @@ public class SonarHelper {
 	 * @param simulate If TRUE, the extraction will only be simulated.
 	 * @return Amount of energy that was (or would have been, if simulated) extracted. */
 
-	/* public static int pullEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyProvider) { IEnergyProvider handler = (IEnergyProvider) tile; return handler.extractEnergy(dir, amount, simulate); } return 0;
-	 * 
-	 * } */
+	/* public static int pullEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyProvider) { IEnergyProvider handler = (IEnergyProvider) tile; return handler.extractEnergy(dir, amount, simulate); } return 0; } */
 	/** checks if a tile implements IWrench and IDropTile and drops it accordingly */
 	public static void dropTile(EntityPlayer player, Block block, World world, BlockPos pos) {
 		ItemStack stack = player.getHeldItemMainhand();
@@ -293,4 +278,13 @@ public class SonarHelper {
 		return objs.toArray();
 	}
 
+	public static boolean intContains(int[] ints, int num) {
+		for (int i : ints) {
+			if (i == num) {
+				return true;
+			}
+		}
+		return false;
+
+	}
 }

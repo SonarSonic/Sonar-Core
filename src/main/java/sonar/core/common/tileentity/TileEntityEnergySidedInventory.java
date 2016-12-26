@@ -78,7 +78,7 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 		return super.hasCapability(capability, facing);
 	}
 
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {	
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		EnergyMode mode = getModeForSide(facing);
 		if (SonarLoader.teslaLoaded && mode.canConnect()) {
 			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
@@ -89,7 +89,7 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 
 	@Override
 	public EnergyMode getModeForSide(EnumFacing side) {
-		if(side==null){
+		if (side == null) {
 			return EnergyMode.SEND_RECIEVE;
 		}
 		return energyMode;
@@ -104,9 +104,8 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	public EnergyMode getMode() {
 		return energyMode;
 	}
-	
 
-	/////* CoFH *//////
+	///// * CoFH *//////
 	@Override
 	public final boolean canConnectEnergy(EnumFacing from) {
 		return getModeForSide(from).canConnect();
@@ -132,27 +131,25 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 		return getModeForSide(from).canRecieve() ? storage.receiveEnergy(maxReceive, simulate) : 0;
 	}
 
-	public void onFirstTick() {
-		super.onFirstTick();
-		if (!this.worldObj.isRemote && SonarLoader.ic2Loaded()) {
+	public void onLoad() {
+		super.onLoad();
+		if (isServer() && SonarLoader.ic2Loaded()) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 		}
 	}
 
 	@Override
-	public void invalidate() {
-		super.invalidate();
-		if (!this.worldObj.isRemote) {
-			if (SonarLoader.ic2Loaded()) {
-				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-			}
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		if (isServer() && SonarLoader.ic2Loaded()) {
+			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 		}
 	}
 
-	/////* IC2 *//////	
+	///// * IC2 *//////
 	@Override
 	public double getDemandedEnergy() {
-		return Math.min(EUHelper.getVoltage(this.getSinkTier()),this.storage.addEnergy(this.storage.getMaxReceive(), ActionType.getTypeForAction(true)) / 4);
+		return Math.min(EUHelper.getVoltage(this.getSinkTier()), this.storage.addEnergy(this.storage.getMaxReceive(), ActionType.getTypeForAction(true)) / 4);
 	}
 
 	@Override
@@ -179,7 +176,7 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 
 	@Override
 	public double getOfferedEnergy() {
-		return Math.min(EUHelper.getVoltage(this.getSourceTier()),this.storage.removeEnergy(maxTransfer, ActionType.getTypeForAction(true)) / 4);
+		return Math.min(EUHelper.getVoltage(this.getSourceTier()), this.storage.removeEnergy(maxTransfer, ActionType.getTypeForAction(true)) / 4);
 	}
 
 	@Override

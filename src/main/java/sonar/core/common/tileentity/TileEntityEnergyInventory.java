@@ -4,8 +4,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 import sonar.core.api.SonarAPI;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.inventory.SonarInventory;
@@ -25,7 +28,21 @@ public class TileEntityEnergyInventory extends TileEntityEnergy implements IInve
 	public SonarInventory getTileInv() {
 		return inv;
 	}
+	
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
 
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
+			return (T) inv.setHandledSide(facing);
+		}
+		return super.getCapability(capability, facing);
+	}
+	
 	public ItemStack[] slots() {
 		return inv.slots;
 	}

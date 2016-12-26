@@ -239,12 +239,18 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 	}
 
 	/** gets a list compatible with JEI */
-	public static ArrayList<Collection<ItemStack>> getJEIValuesFromList(List<ISonarRecipeObject> list) {
-		ArrayList<Collection<ItemStack>> values = new ArrayList<Collection<ItemStack>>();
+	public static ArrayList<List<ItemStack>> getJEIInputsFromList(List<ISonarRecipeObject> list) {
+		ArrayList<List<ItemStack>> values = new ArrayList<List<ItemStack>>();
 		list.forEach(obj -> values.add(obj.getJEIValue()));
 		return values;
 	}
-
+	
+	public static List<ItemStack> getJEIOutputsFromList(List<ISonarRecipeObject> list) {
+		List<ItemStack> values = new ArrayList<ItemStack>();
+		list.forEach(obj -> values.add(obj.getJEIValue().get(0)));
+		return values;
+	}
+	
 	/** extracts the value of each {@link ISonarRecipeObject} into a new list */
 	public static List getValuesFromList(List<ISonarRecipeObject> list) {
 		ArrayList values = new ArrayList();

@@ -1,8 +1,11 @@
 package sonar.core.integration.jei;
 
+import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import mezz.jei.util.Ingredients;
 import sonar.core.helpers.FontHelper;
 
 public abstract class JEICategoryV2 extends BlankRecipeCategory implements IRecipeHandler<JEIRecipeV2> {
@@ -47,4 +50,12 @@ public abstract class JEICategoryV2 extends BlankRecipeCategory implements IReci
 	public String getRecipeCategoryUid(JEIRecipeV2 id) {
 		return getRecipeCategoryUid();
 	}
+
+	@Override
+	public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper) {
+		IIngredients ingredients = new Ingredients();
+		recipeWrapper.getIngredients(ingredients);
+		setRecipe(recipeLayout, recipeWrapper, ingredients);
+	}
+
 }

@@ -44,9 +44,7 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 		this.limit = limit;
 		return this;
 	}
-	/* public StoredItemStack buildItemStack(ArrayList<ItemStack> list) { StoredItemStack stack = null; if (list == null) { return stack; } for (ItemStack item : list) { if (item != null) { if (stack == null) { stack = new StoredItemStack(item); } else { stack.add(item); } } } return stack; }
-	 * 
-	 * public ArrayList<ItemStack> buildArrayList(StoredItemStack stack) { ArrayList<ItemStack> list = new ArrayList<ItemStack>(); while (stack.stored > 0) { ItemStack item = stack.getFullStack(); list.add(item.copy()); stack.remove(item.copy()); } return list; } */
+	/* public StoredItemStack buildItemStack(ArrayList<ItemStack> list) { StoredItemStack stack = null; if (list == null) { return stack; } for (ItemStack item : list) { if (item != null) { if (stack == null) { stack = new StoredItemStack(item); } else { stack.add(item); } } } return stack; } public ArrayList<ItemStack> buildArrayList(StoredItemStack stack) { ArrayList<ItemStack> list = new ArrayList<ItemStack>(); while (stack.stored > 0) { ItemStack item = stack.getFullStack(); list.add(item.copy()); stack.remove(item.copy()); } return list; } */
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (type == SyncType.SAVE) {
@@ -91,12 +89,12 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 			return actualSize == 0 ? null : stack.copy().setStackSize(actualSize).getActualStack();
 		}
 	}
-
+	//ajosdfnjasdbfiasdbfasdhof
 	public int getSlotSize(StoredItemStack stack, int target, int slot) {
-		int maxStackSize = stack.item.getMaxStackSize();
-		int pos = slot - target * numStacks;
-		int size = (int) stack.getStackSize();
-		int actualSize = size >= (pos * maxStackSize) ? maxStackSize : Math.min(0, (int) (size - pos * maxStackSize));
+		int maxStackSize = stack.item.getMaxStackSize(); // maximum stacksize
+		int pos = (slot - (target*numStacks));
+		int fullSize = (int) stack.getStackSize();// total amount stored in the slot
+		int actualSize = fullSize >= (pos * maxStackSize) ? Math.min(fullSize - (pos * maxStackSize), maxStackSize) : Math.min(0, (int) ((fullSize - pos) * maxStackSize));
 		return actualSize;
 	}
 

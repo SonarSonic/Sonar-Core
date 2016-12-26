@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -16,8 +17,65 @@ import sonar.core.api.inventories.InventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.api.wrappers.InventoryWrapper;
+import sonar.core.handlers.inventories.IInventoryProvider;
+import sonar.core.inventory.SonarInventory;
 
 public class InventoryHelper extends InventoryWrapper {
+
+	public static InventoryHandler defHandler = new IInventoryProvider();
+
+	public static boolean addStack(IInventory inv, StoredItemStack add, int slot, int limit, ActionType action) {
+		if (inv.isItemValidForSlot(slot, add.item)) {
+			final ItemStack stored = inv.getStackInSlot(slot);
+			if (stored != null) {
+				ItemStack stack = stored.copy();
+				if (add.equalStack(stack) && stack.stackSize < limit && stack.stackSize < stack.getMaxStackSize()) {
+					long used = Math.min(add.item.getMaxStackSize() - stack.stackSize, Math.min(add.stored, limit - stack.stackSize));
+					if (used > 0) {
+						stack.stackSize += used;
+						add.stored -= used;
+						if (!action.shouldSimulate()) {
+							inv.setInventorySlotContents(slot, stack.copy());
+							inv.markDirty();
+						}
+					}
+				}
+			} else {
+				long used = Math.min(add.item.getMaxStackSize(), Math.min(add.stored, limit));
+				if (used > 0) {
+					add.stored -= used;
+					if (!action.shouldSimulate()) {
+						inv.setInventorySlotContents(slot, new StoredItemStack(add.getFullStack()).setStackSize(used).getFullStack());
+						inv.markDirty();
+					}
+				}
+			}
+			if (add.stored == 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean removeStack(IInventory inv, StoredItemStack remove, ItemStack stored, int slot, ActionType action) {
+		ItemStack stack = stored.copy();
+		if (remove.equalStack(stack)) {
+			long used = (long) Math.min(remove.stored, Math.min(inv.getInventoryStackLimit(), stack.stackSize));
+			stack.stackSize -= used;
+			remove.stored -= used;
+			if (stack.stackSize == 0) {
+				stack = null;
+			}
+			if (!action.shouldSimulate()) {
+				inv.setInventorySlotContents(slot, stack);
+				inv.markDirty();
+			}
+			if (remove.stored == 0) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public StoredItemStack getStackToAdd(long inputSize, StoredItemStack stack, StoredItemStack returned) {
 		StoredItemStack simulateStack = null;
@@ -48,7 +106,7 @@ public class InventoryHelper extends InventoryWrapper {
 			ItemStack stack = inv.getStackInSlot(i);
 			if (stack != null) {
 				stored += stack.stackSize;
-				addStackToList(list, inv.getStackInSlot(i));
+				addStackToList(list, stack);
 			}
 		}
 		return new StorageSize(stored, inv.getSlots() * 64); // guessing the max size is 64...
@@ -112,6 +170,24 @@ public class InventoryHelper extends InventoryWrapper {
 		}
 	}
 
+	public ItemStack addItems(TileEntity tile, StoredItemStack stack, ActionType type) {
+		if (stack == null || tile == null) {
+			return null;
+		}
+		StoredItemStack returned = defHandler.addStack(stack.copy(), tile, (EnumFacing) null, type);
+		StoredItemStack add = getStackToAdd(stack.getStackSize(), stack.copy(), returned);
+		return add.getActualStack();
+	}
+
+	public ItemStack removeItems(TileEntity tile, StoredItemStack stack, ActionType type) {
+		if (stack == null || tile == null) {
+			return null;
+		}
+		StoredItemStack returned = defHandler.removeStack(stack.copy(), tile, (EnumFacing) null, type);
+		StoredItemStack add = getStackToAdd(stack.getStackSize(), stack.copy(), returned);
+		return add.getActualStack();
+	}
+
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
 		if (stack == null) {
 			return null;
@@ -153,7 +229,7 @@ public class InventoryHelper extends InventoryWrapper {
 					break;
 				}
 			}
-			if(stacks.isEmpty()){
+			if (stacks.isEmpty()) {
 				return;
 			}
 			for (StoredItemStack stack : stacks) {
