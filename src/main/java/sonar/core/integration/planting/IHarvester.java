@@ -15,4 +15,7 @@ public interface IHarvester extends IRegistryObject {
 	public boolean isReady(World world, BlockPos pos, IBlockState state);
 	
 	public List<ItemStack> getDrops(World world, BlockPos pos, IBlockState state, int fortune);
+	
+	public void harvest(World world, BlockPos pos, IBlockState state, boolean keepBlock);		
+	
 }

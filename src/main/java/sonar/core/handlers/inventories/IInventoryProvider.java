@@ -9,19 +9,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.StorageSize;
-import sonar.core.api.inventories.InventoryHandler;
+import sonar.core.api.asm.InventoryHandler;
+import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.InventoryHelper;
 
-public class IInventoryProvider extends InventoryHandler {
+@InventoryHandler(modid = "sonarcore", handlerID = IInventoryProvider.name)
+public class IInventoryProvider implements ISonarInventoryHandler {
 
-	public static String name = "Standard Inventory";
-
-	@Override
-	public String getName() {
-		return name;
-	}
+	public static final String name = "Standard Inventory";
 
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {

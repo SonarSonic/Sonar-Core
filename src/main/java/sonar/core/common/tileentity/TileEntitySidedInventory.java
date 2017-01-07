@@ -48,7 +48,7 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
-			return (T) inv.setHandledSide(facing);
+			return (T) inv.getItemHandler(facing);
 		}
 		return super.getCapability(capability, facing);
 	}

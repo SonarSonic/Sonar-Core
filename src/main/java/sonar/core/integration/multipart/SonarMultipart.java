@@ -19,6 +19,8 @@ import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.network.PacketRequestMultipartSync;
+import sonar.core.network.PacketRequestSync;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.utils.IRemovable;
 import sonar.core.utils.IWorldPosition;
@@ -155,6 +157,10 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 			}
 		}
 		return new Pair(false, face);
+	}
+	
+	public void requestSyncPacket() {
+		SonarCore.network.sendToServer(new PacketRequestMultipartSync(this.getPos(), this.getUUID()));
 	}
 
 	public void forceNextSync() {

@@ -2,22 +2,19 @@ package sonar.core.handlers.energy;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import sonar.core.api.energy.EnergyHandler;
+import sonar.core.api.asm.EnergyHandler;
 import sonar.core.api.energy.EnergyMode;
 import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.energy.ISonarEnergyTile;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.network.sync.SyncEnergyStorage;
 
-public class SonarHandler extends EnergyHandler {
+@EnergyHandler(modid = "sonarcore", handlerID = SonarHandler.name)
+public class SonarHandler implements ISonarEnergyHandler {
 
-	public static String name = "Sonar-Provider";
-
-	@Override
-	public String getName() {
-		return name;
-	}
+	public static final String name = "Sonar-Provider";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {

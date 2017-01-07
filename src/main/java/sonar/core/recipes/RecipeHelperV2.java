@@ -152,7 +152,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 			return new RecipeInteger(((Integer) obj));
 		}
 		if (obj instanceof ItemStack) {
-			return new RecipeItemStack((ItemStack) obj);
+			return new RecipeItemStack((ItemStack) obj, true);
 		}
 		return null;
 	}

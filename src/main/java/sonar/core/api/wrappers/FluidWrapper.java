@@ -2,7 +2,6 @@ package sonar.core.api.wrappers;
 
 import java.util.List;
 
-import sonar.core.api.fluids.FluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.inventories.StoredItemStack;
 

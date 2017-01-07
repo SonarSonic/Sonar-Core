@@ -2,17 +2,16 @@ package sonar.core.handlers.container;
 
 import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.item.ItemStack;
-import sonar.core.api.energy.EnergyContainerHandler;
+import sonar.core.api.asm.EnergyContainerHandler;
 import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.ISonarEnergyContainerHandler;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
-public class RFItemHandler extends EnergyContainerHandler {
+@EnergyContainerHandler(modid = "sonarcore", handlerID = RFItemHandler.name)
+public class RFItemHandler implements ISonarEnergyContainerHandler {
 
-	@Override
-	public String getName() {
-		return "RF Item Handler";
-	}
+	public static final String name = "RF Item Handler";
 
 	@Override
 	public boolean canHandleItem(ItemStack stack) {

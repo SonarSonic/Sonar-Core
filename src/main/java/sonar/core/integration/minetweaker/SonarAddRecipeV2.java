@@ -61,7 +61,7 @@ public class SonarAddRecipeV2<T extends RecipeHelperV2> implements IUndoableActi
 			}
 		}
 		for (ItemStack stack : outputs) {
-			adaptedOutputs.add(new RecipeItemStack(stack));
+			adaptedOutputs.add(new RecipeItemStack(stack, false));
 		}
 		this.inputs = adaptedInputs;
 		this.outputs = adaptedOutputs;

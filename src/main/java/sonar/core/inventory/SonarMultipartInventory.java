@@ -18,6 +18,7 @@ public class SonarMultipartInventory extends AbstractSonarInventory<SonarMultipa
 	public void markDirty() {
         part.getWorld().markChunkDirty(part.getPos(), null);
 	}
+	
 	public String getName() {
 		return part.getItemStack().getDisplayName();
 	}

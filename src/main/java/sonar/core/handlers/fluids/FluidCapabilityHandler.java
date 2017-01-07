@@ -9,19 +9,16 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import sonar.core.api.StorageSize;
-import sonar.core.api.fluids.FluidHandler;
+import sonar.core.api.asm.FluidHandler;
+import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
 
-public class FluidCapabilityHandler extends FluidHandler {
+@FluidHandler(modid="sonarcore", handlerID = FluidCapabilityHandler.name)
+public class FluidCapabilityHandler implements ISonarFluidHandler {
 
-	public static String name = "Fluid Capability Handler";
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
+	public static final String name = "Fluid Capability Handler";
+	
 	@Override
 	public boolean canHandleFluids(TileEntity tile, EnumFacing dir) {
 		return tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir);

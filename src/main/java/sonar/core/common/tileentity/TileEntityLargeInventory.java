@@ -25,7 +25,7 @@ public class TileEntityLargeInventory extends TileEntitySonar implements ILargeI
 
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
-			return (T) inv;
+			return (T) inv.embeddedHandler;
 		}
 		return super.getCapability(capability, facing);
 	}

@@ -10,5 +10,7 @@ public interface ISonarInventory extends IInventory, IDirtyPart, INBTSyncable, I
 
 	public ISonarInventory setStackLimit(int limit);
 
-	public ISonarInventory setHandledSide(EnumFacing side);
+	//public ISonarInventory setHandledSide(EnumFacing side);
+	
+	public IItemHandler getItemHandler(EnumFacing side);
 }

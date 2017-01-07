@@ -4,19 +4,16 @@ import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import sonar.core.api.energy.EnergyHandler;
+import sonar.core.api.asm.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
-public class RFHandler extends EnergyHandler {
+@EnergyHandler(modid = "sonarcore", handlerID = RFHandler.name)
+public class RFHandler implements ISonarEnergyHandler {
 
-	public static String name = "RF-Provider";
-
-	@Override
-	public String getName() {
-		return name;
-	}
+	public static final String name = "RF-Provider";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {

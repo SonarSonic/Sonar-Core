@@ -7,19 +7,16 @@ import mekanism.common.capabilities.Capabilities;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Loader;
-import sonar.core.api.energy.EnergyHandler;
+import sonar.core.api.asm.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
-public class MekanismProvider extends EnergyHandler {
+@EnergyHandler(modid = "mekanism", handlerID = MekanismProvider.name)
+public class MekanismProvider implements ISonarEnergyHandler {
 
-	public static String name = "Mekanism-Provider";
-
-	@Override
-	public String getName() {
-		return name;
-	}
+	public static final String name = "Mekanism-Provider";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
@@ -72,11 +69,7 @@ public class MekanismProvider extends EnergyHandler {
 		*/
 		return transfer;
 	}
-
-	public boolean isLoadable() {
-		return Loader.isModLoaded("Mekanism");
-	}
-
+	
 	@Override
 	public EnergyType getProvidedType() {
 		return EnergyType.MJ;

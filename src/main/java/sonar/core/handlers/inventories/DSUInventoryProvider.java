@@ -8,18 +8,15 @@ import net.minecraft.util.EnumFacing;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.StorageSize;
-import sonar.core.api.inventories.InventoryHandler;
+import sonar.core.api.asm.InventoryHandler;
+import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 
-public class DSUInventoryProvider extends InventoryHandler {
+@InventoryHandler(modid = "sonarcore", handlerID = DSUInventoryProvider.name)
+public class DSUInventoryProvider implements ISonarInventoryHandler {
 
-	public static String name = "DSU-Inventory";
-
-	@Override
-	public String getName() {
-		return name;
-	}
+	public static final String name = "DSU-Inventory";
 
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {

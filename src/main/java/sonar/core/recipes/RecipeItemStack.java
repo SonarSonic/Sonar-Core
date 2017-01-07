@@ -9,13 +9,15 @@ import net.minecraft.item.ItemStack;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.helpers.ItemStackHelper;
 
-/**works for matching StoredItemStacks*/
+/** works for matching StoredItemStacks */
 public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {
 
 	public ItemStack stack;
+	public boolean ignoreNBT;
 
-	public RecipeItemStack(ItemStack stack) {
+	public RecipeItemStack(ItemStack stack, boolean ignoreNBT) {
 		this.stack = stack;
+		this.ignoreNBT = ignoreNBT;
 	}
 
 	@Override
@@ -30,7 +32,7 @@ public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {
 			if (!stack2.isItemEqual(stack)) {
 				return false;
 			}
-			if (!ItemStack.areItemStackTagsEqual(stack2, stack)) {
+			if (!ignoreNBT && !ItemStack.areItemStackTagsEqual(stack2, stack)) {
 				return false;
 			}
 			return type.checkStackSize(stack.stackSize, stack2.stackSize);

@@ -24,6 +24,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.SonarCore;
+import sonar.core.api.machines.IPausable;
 import sonar.core.api.machines.IProcessMachine;
 import sonar.core.helpers.FontHelper;
 import sonar.core.network.PacketByteBuf;
@@ -133,14 +134,16 @@ public abstract class GuiSonar extends GuiContainer {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public class PauseButton extends SonarButtons.ImageButton {
+	public static class PauseButton extends SonarButtons.ImageButton {
 
 		boolean paused;
 		public int id;
-		public IProcessMachine machine;
+		public IPausable machine;
+		public GuiSonar gui;
 
-		public PauseButton(IProcessMachine machine, int id, int x, int y, boolean paused) {
+		public PauseButton(GuiSonar gui, IPausable machine, int id, int x, int y, boolean paused) {
 			super(id, x, y, new ResourceLocation("Calculator:textures/gui/buttons/buttons.png"), paused ? 51 : 34, 0, 16, 16);
+			this.gui = gui;
 			this.paused = paused;
 			this.id = id;
 			this.machine = machine;
@@ -149,15 +152,17 @@ public abstract class GuiSonar extends GuiContainer {
 		public void drawButtonForegroundLayer(int x, int y) {
 			ArrayList list = new ArrayList();
 			list.add(TextFormatting.BLUE + "" + TextFormatting.UNDERLINE + (paused ? FontHelper.translate("buttons.resume") : FontHelper.translate("buttons.pause")));
-			list.add("Current: " + (int) ((double) machine.getCurrentProcessTime() / machine.getProcessTime() * 100) + " %");
-			drawHoveringText(list, x, y, fontRendererObj);
+			if (machine instanceof IProcessMachine) {
+				list.add("Current: " + (int) ((double) ((IProcessMachine) machine).getCurrentProcessTime() / ((IProcessMachine) machine).getProcessTime() * 100) + " %");
+			}
+			gui.drawHoveringText(list, x, y, gui.fontRendererObj);
 		}
 
 		@Override
-		public void onClicked() {
-			SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) entity, entity.getCoords().getBlockPos(), id));
-			buttonList.clear();
-			initGui();
+		public void onClicked() {			
+			SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) gui.entity, gui.entity.getCoords().getBlockPos(), id));
+			gui.buttonList.clear();
+			gui.initGui();
 		}
 	}
 

@@ -7,19 +7,16 @@ import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Loader;
-import sonar.core.api.energy.EnergyHandler;
+import sonar.core.api.asm.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
-public class TeslaHandler extends EnergyHandler {
+@EnergyHandler(modid = "tesla", handlerID = TeslaHandler.name)
+public class TeslaHandler implements ISonarEnergyHandler {
 
-	public static String name = "TESLA-Provider";
-
-	@Override
-	public String getName() {
-		return name;
-	}
+	public static final String name = "TESLA-Provider";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
@@ -79,10 +76,6 @@ public class TeslaHandler extends EnergyHandler {
 		if (transfer.stored == 0)
 			transfer = null;
 		return transfer;
-	}
-
-	public boolean isLoadable() {
-		return Loader.isModLoaded("tesla");
 	}
 
 	@Override

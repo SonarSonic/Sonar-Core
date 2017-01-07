@@ -6,23 +6,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.SonarAPI;
-import sonar.core.api.SonarHandler;
 import sonar.core.api.StorageSize;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.InventoryHelper.IInventoryFilter;
 
 /** used for providing information on Inventories for the Inventory Reader to read, the Provider must be registered in the {@link SonarAPI} to be used */
-public abstract class InventoryHandler extends SonarHandler {
-
-	/** gets the ID of this handler, shouldn't be required outside of this class **/
-	public int getID() {
-		return SonarAPI.getRegistry().getInventorHandlerID(getName());
-	}
+public interface ISonarInventoryHandler {
 
 	/** @param tile the {@link TileEntity} to check
 	 * @param dir the {@link EnumFacing} to check from
 	 * @return can this provider handle items for this side of the TileEntity */
-	public abstract boolean canHandleItems(TileEntity tile, EnumFacing dir);
+	public boolean canHandleItems(TileEntity tile, EnumFacing dir);
 
 	/** used by the Inventory Reader, returns the {@link StoredItemStack} in the given slot
 	 * 
@@ -30,7 +24,7 @@ public abstract class InventoryHandler extends SonarHandler {
 	 * @param tile the {@link TileEntity} to check
 	 * @param dir the {@link EnumFacing} to check from
 	 * @return the relevant {@link StoredItemStack} */
-	public abstract StoredItemStack getStack(int slot, TileEntity tile, EnumFacing dir);
+	public StoredItemStack getStack(int slot, TileEntity tile, EnumFacing dir);
 
 	/** used for adding an a {@link StoredItemStack} to the Inventory
 	 * 
@@ -39,7 +33,7 @@ public abstract class InventoryHandler extends SonarHandler {
 	 * @param dir the {@link EnumFacing} to check from
 	 * @param action should this action be simulated
 	 * @return what wasn't added */
-	public abstract StoredItemStack addStack(StoredItemStack add, TileEntity tile, EnumFacing dir, ActionType action);
+	public StoredItemStack addStack(StoredItemStack add, TileEntity tile, EnumFacing dir, ActionType action);
 
 	/** used for removing an a {@link StoredItemStack} from the Inventory
 	 * 
@@ -56,11 +50,8 @@ public abstract class InventoryHandler extends SonarHandler {
 	 * @param tile the {@link TileEntity} to check
 	 * @param dir the {@link EnumFacing} to check from
 	 * @return an {@link StorageSize} object, ensure that capacity and stored items have been fully accounted for */
-	public abstract StorageSize getItems(List<StoredItemStack> storedStacks, TileEntity tile, EnumFacing dir);
-
-	public void transferItems(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, IInventoryFilter filter) {
-	}
-	public boolean isPlayerInventoryFull(EntityPlayer player) {
-		return player.inventory.getFirstEmptyStack() == -1;
-	}
+	public StorageSize getItems(List<StoredItemStack> storedStacks, TileEntity tile, EnumFacing dir);
+	
+	//public void transferItems(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, IInventoryFilter filter);
+	
 }

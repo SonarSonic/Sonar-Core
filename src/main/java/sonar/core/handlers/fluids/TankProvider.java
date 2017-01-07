@@ -8,19 +8,16 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import sonar.core.api.StorageSize;
-import sonar.core.api.fluids.FluidHandler;
+import sonar.core.api.asm.FluidHandler;
+import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
 
 @Deprecated
-public class TankProvider extends FluidHandler {
+@FluidHandler(modid="sonarcore", handlerID = TankProvider.name)
+public class TankProvider implements ISonarFluidHandler {
+	public static final String name = "Tank-Inventory";
 
-	public static String name = "Tank-Inventory";
-
-	@Override
-	public String getName() {
-		return name;
-	}
 
 	@Override
 	public boolean canHandleFluids(TileEntity tile, EnumFacing dir) {

@@ -6,20 +6,17 @@ import ic2.api.tile.IEnergyStorage;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Loader;
-import sonar.core.api.energy.EnergyHandler;
+import sonar.core.api.asm.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.EUHelper;
 
-public class EUProvider extends EnergyHandler {
+@EnergyHandler(modid = "ic2", handlerID = EUProvider.name)
+public class EUProvider implements ISonarEnergyHandler {
 
-	public static String name = "EU-Provider";
-
-	@Override
-	public String getName() {
-		return name;
-	}
+	public static final String name = "EU-Provider";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
@@ -90,10 +87,6 @@ public class EUProvider extends EnergyHandler {
 		if (transfer.stored == 0)
 			transfer = null;
 		return transfer;
-	}
-
-	public boolean isLoadable() {
-		return Loader.isModLoaded("IC2");
 	}
 
 	@Override

@@ -106,9 +106,7 @@ public class RenderHelper {
 		GL11.glPopMatrix();
 	}
 
-	/* public static EnumFacing getHorizontal(EnumFacing forward) { if (forward == EnumFacing.NORTH) { return EnumFacing.EAST; } if (forward == EnumFacing.EAST) { return EnumFacing.SOUTH; } if (forward == EnumFacing.SOUTH) { return EnumFacing.WEST; } if (forward == EnumFacing.WEST) { return EnumFacing.NORTH; } return null;
-	 * 
-	 * } */
+	/* public static EnumFacing getHorizontal(EnumFacing forward) { if (forward == EnumFacing.NORTH) { return EnumFacing.EAST; } if (forward == EnumFacing.EAST) { return EnumFacing.SOUTH; } if (forward == EnumFacing.SOUTH) { return EnumFacing.WEST; } if (forward == EnumFacing.WEST) { return EnumFacing.NORTH; } return null; } */
 	public static void drawRect(float left, float top, float right, float bottom, int color) {
 		if (left < right) {
 			float i = left;
@@ -162,7 +160,7 @@ public class RenderHelper {
 
 	// }
 
-	public static void renderStoredItemStackOverlay(ItemStack stack, long stored, int x, int y, String string) {
+	public static void renderStoredItemStackOverlay(ItemStack stack, long stored, int x, int y, String string, boolean depth) {
 		if (stack != null) {
 			FontRenderer font = getFontFromStack(stack);
 			stack.stackSize = 1;
@@ -171,18 +169,23 @@ public class RenderHelper {
 
 				final float scaleFactor = 0.5F;
 				final float inverseScaleFactor = 1.0f / scaleFactor;
-				GlStateManager.disableLighting();
-				GlStateManager.disableDepth();
-				GlStateManager.disableBlend();
 				GL11.glPushMatrix();
+				GlStateManager.disableLighting();
+				if (depth)
+					GlStateManager.disableDepth();
+
+				GlStateManager.disableBlend();
 				GL11.glScaled(scaleFactor, scaleFactor, scaleFactor);
 				final int X = (int) (((float) x + 15.0f - font.getStringWidth(s1) * scaleFactor) * inverseScaleFactor);
 				final int Y = (int) (((float) y + 15.0f - 7.0f * scaleFactor) * inverseScaleFactor);
 				font.drawStringWithShadow(s1, X, Y, 16777215);
-				GL11.glPopMatrix();
 				GlStateManager.enableLighting();
-				GlStateManager.enableDepth();
+
+				if (depth)
+					GlStateManager.enableDepth();
+
 				GlStateManager.enableBlend();
+				GL11.glPopMatrix();
 			}
 		}
 	}
@@ -211,9 +214,7 @@ public class RenderHelper {
 		vertexbuffer.pos((double) (x + 0), (double) (y + 0), (double) 0).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + 0) * f1)).endVertex();
 		tessellator.draw();
 
-		/* Tessellator tessellator = Tessellator.getInstance(); VertexBuffer vertex = tessellator.getBuffer(); vertex.begin(7, DefaultVertexFormats.POSITION_TEX); double widthnew = (0 + (width * (2))); double heightnew = (0 + ((height) * (2))); addVertexWithUV(vertex, (minX + 0), maxY / 2, 0, 0, heightnew); addVertexWithUV(vertex, (minX + width), maxY / 2, 0, widthnew, heightnew); addVertexWithUV(vertex, (minX + width), (minY + 0), 0, widthnew, 0); addVertexWithUV(vertex, (minX + 0), (minY + 0), 0, 0, 0); tessellator.draw();
-		 * 
-		 * float f = 1.0F / textureWidth; float f1 = 1.0F / textureHeight; Tessellator tessellator = Tessellator.getInstance(); VertexBuffer vertexbuffer = tessellator.getBuffer(); vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX); vertexbuffer.pos((double)x, (double)(y + height), 0.0D).tex((double)(u * f), (double)((v + (float)height) * f1)).endVertex(); vertexbuffer.pos((double)(x + width), (double)(y + height), 0.0D).tex((double)((u + (float)width) * f), (double)((v + (float)height) * f1)).endVertex(); vertexbuffer.pos((double)(x + width), (double)y, 0.0D).tex((double)((u + (float)width) * f), (double)(v * f1)).endVertex(); vertexbuffer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex(); tessellator.draw(); */
+		/* Tessellator tessellator = Tessellator.getInstance(); VertexBuffer vertex = tessellator.getBuffer(); vertex.begin(7, DefaultVertexFormats.POSITION_TEX); double widthnew = (0 + (width * (2))); double heightnew = (0 + ((height) * (2))); addVertexWithUV(vertex, (minX + 0), maxY / 2, 0, 0, heightnew); addVertexWithUV(vertex, (minX + width), maxY / 2, 0, widthnew, heightnew); addVertexWithUV(vertex, (minX + width), (minY + 0), 0, widthnew, 0); addVertexWithUV(vertex, (minX + 0), (minY + 0), 0, 0, 0); tessellator.draw(); float f = 1.0F / textureWidth; float f1 = 1.0F / textureHeight; Tessellator tessellator = Tessellator.getInstance(); VertexBuffer vertexbuffer = tessellator.getBuffer(); vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX); vertexbuffer.pos((double)x, (double)(y + height), 0.0D).tex((double)(u * f), (double)((v + (float)height) * f1)).endVertex(); vertexbuffer.pos((double)(x + width), (double)(y + height), 0.0D).tex((double)((u + (float)width) * f), (double)((v + (float)height) * f1)).endVertex(); vertexbuffer.pos((double)(x + width), (double)y, 0.0D).tex((double)((u + (float)width) * f), (double)(v * f1)).endVertex(); vertexbuffer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex(); tessellator.draw(); */
 		// Gui.drawModalRectWithCustomSizedTexture(0, 0, width, height, 16, 16, minX, minY);
 	}
 
@@ -359,7 +360,7 @@ public class RenderHelper {
 
 	}
 
-	/**compensates for the Entity View and applies the right translation. it pushes the matrix once !*/
+	/** compensates for the Entity View and applies the right translation. it pushes the matrix once ! */
 	public static void offsetRendering(BlockPos pos, double partialTicks) {
 		Entity view = Minecraft.getMinecraft().getRenderViewEntity();
 		double vX = view.lastTickPosX + (view.posX - view.lastTickPosX) * (double) partialTicks;

@@ -6,18 +6,17 @@ import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.api.ITeslaProducer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.Optional;
 import sonar.core.api.energy.ISonarEnergyStorage;
+import sonar.core.api.energy.ISonarEnergyTile;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.NBTHelper.SyncType;
 
-@Optional.InterfaceList({		
-	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "tesla"),
-	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "tesla"),
-	@Optional.Interface (iface = "net.darkhax.tesla.api.ITeslaProducer", modid = "tesla")	
-})				
-public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, ISyncPart, ITeslaConsumer, ITeslaProducer, ITeslaHolder, INBTSerializable<NBTTagCompound> {
+@Optional.InterfaceList({ @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "tesla"), @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "tesla"), @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaProducer", modid = "tesla") })
+public class SyncEnergyStorage implements ISonarEnergyStorage, net.minecraftforge.energy.IEnergyStorage, IEnergyStorage, ISyncPart, ITeslaConsumer, ITeslaProducer, ITeslaHolder, INBTSerializable<NBTTagCompound> {
 
 	protected long energy;
 	protected long capacity;
@@ -27,19 +26,15 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 	private String tagName = "energyStorage";
 	private boolean hasChanged;
 
-
 	public SyncEnergyStorage(int capacity) {
-
 		this(capacity, capacity, capacity);
 	}
 
 	public SyncEnergyStorage(int capacity, int maxTransfer) {
-
 		this(capacity, maxTransfer, maxTransfer);
 	}
 
 	public SyncEnergyStorage(int capacity, int maxReceive, int maxExtract) {
-
 		this.capacity = capacity;
 		this.maxReceive = maxReceive;
 		this.maxExtract = maxExtract;
@@ -69,7 +64,7 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 		this.maxExtract = maxExtract;
 		return this;
 	}
-
+	
 	public long getMaxReceive() {
 		return maxReceive;
 	}
@@ -77,7 +72,7 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 	public long getMaxExtract() {
 		return maxExtract;
 	}
-	
+
 	public void setEnergyStored(int energy) {
 		this.energy = energy;
 
@@ -89,7 +84,6 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 		this.setChanged(true);
 	}
 
-	
 	public void modifyEnergyStored(int energy) {
 
 		this.energy += energy;
@@ -101,7 +95,7 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 		}
 		this.setChanged(true);
 	}
-	
+
 	@Override
 	public void writeToBuf(ByteBuf buf) {
 		if (energy < 0) {
@@ -118,7 +112,7 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 			energy = capacity;
 		}
 	}
-		
+
 	public SyncEnergyStorage readFromNBT(NBTTagCompound nbt) {
 		this.energy = nbt.getLong("Energy");
 
@@ -135,10 +129,9 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 		nbt.setLong("Energy", energy);
 		return nbt;
 	}
-	
 
 	public final NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
-		/*NBTTagCompound energyTag = new NBTTagCompound(); if (type.isType(SyncType.DEFAULT_SYNC)) { if (type.mustSync() || !equal()) { this.writeToNBT(energyTag); lastEnergy = this.getEnergyStored(); } } else if (type == SyncType.SAVE) { this.writeToNBT(energyTag); lastEnergy = this.getEnergyStored(); } if (!energyTag.hasNoTags()) nbt.setTag(getTagName(), energyTag); */
+		/* NBTTagCompound energyTag = new NBTTagCompound(); if (type.isType(SyncType.DEFAULT_SYNC)) { if (type.mustSync() || !equal()) { this.writeToNBT(energyTag); lastEnergy = this.getEnergyStored(); } } else if (type == SyncType.SAVE) { this.writeToNBT(energyTag); lastEnergy = this.getEnergyStored(); } if (!energyTag.hasNoTags()) nbt.setTag(getTagName(), energyTag); */
 		NBTTagCompound energyTag = new NBTTagCompound();
 		this.writeToNBT(energyTag);
 		nbt.setTag(getTagName(), energyTag);
@@ -176,7 +169,7 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 		return hasChanged;
 	}
 
-	/////* SONAR *//////
+	///// * SONAR *//////
 	public long addEnergy(long maxReceive, ActionType action) {
 		long add = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
 
@@ -186,8 +179,8 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 		}
 		return add;
 	}
-	
-	public long removeEnergy(long maxExtract, ActionType action){
+
+	public long removeEnergy(long maxExtract, ActionType action) {
 
 		long energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
 
@@ -204,9 +197,9 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 
 	public long getFullCapacity() {
 		return capacity;
-	}		
+	}
 
-	/////* CoFH *//////
+	///// * CoFH *//////
 	public int receiveEnergy(int maxReceive, boolean simulate) {
 		return (int) addEnergy(maxReceive, ActionType.getTypeForAction(simulate));
 	}
@@ -221,9 +214,9 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 
 	public int getMaxEnergyStored() {
 		return (int) Math.min(getFullCapacity(), Integer.MAX_VALUE);
-	}	
+	}
 
-	/////* TESLA *//////
+	///// * TESLA *//////
 	@Override
 	public long getStoredPower() {
 		return getEnergyStored();
@@ -251,6 +244,16 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, IEnergyStorage, I
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		this.readData(nbt, SyncType.SAVE);		
+		this.readData(nbt, SyncType.SAVE);
+	}
+
+	@Override
+	public boolean canExtract() {
+		return true;// may need to link to something else
+	}
+
+	@Override
+	public boolean canReceive() {
+		return true;// may need to link to something else
 	}
 }

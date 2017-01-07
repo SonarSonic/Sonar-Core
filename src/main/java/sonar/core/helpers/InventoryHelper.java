@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -13,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import sonar.core.SonarCore;
 import sonar.core.api.StorageSize;
-import sonar.core.api.inventories.InventoryHandler;
+import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.api.wrappers.InventoryWrapper;
@@ -22,7 +23,7 @@ import sonar.core.inventory.SonarInventory;
 
 public class InventoryHelper extends InventoryWrapper {
 
-	public static InventoryHandler defHandler = new IInventoryProvider();
+	public static ISonarInventoryHandler defHandler = new IInventoryProvider();
 
 	public static boolean addStack(IInventory inv, StoredItemStack add, int slot, int limit, ActionType action) {
 		if (inv.isItemValidForSlot(slot, add.item)) {
@@ -193,8 +194,8 @@ public class InventoryHelper extends InventoryWrapper {
 			return null;
 		}
 		if (tile != null && (filter == null || filter.allowed(stack.getFullStack()))) {
-			List<InventoryHandler> handlers = SonarCore.inventoryProviders.getObjects();
-			for (InventoryHandler handler : handlers) {
+			List<ISonarInventoryHandler> handlers = SonarCore.inventoryHandlers;
+			for (ISonarInventoryHandler handler : handlers) {
 				if (handler.canHandleItems(tile, dir)) {
 					StoredItemStack returned = handler.addStack(stack.copy(), tile, dir, type);
 					StoredItemStack add = getStackToAdd(stack.getStackSize(), stack.copy(), returned);
@@ -207,8 +208,8 @@ public class InventoryHelper extends InventoryWrapper {
 
 	public StoredItemStack removeItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
 		if (tile != null && filter == null || filter.allowed(stack.getFullStack())) {
-			List<InventoryHandler> handlers = SonarCore.inventoryProviders.getObjects();
-			for (InventoryHandler handler : handlers) {
+			List<ISonarInventoryHandler> handlers = SonarCore.inventoryHandlers;
+			for (ISonarInventoryHandler handler : handlers) {
 				if (handler.canHandleItems(tile, dir)) {
 					StoredItemStack returned = handler.removeStack(stack.copy(), tile, dir, type);
 					StoredItemStack remove = getStackToAdd(stack.getStackSize(), stack.copy(), returned);
@@ -222,8 +223,8 @@ public class InventoryHelper extends InventoryWrapper {
 	public void transferItems(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, IInventoryFilter filter) {
 		if (from != null && to != null) {
 			ArrayList<StoredItemStack> stacks = new ArrayList();
-			List<InventoryHandler> handlers = SonarCore.inventoryProviders.getObjects();
-			for (InventoryHandler handler : handlers) {
+			List<ISonarInventoryHandler> handlers = SonarCore.inventoryHandlers;
+			for (ISonarInventoryHandler handler : handlers) {
 				if (handler.canHandleItems(from, dirFrom)) {
 					handler.getItems(stacks, from, dirFrom);
 					break;

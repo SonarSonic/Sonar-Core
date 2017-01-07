@@ -1,5 +1,7 @@
 package sonar.core.inventory;
 
+import javax.annotation.Nullable;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,20 +18,49 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.ISyncPart;
 
-public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> extends DirtyPart implements ISonarInventory, ISyncPart, IItemHandler {
+public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> extends DirtyPart implements ISonarInventory, ISyncPart {
 
 	public ItemStack[] slots;
 	public int limit = 64;
 	public EnumFacing face = null;
+	public IItemHandler embeddedHandler = new EmbeddedHandler(this);
+
+	public static class EmbeddedHandler implements IItemHandler {
+		AbstractSonarInventory inv;
+
+		public EmbeddedHandler(AbstractSonarInventory inv) {
+			this.inv = inv;
+		}
+
+		@Override
+		public int getSlots() {
+			return inv.getSlots();
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot) {
+			return inv.getStackInSlot(slot);
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+			return inv.insertItem(slot, stack, simulate);
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			return inv.extractItem(slot, amount, simulate);
+		}
+
+	}
 
 	public AbstractSonarInventory(int size) {
 		this.slots = new ItemStack[size];
 	}
 
-	@Override
-	public ISonarInventory setHandledSide(EnumFacing side) {
-		this.face = side;
-		return this;
+	public IItemHandler getItemHandler(EnumFacing side){
+		face = side;
+		return embeddedHandler;
 	}
 
 	public T setStackLimit(int limit) {
@@ -192,4 +223,8 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		remove = SonarAPI.getItemHelper().getStackToAdd(amount, new StoredItemStack(stored), remove);
 		return remove.getActualStack();
 	}
+
+	public void markDirty() {
+	}
+
 }

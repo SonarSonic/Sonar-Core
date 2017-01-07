@@ -10,12 +10,43 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
 import sonar.core.SonarCore;
+import sonar.core.api.asm.EnergyContainerHandler;
+import sonar.core.api.asm.EnergyHandler;
+import sonar.core.api.asm.FluidHandler;
+import sonar.core.api.asm.InventoryHandler;
+import sonar.core.api.energy.ISonarEnergyContainerHandler;
+import sonar.core.api.energy.ISonarEnergyHandler;
+import sonar.core.api.fluids.ISonarFluidHandler;
+import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.utils.Pair;
 
 public class ASMLoader {
 
 	public enum ASMLog {
 		LOADED, ERROR, MODID;
+	}
+
+	public static void load(@Nonnull ASMDataTable asmDataTable) {
+		SonarCore.inventoryHandlers = getInventoryHandlers(asmDataTable);
+		SonarCore.energyHandlers = getEnergyHandlers(asmDataTable);
+		SonarCore.fluidHandlers = getFluidHandlers(asmDataTable);
+		SonarCore.energyContainerHandlers = getEnergyContainerHandlers(asmDataTable);
+	}
+
+	public static List<ISonarInventoryHandler> getInventoryHandlers(@Nonnull ASMDataTable asmDataTable) {
+		return ASMLoader.getInstances(asmDataTable, InventoryHandler.class, ISonarInventoryHandler.class, true);
+	}
+
+	public static List<ISonarEnergyHandler> getEnergyHandlers(@Nonnull ASMDataTable asmDataTable) {
+		return ASMLoader.getInstances(asmDataTable, EnergyHandler.class, ISonarEnergyHandler.class, true);
+	}
+
+	public static List<ISonarFluidHandler> getFluidHandlers(@Nonnull ASMDataTable asmDataTable) {
+		return ASMLoader.getInstances(asmDataTable, FluidHandler.class, ISonarFluidHandler.class, true);
+	}
+
+	public static List<ISonarEnergyContainerHandler> getEnergyContainerHandlers(@Nonnull ASMDataTable asmDataTable) {
+		return ASMLoader.getInstances(asmDataTable, EnergyContainerHandler.class, ISonarEnergyContainerHandler.class, true);
 	}
 
 	public static void log(ASMLog log, Class type, ASMData asm, String modid) {
@@ -40,7 +71,7 @@ public class ASMLoader {
 		List<T> instances = new ArrayList<>();
 		for (ASMDataTable.ASMData asmData : asmDatas) {
 			String modid = checkModid ? (String) asmData.getAnnotationInfo().get("modid") : "";
-			if (!checkModid || Loader.isModLoaded(modid)) {
+			if (!checkModid || Loader.isModLoaded(modid) || Loader.isModLoaded(modid.toLowerCase())) {
 				try {
 					Class<?> asmClass = Class.forName(asmData.getClassName());
 					Class<? extends T> asmInstanceClass = asmClass.asSubclass(instanceClass);
@@ -65,7 +96,7 @@ public class ASMLoader {
 		List<Pair<ASMDataTable.ASMData, Class<? extends T>>> classes = new ArrayList<>();
 		for (ASMDataTable.ASMData asmData : asmDatas) {
 			String modid = checkModid ? (String) asmData.getAnnotationInfo().get("modid") : "";
-			if (!checkModid || Loader.isModLoaded(modid)) {
+			if (!checkModid || Loader.isModLoaded(modid) || Loader.isModLoaded(modid.toLowerCase())) {
 				try {
 					Class<?> asmClass = Class.forName(asmData.getClassName());
 					Class<? extends T> asmInstanceClass = asmClass.asSubclass(instanceClass);

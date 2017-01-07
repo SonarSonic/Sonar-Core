@@ -11,18 +11,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Loader;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.StorageSize;
-import sonar.core.api.inventories.InventoryHandler;
+import sonar.core.api.asm.InventoryHandler;
+import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 
-public class DrawersInventoryProvider extends InventoryHandler {
+@InventoryHandler(modid="StorageDrawers", handlerID=DrawersInventoryProvider.name)
+public class DrawersInventoryProvider implements ISonarInventoryHandler {
 
-	public static String name = "Storage Drawers";
-
-	@Override
-	public String getName() {
-		return name;
-	}
+	public static final String name = "Storage Drawers";
 
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {
@@ -67,10 +64,6 @@ public class DrawersInventoryProvider extends InventoryHandler {
 			return new StorageSize(stored,maxStorage);
 		}
 		return StorageSize.EMPTY;
-	}
-
-	public boolean isLoadable() {
-		return Loader.isModLoaded("StorageDrawers");
 	}
 
 	private long injectItemsIntoDrawer(IDrawer drawer, long itemCount) {

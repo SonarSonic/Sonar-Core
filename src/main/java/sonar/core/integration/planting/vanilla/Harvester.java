@@ -31,12 +31,21 @@ public class Harvester implements IHarvester {
 
 	@Override
 	public boolean isReady(World world, BlockPos pos, IBlockState state) {
-		return ((BlockCrops)state.getBlock()).isMaxAge(state);
+		return ((BlockCrops) state.getBlock()).isMaxAge(state);
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(World world, BlockPos pos, IBlockState state, int fortune) {
 		return world.getBlockState(pos).getBlock().getDrops(world, pos, state, fortune);
+	}
+
+	@Override
+	public void harvest(World world, BlockPos pos, IBlockState state, boolean keepBlock) {
+		if (keepBlock) {
+			world.setBlockState(pos, state.getBlock().getDefaultState());
+			return;
+		}
+		world.setBlockToAir(pos);
 	}
 
 }

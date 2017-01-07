@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.energy.EnergyMode;
 import sonar.core.api.energy.ISonarEnergyTile;
@@ -23,6 +24,7 @@ import sonar.core.helpers.SonarHelper;
 import sonar.core.integration.EUHelper;
 import sonar.core.integration.SonarLoader;
 import sonar.core.network.sync.SyncEnergyStorage;
+import sonar.core.network.sync.SyncSidedEnergyStorage;
 
 public class TileEntityEnergySidedInventory extends TileEntitySidedInventory implements IEnergyReceiver, IEnergyProvider, ISonarEnergyTile, IEnergySource, IEnergySink {
 
@@ -32,7 +34,7 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	}
 
 	public EnergyMode energyMode = EnergyMode.RECIEVE;
-	public final SyncEnergyStorage storage = new SyncEnergyStorage(0);
+	public final SyncSidedEnergyStorage storage = new SyncSidedEnergyStorage(this, 0);
 	public int maxTransfer;
 
 	public void setEnergyMode(EnergyMode mode) {
@@ -71,6 +73,9 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		EnergyMode mode = getModeForSide(facing);
+		if (CapabilityEnergy.ENERGY == capability) {
+			return true;
+		}
 		if (SonarLoader.teslaLoaded && mode.canConnect()) {
 			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
 				return true;
@@ -80,6 +85,9 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		EnergyMode mode = getModeForSide(facing);
+		if (CapabilityEnergy.ENERGY == capability) {
+			return (T)storage.setCurrentFace(facing);
+		}
 		if (SonarLoader.teslaLoaded && mode.canConnect()) {
 			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
 				return (T) storage;
@@ -131,8 +139,8 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 		return getModeForSide(from).canRecieve() ? storage.receiveEnergy(maxReceive, simulate) : 0;
 	}
 
-	public void onLoad() {
-		super.onLoad();
+	public void onFirstTick() {
+		super.onFirstTick();
 		if (isServer() && SonarLoader.ic2Loaded()) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 		}

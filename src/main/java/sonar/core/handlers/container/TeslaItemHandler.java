@@ -6,17 +6,16 @@ import net.darkhax.tesla.api.ITeslaProducer;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
-import sonar.core.api.energy.EnergyContainerHandler;
+import sonar.core.api.asm.EnergyContainerHandler;
 import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.ISonarEnergyContainerHandler;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
-public class TeslaItemHandler extends EnergyContainerHandler {
+@EnergyContainerHandler(modid = "tesla", handlerID = TeslaItemHandler.name)
+public class TeslaItemHandler implements ISonarEnergyContainerHandler {
 
-	@Override
-	public String getName() {
-		return "TESLA Item Handler";
-	}
+	public static final String name = "TESLA Item Handler";
 
 	@Override
 	public boolean canHandleItem(ItemStack stack) {

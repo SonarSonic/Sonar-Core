@@ -32,5 +32,4 @@ public class SonarClient extends SonarCommon {
 			clientListener = Minecraft.getMinecraft();
 		return clientListener;
 	}
-
 }

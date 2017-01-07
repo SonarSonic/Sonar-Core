@@ -18,19 +18,20 @@ import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.InventoryHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.inventory.AbstractSonarInventory;
 import sonar.core.inventory.ISonarInventory;
 import sonar.core.inventory.SonarInventory;
 import sonar.core.inventory.SonarLargeInventory;
 
 public class TileEntityInventory extends TileEntitySonar implements IInventory {
 
-	public ISonarInventory inv;
+	public AbstractSonarInventory inv;
 
 	public TileEntityInventory() {
 		dirtyParts.add(inv);
 	}
 
-	public ISonarInventory getTileInv() {
+	public AbstractSonarInventory getTileInv() {
 		return inv;
 	}
 
@@ -52,7 +53,7 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
-			return (T) inv.setHandledSide(facing);
+			return (T) inv.getItemHandler(facing);
 		}
 		return super.getCapability(capability, facing);
 	}

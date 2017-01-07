@@ -1,6 +1,7 @@
 package sonar.core;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -12,7 +13,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -31,14 +32,17 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.api.SonarAPI;
+import sonar.core.api.energy.ISonarEnergyContainerHandler;
+import sonar.core.api.energy.ISonarEnergyHandler;
+import sonar.core.api.fluids.ISonarFluidHandler;
+import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.common.block.SonarBlockTip;
 import sonar.core.energy.DischargeValues;
+import sonar.core.helpers.ASMLoader;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.SonarLoader;
 import sonar.core.integration.SonarWailaModule;
-import sonar.core.integration.fmp.OLDMultipartHelper;
-import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.integration.planting.FertiliserRegistry;
 import sonar.core.integration.planting.HarvesterRegistry;
 import sonar.core.integration.planting.PlanterRegistry;
@@ -50,6 +54,7 @@ import sonar.core.network.PacketFlexibleContainer;
 import sonar.core.network.PacketFlexibleOpenGui;
 import sonar.core.network.PacketInvUpdate;
 import sonar.core.network.PacketMultipartSync;
+import sonar.core.network.PacketRequestMultipartSync;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketSonarSides;
 import sonar.core.network.PacketStackUpdate;
@@ -57,20 +62,16 @@ import sonar.core.network.PacketTileSync;
 import sonar.core.network.PacketTileSyncUpdate;
 import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
-import sonar.core.registries.EnergyContainerHandlerRegistry;
-import sonar.core.registries.EnergyProviderRegistry;
 import sonar.core.registries.EnergyTypeRegistry;
-import sonar.core.registries.FluidProviderRegistry;
 import sonar.core.registries.ISonarRegistryBlock;
 import sonar.core.registries.ISonarRegistryItem;
-import sonar.core.registries.InventoryProviderRegistry;
 import sonar.core.upgrades.MachineUpgradeRegistry;
 
 @Mod(modid = SonarCore.modid, name = "SonarCore", version = SonarCore.version)
 public class SonarCore {
 
 	public static final String modid = "sonarcore";
-	public static final String version = "3.1.7";
+	public static final String version = "3.2.0";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -78,10 +79,10 @@ public class SonarCore {
 	@Instance(modid)
 	public static SonarCore instance;
 
-	public static InventoryProviderRegistry inventoryProviders = new InventoryProviderRegistry();
-	public static FluidProviderRegistry fluidProviders = new FluidProviderRegistry();
-	public static EnergyProviderRegistry energyProviders = new EnergyProviderRegistry();
-	public static EnergyContainerHandlerRegistry energyContainerHandlers = new EnergyContainerHandlerRegistry();
+	public static List<ISonarInventoryHandler> inventoryHandlers;
+	public static List<ISonarFluidHandler> fluidHandlers;
+	public static List<ISonarEnergyHandler> energyHandlers;
+	public static List<ISonarEnergyContainerHandler> energyContainerHandlers;
 	public static EnergyTypeRegistry energyTypes = new EnergyTypeRegistry();
 	public static MachineUpgradeRegistry machineUpgrades = new MachineUpgradeRegistry();
 	public static SimpleNetworkWrapper network;
@@ -137,6 +138,8 @@ public class SonarCore {
 			OreDictionary.registerOre("sonarStableStone", SonarCore.stablestonerimmedblackBlock[i]);
 		}
 
+		ASMDataTable asmDataTable = event.getAsmData();
+		ASMLoader.load(asmDataTable);
 	}
 
 	@EventHandler
@@ -157,10 +160,6 @@ public class SonarCore {
 		MinecraftForge.EVENT_BUS.register(new SonarEvents());
 		logger.info("Registered Events");
 		energyTypes.register();
-		inventoryProviders.register();
-		fluidProviders.register();
-		energyProviders.register();
-		energyContainerHandlers.register();
 		machineUpgrades.register();
 		planters.register();
 		harvesters.register();
@@ -176,10 +175,10 @@ public class SonarCore {
 			logger.info("Discharge Values: " + entry.toString());
 		}
 		logger.info("Registered " + energyTypes.getObjects().size() + " Energy Types");
-		logger.info("Registered " + inventoryProviders.getObjects().size() + " Inventory Providers");
-		logger.info("Registered " + fluidProviders.getObjects().size() + " Fluid Providers");
-		logger.info("Registered " + energyProviders.getObjects().size() + " Energy Providers");
-		logger.info("Registered " + energyContainerHandlers.getObjects().size() + " Energy Container Providers");
+		logger.info("Registered " + inventoryHandlers.size() + " Inventory Providers");
+		logger.info("Registered " + fluidHandlers.size() + " Fluid Providers");
+		logger.info("Registered " + energyHandlers.size() + " Energy Handlers");
+		logger.info("Registered " + energyContainerHandlers.size() + " Energy Container Providers");
 		logger.info("Registered " + machineUpgrades.getMap().size() + " Machine Upgrades");
 	}
 
@@ -199,10 +198,11 @@ public class SonarCore {
 				network.registerMessage(PacketMultipartSync.Handler.class, PacketMultipartSync.class, 10, Side.CLIENT);
 				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 11, Side.CLIENT);
 				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 12, Side.SERVER);
+				network.registerMessage(PacketRequestMultipartSync.Handler.class, PacketRequestMultipartSync.class, 13, Side.SERVER);
 			}
-			network.registerMessage(PacketFlexibleOpenGui.Handler.class, PacketFlexibleOpenGui.class, 13, Side.CLIENT);
-			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 14, Side.CLIENT);
-			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 15, Side.SERVER);
+			network.registerMessage(PacketFlexibleOpenGui.Handler.class, PacketFlexibleOpenGui.class, 14, Side.CLIENT);
+			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 15, Side.CLIENT);
+			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 16, Side.SERVER);
 		}
 	}
 
