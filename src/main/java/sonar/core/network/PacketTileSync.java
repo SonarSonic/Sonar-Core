@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import sonar.core.SonarCore;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.integration.fmp.OLDMultipartHelper;
 
 public class PacketTileSync extends PacketCoords<PacketTileSync> {
 

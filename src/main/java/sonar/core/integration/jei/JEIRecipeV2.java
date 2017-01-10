@@ -1,7 +1,5 @@
 package sonar.core.integration.jei;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import mezz.jei.api.ingredients.IIngredients;

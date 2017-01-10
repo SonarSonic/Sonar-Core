@@ -1,15 +1,14 @@
 package sonar.core.common.block;
 
-import java.util.List;
+import java.util.ArrayList;
+
+import com.google.common.collect.Lists;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -25,12 +24,26 @@ public abstract class ConnectedTile extends SonarMachineBlock implements IConnec
 	}
 
 	public int target = 0;
-	public static final PropertyBool NORTH = PropertyBool.create("north");
-	public static final PropertyBool EAST = PropertyBool.create("east");
-	public static final PropertyBool SOUTH = PropertyBool.create("south");
-	public static final PropertyBool WEST = PropertyBool.create("west");
-	public static final PropertyBool DOWN = PropertyBool.create("down");
-	public static final PropertyBool UP = PropertyBool.create("up");
+	public static final PropertySonarFacing NORTH = PropertySonarFacing.create("north", EnumFacing.NORTH);
+	public static final PropertySonarFacing EAST = PropertySonarFacing.create("east", EnumFacing.EAST);
+	public static final PropertySonarFacing SOUTH = PropertySonarFacing.create("south", EnumFacing.SOUTH);
+	public static final PropertySonarFacing WEST = PropertySonarFacing.create("west", EnumFacing.WEST);
+	public static final PropertySonarFacing DOWN = PropertySonarFacing.create("down", EnumFacing.DOWN);
+	public static final PropertySonarFacing UP = PropertySonarFacing.create("up", EnumFacing.UP);
+	public static final ArrayList<PropertySonarFacing> faces = Lists.newArrayList(DOWN, UP, NORTH, SOUTH, WEST, EAST);
+
+	public static class PropertySonarFacing extends PropertyBool {
+		public EnumFacing facing;
+
+		protected PropertySonarFacing(String name, EnumFacing facing) {
+			super(name);
+			this.facing = facing;
+		}
+
+		public static PropertySonarFacing create(String name, EnumFacing facing) {
+			return new PropertySonarFacing(name, facing);
+		}
+	}
 
 	public boolean checkBlockInDirection(IBlockAccess world, int x, int y, int z, EnumFacing side) {
 		EnumFacing dir = side;
@@ -66,11 +79,6 @@ public abstract class ConnectedTile extends SonarMachineBlock implements IConnec
 		}
 		return false;
 
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
-		super.getSubBlocks(item, tab, list);
 	}
 
 	public int getMetaFromState(IBlockState state) {

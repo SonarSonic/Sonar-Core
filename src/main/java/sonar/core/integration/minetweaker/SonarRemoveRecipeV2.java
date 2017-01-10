@@ -2,8 +2,6 @@ package sonar.core.integration.minetweaker;
 
 import java.util.ArrayList;
 
-import com.google.common.collect.Lists;
-
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
@@ -11,15 +9,11 @@ import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.oredict.IOreDictEntry;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
-import sonar.core.SonarCore;
 import sonar.core.recipes.DefinedRecipeHelper;
 import sonar.core.recipes.ISonarRecipe;
-import sonar.core.recipes.ISonarRecipeObject;
 import sonar.core.recipes.RecipeHelperV2;
 import sonar.core.recipes.RecipeObjectType;
 import sonar.core.recipes.RecipeOreStack;
-import sonar.core.recipes.ValueHelperV2;
 
 public class SonarRemoveRecipeV2<T extends RecipeHelperV2> implements IUndoableAction {
 

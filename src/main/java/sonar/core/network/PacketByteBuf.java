@@ -5,8 +5,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import sonar.core.SonarCore;
-import sonar.core.integration.fmp.OLDMultipartHelper;
-import sonar.core.integration.fmp.handlers.TileHandler;
 import sonar.core.network.utils.ByteBufWritable;
 import sonar.core.network.utils.IByteBufTile;
 

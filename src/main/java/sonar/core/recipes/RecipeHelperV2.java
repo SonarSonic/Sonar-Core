@@ -1,24 +1,18 @@
 package sonar.core.recipes;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
-import akka.util.Collections;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import sonar.core.SonarCore;
-import sonar.core.helpers.IRecipeHelper;
 import sonar.core.helpers.ItemStackHelper;
-import sonar.core.helpers.SonarHelper;
-import sonar.core.utils.Pair;
 
 /** the new Flexible Recipe Helper, WARNING: addRecipes() needs to be called */
 public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeHelperV2<T> {

@@ -71,7 +71,9 @@ public class SonarAddRecipeV2<T extends RecipeHelperV2> implements IUndoableActi
 	public void apply() {
 		if (!wasNull && !liquidStack && !wrongSize) {
 			boolean isShapeless = helper instanceof DefinedRecipeHelper ? ((DefinedRecipeHelper) helper).shapeless : true;
-			helper.addRecipe(helper.buildRecipe((ArrayList<ISonarRecipeObject>) inputs.clone(), (ArrayList<ISonarRecipeObject>) outputs.clone(), new ArrayList(), isShapeless));
+			ISonarRecipe recipe = helper.buildRecipe((ArrayList<ISonarRecipeObject>) inputs.clone(), (ArrayList<ISonarRecipeObject>) outputs.clone(), new ArrayList(), isShapeless);
+			helper.addRecipe(recipe);	
+			//MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(arg0);
 		} else {
 			SonarCore.logger.error(String.format("Failed to add %s recipe (%s = %s)", helper.getRecipeID(), inputs, outputs));
 		}

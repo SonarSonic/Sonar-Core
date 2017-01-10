@@ -1,6 +1,5 @@
 package sonar.core.recipes;
 
-import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;

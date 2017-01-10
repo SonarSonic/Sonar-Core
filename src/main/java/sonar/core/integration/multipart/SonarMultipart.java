@@ -20,7 +20,6 @@ import sonar.core.api.utils.BlockCoords;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.PacketRequestMultipartSync;
-import sonar.core.network.PacketRequestSync;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.utils.IRemovable;
 import sonar.core.utils.IWorldPosition;

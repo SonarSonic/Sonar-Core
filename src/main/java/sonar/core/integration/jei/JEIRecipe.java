@@ -6,7 +6,6 @@ import java.util.List;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 public abstract class JEIRecipe<T extends JEIRecipe> implements IRecipeWrapper {
@@ -15,8 +14,7 @@ public abstract class JEIRecipe<T extends JEIRecipe> implements IRecipeWrapper {
 	public List<Object> inputs;
 	public List<Object> outputs;
 
-	public JEIRecipe() {
-	}
+	public JEIRecipe() {}
 
 	public abstract T getInstance(String recipeID, Object[] inputs, Object[] outputs);
 

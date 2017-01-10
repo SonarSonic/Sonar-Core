@@ -1,11 +1,9 @@
 package sonar.core.recipes;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import sonar.core.registries.ISonarRegistryItem;
 
 public class RecipeInterchangable implements ISonarRecipeObject, ISonarRecipeItem {
 

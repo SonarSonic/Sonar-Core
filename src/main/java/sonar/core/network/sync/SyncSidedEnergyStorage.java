@@ -1,7 +1,6 @@
 package sonar.core.network.sync;
 
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.Optional;
 import sonar.core.api.energy.ISonarEnergyTile;
 
 public class SyncSidedEnergyStorage extends SyncEnergyStorage {

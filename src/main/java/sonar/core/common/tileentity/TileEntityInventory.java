@@ -1,7 +1,5 @@
 package sonar.core.common.tileentity;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -11,17 +9,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import sonar.core.SonarCore;
-import sonar.core.api.SonarAPI;
-import sonar.core.api.inventories.StoredItemStack;
-import sonar.core.api.utils.ActionType;
-import sonar.core.helpers.InventoryHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.inventory.AbstractSonarInventory;
-import sonar.core.inventory.ISonarInventory;
 import sonar.core.inventory.SonarInventory;
-import sonar.core.inventory.SonarLargeInventory;
 
 public class TileEntityInventory extends TileEntitySonar implements IInventory {
 

@@ -64,7 +64,7 @@ public class ItemHandlerProvider implements ISonarInventoryHandler {
 			if (remove == null || remove.stored == 0)
 				return null;
 			ItemStack current = handler.getStackInSlot(i);
-			if (current != null) {
+			if (current != null && remove.equalStack(current)) {
 				int removeSize = (int) Math.min(current.stackSize, remove.getStackSize());
 				ItemStack stack = handler.extractItem(i, removeSize, action.shouldSimulate());
 				if (stack != null) {

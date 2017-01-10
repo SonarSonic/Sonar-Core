@@ -1,7 +1,6 @@
 package sonar.core.api.energy;
 
 import net.minecraft.item.ItemStack;
-import sonar.core.api.SonarAPI;
 import sonar.core.api.utils.ActionType;
 
 public interface ISonarEnergyContainerHandler {

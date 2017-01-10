@@ -5,7 +5,6 @@ import ic2.api.energy.tile.IEnergySource;
 import ic2.api.tile.IEnergyStorage;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.Loader;
 import sonar.core.api.asm.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.ISonarEnergyHandler;

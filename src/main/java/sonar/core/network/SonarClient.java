@@ -3,7 +3,6 @@ package sonar.core.network;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import sonar.core.BlockRenderRegister;
 import sonar.core.client.renderers.SonarCustomStateMapper;

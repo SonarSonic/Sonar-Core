@@ -1,13 +1,11 @@
 package sonar.core.recipes;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
 import net.minecraft.item.ItemStack;
 import sonar.core.api.inventories.StoredItemStack;
-import sonar.core.helpers.ItemStackHelper;
 
 /** works for matching StoredItemStacks */
 public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {

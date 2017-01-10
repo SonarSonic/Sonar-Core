@@ -1,28 +1,18 @@
 package sonar.core.inventory;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.IItemHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.inventory.AbstractSonarInventory.EmbeddedHandler;
 import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.ISyncPart;
-import sonar.core.network.sync.SyncNBTAbstractList;
-import sonar.core.network.sync.SyncPart;
 
 /** FIXME HELP ME!!!! */
 public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBTSyncable, ISyncPart {
