@@ -13,15 +13,14 @@ import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.NBTHelper.SyncType;
 
 @Optional.InterfaceList({ @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "tesla"), @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "tesla"), @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaProducer", modid = "tesla") })
-public class SyncEnergyStorage implements ISonarEnergyStorage, net.minecraftforge.energy.IEnergyStorage, IEnergyStorage, ISyncPart, ITeslaConsumer, ITeslaProducer, ITeslaHolder, INBTSerializable<NBTTagCompound> {
+public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage, net.minecraftforge.energy.IEnergyStorage, IEnergyStorage, ISyncPart, ITeslaConsumer, ITeslaProducer, ITeslaHolder, INBTSerializable<NBTTagCompound> {
 
-	protected long energy;
-	protected long capacity;
-	protected long maxReceive;
-	protected long maxExtract;
+	private long energy;
+	private long capacity;
+	private long maxReceive;
+	private long maxExtract;
 
 	private String tagName = "energyStorage";
-	private boolean hasChanged;
 
 	public SyncEnergyStorage(int capacity) {
 		this(capacity, capacity, capacity);
@@ -61,7 +60,7 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, net.minecraftforg
 		this.maxExtract = maxExtract;
 		return this;
 	}
-	
+
 	public long getMaxReceive() {
 		return maxReceive;
 	}
@@ -72,17 +71,15 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, net.minecraftforg
 
 	public void setEnergyStored(int energy) {
 		this.energy = energy;
-
 		if (this.energy > capacity) {
 			this.energy = capacity;
 		} else if (this.energy < 0) {
 			this.energy = 0;
 		}
-		this.setChanged(true);
+		this.markDirty();
 	}
 
 	public void modifyEnergyStored(int energy) {
-
 		this.energy += energy;
 
 		if (this.energy > capacity) {
@@ -90,7 +87,7 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, net.minecraftforg
 		} else if (this.energy < 0) {
 			this.energy = 0;
 		}
-		this.setChanged(true);
+		this.markDirty();
 	}
 
 	@Override
@@ -156,23 +153,13 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, net.minecraftforg
 		return sync.isType(SyncType.DEFAULT_SYNC, SyncType.SAVE);
 	}
 
-	@Override
-	public void setChanged(boolean set) {
-		hasChanged = set;
-	}
-
-	@Override
-	public boolean hasChanged() {
-		return hasChanged;
-	}
-
 	///// * SONAR *//////
 	public long addEnergy(long maxReceive, ActionType action) {
 		long add = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
 
 		if (!action.shouldSimulate()) {
 			energy += add;
-			this.setChanged(true);
+			this.markDirty();
 		}
 		return add;
 	}
@@ -183,7 +170,7 @@ public class SyncEnergyStorage implements ISonarEnergyStorage, net.minecraftforg
 
 		if (!action.shouldSimulate()) {
 			energy -= energyExtracted;
-			this.setChanged(true);
+			this.markDirty();
 		}
 		return energyExtracted;
 	}

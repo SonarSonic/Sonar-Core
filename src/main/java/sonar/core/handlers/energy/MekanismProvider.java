@@ -12,7 +12,7 @@ import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
-@EnergyHandler(modid = "mekanism", handlerID = MekanismProvider.name)
+//@EnergyHandler(modid = "Mekanism", handlerID = MekanismProvider.name) disabled due to integration issues :)
 public class MekanismProvider implements ISonarEnergyHandler {
 
 	public static final String name = "Mekanism-Provider";

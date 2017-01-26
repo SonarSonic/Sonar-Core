@@ -16,10 +16,10 @@ import sonar.core.inventory.SonarInventory;
 
 public class TileEntityInventory extends TileEntitySonar implements IInventory {
 
-	public AbstractSonarInventory inv;
+	protected AbstractSonarInventory inv;
 
 	public TileEntityInventory() {
-		dirtyParts.add(inv);
+		//syncList.addPart(inv);
 	}
 
 	public AbstractSonarInventory getTileInv() {

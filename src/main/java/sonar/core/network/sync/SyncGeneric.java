@@ -26,7 +26,7 @@ public class SyncGeneric<T extends IBufObject> extends SyncPart {
 
 	public void setObject(T value) {
 		c = value;
-		this.setChanged(true);
+		this.markDirty();
 	}
 
 	public T getObject() {

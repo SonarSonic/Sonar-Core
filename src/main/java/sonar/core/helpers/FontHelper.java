@@ -13,49 +13,42 @@ import sonar.core.utils.CustomColour;
 
 public class FontHelper {
 
-	public static void text(String info, int x, int y, CustomColour colour) {
-		text(info, x, y, colour.getRGB());
+	public static int text(String info, int x, int y, CustomColour colour) {
+		return text(info, x, y, colour.getRGB());
 	}
 
 	/** @param colour 0 = grey, 1 = black, 2 = white */
-	public static void text(String info, int x, int y, int colour) {
+	public static int text(String info, int x, int y, int colour) {
 		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		switch (colour) {
 		case 0:
-			render.drawString(info, x, y, 4210752);
-			break;
+			return render.drawString(info, x, y, 4210752);
 		case 1:
-			render.drawString(info, x, y, 1);
-			break;
+			return render.drawString(info, x, y, 1);
 		case 2:
-			render.drawString(info, x, y, -1);
-			break;
+			return render.drawString(info, x, y, -1);
 		default:
-			render.drawString(info, x, y, colour);
-			break;
+			return render.drawString(info, x, y, colour);
 		}
 	}
 
-	public static void textCentre(String info, int xSize, int y, CustomColour colour) {
-		textCentre(info, xSize, y, colour.getRGB());
+	public static int textCentre(String info, int xSize, int y, CustomColour colour) {
+		return textCentre(info, xSize, y, colour.getRGB());
 	}
 
-	/** @param colour 0 = grey, 1 = black, 2 = white */
-	public static void textCentre(String info, int xSize, int y, int colour) {
+	/** @param colour 0 = grey, 1 = black, 2 = white
+	 * @return */
+	public static int textCentre(String info, int xSize, int y, int colour) {
 		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		switch (colour) {
 		case 0:
-			render.drawString(info, xSize / 2 - width(info) / 2, y, 4210752);
-			break;
+			return render.drawString(info, xSize / 2 - width(info) / 2, y, 4210752);
 		case 1:
-			render.drawString(info, xSize / 2 - width(info) / 2, y, 1);
-			break;
+			return render.drawString(info, xSize / 2 - width(info) / 2, y, 1);
 		case 2:
-			render.drawString(info, xSize / 2 - width(info) / 2, y, -1);
-			break;
+			return render.drawString(info, xSize / 2 - width(info) / 2, y, -1);
 		default:
-			render.drawString(info, xSize / 2 - width(info) / 2, y, colour);
-			break;
+			return render.drawString(info, xSize / 2 - width(info) / 2, y, colour);
 		}
 	}
 
@@ -64,29 +57,25 @@ public class FontHelper {
 		return render.getStringWidth(info);
 	}
 
-	public static void textOffsetCentre(String info, int xCentre, int y, CustomColour colour) {
-		textOffsetCentre(info, xCentre, y, colour.getRGB());
+	public static int textOffsetCentre(String info, int xCentre, int y, CustomColour colour) {
+		return textOffsetCentre(info, xCentre, y, colour.getRGB());
 	}
 
 	/** @param info string information
 	 * @param xCentre where you want txt to be centred
 	 * @param y y coordinate
 	 * @param colour 0 = Gray, 1= Black, 2 = White */
-	public static void textOffsetCentre(String info, int xCentre, int y, int colour) {
+	public static int textOffsetCentre(String info, int xCentre, int y, int colour) {
 		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		switch (colour) {
 		case 0:
-			render.drawString(info, xCentre - width(info) / 2, y, 4210752);
-			break;
+			return render.drawString(info, xCentre - width(info) / 2, y, 4210752);
 		case 1:
-			render.drawString(info, xCentre - width(info) / 2, y, 1);
-			break;
+			return render.drawString(info, xCentre - width(info) / 2, y, 1);
 		case 2:
-			render.drawString(info, xCentre - width(info) / 2, y, -1);
-			break;
+			return render.drawString(info, xCentre - width(info) / 2, y, -1);
 		default:
-			render.drawString(info, xCentre - width(info) / 2, y, colour);
-			break;
+			return render.drawString(info, xCentre - width(info) / 2, y, colour);
 		}
 	}
 
@@ -188,9 +177,7 @@ public class FontHelper {
 		return false;
 	}
 
-	/* public static String translate(String string) { String local = FontHelper.translate(string); if (!local.equals(string)) { return local; } else { return StatCollector.translateToFallback(string); } }
-	 * 
-	 * public static String fullTranslate(String s) { String ret = LanguageRegistry.instance().getStringLocalization(s); if (ret.length() == 0) ret = LanguageRegistry.instance().getStringLocalization(s, "en_US"); if (ret.length() == 0) ret = translate(s); if (ret.length() == 0) return s; return ret; } */
+	/* public static String translate(String string) { String local = FontHelper.translate(string); if (!local.equals(string)) { return local; } else { return StatCollector.translateToFallback(string); } } public static String fullTranslate(String s) { String ret = LanguageRegistry.instance().getStringLocalization(s); if (ret.length() == 0) ret = LanguageRegistry.instance().getStringLocalization(s, "en_US"); if (ret.length() == 0) ret = translate(s); if (ret.length() == 0) return s; return ret; } */
 
 	public static String translate(String string) {
 		return new TextComponentTranslation(string).getFormattedText();

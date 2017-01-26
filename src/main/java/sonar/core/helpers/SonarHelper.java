@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.integration.SonarLoader;
+import sonar.core.utils.SortingDirection;
 
 /** helps with getting tiles, adding energy and checking stacks */
 public class SonarHelper {
@@ -274,8 +275,8 @@ public class SonarHelper {
 		return inputs;
 	}
 
-	public static <T> Object[] convertArray(List<T> objs) {
-		return objs.toArray();
+	public static <T> T[] convertArray(List<T> objs) {
+		return (T[]) objs.toArray();
 	}
 
 	public static boolean intContains(int[] ints, int num) {
@@ -285,6 +286,21 @@ public class SonarHelper {
 			}
 		}
 		return false;
+	}
+	
+	public static int compareWithDirection(long stored1, long stored2, SortingDirection dir) {
+		if (stored1 < stored2)
+			return dir == SortingDirection.DOWN ? 1 : -1;
+		if (stored1 == stored2)
+			return 0;
+		return dir == SortingDirection.DOWN ? -1 : 1;
+	}
 
+	public static int compareStringsWithDirection(String string1, String string2, SortingDirection dir) {
+		int res = String.CASE_INSENSITIVE_ORDER.compare(string1, string2);
+		if (res == 0) {
+			res = string1.compareTo(string2);
+		}
+		return dir == SortingDirection.DOWN ? res : -res;
 	}
 }

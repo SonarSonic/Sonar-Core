@@ -13,10 +13,10 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 
 	public MachineSides sides = new MachineSides(MachineSideConfig.INPUT, this, MachineSideConfig.NONE);
 	public int[] input, output;
-
+	
 	public TileEntitySidedInventory() {
 		super();
-		syncParts.add(sides);
+		syncList.addPart(sides);
 	}
 
 	@Override

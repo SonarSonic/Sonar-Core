@@ -2,16 +2,22 @@ package sonar.core.network.sync;
 
 public class DirtyPart implements IDirtyPart {
 
-	private boolean hasChanged = true;
+	protected ISyncableListener listener;
 
-	@Override
-	public void setChanged(boolean set) {
-		hasChanged = set;
+	public DirtyPart() {}
+
+	public DirtyPart setListener(ISyncableListener listener) {
+		this.listener = listener;
+		return this;
 	}
 
 	@Override
-	public boolean hasChanged() {
-		return hasChanged;
+	public ISyncableListener getListener() {
+		return listener;
 	}
-	
+
+	public void markDirty() {
+		if (listener != null)
+			listener.markChanged(this);
+	}
 }

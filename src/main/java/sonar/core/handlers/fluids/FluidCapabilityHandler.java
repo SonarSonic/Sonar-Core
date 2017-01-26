@@ -14,7 +14,7 @@ import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
 
-@FluidHandler(modid="sonarcore", handlerID = FluidCapabilityHandler.name)
+@FluidHandler(modid="sonarcore", handlerID = FluidCapabilityHandler.name, priority = 0)
 public class FluidCapabilityHandler implements ISonarFluidHandler {
 
 	public static final String name = "Fluid Capability Handler";

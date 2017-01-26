@@ -30,7 +30,7 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 
 	public TileEntityEnergySidedInventory() {
 		super();
-		syncParts.add(storage);
+		syncList.addPart(storage);
 	}
 
 	public EnergyMode energyMode = EnergyMode.RECIEVE;

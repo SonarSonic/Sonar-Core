@@ -9,6 +9,7 @@ import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.oredict.IOreDictEntry;
 import net.minecraft.item.ItemStack;
+import sonar.core.integration.jei.JEIHelper;
 import sonar.core.recipes.DefinedRecipeHelper;
 import sonar.core.recipes.ISonarRecipe;
 import sonar.core.recipes.RecipeHelperV2;
@@ -69,8 +70,11 @@ public class SonarRemoveRecipeV2<T extends RecipeHelperV2> implements IUndoableA
 		}
 		if (!wasNull && !liquidStack && !wrongSize) {
 			boolean removed = helper.removeRecipe(recipe);
-			if (!removed)
+			if (!removed){
 				MineTweakerAPI.logError(String.format("%s: Removing Recipe - Failed to remove recipe %s", helper.getRecipeID(), ingredients));
+			}else{
+				MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(JEIHelper.createJEIRecipe(recipe, helper));
+			}
 		}
 	}
 
@@ -83,6 +87,7 @@ public class SonarRemoveRecipeV2<T extends RecipeHelperV2> implements IUndoableA
 	public void undo() {
 		if (recipe != null && !wasNull && !liquidStack && !wrongSize) {
 			helper.addRecipe(recipe);
+			MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(JEIHelper.createJEIRecipe(recipe, helper));
 		}
 	}
 

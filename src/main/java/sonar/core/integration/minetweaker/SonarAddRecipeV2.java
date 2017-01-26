@@ -13,6 +13,7 @@ import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.oredict.IOreDictEntry;
 import net.minecraft.item.ItemStack;
 import sonar.core.SonarCore;
+import sonar.core.integration.jei.JEIHelper;
 import sonar.core.recipes.DefinedRecipeHelper;
 import sonar.core.recipes.ISonarRecipe;
 import sonar.core.recipes.ISonarRecipeObject;
@@ -73,7 +74,7 @@ public class SonarAddRecipeV2<T extends RecipeHelperV2> implements IUndoableActi
 			boolean isShapeless = helper instanceof DefinedRecipeHelper ? ((DefinedRecipeHelper) helper).shapeless : true;
 			ISonarRecipe recipe = helper.buildRecipe((ArrayList<ISonarRecipeObject>) inputs.clone(), (ArrayList<ISonarRecipeObject>) outputs.clone(), new ArrayList(), isShapeless);
 			helper.addRecipe(recipe);	
-			//MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(arg0);
+			MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(JEIHelper.createJEIRecipe(recipe, helper));
 		} else {
 			SonarCore.logger.error(String.format("Failed to add %s recipe (%s = %s)", helper.getRecipeID(), inputs, outputs));
 		}
@@ -88,9 +89,11 @@ public class SonarAddRecipeV2<T extends RecipeHelperV2> implements IUndoableActi
 				MineTweakerAPI.logError(String.format("%s: Adding Recipe - Couldn't find matching recipe %s", helper.getRecipeID(), values));
 				return;
 			}
-			boolean removed = helper.removeRecipe(recipe);
+			boolean removed = helper.removeRecipe(recipe);			
 			if (!removed) {
 				MineTweakerAPI.logError(String.format("%s: Adding Recipe - Failed to remove recipe %s", helper.getRecipeID(), values));
+			}else{
+				MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(JEIHelper.createJEIRecipe(recipe, helper));
 			}
 
 		} else {

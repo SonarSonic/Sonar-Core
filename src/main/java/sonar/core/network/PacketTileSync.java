@@ -1,11 +1,13 @@
 package sonar.core.network;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import sonar.core.SonarCore;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
@@ -53,7 +55,7 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 	public static class Handler extends PacketTileEntityHandler<PacketTileSync> {
 
 		@Override
-		public IMessage processMessage(PacketTileSync message, TileEntity tile) {
+		public IMessage processMessage(EntityPlayer player, MessageContext ctx, PacketTileSync message, TileEntity tile) {
 			if (tile != null && tile.getWorld().isRemote) {
 				/* Object te = OLDMultipartHelper.checkObject(tile); if (te == null) { return null; } */
 				SonarCore.proxy.getThreadListener().addScheduledTask(new Runnable() {

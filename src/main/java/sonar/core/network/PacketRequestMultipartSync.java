@@ -6,9 +6,11 @@ import io.netty.buffer.ByteBuf;
 import mcmultipart.multipart.IMultipart;
 import mcmultipart.multipart.IMultipartContainer;
 import mcmultipart.multipart.MultipartHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import sonar.core.SonarCore;
 import sonar.core.integration.multipart.SonarMultipart;
 import sonar.core.integration.multipart.SonarMultipartHelper;
@@ -43,7 +45,7 @@ public class PacketRequestMultipartSync extends PacketCoords<PacketRequestMultip
 	public static class Handler extends PacketTileEntityHandler<PacketRequestMultipartSync> {
 
 		@Override
-		public IMessage processMessage(PacketRequestMultipartSync message, TileEntity tile) {
+		public IMessage processMessage(EntityPlayer player, MessageContext ctx, PacketRequestMultipartSync message, TileEntity tile) {
 			if (!tile.getWorld().isRemote) {
 				IMultipartContainer container = MultipartHelper.getPartContainer(tile.getWorld(), tile.getPos());
 				if (container != null) {
@@ -52,7 +54,9 @@ public class PacketRequestMultipartSync extends PacketCoords<PacketRequestMultip
 						SonarCore.proxy.getThreadListener().addScheduledTask(new Runnable() {
 							public void run() {
 								((SonarMultipart) part).forceNextSync();
+								((SonarMultipart) part).onSyncPacketRequested(player);
 								SonarMultipartHelper.sendMultipartSyncAround((SonarMultipart) part, 64);
+								
 							}
 						});
 						return null;

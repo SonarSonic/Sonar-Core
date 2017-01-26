@@ -8,6 +8,12 @@ import java.util.Map.Entry;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
+import sonar.calculator.mod.integration.jei.CalculatorJEI;
+import sonar.calculator.mod.integration.jei.CalculatorJEI.Handlers;
+import sonar.core.integration.SonarLoader;
+import sonar.core.recipes.ISonarRecipe;
+import sonar.core.recipes.RecipeHelperV2;
 import sonar.core.recipes.RecipeObjectType;
 
 //FIXME this is JEI STUFF hahah
@@ -63,5 +69,18 @@ public class JEIHelper {
 			this.yPos = yPos;
 		}
 	}
-
+	public static Object createJEIRecipe(ISonarRecipe recipe, RecipeHelperV2<ISonarRecipe> helper) {
+		if (SonarLoader.calculatorLoaded && (Loader.isModLoaded("jei") || Loader.isModLoaded("JEI"))) {
+			for (Handlers handler : CalculatorJEI.Handlers.values()) {
+				if (handler.helper.getRecipeID().equals(helper.getRecipeID())) {
+					try {
+						return handler.recipeClass.getConstructor(RecipeHelperV2.class, ISonarRecipe.class).newInstance(handler.helper, recipe);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return null;
+	}
 }

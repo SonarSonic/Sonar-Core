@@ -27,7 +27,7 @@ public class SyncUUID extends SyncPart {
 
 	public void setObject(UUID id) {
 		current = id;
-		setChanged(true);
+		markDirty();
 	}
 
 	@Override
@@ -54,9 +54,12 @@ public class SyncUUID extends SyncPart {
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasUniqueId(getTagName())) {
 			current = nbt.getUniqueId(getTagName());
-		}else if(nbt.hasKey(getTagName())){
+		}
+		/*
+		else if(nbt.hasKey(getTagName())){
 			current = SonarHelper.getGameProfileForUsername(nbt.getString(getTagName())).getId();
 		}
+		*/
 	}
 
 }

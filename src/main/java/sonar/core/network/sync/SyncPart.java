@@ -12,10 +12,12 @@ public abstract class SyncPart extends DirtyPart implements ISyncPart {
 	private List<SyncType> types = Lists.newArrayList(SyncType.SAVE, SyncType.DEFAULT_SYNC);
 	
 	public SyncPart(int id) {
+		super();
 		this.id = (byte) id;
 	}
 
 	public SyncPart(String name) {
+		super();
 		this.name = name;
 	}
 

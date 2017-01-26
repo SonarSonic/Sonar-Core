@@ -20,38 +20,55 @@ import sonar.core.api.nbt.IBufObject;
 import sonar.core.api.nbt.INBTObject;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.network.sync.ISyncPart;
+import sonar.core.network.sync.SyncableList;
 
 public class NBTHelper {
 
-	public static void readSyncParts(NBTTagCompound nbt, SyncType type, ArrayList<ISyncPart> parts) {
-		for (ISyncPart part : parts) {
+	public static void readSyncParts(NBTTagCompound nbt, SyncType type, List<ISyncPart> syncableList) {
+		for (ISyncPart part : syncableList) {
 			if (part != null && part.canSync(type)) {
 				part.readData(nbt, type);
-				part.setChanged(false);
 			}
 		}
 	}
 
-	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, ArrayList<ISyncPart> parts, boolean forceSync) {
-		for (ISyncPart part : parts) {
-			if (part != null && (forceSync || type.mustSync() || part.hasChanged()) && part.canSync(type)) {
+	public static void readSyncParts(NBTTagCompound nbt, SyncType type, SyncableList syncableList) {
+		for (ISyncPart part : syncableList.getStandardSyncParts()) {
+			if (part != null && (part.canSync(type))) {
+				part.readData(nbt, type);
+			}
+		}
+	}
+
+	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, List<ISyncPart> syncableList, boolean forceSync) {
+		for (ISyncPart part : syncableList) {
+			if (part != null && (forceSync || type.mustSync()) && part.canSync(type)) {
 				part.writeData(nbt, type);
-				part.setChanged(false);
 			}
 		}
 		return nbt;
 	}
 
-	public static ISyncPart getSyncPartByID(ArrayList<ISyncPart> parts,int id){
-		String tag = ""+id;
-		for(ISyncPart part : parts){
-			if(part!=null && part.getTagName().equals(tag)){
+	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, SyncableList syncableList, boolean forceSync) {
+		for (ISyncPart part : (ArrayList<ISyncPart>) (syncableList.getSyncList(type).clone())) {
+			if (part != null && (forceSync || type.mustSync()) && part.canSync(type)) {
+				part.writeData(nbt, type);
+				syncableList.onPartSynced(part);
+			}
+		}
+		return nbt;
+	}
+
+	public static ISyncPart getSyncPartByID(ArrayList<ISyncPart> parts, int id) {
+		String tag = "" + id;
+		for (ISyncPart part : parts) {
+			if (part != null && part.getTagName().equals(tag)) {
 				return part;
 			}
 		}
 		return null;
 	}
-	
+
 	/** typically used for Fluid/item/energy stacks */
 	@Nullable
 	public static <T extends INBTSyncable> T instanceNBTSyncable(Class<T> classType, NBTTagCompound tag) {
@@ -235,9 +252,7 @@ public class NBTHelper {
 		}
 	}
 
-	/* public static void writeEnergyStorage(EnergyStorage storage, NBTTagCompound nbt) { NBTTagCompound energyTag = new NBTTagCompound(); storage.writeToNBT(energyTag); nbt.setTag("energyStorage", energyTag); }
-	 * 
-	 * public static void readEnergyStorage(EnergyStorage storage, NBTTagCompound nbt) { if (nbt.hasKey("energyStorage")) { storage.readFromNBT(nbt.getCompoundTag("energyStorage")); } } */
+	/* public static void writeEnergyStorage(EnergyStorage storage, NBTTagCompound nbt) { NBTTagCompound energyTag = new NBTTagCompound(); storage.writeToNBT(energyTag); nbt.setTag("energyStorage", energyTag); } public static void readEnergyStorage(EnergyStorage storage, NBTTagCompound nbt) { if (nbt.hasKey("energyStorage")) { storage.readFromNBT(nbt.getCompoundTag("energyStorage")); } } */
 	public static void writeFluidToBuf(FluidStack stack, ByteBuf buf) {
 		ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(stack.getFluid()));
 		buf.writeInt(stack.amount);

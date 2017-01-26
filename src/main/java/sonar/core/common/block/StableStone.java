@@ -14,12 +14,20 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.common.block.properties.IMetaVariant;
 
-public class StableStone extends ConnectedBlock{
-	public static final PropertyEnum<Variants> VARIANT = PropertyEnum.<Variants> create("variant", Variants.class);
+public class StableStone extends ConnectedBlock {
+	public static final PropertyEnum<Variants> VARIANT = PropertyEnum.<Variants>create("variant", Variants.class);
 
 	public static enum Variants implements IStringSerializable, IMetaVariant {
 
-		Normal, Black, Blue, Brown, Cyan, Green, LightBlue, LightGrey, Lime, Magenta, Orange, Pink, Plain, Purple, Red, Yellow;
+		Normal(7), Black(0), Blue(4), Brown(3), Cyan(6), Green(2), LightBlue(12), LightGrey(8), Lime(10), Magenta(13), Orange(14), Pink(9), Plain(15), Purple(5), Red(1), Yellow(11);
+
+		// Black, Red, Green, Brown, Blue, Purple, Cyan, Normal, LightGrey, Pink, Lime, Yellow, LightBlue, Magenta, Orange, Plain;
+
+		public int dyeMeta;
+
+		Variants(int dyeMeta) {
+			this.dyeMeta = dyeMeta;
+		}
 
 		@Override
 		public String getName() {
@@ -29,6 +37,10 @@ public class StableStone extends ConnectedBlock{
 		@Override
 		public int getMeta() {
 			return ordinal();
+		}
+
+		public int getDyeMeta() {
+			return dyeMeta;
 		}
 	}
 
@@ -49,21 +61,12 @@ public class StableStone extends ConnectedBlock{
 
 	public IBlockState getStateFromMeta(int meta) {
 		return super.getStateFromMeta(meta);
-		//return this.getDefaultState().withProperty(VARIANT, Variants.values()[meta]);
+		// return this.getDefaultState().withProperty(VARIANT, Variants.values()[meta]);
 	}
 
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { NORTH, EAST, SOUTH, WEST, DOWN, UP});
+		return new BlockStateContainer(this, new IProperty[] { NORTH, EAST, SOUTH, WEST, DOWN, UP });
 	}
-/*
-	@Override
-	public IItemVariant[] getVariants() {
-		return Variants.values();
-	}
-
-	@Override
-	public IMetaVariant getVariant(int metadata) {
-		return Variants.values()[metadata];
-	}
-	*/
+	/* @Override public IItemVariant[] getVariants() { return Variants.values(); }
+	 * @Override public IMetaVariant getVariant(int metadata) { return Variants.values()[metadata]; } */
 }

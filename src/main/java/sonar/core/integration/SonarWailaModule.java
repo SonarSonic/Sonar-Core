@@ -16,8 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import sonar.core.common.tileentity.TileEntitySonar;
-import sonar.core.integration.fmp.OLDMultipartHelper;
-import sonar.core.integration.fmp.handlers.TileHandler;
 
 /** Integrations with WAILA - Registers all HUDs */
 public class SonarWailaModule {
@@ -45,11 +43,13 @@ public class SonarWailaModule {
 			TileEntity te = accessor.getTileEntity();
 			if (te == null)
 				return currenttip;
+			/*
 			TileHandler handler = OLDMultipartHelper.getHandler(te);
 			if (handler != null && handler instanceof IWailaInfo) {
 				IWailaInfo tile = (IWailaInfo) handler;
 				tile.getWailaInfo(currenttip, accessor.getBlockState());
 			}
+			*/
 			if (te instanceof IWailaInfo) {
 				IWailaInfo tile = (IWailaInfo) te;
 				tile.getWailaInfo(currenttip, accessor.getBlockState());
@@ -85,10 +85,11 @@ public class SonarWailaModule {
 
 		public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaFMPAccessor accessor, IWailaConfigHandler config) {
 			Object handler = accessor.getTileEntity();
+			/*
 			handler = OLDMultipartHelper.checkObject(handler);
 			if (handler == null)
 				return currenttip;
-
+			*/
 			if (handler instanceof IWailaInfo) {
 				IWailaInfo tile = (IWailaInfo) handler;
 				tile.getWailaInfo(currenttip, null);

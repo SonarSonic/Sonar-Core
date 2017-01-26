@@ -9,7 +9,7 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.energy.GenericForgeEnergyHandler;
 
-@EnergyHandler(modid = "sonarcore", handlerID = ForgeEnergyHandler.name)
+@EnergyHandler(modid = "sonarcore", handlerID = ForgeEnergyHandler.name, priority = 0)
 public class ForgeEnergyHandler implements ISonarEnergyHandler {
 
 	public static final String name = "Forge-Energy-Handler";

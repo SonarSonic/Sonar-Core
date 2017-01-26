@@ -10,16 +10,17 @@ import sonar.core.SonarCore;
 public abstract class PacketTileEntityHandler<T extends PacketCoords> implements IMessageHandler<T, IMessage> {
 
 	public final IMessage onMessage(T message, MessageContext ctx) {
+		IMessage returnMessage = null;
 		EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 		if (player != null && player.worldObj != null) {
 			TileEntity target = player.worldObj.getTileEntity(message.pos);
 			if (target != null) {
-				return processMessage(message, target);
+				processMessage(player, ctx, message, target);
 			}
 		}
 		return null;
 	}
 
-	public abstract IMessage processMessage(T message, TileEntity target);
+	public abstract IMessage processMessage(EntityPlayer player, MessageContext ctx, T message, TileEntity target);
 
 }

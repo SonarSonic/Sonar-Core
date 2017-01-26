@@ -18,7 +18,8 @@ public abstract class PacketMultipartHandler<T extends PacketMultipart> implemen
 		if (player != null && player.worldObj != null) {
 			Object target = SonarMultipartHelper.getTile(player.worldObj, message.pos);
 			if (target != null && target instanceof IMultipartContainer) {
-				return processMessage(message, (IMultipartContainer) target, ((IMultipartContainer) target).getPartFromID(message.partUUID), ctx);
+				IMultipart part = ((IMultipartContainer) target).getPartFromID(message.partUUID);
+				return part != null ? processMessage(message, (IMultipartContainer) target, part, ctx) : null;
 			}
 		}
 		return null;

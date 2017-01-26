@@ -66,7 +66,7 @@ public class SyncEnum<E extends Enum> extends SyncPart {
 	public void setObject(E object) {
 		if (current != object) {
 			current = object;
-			setChanged(true);
+			markDirty();
 		}
 	}
 

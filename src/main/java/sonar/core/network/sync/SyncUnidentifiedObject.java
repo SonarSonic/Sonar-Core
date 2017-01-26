@@ -22,7 +22,7 @@ public class SyncUnidentifiedObject extends SyncPart {
 		if (obj != null && (this.obj == null || !obj.equals(this.obj))) {
 			this.obj = obj;
 			this.objectType = objectType;
-			this.setChanged(true);
+			this.markDirty();
 		}
 	}
 

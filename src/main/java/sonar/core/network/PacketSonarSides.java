@@ -1,10 +1,12 @@
 package sonar.core.network;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.utils.IMachineSides;
 import sonar.core.utils.MachineSideConfig;
@@ -38,7 +40,7 @@ public class PacketSonarSides extends PacketCoords<PacketSonarSides> {
 	public static class Handler extends PacketTileEntityHandler<PacketSonarSides> {
 
 		@Override
-		public IMessage processMessage(PacketSonarSides message, TileEntity tile) {
+		public IMessage processMessage(EntityPlayer player, MessageContext ctx, PacketSonarSides message, TileEntity tile) {
 			if (tile.getWorld().isRemote && tile instanceof IMachineSides) {
 				IMachineSides sides = (IMachineSides) tile;
 				sides.getSideConfigs().setSide(message.side, message.config);

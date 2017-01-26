@@ -1,6 +1,5 @@
 package sonar.core.integration.multipart;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,21 +12,26 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import sonar.core.SonarCore;
+import sonar.core.api.IFlexibleGui;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.PacketRequestMultipartSync;
+import sonar.core.network.sync.IDirtyPart;
 import sonar.core.network.sync.ISyncPart;
+import sonar.core.network.sync.ISyncableListener;
+import sonar.core.network.sync.SyncableList;
 import sonar.core.utils.IRemovable;
 import sonar.core.utils.IWorldPosition;
 import sonar.core.utils.Pair;
 
-public abstract class SonarMultipart extends Multipart implements ITickable, INBTSyncable, IWorldPosition, IRemovable {
+public abstract class SonarMultipart extends Multipart implements ISyncableListener, ITickable, INBTSyncable, IWorldPosition, IRemovable {
 
-	public ArrayList<ISyncPart> syncParts = new ArrayList<ISyncPart>();
+	public SyncableList syncList = new SyncableList(this);
 	public AxisAlignedBB collisionBox = null;
 	public boolean wasRemoved = false;
 	public boolean firstTick = false;
@@ -46,12 +50,6 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 		if (!firstTick) {
 			this.onFirstTick();
 			firstTick = true;
-		}
-		for (ISyncPart part : syncParts) {
-			if (part != null && part.hasChanged()) {
-				markDirty();
-				break;
-			}
 		}
 	}
 
@@ -90,17 +88,17 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 
 	@Override
 	public final NBTTagCompound writeToNBT(NBTTagCompound tag) {
-		return writeData(tag, SyncType.SAVE);
+		return this.writeData(tag, SyncType.SAVE);
 	}
 
 	@Override
 	public final void readFromNBT(NBTTagCompound tag) {
-		readData(tag, SyncType.SAVE);
+		this.readData(tag, SyncType.SAVE);
 	}
 
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		NBTHelper.readSyncParts(nbt, type, this.syncParts);
+		NBTHelper.readSyncParts(nbt, type, syncList);
 	}
 
 	@Override
@@ -109,7 +107,7 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 			type = SyncType.SYNC_OVERRIDE;
 			forceSync = false;
 		}
-		NBTHelper.writeSyncParts(nbt, type, this.syncParts, forceSync);
+		NBTHelper.writeSyncParts(nbt, type, syncList, forceSync);
 		return nbt;
 	}
 
@@ -136,7 +134,7 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 
 	public abstract ItemStack getItemStack();
 
-	//change it to get the next valid rotation whatever it is;
+	// change it to get the next valid rotation whatever it is;
 	public Pair<Boolean, EnumFacing> rotatePart(EnumFacing face, EnumFacing axis) {
 		EnumFacing[] valid = getValidRotations();
 		if (valid != null) {
@@ -157,7 +155,10 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 		}
 		return new Pair(false, face);
 	}
-	
+
+	public void onSyncPacketRequested(EntityPlayer player) {
+	}
+
 	public void requestSyncPacket() {
 		SonarCore.network.sendToServer(new PacketRequestMultipartSync(this.getPos(), this.getUUID()));
 	}
@@ -170,26 +171,37 @@ public abstract class SonarMultipart extends Multipart implements ITickable, INB
 		return wasRemoved;
 	}
 
-	public boolean isClient() {
+	/** called when a part is changed */
+	@Override
+	public void markChanged(IDirtyPart part) {
+		syncList.markSyncPartChanged(part);
+		markDirty();
+	}
+
+	/** if this Multipart is in a client world */
+	public final boolean isClient() {
 		if (getWorld() == null) {
 			return FMLCommonHandler.instance().getEffectiveSide().isClient();
 		}
 		return this.getWorld().isRemote;
 	}
 
-	public boolean isServer() {
+	/** if this multipart is in a server world */
+	public final boolean isServer() {
 		if (getWorld() == null) {
 			return FMLCommonHandler.instance().getEffectiveSide().isServer();
 		}
+		World world = getWorld();
 		return !this.getWorld().isRemote;
 	}
 
-	public void openGui(EntityPlayer player, Object mod) {
+	/** opens a standard GUI */
+	public final void openGui(EntityPlayer player, Object mod) {
 		player.openGui(mod, getUUID().hashCode(), getWorld(), getPos().getX(), getPos().getY(), getPos().getZ());
 	}
 
-	public void openBasicGui(EntityPlayer player, int id) {
+	/** opens a GUI using {@link IFlexibleGui} */
+	public final void openFlexibleGui(EntityPlayer player, int id) {
 		SonarCore.instance.guiHandler.openBasicMultipart(getUUID(), player, getWorld(), getPos(), id);
-
 	}
 }

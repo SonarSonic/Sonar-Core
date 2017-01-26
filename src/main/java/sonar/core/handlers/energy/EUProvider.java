@@ -12,7 +12,7 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.EUHelper;
 
-@EnergyHandler(modid = "ic2", handlerID = EUProvider.name)
+@EnergyHandler(modid = "IC2", handlerID = EUProvider.name, priority = 4)
 public class EUProvider implements ISonarEnergyHandler {
 
 	public static final String name = "EU-Provider";
@@ -52,8 +52,10 @@ public class EUProvider implements ISonarEnergyHandler {
 			}
 		} else if (tile instanceof IEnergySink) {
 			IEnergySink sink = (IEnergySink) tile;
+
 			if (!action.shouldSimulate()) {
-				transfer.stored -= (sink.injectEnergy(dir, transfer.stored, EUHelper.getVoltage(sink.getSinkTier())));
+				int maxAdd = (int) transfer.stored;
+				transfer.stored -= (maxAdd - sink.injectEnergy(dir, maxAdd, EUHelper.getVoltage(sink.getSinkTier())));
 			} else {
 				transfer.stored -= Math.min(sink.getDemandedEnergy(), EUHelper.getVoltage(sink.getSinkTier()));
 			}
@@ -75,7 +77,7 @@ public class EUProvider implements ISonarEnergyHandler {
 			}
 		} else if (tile instanceof IEnergySource) {
 			IEnergySource source = (IEnergySource) tile;
-			double amount = Math.min(EUHelper.getVoltage(source.getSourceTier()),Math.min(transfer.stored, source.getOfferedEnergy()));
+			double amount = Math.min(EUHelper.getVoltage(source.getSourceTier()), Math.min(transfer.stored, source.getOfferedEnergy()));
 			if (!action.shouldSimulate()) {
 				source.drawEnergy(amount);
 				transfer.stored -= amount;

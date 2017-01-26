@@ -10,7 +10,7 @@ import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
-@EnergyHandler(modid = "sonarcore", handlerID = RFHandler.name)
+@EnergyHandler(modid = "sonarcore", handlerID = RFHandler.name, priority = 3)
 public class RFHandler implements ISonarEnergyHandler {
 
 	public static final String name = "RF-Provider";

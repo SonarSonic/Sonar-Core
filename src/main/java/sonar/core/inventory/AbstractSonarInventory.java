@@ -53,6 +53,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	}
 
 	public AbstractSonarInventory(int size) {
+		super();
 		this.slots = new ItemStack[size];
 	}
 
@@ -106,7 +107,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 
 	public ItemStack decrStackSize(int slot, int var2) {
 		if (this.slots[slot] != null) {
-			setChanged(true);
+			markDirty();
 			if (this.slots[slot].stackSize <= var2) {
 				ItemStack itemstack = this.slots[slot];
 				this.slots[slot] = null;
@@ -125,7 +126,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 
 	public ItemStack removeStackFromSlot(int i) {
 		if (this.slots[i] != null) {
-			setChanged(true);
+			markDirty();
 			ItemStack itemstack = this.slots[i];
 			this.slots[i] = null;
 			return itemstack;
@@ -139,7 +140,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit())) {
 			itemstack.stackSize = getInventoryStackLimit();
 		}
-		setChanged(true);
+		markDirty();
 	}
 
 	public int getInventoryStackLimit() {
@@ -220,9 +221,6 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		boolean bool = InventoryHelper.removeStack(this, remove, stored, slot, ActionType.getTypeForAction(simulate));
 		remove = SonarAPI.getItemHelper().getStackToAdd(amount, new StoredItemStack(stored), remove);
 		return remove.getActualStack();
-	}
-
-	public void markDirty() {
 	}
 
 }

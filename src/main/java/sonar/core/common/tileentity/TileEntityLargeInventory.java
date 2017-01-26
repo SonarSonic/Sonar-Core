@@ -12,8 +12,8 @@ public class TileEntityLargeInventory extends TileEntitySonar implements ILargeI
 	public TileEntityLargeInventory() {}
 	
 	public TileEntityLargeInventory(int size, int numStacks) {
-		inv = new SonarLargeInventory(this, size, numStacks);
-		syncParts.add(inv);
+		inv = new SonarLargeInventory(size, numStacks);
+		syncList.addPart(inv);
 	}
 
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {

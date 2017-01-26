@@ -21,7 +21,7 @@ public abstract class SyncTagType<T> extends SyncPart {
 
 		public void invert() {
 			setObject(!getObject());
-			this.setChanged(true);
+			markDirty();
 		}
 	}
 
@@ -50,12 +50,12 @@ public abstract class SyncTagType<T> extends SyncPart {
 
 		public void increaseBy(int i) {
 			setObject((short) (getObject() + i));
-			setChanged(true);
+			markDirty();
 		}
 
 		public void decreaseBy(int i) {
 			setObject((short) (getObject() - i));
-			setChanged(true);
+			markDirty();
 		}
 	}
 
@@ -72,12 +72,12 @@ public abstract class SyncTagType<T> extends SyncPart {
 
 		public void increaseBy(int i) {
 			setObject(getObject() + i);
-			this.setChanged(true);
+			markDirty();
 		}
 
 		public void decreaseBy(int i) {
 			setObject(getObject() - i);
-			this.setChanged(true);
+			markDirty();
 		}
 	}
 
@@ -94,12 +94,12 @@ public abstract class SyncTagType<T> extends SyncPart {
 
 		public void increaseBy(int i) {
 			setObject(getObject() + i);
-			this.setChanged(true);
+			markDirty();
 		}
 
 		public void decreaseBy(int i) {
 			setObject(getObject() - i);
-			this.setChanged(true);
+			markDirty();
 		}
 	}
 
@@ -173,7 +173,7 @@ public abstract class SyncTagType<T> extends SyncPart {
 			super(NBT.TAG_INT_ARRAY, name);
 			this.current = new Integer[size];
 		}
-	}
+	}	
 
 	public T current;
 	private int nbtType = -1;
@@ -224,7 +224,7 @@ public abstract class SyncTagType<T> extends SyncPart {
 	public void setObject(T object) {
 		if (current != object) {
 			current = object;
-			setChanged(true);
+			markDirty();
 		}
 	}
 

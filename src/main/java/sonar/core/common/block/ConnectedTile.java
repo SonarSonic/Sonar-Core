@@ -31,6 +31,7 @@ public abstract class ConnectedTile extends SonarMachineBlock implements IConnec
 	public static final PropertySonarFacing DOWN = PropertySonarFacing.create("down", EnumFacing.DOWN);
 	public static final PropertySonarFacing UP = PropertySonarFacing.create("up", EnumFacing.UP);
 	public static final ArrayList<PropertySonarFacing> faces = Lists.newArrayList(DOWN, UP, NORTH, SOUTH, WEST, EAST);
+	public static final ArrayList<PropertySonarFacing> horizontals = Lists.newArrayList(NORTH, SOUTH, WEST, EAST);
 
 	public static class PropertySonarFacing extends PropertyBool {
 		public EnumFacing facing;

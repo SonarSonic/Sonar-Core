@@ -7,6 +7,7 @@ import mcmultipart.multipart.IMultipartContainer;
 import mcmultipart.multipart.MultipartHelper;
 import mcmultipart.multipart.PartSlot;
 import mcmultipart.raytrace.RayTraceUtils.AdvancedRayTraceResultPart;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -87,10 +88,21 @@ public class SonarMultipartHelper {
 			}
 		}
 		return (IMultipart) null;
+	}	
+	
+	public static boolean sendMultipartSyncToPlayer(SonarMultipart part, EntityPlayerMP player) {
+		if (part != null && part.getWorld()!=null && !part.getWorld().isRemote && part instanceof INBTSyncable) {
+			NBTTagCompound tag = ((INBTSyncable) part).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
+			if (!tag.hasNoTags()) {
+				SonarCore.network.sendTo(buildSyncPacket(part, tag), player);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static boolean sendMultipartSyncAround(SonarMultipart part, int spread) {
-		if (!part.getWorld().isRemote && part != null && part instanceof INBTSyncable) {
+		if (part != null && part.getWorld()!=null && !part.getWorld().isRemote && part instanceof INBTSyncable) {
 			NBTTagCompound tag = ((INBTSyncable) part).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendToAllAround(buildSyncPacket(part, tag), new TargetPoint(part.getWorld().provider.getDimension(), part.getPos().getX(), part.getPos().getY(), part.getPos().getZ(), spread));
@@ -101,7 +113,7 @@ public class SonarMultipartHelper {
 	}
 
 	public static boolean sendMultipartSyncToServer(SonarMultipart part) {
-		if (part.getWorld().isRemote && part != null && part instanceof INBTSyncable) {
+		if (part != null && part.getWorld()!=null && part.getWorld().isRemote && part instanceof INBTSyncable) {
 			NBTTagCompound tag = ((INBTSyncable) part).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendToServer(buildSyncPacket(part, tag));
@@ -110,9 +122,10 @@ public class SonarMultipartHelper {
 		}
 		return false;
 	}
+	
 
 	public static boolean sendMultipartPacketAround(SonarMultipart part, int id, int spread) {
-		if (!part.getWorld().isRemote && part != null && part instanceof IByteBufTile) {
+		if (part != null && !part.getWorld().isRemote && part instanceof IByteBufTile) {
 			SonarCore.network.sendToAllAround(buildBufPacket(part, id), new TargetPoint(part.getWorld().provider.getDimension(), part.getPos().getX(), part.getPos().getY(), part.getPos().getZ(), spread));
 			return true;
 		}
@@ -120,7 +133,7 @@ public class SonarMultipartHelper {
 	}
 
 	public static boolean sendMultipartPacketToServer(SonarMultipart part, int id) {
-		if (part.getWorld().isRemote && part != null && part instanceof IByteBufTile) {
+		if (part != null && part.getWorld().isRemote && part instanceof IByteBufTile) {
 			SonarCore.network.sendToServer(buildBufPacket(part, id));
 			return true;
 		}

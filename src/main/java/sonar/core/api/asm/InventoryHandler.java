@@ -15,4 +15,6 @@ public @interface InventoryHandler {
 
 	/**the identification string of the TileHandler*/
 	String handlerID();
+	
+	int priority();
 }

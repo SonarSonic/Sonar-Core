@@ -1,9 +1,11 @@
 package sonar.core.network;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import sonar.core.SonarCore;
 import sonar.core.network.utils.ByteBufWritable;
 import sonar.core.network.utils.IByteBufTile;
@@ -54,7 +56,7 @@ public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 	public static class Handler extends PacketTileEntityHandler<PacketByteBuf> {
 
 		@Override
-		public IMessage processMessage(PacketByteBuf message, TileEntity tile) {
+		public IMessage processMessage(EntityPlayer player, MessageContext ctx, PacketByteBuf message, TileEntity tile) {
 
 			SonarCore.proxy.getThreadListener().addScheduledTask(new Runnable() {
 				public void run() {

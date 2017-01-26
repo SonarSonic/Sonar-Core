@@ -15,7 +15,7 @@ import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.InventoryHelper;
 
-@InventoryHandler(modid = "sonarcore", handlerID = IInventoryProvider.name)
+@InventoryHandler(modid = "sonarcore", handlerID = IInventoryProvider.name, priority = 1)
 public class IInventoryProvider implements ISonarInventoryHandler {
 
 	public static final String name = "Standard Inventory";

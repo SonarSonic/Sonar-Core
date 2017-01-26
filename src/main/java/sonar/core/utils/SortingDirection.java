@@ -1,7 +1,11 @@
 package sonar.core.utils;
 
 public enum SortingDirection {
-	DOWN, UP;
+	
+	/**highest first*/
+	DOWN, 
+	/**lowest first*/
+	UP;
 
 	public SortingDirection switchDir() {
 		switch (this) {

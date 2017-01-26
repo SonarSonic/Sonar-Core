@@ -36,10 +36,12 @@ public class SyncItemEnergyStorage extends SyncEnergyStorage implements ICapabil
 		}
 		return this;
 	}
-
+	
+	
+	
 	@Override
-	public void setChanged(boolean set) {
-		super.setChanged(set);
+	public void markDirty() {
+		super.markDirty();
 		if (stack != null){
 			if(!stack.hasTagCompound()){
 				stack.setTagCompound(new NBTTagCompound());

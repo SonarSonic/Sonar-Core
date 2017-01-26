@@ -9,7 +9,7 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.energy.GenericTeslaHandler;
 
-@EnergyHandler(modid = "tesla", handlerID = TeslaHandler.name)
+@EnergyHandler(modid = "tesla", handlerID = TeslaHandler.name, priority = 2)
 public class TeslaHandler implements ISonarEnergyHandler {
 
 	public static final String name = "TESLA-Provider";

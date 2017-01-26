@@ -4,6 +4,7 @@ import org.lwjgl.input.Mouse;
 
 public class SonarScroller {
 
+	public boolean renderScroller = true;
 	public float currentScroll;
 	public boolean isScrolling;
 	public boolean wasClicking;

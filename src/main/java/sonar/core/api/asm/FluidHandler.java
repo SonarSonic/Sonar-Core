@@ -15,4 +15,6 @@ public @interface FluidHandler {
 
 	/**the identification string of the TileHandler*/
 	String handlerID();
+	
+	int priority();
 }

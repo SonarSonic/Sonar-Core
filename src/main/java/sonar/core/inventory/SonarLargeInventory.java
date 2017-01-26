@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.IItemHandler;
 import sonar.core.api.inventories.StoredItemStack;
@@ -19,7 +18,6 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 
 	public StoredItemStack[] slots;
 	public int limit = 64;
-	public final TileEntity tile;
 	public int numStacks = 4;
 	public int size;
 	// public int max;
@@ -55,10 +53,10 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 
 	}
 	
-	public SonarLargeInventory(TileEntity tile, int size, int numStacks) {
+	public SonarLargeInventory(int size, int numStacks) {
+		super();
 		this.size = size;
 		this.slots = new StoredItemStack[size];
-		this.tile = tile;
 		this.numStacks = numStacks;
 	}
 
@@ -186,10 +184,7 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 	public boolean isItemValidForSlot(int slot, ItemStack item) {
 		return true;
 	}
-
-	public void markDirty() {
-		tile.markDirty();
-	}
+	
 
 	@Override
 	public void writeToBuf(ByteBuf buf) {

@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import sonar.core.common.block.StableStone.Variants;
 import sonar.core.integration.SonarLoader;
 
 public class SonarCrafting extends SonarCore {
@@ -27,13 +28,7 @@ public class SonarCrafting extends SonarCore {
 		addShapedOre(new ItemStack(SonarCore.reinforcedDirtBrickFence, 6), new Object[] { "ASA", "ASA", "   ", 'A', SonarCore.reinforcedDirtBrick, 'S', "stickWood" });
 
 		for (int i = 0; i < 16; i++) {
-			int meta = ~i & 15;
-			if (meta != 0) {
-				addShaped(new ItemStack(SonarCore.stableStone[meta], 8), new Object[] { "SSS", "SDS", "SSS", 'D', new ItemStack(Items.DYE, 1, i), 'S', new ItemStack(SonarCore.stableStone[0], 1) });
-			}
-		}
-
-		for (int i = 0; i < 16; i++) {
+			addShaped(new ItemStack(SonarCore.stableStone[i], 8), new Object[] { "SSS", "SDS", "SSS", 'D', new ItemStack(Items.DYE, 1, Variants.values()[i].getDyeMeta()), 'S', new ItemStack(SonarCore.stableStone[0], 1) });
 			addShapeless(new ItemStack(stablestonerimmedBlock[i], 1), new Object[] { new ItemStack(stableStone[i], 1) });
 			addShapeless(new ItemStack(stablestonerimmedblackBlock[i], 1), new Object[] { new ItemStack(stablestonerimmedBlock[i], 1) });
 			addShapeless(new ItemStack(SonarCore.stableStone[i], 1), new Object[] { new ItemStack(SonarCore.stablestonerimmedblackBlock[i], 1) });

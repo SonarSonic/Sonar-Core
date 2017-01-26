@@ -30,7 +30,7 @@ import sonar.core.network.sync.SyncSidedEnergyStorage;
 public abstract class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver, IEnergyProvider, ISonarEnergyTile, IEnergyTile, IEnergySink, IEnergySource {
 
 	public TileEntityEnergy() {
-		syncParts.add(storage);
+		syncList.addPart(storage);
 	}
 
 	public EnergyMode energyMode = EnergyMode.RECIEVE;

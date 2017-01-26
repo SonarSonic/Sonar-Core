@@ -1,6 +1,5 @@
 package sonar.core.common.tileentity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
@@ -22,22 +21,20 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.IWailaInfo;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketTileSync;
-import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.IDirtyPart;
 import sonar.core.network.sync.ISyncPart;
+import sonar.core.network.sync.ISyncableListener;
+import sonar.core.network.sync.SyncableList;
 import sonar.core.utils.IWorldPosition;
 
-public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncable, IWailaInfo, IWorldPosition {
+public class TileEntitySonar extends TileEntity implements ISyncableListener, ITickable, INBTSyncable, IWailaInfo, IWorldPosition {
 
-	public ArrayList<ISyncPart> syncParts = new ArrayList<ISyncPart>();
-	public ArrayList<IDirtyPart> dirtyParts = new ArrayList();
+	public SyncableList syncList = new SyncableList(this);	
 	protected boolean forceSync;
 	protected BlockCoords coords = BlockCoords.EMPTY;
-	public boolean loaded = true;
-	protected DirtyPart isDirty = new DirtyPart();
-
-	public TileEntitySonar() {
-	}
+	public boolean loaded = true;	
+	
+	public TileEntitySonar() {}
 
 	public boolean isClient() {
 		return worldObj == null ? false : worldObj.isRemote;
@@ -48,34 +45,17 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	}
 
 	public void onLoad() {
-		isDirty.setChanged(true);
 	}
 
 	public void onFirstTick() {
 		this.markBlockForUpdate();
+		markDirty();
 	}
 
 	public void update() {
-		boolean markDirty = false;
 		if (loaded) {
 			onFirstTick();
 			loaded = !loaded;
-		}
-
-		for (ISyncPart part : syncParts) {
-			if (part != null && part.hasChanged()) {
-				markDirty = true;
-				break;
-			}
-		}
-		for (IDirtyPart part : dirtyParts) {
-			if (part != null && part.hasChanged()) {
-				markDirty = true;
-				part.setChanged(false);
-			}
-		}
-		if (markDirty) {
-			markDirty();
 		}
 	}
 
@@ -122,7 +102,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	}
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		NBTHelper.readSyncParts(nbt, type, this.syncParts);
+		NBTHelper.readSyncParts(nbt, type, syncList);
 	}
 
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
@@ -130,7 +110,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 			type = SyncType.SYNC_OVERRIDE;
 			forceSync = false;
 		}
-		NBTHelper.writeSyncParts(nbt, type, this.syncParts, forceSync);
+		NBTHelper.writeSyncParts(nbt, type, syncList, forceSync);
 		return nbt;
 	}
 
@@ -141,8 +121,10 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 
 	public void forceNextSync() {
 		forceSync = true;
-		isDirty.setChanged(true);
+		markDirty();
 	}
+
+	public void onSyncPacketRequested(EntityPlayer player){}
 
 	public void requestSyncPacket() {
 		SonarCore.network.sendToServer(new PacketRequestSync(pos));
@@ -163,7 +145,7 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 
 	public void markBlockForUpdate() {
 		if (this.isServer()) {
-			isDirty.setChanged(true);
+			markDirty();
 			SonarCore.sendFullSyncAroundWithRenderUpdate(this, 128);
 		} else {
 			getWorld().markBlockRangeForRenderUpdate(pos, pos);
@@ -185,6 +167,12 @@ public class TileEntitySonar extends TileEntity implements ITickable, INBTSyncab
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		return maxRender() ? INFINITE_EXTENT_AABB : super.getRenderBoundingBox();
+	}
+
+	@Override
+	public void markChanged(IDirtyPart part) {
+		syncList.markSyncPartChanged(part);		
+		markBlockForUpdate();
 	}
 
 }
