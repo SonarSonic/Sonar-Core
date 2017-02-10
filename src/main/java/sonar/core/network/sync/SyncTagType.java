@@ -195,7 +195,7 @@ public abstract class SyncTagType<T> extends SyncPart {
 
 	@Override
 	public void readFromBuf(ByteBuf buf) {
-		current = (T) NBTHelper.readBufBase(buf, nbtType, getTagName());
+		setObject((T) NBTHelper.readBufBase(buf, nbtType, getTagName()));
 	}
 
 	@Override
@@ -208,8 +208,9 @@ public abstract class SyncTagType<T> extends SyncPart {
 
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		if (nbt.hasKey(getTagName()))
-			current = (T) NBTHelper.readNBTBase(nbt, nbtType, getTagName());
+		if (nbt.hasKey(getTagName())){
+			setObject((T) NBTHelper.readNBTBase(nbt, nbtType, getTagName()));
+		}
 	}
 
 	public SyncTagType<T> setDefault(T def) {

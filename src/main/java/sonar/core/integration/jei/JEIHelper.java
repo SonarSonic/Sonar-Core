@@ -1,5 +1,6 @@
 package sonar.core.integration.jei;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import net.minecraftforge.fml.common.Loader;
 import sonar.calculator.mod.integration.jei.CalculatorJEI;
 import sonar.calculator.mod.integration.jei.CalculatorJEI.Handlers;
 import sonar.core.integration.SonarLoader;
+import sonar.core.recipes.IRecipeHelperV2;
 import sonar.core.recipes.ISonarRecipe;
 import sonar.core.recipes.RecipeHelperV2;
 import sonar.core.recipes.RecipeObjectType;
@@ -82,5 +84,20 @@ public class JEIHelper {
 			}
 		}
 		return null;
+	}
+	
+	public static ArrayList<JEIRecipeV2> getJEIRecipes(IRecipeHelperV2 recipeHelper, Class<? extends JEIRecipeV2> recipeClass) {
+		ArrayList<JEIRecipeV2> recipesV2 = new ArrayList();
+		if (recipeHelper != null && recipeHelper instanceof RecipeHelperV2) {
+			RecipeHelperV2 helper = (RecipeHelperV2) recipeHelper;
+			for (ISonarRecipe recipe : (ArrayList<ISonarRecipe>) helper.getRecipes()) {
+				try {
+					recipesV2.add(recipeClass.getConstructor(RecipeHelperV2.class, ISonarRecipe.class).newInstance(helper, recipe));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return recipesV2;
 	}
 }

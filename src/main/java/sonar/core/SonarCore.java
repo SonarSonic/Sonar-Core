@@ -50,6 +50,8 @@ import sonar.core.network.FlexibleGuiHandler;
 import sonar.core.network.PacketBlockInteraction;
 import sonar.core.network.PacketByteBuf;
 import sonar.core.network.PacketByteBufMultipart;
+import sonar.core.network.PacketFlexibleChangeGui;
+import sonar.core.network.PacketFlexibleCloseGui;
 import sonar.core.network.PacketFlexibleContainer;
 import sonar.core.network.PacketFlexibleOpenGui;
 import sonar.core.network.PacketInvUpdate;
@@ -71,7 +73,7 @@ import sonar.core.upgrades.MachineUpgradeRegistry;
 public class SonarCore {
 
 	public static final String modid = "sonarcore";
-	public static final String version = "3.2.2";
+	public static final String version = "3.2.3";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -204,6 +206,9 @@ public class SonarCore {
 			network.registerMessage(PacketFlexibleOpenGui.Handler.class, PacketFlexibleOpenGui.class, 14, Side.CLIENT);
 			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 15, Side.CLIENT);
 			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 16, Side.SERVER);
+			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 17, Side.CLIENT);
+			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 18, Side.SERVER);
+			network.registerMessage(PacketFlexibleChangeGui.Handler.class, PacketFlexibleChangeGui.class, 19, Side.SERVER);
 		}
 	}
 
@@ -247,7 +252,7 @@ public class SonarCore {
 	}
 
 	public static void sendFullSyncAroundWithRenderUpdate(TileEntity tile, int spread) {
-		if (!tile.getWorld().isRemote && tile instanceof INBTSyncable) {
+		if (tile!=null && tile.getWorld()!=null && !tile.getWorld().isRemote && tile instanceof INBTSyncable) {
 			NBTTagCompound tag = ((INBTSyncable) tile).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendToAllAround(new PacketTileSyncUpdate(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));

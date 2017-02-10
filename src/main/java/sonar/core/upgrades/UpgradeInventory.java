@@ -4,21 +4,33 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import gnu.trove.map.hash.THashMap;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.SonarCore;
 import sonar.core.api.upgrades.IUpgradeInventory;
 import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.network.sync.SyncPart;
 
-public class UpgradeInventory implements IUpgradeInventory {
+public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
 
 	public ArrayList<String> allowed = new ArrayList();
 	public THashMap<String, Integer> upgrades = new THashMap<String, Integer>();
 	public THashMap<String, Integer> maxUpgrades = new THashMap<String, Integer>();
-	public boolean markDirty = true;
+	//public boolean markDirty = true;
 
-	public UpgradeInventory(int max, Object... allowed) {
+	public UpgradeInventory(int syncID, int max, Object... allowed) {
+		super(syncID);		
+		this.setAllowed(max, allowed);
+		if (allowed.length == 0) {
+			SonarCore.logger.warn("Upgradable Inventory: has no allowed Upgrade Types");
+		}
+	}
+	
+	public UpgradeInventory setAllowed(int max, Object... allowed){
+		this.allowed.clear();
 		for (Object object : allowed) {
 			if (object != null && object instanceof String) {
 				this.allowed.add((String) object);
@@ -28,9 +40,7 @@ public class UpgradeInventory implements IUpgradeInventory {
 			this.upgrades.put(type, 0);
 			this.maxUpgrades.put(type, max);
 		}
-		if (allowed.length == 0) {
-			SonarCore.logger.warn("Upgradable Inventory: has no allowed Upgrade Types");
-		}
+		return this;
 	}
 
 	public UpgradeInventory addMaxiumum(String type, int max) {
@@ -44,7 +54,7 @@ public class UpgradeInventory implements IUpgradeInventory {
 			if (upgrade != null) {
 				if (allowed.contains(upgrade) && maxUpgrades.get(upgrade).intValue() != upgrades.get(upgrade).intValue()) {
 					upgrades.put(upgrade, Integer.valueOf(upgrades.get(upgrade) + 1));
-					markDirty = true;
+					this.markDirty();
 					return true;
 				}
 			}
@@ -84,22 +94,19 @@ public class UpgradeInventory implements IUpgradeInventory {
 				upgrades.put(entry.getKey(), 0);
 			}
 		}
-		this.markDirty = true;
+		this.markDirty();
 		return drops;
 	}
 
 	@Override
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
-		if (type.isType(SyncType.DEFAULT_SYNC, SyncType.SAVE) || markDirty) {
+		if (type.isType(SyncType.DEFAULT_SYNC, SyncType.SAVE)) {
 			NBTTagCompound upgradeTag = new NBTTagCompound();
 			for (Entry<String, Integer> entry : upgrades.entrySet()) {
 				upgradeTag.setInteger(entry.getKey(), entry.getValue());
 			}
 			if (!upgradeTag.hasNoTags()) {
 				nbt.setTag("Upgrades", upgradeTag);
-			}
-			if (type.isType(SyncType.DEFAULT_SYNC)) {
-				markDirty = false;
 			}
 		}
 		return nbt;
@@ -125,6 +132,16 @@ public class UpgradeInventory implements IUpgradeInventory {
 	@Override
 	public THashMap<String, Integer> getInstalledUpgrades() {
 		return upgrades;
+	}
+
+	@Override
+	public void writeToBuf(ByteBuf buf) {
+		ByteBufUtils.writeTag(buf, writeData(new NBTTagCompound(), SyncType.SAVE));
+	}
+
+	@Override
+	public void readFromBuf(ByteBuf buf) {
+		readData(ByteBufUtils.readTag(buf), SyncType.SAVE);
 	}
 
 }

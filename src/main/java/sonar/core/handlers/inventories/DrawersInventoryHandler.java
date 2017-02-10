@@ -15,8 +15,8 @@ import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 
-@InventoryHandler(modid="StorageDrawers", handlerID=DrawersInventoryProvider.name, priority = 2)
-public class DrawersInventoryProvider implements ISonarInventoryHandler {
+@InventoryHandler(modid="StorageDrawers", handlerID=DrawersInventoryHandler.name, priority = 2)
+public class DrawersInventoryHandler implements ISonarInventoryHandler {
 
 	public static final String name = "Storage Drawers";
 

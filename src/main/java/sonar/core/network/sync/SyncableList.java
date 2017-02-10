@@ -18,8 +18,10 @@ public class SyncableList {
 
 	public void addPart(IDirtyPart part) {
 		ArrayList list = (part instanceof ISyncPart ? syncParts : dirtyParts);
+		ArrayList changeList = (part instanceof ISyncPart ? changedSyncParts : changedDirtyParts);
 		if (!list.contains(part)) {
 			list.add(part);
+			changeList.add(part);
 			part.setListener(listener);
 		}
 	}

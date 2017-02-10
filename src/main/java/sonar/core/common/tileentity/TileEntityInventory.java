@@ -51,12 +51,12 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		super.readData(nbt, type);
-		getTileInv().readData(nbt, type);
+		//getTileInv().readData(nbt, type);
 	}
 
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
-		getTileInv().writeData(nbt, type);
+		//getTileInv().writeData(nbt, type);
 		return nbt;
 	}
 

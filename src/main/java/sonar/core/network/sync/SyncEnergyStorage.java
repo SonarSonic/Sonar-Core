@@ -42,6 +42,7 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 		if (energy > capacity) {
 			energy = capacity;
 		}
+		markDirty();
 		return this;
 	}
 
@@ -53,11 +54,13 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 
 	public SyncEnergyStorage setMaxReceive(int maxReceive) {
 		this.maxReceive = maxReceive;
+		markDirty();
 		return this;
 	}
 
 	public SyncEnergyStorage setMaxExtract(int maxExtract) {
 		this.maxExtract = maxExtract;
+		markDirty();
 		return this;
 	}
 
@@ -125,7 +128,6 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 	}
 
 	public final NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
-		/* NBTTagCompound energyTag = new NBTTagCompound(); if (type.isType(SyncType.DEFAULT_SYNC)) { if (type.mustSync() || !equal()) { this.writeToNBT(energyTag); lastEnergy = this.getEnergyStored(); } } else if (type == SyncType.SAVE) { this.writeToNBT(energyTag); lastEnergy = this.getEnergyStored(); } if (!energyTag.hasNoTags()) nbt.setTag(getTagName(), energyTag); */
 		NBTTagCompound energyTag = new NBTTagCompound();
 		this.writeToNBT(energyTag);
 		nbt.setTag(getTagName(), energyTag);

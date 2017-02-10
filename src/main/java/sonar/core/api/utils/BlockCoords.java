@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
@@ -16,6 +17,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import sonar.core.SonarCore;
 
 /** an object with a blocks x, y and z coordinates */
 public class BlockCoords {
@@ -163,9 +165,7 @@ public class BlockCoords {
 		if (world != null) {
 			return world;
 		}
-		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-		World world = server.worldServerForDimension(getDimension());
-		return world;
+		return world = SonarCore.proxy.getDimension(getDimension());
 	}
 
 	public static void writeToBuf(ByteBuf tag, BlockCoords coords) {

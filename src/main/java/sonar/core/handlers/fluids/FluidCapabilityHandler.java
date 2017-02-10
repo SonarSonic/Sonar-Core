@@ -27,7 +27,7 @@ public class FluidCapabilityHandler implements ISonarFluidHandler {
 	@Override
 	public StoredFluidStack addStack(StoredFluidStack add, TileEntity tile, EnumFacing dir, ActionType action) {
 		IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir);
-		add.stored -= handler.fill(add.fluid, !action.shouldSimulate());
+		add.stored -= handler.fill(add.getFullStack(), !action.shouldSimulate());
 		return add;
 	}
 
@@ -35,7 +35,7 @@ public class FluidCapabilityHandler implements ISonarFluidHandler {
 	public StoredFluidStack removeStack(StoredFluidStack remove, TileEntity tile, EnumFacing dir, ActionType action) {
 		IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir);
 		FluidStack drained = null;
-		remove.stored -= (drained = handler.drain(remove.fluid, !action.shouldSimulate())) != null ? drained.amount : 0;
+		remove.stored -= (drained = handler.drain(remove.getFullStack(), !action.shouldSimulate())) != null ? drained.amount : 0;
 		return remove;
 	}
 

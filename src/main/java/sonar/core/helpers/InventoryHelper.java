@@ -16,11 +16,11 @@ import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.api.wrappers.InventoryWrapper;
-import sonar.core.handlers.inventories.IInventoryProvider;
+import sonar.core.handlers.inventories.IInventoryHandler;
 
 public class InventoryHelper extends InventoryWrapper {
 
-	public static ISonarInventoryHandler defHandler = new IInventoryProvider();
+	public static ISonarInventoryHandler defHandler = new IInventoryHandler();
 
 	public static boolean addStack(IInventory inv, StoredItemStack add, int slot, int limit, ActionType action) {
 		if (inv.isItemValidForSlot(slot, add.item)) {

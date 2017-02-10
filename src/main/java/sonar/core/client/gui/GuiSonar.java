@@ -133,6 +133,10 @@ public abstract class GuiSonar extends GuiContainer {
 		mc.getTextureManager().bindTexture(resource);
 	}
 
+	public void drawSonarCreativeTabHoveringText(String tabName, int mouseX, int mouseY) {
+		drawCreativeTabHoveringText(tabName,mouseX,mouseY);
+	}
+
 	@SideOnly(Side.CLIENT)
 	public static class PauseButton extends SonarButtons.ImageButton {
 
@@ -159,7 +163,7 @@ public abstract class GuiSonar extends GuiContainer {
 		}
 
 		@Override
-		public void onClicked() {			
+		public void onClicked() {
 			SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) gui.entity, gui.entity.getCoords().getBlockPos(), id));
 			gui.buttonList.clear();
 			gui.initGui();

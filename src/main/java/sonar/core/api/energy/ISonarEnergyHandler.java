@@ -36,7 +36,7 @@ public interface ISonarEnergyHandler {
 	 * @param energyStack current list of energy for the block, providers only add to this and don't remove.
 	 * @param tile the {@link TileEntity} to check
 	 * @param dir the {@link EnumFacing} to check from 
-	 * @return TODO*/
+	 * @return the stored energy*/
 	public StoredEnergyStack getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir);
 
 }

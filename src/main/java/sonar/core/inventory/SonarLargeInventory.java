@@ -147,7 +147,7 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 				int maxAdd = (int) Math.min(numStacks * stack.getMaxStackSize() - (stored != null ? stored.getStackSize() : 0), stack.stackSize);
 				if (maxAdd != 0) {
 					if (!simulate) {
-						if (stored != null) {
+						if (stored != null && stored.getStackSize() != 0) {
 							stored.stored += maxAdd;
 						} else {
 							stored = slots[target] = new StoredItemStack(stack.copy(), maxAdd);

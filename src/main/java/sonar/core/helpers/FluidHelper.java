@@ -21,12 +21,12 @@ public class FluidHelper extends FluidWrapper {
 
 	}
 
-	public StoredFluidStack getStackToAdd(long inputSize, StoredFluidStack stack, StoredItemStack returned) {
+	public StoredFluidStack getStackToAdd(long inputSize, StoredFluidStack stack, StoredFluidStack returned) {
 		StoredFluidStack simulateStack = null;
 		if (returned == null || returned.stored == 0) {
-			simulateStack = new StoredFluidStack(stack.getFullStack(), inputSize);
+			simulateStack = new StoredFluidStack(stack.getFullStack(), inputSize, stack.capacity);
 		} else {
-			simulateStack = new StoredFluidStack(stack.getFullStack(), inputSize - returned.stored);
+			simulateStack = new StoredFluidStack(stack.getFullStack(), inputSize - returned.stored, stack.capacity);
 		}
 		return simulateStack;
 	}

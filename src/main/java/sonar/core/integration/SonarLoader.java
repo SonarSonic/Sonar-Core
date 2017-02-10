@@ -20,7 +20,7 @@ public class SonarLoader {
 		wailaLoaded = Loader.isModLoaded("Waila") || Loader.isModLoaded("Waila".toLowerCase());
 		teslaLoaded = Loader.isModLoaded("Tesla") || Loader.isModLoaded("tesla");
 		calculatorLoaded = Loader.isModLoaded("calculator") || Loader.isModLoaded("Calculator");
-		logisticsLoaded = Loader.isModLoaded("PracticalLogistics") || Loader.isModLoaded("practicallogistics");
+		logisticsLoaded = Loader.isModLoaded("PracticalLogistics2") || Loader.isModLoaded("practicallogistics2");
 		fluxedRedstone = Loader.isModLoaded("fluxedredstone");
 		ic2loaded = Loader.isModLoaded("IC2") || Loader.isModLoaded("IC2".toLowerCase());
 

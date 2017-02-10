@@ -14,7 +14,7 @@ public class FluidWrapper {
 	public void addFluidToList(List<StoredFluidStack> list, StoredFluidStack stack) {}
 
 	/** convenience method, creates a {@link StoredFluidStack} of how much should be added */
-	public StoredFluidStack getStackToAdd(long inputSize, StoredFluidStack stack, StoredItemStack returned) {
+	public StoredFluidStack getStackToAdd(long inputSize, StoredFluidStack stack, StoredFluidStack returned) {
 		return null;
 	}
 

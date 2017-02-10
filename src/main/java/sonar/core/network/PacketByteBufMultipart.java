@@ -44,13 +44,15 @@ public class PacketByteBufMultipart extends PacketMultipart {
 
 		@Override
 		public IMessage processMessage(PacketByteBufMultipart message, IMultipartContainer tile, IMultipart part, MessageContext ctx) {
-			SonarCore.proxy.getThreadListener().addScheduledTask(new Runnable() {
+
+			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
 				public void run() {
 					if (part != null && part instanceof IByteBufTile) {
 						((IByteBufTile) part).readPacket(message.buf, message.id);
 					}
 				}
 			});
+
 			return null;
 		}
 	}

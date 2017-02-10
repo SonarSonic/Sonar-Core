@@ -1,6 +1,7 @@
 package sonar.core.helpers;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -189,5 +190,14 @@ public class FontHelper {
 		blue = blue & 0x000000FF;
 
 		return 0xFF000000 | red | green | blue;
+	}
+
+	public static String getStringListToText(List<String> strings) {
+		String list = "";
+		for (int i = 0; i < strings.size(); i++) {
+			String string = strings.get(i);
+			list = i != 0 ? (list + ", " + string) : string;
+		}
+		return list;
 	}
 }

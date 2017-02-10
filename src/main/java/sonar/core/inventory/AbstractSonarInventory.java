@@ -107,10 +107,10 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 
 	public ItemStack decrStackSize(int slot, int var2) {
 		if (this.slots[slot] != null) {
-			markDirty();
 			if (this.slots[slot].stackSize <= var2) {
 				ItemStack itemstack = this.slots[slot];
 				this.slots[slot] = null;
+				markDirty();
 				return itemstack;
 			}
 			ItemStack itemstack = this.slots[slot].splitStack(var2);
@@ -118,6 +118,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 			if (this.slots[slot].stackSize == 0) {
 				this.slots[slot] = null;
 			}
+			markDirty();
 			return itemstack;
 		}
 
@@ -126,9 +127,9 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 
 	public ItemStack removeStackFromSlot(int i) {
 		if (this.slots[i] != null) {
-			markDirty();
 			ItemStack itemstack = this.slots[i];
 			this.slots[i] = null;
+			markDirty();
 			return itemstack;
 		}
 		return null;

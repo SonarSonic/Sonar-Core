@@ -12,8 +12,8 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.EUHelper;
 
-@EnergyHandler(modid = "IC2", handlerID = EUProvider.name, priority = 4)
-public class EUProvider implements ISonarEnergyHandler {
+@EnergyHandler(modid = "IC2", handlerID = EUHandler.name, priority = 4)
+public class EUHandler implements ISonarEnergyHandler {
 
 	public static final String name = "EU-Provider";
 

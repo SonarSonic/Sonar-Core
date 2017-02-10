@@ -3,6 +3,8 @@ package sonar.core.network;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import sonar.core.BlockRenderRegister;
 import sonar.core.client.renderers.SonarCustomStateMapper;
@@ -26,9 +28,18 @@ public class SonarClient extends SonarCommon {
 		return (ctx.side.isClient() ? Minecraft.getMinecraft().thePlayer : super.getPlayerEntity(ctx));
 	}
 
-	public IThreadListener getThreadListener() {
-		if (clientListener == null)
-			clientListener = Minecraft.getMinecraft();
-		return clientListener;
+	@Override
+	public World getDimension(int dimensionID) {
+		return FMLCommonHandler.instance().getEffectiveSide().isClient() ? Minecraft.getMinecraft().theWorld : super.getDimension(dimensionID);
+	}
+
+	public IThreadListener getThreadListener(MessageContext ctx) {
+		if (ctx.side.isClient()) {
+			if (clientListener == null)
+				clientListener = Minecraft.getMinecraft();
+			return clientListener;
+		} else {
+			return super.getThreadListener(ctx);
+		}
 	}
 }

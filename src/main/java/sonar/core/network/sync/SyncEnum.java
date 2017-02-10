@@ -28,7 +28,7 @@ public class SyncEnum<E extends Enum> extends SyncPart {
 
 	@Override
 	public void readFromBuf(ByteBuf buf) {
-		current = values.clone()[buf.readInt()];
+		setObject(values[buf.readInt()]);
 	}
 
 	@Override
@@ -41,8 +41,9 @@ public class SyncEnum<E extends Enum> extends SyncPart {
 
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		if (nbt.hasKey(getTagName()))
-			current = values.clone()[nbt.getInteger(getTagName())];
+		if (nbt.hasKey(getTagName())){
+			setObject(values.clone()[nbt.getInteger(getTagName())]);
+		}
 	}
 
 	public void incrementEnum() {
@@ -52,6 +53,7 @@ public class SyncEnum<E extends Enum> extends SyncPart {
 		} else {
 			current = values[0];
 		}
+		this.markDirty();
 	}
 
 	public SyncEnum<E> setDefault(E def) {

@@ -51,7 +51,7 @@ public class PacketRequestMultipartSync extends PacketCoords<PacketRequestMultip
 				if (container != null) {
 					IMultipart part = container.getPartFromID(message.uuid);
 					if (part != null && part instanceof SonarMultipart) {
-						SonarCore.proxy.getThreadListener().addScheduledTask(new Runnable() {
+						SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
 							public void run() {
 								((SonarMultipart) part).forceNextSync();
 								((SonarMultipart) part).onSyncPacketRequested(player);

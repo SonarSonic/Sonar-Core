@@ -16,6 +16,27 @@ public abstract class SonarValidation {
 		public boolean isValid(Object obj) {
 			return obj != null && type.isInstance(obj);
 		}
+	}
 
+	public static class CLASSLIST extends SonarValidation {
+
+		public Class[] types;
+
+		public CLASSLIST(Class... types) {
+			this.types = types;
+		}
+
+		@Override
+		public boolean isValid(Object obj) {
+			if(obj==null){
+				return false;
+			}
+			for(Class type :types){
+				if(type.isInstance(obj)){
+					return true;
+				}
+			}			
+			return false;
+		}
 	}
 }

@@ -14,8 +14,8 @@ import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
 
 @Deprecated
-@FluidHandler(modid="sonarcore", handlerID = TankProvider.name, priority = 1)
-public class TankProvider implements ISonarFluidHandler {
+@FluidHandler(modid="sonarcore", handlerID = TankHandler.name, priority = 1)
+public class TankHandler implements ISonarFluidHandler {
 	public static final String name = "Tank-Inventory";
 
 

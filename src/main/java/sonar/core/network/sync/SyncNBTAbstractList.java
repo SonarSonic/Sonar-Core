@@ -45,8 +45,7 @@ public class SyncNBTAbstractList<T extends INBTSyncable> extends SyncPart {
 	}
 
 	public void removeObject(T object) {
-		if (objs.contains(object)) {
-			objs.remove(object);
+		if (objs.remove(object)) {
 			markDirty();
 		}
 	}

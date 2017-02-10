@@ -8,8 +8,18 @@ import javax.annotation.Nullable;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagByte;
+import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagDouble;
+import net.minecraft.nbt.NBTTagEnd;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagLong;
+import net.minecraft.nbt.NBTTagShort;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -42,7 +52,7 @@ public class NBTHelper {
 
 	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, List<ISyncPart> syncableList, boolean forceSync) {
 		for (ISyncPart part : syncableList) {
-			if (part != null && (forceSync || type.mustSync()) && part.canSync(type)) {
+			if (part != null && ((forceSync || type.mustSync()) || part.canSync(type))) {
 				part.writeData(nbt, type);
 			}
 		}
@@ -51,7 +61,8 @@ public class NBTHelper {
 
 	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, SyncableList syncableList, boolean forceSync) {
 		for (ISyncPart part : (ArrayList<ISyncPart>) (syncableList.getSyncList(type).clone())) {
-			if (part != null && (forceSync || type.mustSync()) && part.canSync(type)) {
+			//System.out.println((forceSync || type.mustSync()));
+			if (part != null && ((forceSync || type.mustSync()) || part.canSync(type))) {
 				part.writeData(nbt, type);
 				syncableList.onPartSynced(part);
 			}
@@ -327,7 +338,7 @@ public class NBTHelper {
 			obj = readNBTBase(tag, tag.getTag(key).getId(), key);
 		}
 	}
-
+		
 	public static NBTTagCompound writeNBTBase(NBTTagCompound nbt, int type, Object object, String tagName) {
 		if (object == null) {
 			SonarCore.logger.error("NBT ERROR: Can't write NULL");

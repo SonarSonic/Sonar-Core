@@ -3,6 +3,8 @@ package sonar.core.integration.multipart;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.common.collect.Lists;
+
 import mcmultipart.multipart.Multipart;
 import mcmultipart.raytrace.PartMOP;
 import net.minecraft.entity.Entity;
@@ -36,6 +38,7 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 	public boolean wasRemoved = false;
 	public boolean firstTick = false;
 	protected boolean forceSync;
+	public boolean isDirty = false;
 
 	public SonarMultipart(AxisAlignedBB collisionBox) {
 		super();
@@ -50,6 +53,10 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 		if (!firstTick) {
 			this.onFirstTick();
 			firstTick = true;
+		}
+		if (isDirty) {
+			this.markDirty();
+			isDirty = !isDirty;
 		}
 	}
 
@@ -78,6 +85,9 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 	}
 
 	public BlockCoords getCoords() {
+		if (getContainer() == null) {
+			return null;
+		}
 		return new BlockCoords(getContainer().getPosIn(), getContainer().getWorldIn());
 	}
 
@@ -132,6 +142,11 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 		return getItemStack();
 	}
 
+	@Override
+	public List<ItemStack> getDrops() {
+		return Lists.newArrayList(this.getItemStack());
+	}
+
 	public abstract ItemStack getItemStack();
 
 	// change it to get the next valid rotation whatever it is;
@@ -174,8 +189,10 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 	/** called when a part is changed */
 	@Override
 	public void markChanged(IDirtyPart part) {
-		syncList.markSyncPartChanged(part);
-		markDirty();
+		if (this.isServer()) {
+			syncList.markSyncPartChanged(part);
+			isDirty = true;
+		}
 	}
 
 	/** if this Multipart is in a client world */
@@ -202,6 +219,10 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 
 	/** opens a GUI using {@link IFlexibleGui} */
 	public final void openFlexibleGui(EntityPlayer player, int id) {
-		SonarCore.instance.guiHandler.openBasicMultipart(getUUID(), player, getWorld(), getPos(), id);
+		SonarCore.instance.guiHandler.openBasicMultipart(false, getUUID(), player, getWorld(), getPos(), id);
+	}
+
+	public final void changeFlexibleGui(EntityPlayer player, int id) {
+		SonarCore.instance.guiHandler.openBasicMultipart(true, getUUID(), player, getWorld(), getPos(), id);
 	}
 }

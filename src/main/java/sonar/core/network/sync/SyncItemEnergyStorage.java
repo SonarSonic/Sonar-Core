@@ -37,8 +37,6 @@ public class SyncItemEnergyStorage extends SyncEnergyStorage implements ICapabil
 		return this;
 	}
 	
-	
-	
 	@Override
 	public void markDirty() {
 		super.markDirty();

@@ -18,7 +18,8 @@ public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 
 	@Override
 	public void markDirty() {
-		tile.markDirty();
+		super.markDirty();
+		//tile.markDirty();
 	}
 
 	public String getName() {
