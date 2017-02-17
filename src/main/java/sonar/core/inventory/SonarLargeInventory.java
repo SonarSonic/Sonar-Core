@@ -205,5 +205,9 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 	public String getTagName() {
 		return "Items";
 	}
+	
+	public void markDirty(){
+		markChanged();
+	}
 
 }

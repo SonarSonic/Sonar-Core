@@ -27,7 +27,7 @@ public class SyncUUID extends SyncPart {
 
 	public void setObject(UUID id) {
 		current = id;
-		markDirty();
+		markChanged();
 	}
 
 	@Override

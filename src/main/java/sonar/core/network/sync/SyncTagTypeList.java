@@ -33,20 +33,20 @@ public class SyncTagTypeList<T> extends SyncPart {
 
 	public void setObjects(ArrayList<T> list) {
 		objs = list;
-		markDirty();
+		markChanged();
 	}
 
 	public void addObject(T object) {
 		if (!objs.contains(object)) {
 			objs.add(object);
-			markDirty();
+			markChanged();
 		}
 	}
 
 	public void removeObject(T object) {
 		if (objs.contains(object)) {
 			objs.remove(object);
-			markDirty();
+			markChanged();
 		}
 	}
 

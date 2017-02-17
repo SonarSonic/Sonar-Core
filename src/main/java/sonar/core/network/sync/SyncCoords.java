@@ -18,7 +18,7 @@ public class SyncCoords extends SyncPart {
 
 	public void setCoords(BlockCoords value) {
 		c = value;
-		this.markDirty();
+		this.markChanged();
 	}
 
 	public BlockCoords getCoords() {

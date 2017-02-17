@@ -21,24 +21,28 @@ import sonar.core.SonarCore;
 import sonar.core.api.IFlexibleGui;
 
 public class PacketFlexibleChangeGui extends PacketMultipart {
-	public int windowID;
+	public int guiID;
+	public int returnID;
 
 	public PacketFlexibleChangeGui() {
 	}
 
-	public PacketFlexibleChangeGui(UUID partUUID, BlockPos pos, int windowID) {
+	public PacketFlexibleChangeGui(UUID partUUID, BlockPos pos, int guiID, int returnID) {
 		super(partUUID, pos);
-		this.windowID = windowID;
+		this.guiID = guiID;
+		this.returnID = returnID;
 	}
 
 	public void fromBytes(ByteBuf buf) {
 		super.fromBytes(buf);
-		windowID = buf.readInt();
+		guiID = buf.readInt();
+		returnID = buf.readInt();
 	}
 
 	public void toBytes(ByteBuf buf) {
 		super.toBytes(buf);
-		buf.writeInt(windowID);
+		buf.writeInt(guiID);
+		buf.writeInt(returnID);
 	}
 
 	public static class Handler extends PacketMultipartHandler<PacketFlexibleChangeGui> {
@@ -48,10 +52,11 @@ public class PacketFlexibleChangeGui extends PacketMultipart {
 			if (!(part instanceof IFlexibleGui)) {
 				return null;
 			}
-			EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
 				public void run() {
-					SonarCore.instance.guiHandler.openBasicMultipart(true, message.partUUID, player, player.getEntityWorld(), message.pos, message.windowID);
+					EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
+					SonarCore.instance.guiHandler.lastID.put(player, message.returnID);
+					SonarCore.instance.guiHandler.openBasicMultipart(true, message.partUUID, player, player.getEntityWorld(), message.pos, message.guiID);
 				}
 			});
 			return null;

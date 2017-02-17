@@ -16,8 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import sonar.core.SonarCore;
 
 public class PacketFlexibleCloseGui extends PacketCoords {
-	public int windowID;
-
+	
 	public PacketFlexibleCloseGui() {}
 
 	public PacketFlexibleCloseGui(BlockPos pos) {
@@ -27,9 +26,9 @@ public class PacketFlexibleCloseGui extends PacketCoords {
 	public static class Handler implements IMessageHandler<PacketFlexibleCloseGui, IMessage> {
 		@Override
 		public IMessage onMessage(PacketFlexibleCloseGui message, MessageContext ctx) {
-			EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
 				public void run() {
+					EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 					FlexibleGuiHandler.closeGui(player, ctx.side);
 				}
 			});

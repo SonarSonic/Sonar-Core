@@ -54,7 +54,7 @@ public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
 			if (upgrade != null) {
 				if (allowed.contains(upgrade) && maxUpgrades.get(upgrade).intValue() != upgrades.get(upgrade).intValue()) {
 					upgrades.put(upgrade, Integer.valueOf(upgrades.get(upgrade) + 1));
-					this.markDirty();
+					this.markChanged();
 					return true;
 				}
 			}
@@ -94,7 +94,7 @@ public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
 				upgrades.put(entry.getKey(), 0);
 			}
 		}
-		this.markDirty();
+		this.markChanged();
 		return drops;
 	}
 

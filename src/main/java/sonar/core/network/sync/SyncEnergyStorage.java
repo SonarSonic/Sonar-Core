@@ -42,7 +42,7 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 		if (energy > capacity) {
 			energy = capacity;
 		}
-		markDirty();
+		markChanged();
 		return this;
 	}
 
@@ -54,13 +54,13 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 
 	public SyncEnergyStorage setMaxReceive(int maxReceive) {
 		this.maxReceive = maxReceive;
-		markDirty();
+		markChanged();
 		return this;
 	}
 
 	public SyncEnergyStorage setMaxExtract(int maxExtract) {
 		this.maxExtract = maxExtract;
-		markDirty();
+		markChanged();
 		return this;
 	}
 
@@ -79,7 +79,7 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 		} else if (this.energy < 0) {
 			this.energy = 0;
 		}
-		this.markDirty();
+		this.markChanged();
 	}
 
 	public void modifyEnergyStored(int energy) {
@@ -90,7 +90,7 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 		} else if (this.energy < 0) {
 			this.energy = 0;
 		}
-		this.markDirty();
+		this.markChanged();
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 
 		if (!action.shouldSimulate()) {
 			energy += add;
-			this.markDirty();
+			this.markChanged();
 		}
 		return add;
 	}
@@ -172,7 +172,7 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 
 		if (!action.shouldSimulate()) {
 			energy -= energyExtracted;
-			this.markDirty();
+			this.markChanged();
 		}
 		return energyExtracted;
 	}

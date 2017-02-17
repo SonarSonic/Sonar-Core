@@ -16,7 +16,7 @@ public class DirtyPart implements IDirtyPart {
 		return listener;
 	}
 
-	public void markDirty() {
+	public void markChanged() {
 		if (listener != null)
 			listener.markChanged(this);
 	}

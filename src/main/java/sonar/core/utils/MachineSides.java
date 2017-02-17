@@ -77,7 +77,7 @@ public class MachineSides extends DirtyPart implements ISyncPart {
 			configs[side.getIndex()] = allowedSides.get((pos == 0 ? allowedSides.size() : pos) - 1);
 			sendPacket(tile.getWorld().provider.getDimension(), side);
 		}
-		markDirty();
+		markChanged();
 		return true;
 	}
 
@@ -97,14 +97,14 @@ public class MachineSides extends DirtyPart implements ISyncPart {
 			configs[side.getIndex()] = allowedSides.get(allowedSides.size() <= pos + 1 ? 0 : pos + 1);
 			sendPacket(tile.getWorld().provider.getDimension(), side);
 		}
-		markDirty();
+		markChanged();
 		return true;
 	}
 
 	public boolean setSide(EnumFacing side, MachineSideConfig config) {
 		if (allowedDirs.contains(side) && allowedSides.contains(config)) {
 			configs[side.getIndex()] = config;
-			markDirty();
+			markChanged();
 			return true;
 		}
 		return false;

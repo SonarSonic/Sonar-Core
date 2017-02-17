@@ -16,12 +16,6 @@ public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 		this.tile = tile;
 	}
 
-	@Override
-	public void markDirty() {
-		super.markDirty();
-		//tile.markDirty();
-	}
-
 	public String getName() {
 		return tile.getBlockType().getUnlocalizedName();
 	}
@@ -55,5 +49,10 @@ public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 			return super.extractItem(slot, amount, simulate);
 		}
 		return null;
+	}
+
+	@Override
+	public void markDirty() {
+		markChanged();		
 	}
 }

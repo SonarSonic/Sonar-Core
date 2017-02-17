@@ -24,7 +24,7 @@ public class SyncNBTAbstract<T extends INBTSyncable> extends SyncPart {
 
 	public void setObject(T object) {
 		obj = object;
-		markDirty();
+		markChanged();
 	}
 
 	@Override

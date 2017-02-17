@@ -53,7 +53,7 @@ public class SyncEnum<E extends Enum> extends SyncPart {
 		} else {
 			current = values[0];
 		}
-		this.markDirty();
+		this.markChanged();
 	}
 
 	public SyncEnum<E> setDefault(E def) {
@@ -68,7 +68,7 @@ public class SyncEnum<E extends Enum> extends SyncPart {
 	public void setObject(E object) {
 		if (current != object) {
 			current = object;
-			markDirty();
+			markChanged();
 		}
 	}
 

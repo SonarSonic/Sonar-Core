@@ -50,14 +50,15 @@ public class PacketFlexibleOpenGui extends PacketCoords {
 			Minecraft.getMinecraft().addScheduledTask(new Runnable() {
 				public void run() {
 					EntityPlayer player = FMLClientHandler.instance().getClient().thePlayer;
+					int id = message.tag.getInteger("id");
+					Pair<Object, IFlexibleGui> gui = SonarCore.instance.guiHandler.getFlexibleGui(id, player, player.getEntityWorld(), message.pos, message.tag);
 					if (!message.change) {
 						player.closeScreen();
 					} else {
+						FlexibleGuiHandler.setLastContainer(player.openContainer, player, ctx.side);
+						FlexibleGuiHandler.setLastGui(gui, player, ctx.side);
 						SonarCore.instance.guiHandler.lastScreen = Minecraft.getMinecraft().currentScreen;
-						SonarCore.instance.guiHandler.lastContainer = player.openContainer;
 					}
-					int id = message.tag.getInteger("id");
-					Pair<Object, IFlexibleGui> gui = SonarCore.instance.guiHandler.getFlexibleGui(id, player, player.getEntityWorld(), message.pos, message.tag);
 					FMLClientHandler.instance().showGuiScreen(gui.b.getClientElement(gui.a, id, player.getEntityWorld(), player, message.tag));
 					player.openContainer.windowId = message.windowID;
 				}
