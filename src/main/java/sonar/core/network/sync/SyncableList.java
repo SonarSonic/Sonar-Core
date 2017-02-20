@@ -47,8 +47,13 @@ public class SyncableList {
 	}
 
 	public void onPartSynced(IDirtyPart part) {
-		ArrayList list = (part instanceof ISyncPart ? changedSyncParts : changedDirtyParts);
-		list.remove(part);
+		//ArrayList list = (part instanceof ISyncPart ? changedSyncParts : changedDirtyParts);
+		//list.remove(part);
+	}
+	
+	public void onPartsSynced(){
+		changedSyncParts.clear();
+		changedDirtyParts.clear();
 	}
 
 	public ArrayList<ISyncPart> getSyncList(SyncType type) {

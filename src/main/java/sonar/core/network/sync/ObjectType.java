@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
 
 public enum ObjectType {
-	BOOLEAN(Constants.NBT.TAG_END, Boolean.class), BYTE(Constants.NBT.TAG_BYTE, Byte.class), SHORT(Constants.NBT.TAG_SHORT, Short.class), INTEGER(Constants.NBT.TAG_INT, Integer.class), LONG(Constants.NBT.TAG_LONG, Long.class), FLOAT(Constants.NBT.TAG_FLOAT, Float.class), DOUBLE(Constants.NBT.TAG_DOUBLE, Double.class), STRING(Constants.NBT.TAG_STRING, String.class), NONE(-1, null);
+	BOOLEAN(Constants.NBT.TAG_END, Boolean.class), BYTE(Constants.NBT.TAG_BYTE, Byte.class), SHORT(Constants.NBT.TAG_SHORT, Short.class), INTEGER(Constants.NBT.TAG_INT, Integer.class), LONG(Constants.NBT.TAG_LONG, Long.class), FLOAT(Constants.NBT.TAG_FLOAT, Float.class), DOUBLE(Constants.NBT.TAG_DOUBLE, Double.class), STRING(Constants.NBT.TAG_STRING, String.class), NBT(Constants.NBT.TAG_COMPOUND, NBTTagCompound.class), NONE(-1, null);
 
 	public static final ArrayList<ObjectType> numbers = Lists.newArrayList(BYTE, SHORT, INTEGER, LONG, FLOAT, DOUBLE);
 	public int tagType;

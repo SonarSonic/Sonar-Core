@@ -232,5 +232,5 @@ public abstract class SyncTagType<T> extends SyncPart {
 	public String toString() {
 		return current.toString();
 	}
-
+	
 }

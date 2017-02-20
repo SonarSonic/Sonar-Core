@@ -53,7 +53,7 @@ public class PacketFlexibleOpenGui extends PacketCoords {
 					int id = message.tag.getInteger("id");
 					Pair<Object, IFlexibleGui> gui = SonarCore.instance.guiHandler.getFlexibleGui(id, player, player.getEntityWorld(), message.pos, message.tag);
 					if (!message.change) {
-						player.closeScreen();
+						//player.closeScreen();
 					} else {
 						FlexibleGuiHandler.setLastContainer(player.openContainer, player, ctx.side);
 						FlexibleGuiHandler.setLastGui(gui, player, ctx.side);

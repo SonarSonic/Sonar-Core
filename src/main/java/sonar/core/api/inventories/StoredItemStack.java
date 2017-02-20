@@ -157,5 +157,4 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 			return super.toString() + " : NULL";
 		}
 	}
-
 }

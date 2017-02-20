@@ -1,5 +1,6 @@
 package sonar.core.client.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -7,9 +8,12 @@ import java.util.Map.Entry;
 
 import org.lwjgl.opengl.GL11;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -35,6 +39,7 @@ import sonar.core.utils.IWorldPosition;
 public abstract class GuiSonar extends GuiContainer {
 
 	public IWorldPosition entity;
+    protected List<SonarTextField> fieldList = Lists.<SonarTextField>newArrayList();
 
 	public GuiSonar(Container container, IWorldPosition entity) {
 		super(container);
@@ -45,11 +50,11 @@ public abstract class GuiSonar extends GuiContainer {
 
 	public void reset() {
 		this.buttonList.clear();
+		this.fieldList.clear();
 		this.initGui();
 	}
 
-	public void initGui(boolean pause) {
-	}
+	//public void initGui(boolean pause) {}
 
 	public void setZLevel(float zLevel) {
 		this.zLevel = zLevel;
@@ -108,6 +113,7 @@ public abstract class GuiSonar extends GuiContainer {
 	}
 
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
+		fieldList.forEach(field -> field.drawTextBox());
 		RenderHelper.disableStandardItemLighting();
 		Iterator iterator = this.buttonList.iterator();
 
@@ -119,7 +125,8 @@ public abstract class GuiSonar extends GuiContainer {
 				break;
 			}
 		}
-		RenderHelper.enableGUIStandardItemLighting();
+		RenderHelper.enableGUIStandardItemLighting();		
+
 	}
 
 	@Override
@@ -135,8 +142,32 @@ public abstract class GuiSonar extends GuiContainer {
 
 	public void drawSonarCreativeTabHoveringText(String tabName, int mouseX, int mouseY) {
 		drawCreativeTabHoveringText(tabName,mouseX,mouseY);
-	}
+	}	
 
+	@Override
+	protected void keyTyped(char c, int i) throws IOException {
+		for(SonarTextField field : fieldList){
+			if(field.isFocused()){
+				if (c == 13 || c == 27) {
+					field.setFocused(false);
+				} else {
+					field.textboxKeyTyped(c, i);
+					onTextFieldChanged(field);
+				}
+				return;
+			}
+		}		
+		super.keyTyped(c, i);
+	}
+	
+	public void onTextFieldChanged(SonarTextField field){}
+	
+	@Override
+	public void mouseClicked(int i, int j, int k) throws IOException {
+		super.mouseClicked(i, j, k);
+		fieldList.forEach(field -> field.mouseClicked(i - guiLeft, j - guiTop, k));
+	}
+	
 	@SideOnly(Side.CLIENT)
 	public static class PauseButton extends SonarButtons.ImageButton {
 
@@ -169,7 +200,7 @@ public abstract class GuiSonar extends GuiContainer {
 			gui.initGui();
 		}
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public class CircuitButton extends SonarButtons.ImageButton {
 		public int id;

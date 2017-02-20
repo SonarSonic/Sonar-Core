@@ -112,4 +112,12 @@ public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 	public long getStackSize() {
 		return stored;
 	}
+	
+	public String toString() {
+		if (fluid != null) {
+			return this.stored +" mb " + "x " + this.fluid.getLocalizedName();
+		} else {
+			return super.toString() + " : NULL";
+		}
+	}
 }

@@ -61,12 +61,12 @@ public class NBTHelper {
 
 	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, SyncableList syncableList, boolean forceSync) {
 		for (ISyncPart part : (ArrayList<ISyncPart>) (syncableList.getSyncList(type).clone())) {
-			//System.out.println((forceSync || type.mustSync()));
 			if (part != null && ((forceSync || type.mustSync()) || part.canSync(type))) {
 				part.writeData(nbt, type);
 				syncableList.onPartSynced(part);
 			}
 		}
+		syncableList.onPartsSynced();
 		return nbt;
 	}
 
@@ -338,7 +338,7 @@ public class NBTHelper {
 			obj = readNBTBase(tag, tag.getTag(key).getId(), key);
 		}
 	}
-		
+
 	public static NBTTagCompound writeNBTBase(NBTTagCompound nbt, int type, Object object, String tagName) {
 		if (object == null) {
 			SonarCore.logger.error("NBT ERROR: Can't write NULL");

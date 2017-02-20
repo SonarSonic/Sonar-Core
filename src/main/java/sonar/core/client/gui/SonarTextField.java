@@ -5,11 +5,16 @@ import net.minecraft.client.gui.GuiTextField;
 
 public class SonarTextField extends GuiTextField {
 
+	private String defString = "";
 	private boolean digitsOnly = false;
-	private int outlineColour = -6250336, boxColour =-16777216;
+	private int outlineColour = -6250336, boxColour = -16777216;
 
 	public SonarTextField(int id, FontRenderer renderer, int x, int y, int width, int height) {
 		super(id, renderer, x, y, width, height);
+	}
+
+	public void setDefault(String defString) {
+		this.defString = defString;
 	}
 
 	public SonarTextField setDigitsOnly(boolean digitsOnly) {
@@ -64,11 +69,11 @@ public class SonarTextField extends GuiTextField {
 	public int getIntegerFromText() {
 		return Integer.valueOf(getText().isEmpty() ? "0" : getText());
 	}
-	
+
 	public long getLongFromText() {
 		return Long.valueOf(getText().isEmpty() ? "0" : getText());
 	}
-	
+
 	public void drawTextBox() {
 		this.setEnableBackgroundDrawing(true);
 		if (this.getVisible()) {
@@ -78,10 +83,10 @@ public class SonarTextField extends GuiTextField {
 			}
 		}
 		this.setEnableBackgroundDrawing(false);
-		xPosition+=4;
+		xPosition += 4;
 		this.yPosition += (this.height - 8) / 2;
 		super.drawTextBox();
-		xPosition-=4;
-		this.yPosition -= (this.height - 8) / 2;		
+		xPosition -= 4;
+		this.yPosition -= (this.height - 8) / 2;
 	}
 }
