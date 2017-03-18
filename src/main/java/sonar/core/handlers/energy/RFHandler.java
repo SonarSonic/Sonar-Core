@@ -42,12 +42,11 @@ public class RFHandler implements ISonarEnergyHandler {
 
 	@Override
 	public StoredEnergyStack addEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
-		EnumFacing side = dir;
 		if (tile instanceof IEnergyReceiver) {
 			IEnergyReceiver receiver = (IEnergyReceiver) tile;
-			if (side==null || receiver.canConnectEnergy(side = side.getOpposite())) {
+			if (dir==null || receiver.canConnectEnergy(dir)) {
 				int transferRF = Math.min(receiver.getMaxEnergyStored(dir), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
-				transfer.stored -= receiver.receiveEnergy(side, transferRF, action.shouldSimulate());
+				transfer.stored -= receiver.receiveEnergy(dir, transferRF, action.shouldSimulate());
 			}
 		}
 		if (transfer.stored == 0)
@@ -57,12 +56,11 @@ public class RFHandler implements ISonarEnergyHandler {
 
 	@Override
 	public StoredEnergyStack removeEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
-		EnumFacing side = dir;
 		if (tile instanceof IEnergyProvider) {
 			IEnergyProvider receiver = (IEnergyProvider) tile;			
-			if (side==null || receiver.canConnectEnergy(side = side.getOpposite())) {
+			if (receiver.canConnectEnergy(dir)) {
 				int transferRF = Math.min(receiver.getMaxEnergyStored(dir), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
-				transfer.stored -= receiver.extractEnergy(side, transferRF, action.shouldSimulate());
+				transfer.stored -= receiver.extractEnergy(dir, transferRF, action.shouldSimulate());
 			}
 		}
 		if (transfer.stored == 0)

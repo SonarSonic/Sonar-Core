@@ -1,22 +1,22 @@
 package sonar.core.handlers.energy;
-/*
+
+import appeng.api.config.PowerMultiplier;
+import appeng.api.networking.energy.IAEPowerStorage;
+import appeng.api.networking.energy.IEnergyGrid;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Loader;
-import sonar.core.api.ActionType;
-import sonar.core.api.EnergyHandler;
-import sonar.core.api.EnergyType;
-import sonar.core.api.StoredEnergyStack;
+import sonar.core.api.asm.EnergyHandler;
+import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.ISonarEnergyHandler;
+import sonar.core.api.energy.StoredEnergyStack;
+import sonar.core.api.utils.ActionType;
 import sonar.core.integration.AE2Helper;
 
-public class AEProvider extends EnergyHandler {
+@EnergyHandler(modid = "appliedenergistics2", handlerID = AEProvider.name, priority = 4)
+public class AEProvider implements ISonarEnergyHandler {
 
-	public static String name = "AE-Provider";
-
-	@Override
-	public String getName() {
-		return name;
-	}
+	public static final String name = "AE-Provider";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
@@ -24,7 +24,7 @@ public class AEProvider extends EnergyHandler {
 	}
 
 	@Override
-	public void getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
+	public StoredEnergyStack getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
 		if (tile instanceof IEnergyGrid) {
 			IEnergyGrid grid = (IEnergyGrid) tile;
 			energyStack.setUsage((long) grid.getAvgPowerUsage());
@@ -33,6 +33,7 @@ public class AEProvider extends EnergyHandler {
 			IAEPowerStorage power = (IAEPowerStorage) tile;
 			energyStack.setStorageValues((long) power.getAECurrentPower(), (long) power.getAEMaxPower());
 		}
+		return energyStack;
 	}
 
 	@Override
@@ -44,8 +45,8 @@ public class AEProvider extends EnergyHandler {
 			IAEPowerStorage grid = (IAEPowerStorage) tile;
 			transfer.stored = (long) grid.injectAEPower(Math.min(transfer.stored, 10000), AE2Helper.getActionable(action));
 		}
-		if(transfer.stored==0)
-			transfer=null;
+		if (transfer.stored == 0)
+			transfer = null;
 		return transfer;
 	}
 
@@ -58,13 +59,9 @@ public class AEProvider extends EnergyHandler {
 			IAEPowerStorage grid = (IAEPowerStorage) tile;
 			transfer.stored -= grid.extractAEPower(Math.min(transfer.stored, 10000), AE2Helper.getActionable(action), PowerMultiplier.CONFIG);
 		}
-		if(transfer.stored==0)
-			transfer=null;
+		if (transfer.stored == 0)
+			transfer = null;
 		return transfer;
-	}
-
-	public boolean isLoadable() {
-		return Loader.isModLoaded("appliedenergistics2");
 	}
 
 	@Override
@@ -72,4 +69,3 @@ public class AEProvider extends EnergyHandler {
 		return EnergyType.AE;
 	}
 }
-*/

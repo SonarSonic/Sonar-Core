@@ -36,9 +36,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
+import sonar.core.SonarCore;
 import sonar.core.client.gui.GuiSonar;
 import sonar.core.client.renderers.TransformationMatrix;
 import sonar.core.client.renderers.Vector;
+
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 public class RenderHelper {
 
@@ -126,18 +129,18 @@ public class RenderHelper {
 		float f2 = (float) (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer vertexbuffer = tessellator.getBuffer();
-		GlStateManager.enableBlend();
-		GlStateManager.disableTexture2D();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		GlStateManager.color(f, f1, f2, f3);
+		enableBlend();
+		disableTexture2D();
+		tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		color(f, f1, f2, f3);
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
 		vertexbuffer.pos((double) left, (double) bottom, 0.0D).endVertex();
 		vertexbuffer.pos((double) right, (double) bottom, 0.0D).endVertex();
 		vertexbuffer.pos((double) right, (double) top, 0.0D).endVertex();
 		vertexbuffer.pos((double) left, (double) top, 0.0D).endVertex();
 		tessellator.draw();
-		GlStateManager.enableTexture2D();
-		GlStateManager.disableBlend();
+		enableTexture2D();
+		disableBlend();
 	}
 	// 1.9.4 additions
 
@@ -146,14 +149,14 @@ public class RenderHelper {
 	}
 
 	public static void renderItem(GuiSonar screen, int x, int y, ItemStack stack) {
-		GlStateManager.translate(0.0F, 0.0F, 32.0F);
+		translate(0.0F, 0.0F, 32.0F);
 		screen.setZLevel(200.0F);
 		itemRender.zLevel = 200.0F;
 		itemRender.renderItemAndEffectIntoGUI(stack, x, y);
 		// itemRender.renderItemOverlayIntoGUI(getFontFromStack(stack), stack, x, y, "");
 		screen.setZLevel(0.0F);
 		itemRender.zLevel = 0.0F;
-		GlStateManager.translate(0.0F, 0.0F, -32.0F);
+		translate(0.0F, 0.0F, -32.0F);
 	}
 
 	// public static void renderItem(GuiSonar screen, int x, int y, ItemStack stack) {
@@ -170,21 +173,21 @@ public class RenderHelper {
 				final float scaleFactor = 0.5F;
 				final float inverseScaleFactor = 1.0f / scaleFactor;
 				GL11.glPushMatrix();
-				GlStateManager.disableLighting();
+				disableLighting();
 				if (depth)
-					GlStateManager.disableDepth();
+					disableDepth();
 
-				GlStateManager.disableBlend();
+				disableBlend();
 				GL11.glScaled(scaleFactor, scaleFactor, scaleFactor);
 				final int X = (int) (((float) x + 15.0f - font.getStringWidth(s1) * scaleFactor) * inverseScaleFactor);
 				final int Y = (int) (((float) y + 15.0f - 7.0f * scaleFactor) * inverseScaleFactor);
 				font.drawStringWithShadow(s1, X, Y, 16777215);
-				GlStateManager.enableLighting();
+				enableLighting();
 
 				if (depth)
-					GlStateManager.enableDepth();
+					enableDepth();
 
-				GlStateManager.enableBlend();
+				enableBlend();
 				GL11.glPopMatrix();
 			}
 		}
@@ -218,17 +221,65 @@ public class RenderHelper {
 		// Gui.drawModalRectWithCustomSizedTexture(0, 0, width, height, 16, 16, minX, minY);
 	}
 
-	public static void renderItem(ItemStack stack, World world) {
-		GlStateManager.pushAttrib();
-		GlStateManager.pushMatrix();
+	public static void drawScaledCustomSizeModalRect(int x, int y, float u, float v, int uWidth, int vHeight, int width, int height, float tileWidth, float tileHeight) {
+		float f = 1.0F / tileWidth;
+		float f1 = 1.0F / tileHeight;
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		vertexbuffer.pos((double) x, (double) (y + height), 0.0D).tex((double) (u * f), (double) ((v + (float) vHeight) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) (y + height), 0.0D).tex((double) ((u + (float) uWidth) * f), (double) ((v + (float) vHeight) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) y, 0.0D).tex((double) ((u + (float) uWidth) * f), (double) (v * f1)).endVertex();
+		vertexbuffer.pos((double) x, (double) y, 0.0D).tex((double) (u * f), (double) (v * f1)).endVertex();
+		tessellator.draw();
+	}
+
+	public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
+		float f = 0.00390625F;
+		float f1 = 0.00390625F;
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		vertexbuffer.pos((double) (x + 0), (double) (y + height), (double) 0).tex((double) ((float) (textureX + 0) * 0.00390625F), (double) ((float) (textureY + height) * 0.00390625F)).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) (y + height), (double) 0).tex((double) ((float) (textureX + width) * 0.00390625F), (double) ((float) (textureY + height) * 0.00390625F)).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) (y + 0), (double) 0).tex((double) ((float) (textureX + width) * 0.00390625F), (double) ((float) (textureY + 0) * 0.00390625F)).endVertex();
+		vertexbuffer.pos((double) (x + 0), (double) (y + 0), (double) 0).tex((double) ((float) (textureX + 0) * 0.00390625F), (double) ((float) (textureY + 0) * 0.00390625F)).endVertex();
+		tessellator.draw();
+	}
+
+	public static void drawSizedIconWithoutColor(int x, int y, int width, int height, float zLevel) {
+		pushMatrix();
+		enableBlend();
+		blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		color(1F, 1F, 1F, 1F);
+		scale(0.5D, 0.5D, 0.5D);
+		translate(x, y, zLevel);
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.translate(-6.4F, -6.5F, -0.245F);
-		GlStateManager.scale(0.8, 0.8, 0.01);
+		disableLighting();
+		enableRescaleNormal();
+		enableDepth();
+		Tessellator tessellator = Tessellator.getInstance();
+		tessellator.getBuffer().begin(7, DefaultVertexFormats.POSITION_TEX);
+		tessellator.getBuffer().pos(x, y + height, zLevel).tex(0D, 1D).endVertex();
+		tessellator.getBuffer().pos(x + width, y + height, zLevel).tex(1D, 1D).endVertex();
+		tessellator.getBuffer().pos(x + width, y, zLevel).tex(1D, 0D).endVertex();
+		tessellator.getBuffer().pos(x, y, zLevel).tex(0D, 0D).endVertex();
+		tessellator.draw();
+		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+		popMatrix();
+	}
+
+	public static void renderItem(ItemStack stack, World world) {
+		pushAttrib();
+		pushMatrix();
+		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+		translate(-6.4F, -6.5F, -0.245F);
+		scale(0.8, 0.8, 0.01);
 
 		renderItem(stack, ItemCameraTransforms.TransformType.NONE);
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-		GlStateManager.popAttrib();
-		GlStateManager.popMatrix();
+		popAttrib();
+		popMatrix();
 
 		/* net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting(); itemRender.renderItemAndEffectIntoGUI(stack, 0, 0); itemRender.renderItemOverlayIntoGUI(getFontFromStack(stack), stack, 0, 0, ""); net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting(); */
 	}
@@ -240,19 +291,19 @@ public class RenderHelper {
 	}
 
 	public static void renderItem(ItemStack itemStack, ItemCameraTransforms.TransformType transformType) {
-		GlStateManager.translate(8.0F, 8.0F, 0.0F);
-		GlStateManager.scale(1.0F, 1.0F, -1.0F);
-		GlStateManager.scale(0.5F, 0.5F, 0.5F);
+		translate(8.0F, 8.0F, 0.0F);
+		scale(1.0F, 1.0F, -1.0F);
+		scale(0.5F, 0.5F, 0.5F);
 		IBakedModel ibakedmodel = itemRender.getItemModelMesher().getItemModel(itemStack);
 		if (ibakedmodel.isGui3d()) {
-			GlStateManager.scale(40 / 64F, 40 / 64F, 40 / 64F);
-			GlStateManager.rotate(210.0F, 1.0F, 0.0F, 0.0F);
-			GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
-			GlStateManager.enableLighting();
+			scale(40 / 64F, 40 / 64F, 40 / 64F);
+			rotate(210.0F, 1.0F, 0.0F, 0.0F);
+			rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+			enableLighting();
 		} else {
 			// GlStateManager.scale(64.0F, 64.0F, 64.0F);
-			GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
-			GlStateManager.disableLighting();
+			rotate(180.0F, 1.0F, 0.0F, 0.0F);
+			disableLighting();
 		}
 		itemRender.renderItem(itemStack, transformType);
 	}
@@ -262,26 +313,26 @@ public class RenderHelper {
 	}
 
 	protected static void renderItemModelIntoGUI(ItemStack stack, int x, int y, IBakedModel bakedmodel) {
-		GlStateManager.pushMatrix();
+		pushMatrix();
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		textureManager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
-		GlStateManager.enableRescaleNormal();
+		enableRescaleNormal();
 		// GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		// GlStateManager.enableNormalize();
-		GlStateManager.enableAlpha();
-		GlStateManager.alphaFunc(516, 0.1F);
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		enableAlpha();
+		alphaFunc(516, 0.1F);
+		enableBlend();
+		blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		color(1.0F, 1.0F, 1.0F, 1.0F);
 		setupGuiTransform(x, y, bakedmodel.isGui3d());
 		// GL11.glVertex3d(1, 1, 0.04);
 		GL11.glScaled(1, 1, 0.04);
 		bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
 		itemRender.renderItem(stack, bakedmodel);
-		GlStateManager.disableAlpha();
-		GlStateManager.disableRescaleNormal();
-		GlStateManager.disableLighting();
-		GlStateManager.popMatrix();
+		disableAlpha();
+		disableRescaleNormal();
+		disableLighting();
+		popMatrix();
 		// GlStateManager.disableNormalize();
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		textureManager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
@@ -289,14 +340,14 @@ public class RenderHelper {
 
 	private static void setupGuiTransform(int xPosition, int yPosition, boolean isGui3d) {
 		// GlStateManager.translate((float) xPosition, (float) yPosition, 100.0F + itemRender.zLevel);
-		GlStateManager.translate(8.0F, 8.0F, 0.0F);
-		GlStateManager.scale(1.0F, -1.0F, 1.0F);
-		GlStateManager.scale(16.0F, 16.0F, 16.0F);
+		translate(8.0F, 8.0F, 0.0F);
+		scale(1.0F, -1.0F, 1.0F);
+		scale(16.0F, 16.0F, 16.0F);
 
 		if (isGui3d) {
 			// GlStateManager.enableLighting();
 		} else {
-			GlStateManager.disableLighting();
+			disableLighting();
 		}
 	}
 
@@ -366,28 +417,28 @@ public class RenderHelper {
 		double vX = view.lastTickPosX + (view.posX - view.lastTickPosX) * (double) partialTicks;
 		double vY = view.lastTickPosY + (view.posY - view.lastTickPosY) * (double) partialTicks;
 		double vZ = view.lastTickPosZ + (view.posZ - view.lastTickPosZ) * (double) partialTicks;
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(pos.getX() - vX, pos.getY() - vY, pos.getZ() - vZ);
+		pushMatrix();
+		translate(pos.getX() - vX, pos.getY() - vY, pos.getZ() - vZ);
 	}
 
 	public static void drawBoundingBox(AxisAlignedBB box, BlockPos pos, float partialTicks, float r, float g, float b, float alpha) {
 		EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-		GlStateManager.enableBlend();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		GlStateManager.glLineWidth(5.0F);
-		GlStateManager.disableTexture2D();
-		GlStateManager.depthMask(false);
+		enableBlend();
+		tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		glLineWidth(5.0F);
+		disableTexture2D();
+		depthMask(false);
 		if (Minecraft.getMinecraft().theWorld.getWorldBorder().contains(pos)) {
 			double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) partialTicks;
 			double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) partialTicks;
 			double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) partialTicks;
-			GlStateManager.translate(-d0 + pos.getX(), -d1 + pos.getY(), -d2 + pos.getZ());
+			translate(-d0 + pos.getX(), -d1 + pos.getY(), -d2 + pos.getZ());
 			drawBoundingBox(box.expandXyz(0.0020000000949949026D), r, g, b, alpha);
 		}
 
-		GlStateManager.depthMask(true);
-		GlStateManager.enableTexture2D();
-		GlStateManager.disableBlend();
+		depthMask(true);
+		enableTexture2D();
+		disableBlend();
 	}
 
 	public static void drawBoundingBox(AxisAlignedBB box, float r, float g, float b, float alpha) {
@@ -421,6 +472,12 @@ public class RenderHelper {
 		buffer.pos(maxX, maxY, minZ).color(r, g, b, 0.0F).endVertex();
 		buffer.pos(maxX, minY, minZ).color(r, g, b, alpha).endVertex();
 		buffer.pos(maxX, minY, minZ).color(r, g, b, 0.0F).endVertex();
+	}
+
+	public static void resetLanguageRegistry() {
+		SonarCore.logger.info("Resetting Language");
+		Minecraft.getMinecraft().getLanguageManager().onResourceManagerReload(Minecraft.getMinecraft().getResourceManager());
+		SonarCore.logger.info("Reset Language");
 	}
 
 }

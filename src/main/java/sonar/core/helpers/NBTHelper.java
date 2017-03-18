@@ -345,7 +345,7 @@ public class NBTHelper {
 			return nbt;
 		}
 		if (tagName == null) {
-			SonarCore.logger.error("NBT ERROR: Can't write with a no TAG NAME");
+			SonarCore.logger.error("NBT ERROR: Can't write with no TAG NAME");
 			return nbt;
 		}
 		switch (type) {

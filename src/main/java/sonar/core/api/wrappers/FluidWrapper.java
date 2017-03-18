@@ -2,9 +2,13 @@ package sonar.core.api.wrappers;
 
 import java.util.List;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import sonar.core.api.asm.FluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.inventories.StoredItemStack;
+import sonar.core.api.utils.ActionType;
+import sonar.core.helpers.FluidHelper.ITankFilter;
 
 public class FluidWrapper {
 
@@ -17,5 +21,16 @@ public class FluidWrapper {
 	public StoredFluidStack getStackToAdd(long inputSize, StoredFluidStack stack, StoredFluidStack returned) {
 		return null;
 	}
+	
+	public StoredFluidStack addFluids(StoredFluidStack add, TileEntity tile, EnumFacing face, ActionType type, ITankFilter filter) {
+		return null;
+	}
 
+	public StoredFluidStack removeFluids(StoredFluidStack remove, TileEntity tile, EnumFacing face, ActionType type, ITankFilter filter) {
+		return null;
+	}
+
+	public void transferFluids(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, ITankFilter filter) {
+		
+	}
 }

@@ -45,6 +45,8 @@ public class SonarBlocks extends SonarCore {
 	}
 
 	public static void registerBlocks() {
+		//white_dev_block = registerBlock("WhiteDevBlock", new BlockBase(Material.ROCK, 0.1f, 650.0f));
+		//black_dev_block = registerBlock("BlackDevBlock", new BlockBase(Material.ROCK, 0.1f, 650.0f));
 		// common blocks
 		reinforcedStoneBlock = registerBlock("ReinforcedStoneBlock", new BlockBase(Material.ROCK, 2.0f, 50.0f));
 		reinforcedStoneStairs = registerBlock("ReinforcedStoneStairs", new SonarStairs(reinforcedStoneBlock));

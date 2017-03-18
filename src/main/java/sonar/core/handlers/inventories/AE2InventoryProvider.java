@@ -1,28 +1,32 @@
 package sonar.core.handlers.inventories;
-/*
+
 import java.util.List;
 
+import appeng.api.AEApi;
+import appeng.api.networking.security.IActionHost;
+import appeng.api.networking.security.MachineSource;
+import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.IStorageMonitorable;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
+import appeng.me.GridAccessException;
+import appeng.me.helpers.IGridProxyable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Loader;
-import sonar.core.api.ActionType;
-import sonar.core.api.InventoryHandler;
 import sonar.core.api.SonarAPI;
-import sonar.core.api.StoredItemStack;
+import sonar.core.api.StorageSize;
+import sonar.core.api.asm.InventoryHandler;
+import sonar.core.api.inventories.ISonarInventoryHandler;
+import sonar.core.api.inventories.StoredItemStack;
+import sonar.core.api.utils.ActionType;
 import sonar.core.integration.AE2Helper;
 
-public class AE2InventoryProvider extends InventoryHandler {
+@InventoryHandler(modid = "appliedenergistics2", handlerID = AE2InventoryProvider.name, priority = 2)
+public class AE2InventoryProvider implements ISonarInventoryHandler {
 
-	public static String name = "AE2-Inventory";
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	public boolean isLoadable() {
-		return Loader.isModLoaded("appliedenergistics2");
-	}
+	public static final String name = "AE2-Inventory";
 
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {
@@ -72,13 +76,8 @@ public class AE2InventoryProvider extends InventoryHandler {
 	}
 
 	public IItemList<IAEItemStack> getItemList(TileEntity tile, EnumFacing dir) {
-		IStorageMonitorable monitor = ((ITileStorageMonitorable) tile).getMonitorable(dir, new MachineSource(((IActionHost) tile)));
-		if (monitor != null) {
-			IMEMonitor<IAEItemStack> stacks = monitor.getItemInventory();
-			IItemList<IAEItemStack> items = stacks.getAvailableItems(AEApi.instance().storage().createItemList());
-			return items;
-		}
-		return null;
+		return ((IStorageMonitorable) tile).getItemInventory().getAvailableItems(AEApi.instance().storage().createItemList());
+		/* if (monitor != null) { IMEMonitor<IAEItemStack> stacks = monitor.getItemInventory(); IItemList<IAEItemStack> items = stacks.getAvailableItems(AEApi.instance().storage().createItemList()); return items; } return null; */
 	}
 
 	@Override
@@ -114,4 +113,3 @@ public class AE2InventoryProvider extends InventoryHandler {
 	}
 
 }
-*/

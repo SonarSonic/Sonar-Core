@@ -39,11 +39,12 @@ import sonar.core.utils.IWorldPosition;
 public abstract class GuiSonar extends GuiContainer {
 
 	public IWorldPosition entity;
-    protected List<SonarTextField> fieldList = Lists.<SonarTextField>newArrayList();
+	protected List<SonarTextField> fieldList = Lists.<SonarTextField>newArrayList();
 
 	public GuiSonar(Container container, IWorldPosition entity) {
 		super(container);
-		this.entity = entity;
+		if (entity != null)
+			this.entity = entity;
 	}
 
 	public abstract ResourceLocation getBackground();
@@ -53,8 +54,12 @@ public abstract class GuiSonar extends GuiContainer {
 		this.fieldList.clear();
 		this.initGui();
 	}
+	
+	public void initButtons(){
+		this.buttonList.clear();			
+	}
 
-	//public void initGui(boolean pause) {}
+	// public void initGui(boolean pause) {}
 
 	public void setZLevel(float zLevel) {
 		this.zLevel = zLevel;
@@ -125,7 +130,7 @@ public abstract class GuiSonar extends GuiContainer {
 				break;
 			}
 		}
-		RenderHelper.enableGUIStandardItemLighting();		
+		RenderHelper.enableGUIStandardItemLighting();
 
 	}
 
@@ -141,13 +146,13 @@ public abstract class GuiSonar extends GuiContainer {
 	}
 
 	public void drawSonarCreativeTabHoveringText(String tabName, int mouseX, int mouseY) {
-		drawCreativeTabHoveringText(tabName,mouseX,mouseY);
-	}	
+		drawCreativeTabHoveringText(tabName, mouseX, mouseY);
+	}
 
 	@Override
 	protected void keyTyped(char c, int i) throws IOException {
-		for(SonarTextField field : fieldList){
-			if(field.isFocused()){
+		for (SonarTextField field : fieldList) {
+			if (field.isFocused()) {
 				if (c == 13 || c == 27) {
 					field.setFocused(false);
 				} else {
@@ -156,16 +161,25 @@ public abstract class GuiSonar extends GuiContainer {
 				}
 				return;
 			}
-		}		
+		}
 		super.keyTyped(c, i);
 	}
-	
-	public void onTextFieldChanged(SonarTextField field){}
-	
+
+	public void onTextFieldChanged(SonarTextField field) {
+	}
+
 	@Override
 	public void mouseClicked(int i, int j, int k) throws IOException {
 		super.mouseClicked(i, j, k);
 		fieldList.forEach(field -> field.mouseClicked(i - guiLeft, j - guiTop, k));
+	}
+	
+	public int getGuiLeft(){
+		return guiLeft;
+	}
+	
+	public int getGuiTop(){
+		return guiTop;
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -200,7 +214,7 @@ public abstract class GuiSonar extends GuiContainer {
 			gui.initGui();
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public class CircuitButton extends SonarButtons.ImageButton {
 		public int id;

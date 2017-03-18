@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.google.common.collect.Lists;
 
 import mcmultipart.multipart.Multipart;
+import mcmultipart.multipart.PartSlot;
 import mcmultipart.raytrace.PartMOP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +29,7 @@ import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.ISyncableListener;
 import sonar.core.network.sync.SyncableList;
 import sonar.core.utils.IRemovable;
+import sonar.core.utils.IUUIDIdentity;
 import sonar.core.utils.IWorldPosition;
 import sonar.core.utils.Pair;
 
@@ -67,7 +69,7 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 		if (getContainer() != null) {
 			return getContainer().getPartID(this);
 		}
-		return null;
+		return IUUIDIdentity.INVALID_UUID;
 	}
 
 	public void addSelectionBoxes(List<AxisAlignedBB> list) {
@@ -161,11 +163,21 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 				}
 			}
 			if (pos != -1) {
-				pos = pos + 1 < valid.length ? pos + 1 : 0;
-				if (isServer()) {
-					face = valid[pos];
+				int current = pos;
+				boolean fullCycle = false;
+				while (!fullCycle && getContainer().getPartInSlot(PartSlot.getFaceSlot(valid[current])) != null) {
+					current++;
+					if (current >= valid.length) {
+						current = 0;
+					}
+					if (current == pos) {
+						return new Pair(false, face);
+					}
 				}
-				return new Pair(true, face);
+				if (current != -1 && isServer()) {
+					face = valid[current];
+					return new Pair(true, face);
+				}
 			}
 		}
 		return new Pair(false, face);

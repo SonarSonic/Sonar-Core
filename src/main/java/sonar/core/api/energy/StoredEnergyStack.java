@@ -90,7 +90,7 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 
 	@Override
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
-		nbt.setString("energytype", energyType.getStorageSuffix());
+		nbt.setString("energytype", energyType.getName());
 		nbt.setBoolean("hS", hasStorage);
 		nbt.setBoolean("hI", hasInput);
 		nbt.setBoolean("hO", hasOutput);
@@ -135,7 +135,7 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 	}
 
 	public static void writeToBuf(ByteBuf buf, StoredEnergyStack storedStack) {
-		ByteBufUtils.writeUTF8String(buf, storedStack.energyType.getStorageSuffix());
+		ByteBufUtils.writeUTF8String(buf, storedStack.energyType.getName());
 		buf.writeBoolean(storedStack.hasStorage);
 		buf.writeBoolean(storedStack.hasInput);
 		buf.writeBoolean(storedStack.hasOutput);
@@ -159,7 +159,7 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 	public boolean equals(Object obj) {
 		if (obj instanceof StoredEnergyStack) {
 			StoredEnergyStack target = (StoredEnergyStack) obj;
-			if (this.stored == target.stored && this.capacity == target.capacity && this.input == target.input && this.output == target.output && this.usage == target.usage && this.energyType.getStorageSuffix().equals(target.energyType.getStorageSuffix())) {
+			if (this.stored == target.stored && this.capacity == target.capacity && this.input == target.input && this.output == target.output && this.usage == target.usage && this.energyType.getName().equals(target.energyType.getName())) {
 				return true;
 			}
 		}
@@ -174,7 +174,7 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 	public StoredEnergyStack copy() {
 		StoredEnergyStack stack = new StoredEnergyStack(energyType);
 		stack.stored = stored;
-		stack.capacity = stored;
+		stack.capacity = capacity;
 		stack.input = input;
 		stack.output = output;
 		stack.usage = usage;
@@ -196,6 +196,19 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 				this.output += stack.output;
 			if (stack.usage > this.usage)
 				this.usage += stack.usage;
+
+			if(stack.hasOutput){
+				this.hasOutput=true;
+			}
+			if(stack.hasStorage){
+				this.hasStorage=true;
+			}
+			if(stack.hasUsage){
+				this.hasUsage=true;
+			}
+			if(stack.hasInput){
+				this.hasInput=true;
+			}
 		}
 	}
 

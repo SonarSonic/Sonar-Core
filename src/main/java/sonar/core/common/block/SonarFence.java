@@ -12,16 +12,16 @@ import net.minecraft.world.IBlockAccess;
 
 public class SonarFence extends BlockFence {
 
-	Material connectMaterial;
-	
+	// Material connectMaterial;
+
 	public SonarFence(Material connectMaterial) {
-		super(SonarMaterials.fence, MapColor.GRAY);
-		this.connectMaterial=connectMaterial;
+		super(connectMaterial, MapColor.GRAY);
+		// this.connectMaterial=connectMaterial;
 	}
 
 	public boolean canConnectTo(IBlockAccess worldIn, BlockPos pos) {
 		IBlockState state = worldIn.getBlockState(pos);
 		Block block = state.getBlock();
-		return block == Blocks.BARRIER ? false : ((!(block instanceof BlockFence) || state.getMaterial() != connectMaterial) && !(block instanceof BlockFenceGate || block instanceof SonarGate) ? (state.getMaterial().isOpaque() && state.isFullCube() ? state.getMaterial() != Material.GOURD : false) : true);
+		return block == Blocks.BARRIER ? false : ((!(block instanceof BlockFence) || state.getMaterial() != this.blockMaterial) && !(block instanceof BlockFenceGate || block instanceof SonarGate) ? (block.getMaterial(state).isOpaque() && block.isFullCube(state) ? block.getMaterial(state) != Material.GOURD : false) : true);
 	}
 }

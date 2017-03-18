@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.integration.SonarLoader;
+import sonar.core.utils.IWorldPosition;
 import sonar.core.utils.SortingDirection;
 
 /** helps with getting tiles, adding energy and checking stacks */
@@ -82,25 +83,24 @@ public class SonarHelper {
 
 	}
 
-	public static Entity getNearestEntity(Class entityClass, TileEntity tile, int range) {
+	public static Entity getEntity(Class entityClass, IWorldPosition tile, int range, boolean nearest) {
+		BlockCoords coords = tile.getCoords();
 
-		AxisAlignedBB aabb = new AxisAlignedBB(tile.getPos().getX() - range, tile.getPos().getY() - range, tile.getPos().getZ() - range, tile.getPos().getX() + range, tile.getPos().getY() + range, tile.getPos().getZ() + range);
+		AxisAlignedBB aabb = new AxisAlignedBB(coords.getX() - range, coords.getY() - range, coords.getZ() - range, coords.getX() + range, coords.getY() + range, coords.getZ() + range);
 
-		List<Entity> entities = tile.getWorld().getEntitiesWithinAABB(entityClass, aabb);
+		List<Entity> entities = coords.getWorld().getEntitiesWithinAABB(entityClass, aabb);
 		Entity entity = null;
-		double closest = Double.MAX_VALUE;
+		double entityDis = nearest ? Double.MAX_VALUE : 0;
 		for (int i = 0; i < entities.size(); i++) {
 			Entity target = (Entity) entities.get(i);
-			double d0 = tile.getPos().getX() - target.posX;
-			double d1 = tile.getPos().getY() - target.posY;
-			double d2 = tile.getPos().getZ() - target.posZ;
+			double d0 = coords.getX() - target.posX;
+			double d1 = coords.getY() - target.posY;
+			double d2 = coords.getZ() - target.posZ;
 			double distance = d0 * d0 + d1 * d1 + d2 * d2;
-
-			if (distance < closest) {
+			if (nearest ? distance < entityDis : distance > entityDis) {
 				entity = target;
-				closest = distance;
+				entityDis = distance;
 			}
-
 		}
 		return entity;
 	}
@@ -287,7 +287,7 @@ public class SonarHelper {
 		}
 		return false;
 	}
-	
+
 	public static int compareWithDirection(long stored1, long stored2, SortingDirection dir) {
 		if (stored1 < stored2)
 			return dir == SortingDirection.DOWN ? 1 : -1;

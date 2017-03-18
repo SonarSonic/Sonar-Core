@@ -8,6 +8,7 @@ public class SonarTextField extends GuiTextField {
 	private String defString = "";
 	private boolean digitsOnly = false;
 	private int outlineColour = -6250336, boxColour = -16777216;
+	
 
 	public SonarTextField(int id, FontRenderer renderer, int x, int y, int width, int height) {
 		super(id, renderer, x, y, width, height);
@@ -31,7 +32,7 @@ public class SonarTextField extends GuiTextField {
 		this.boxColour = boxColour;
 		return this;
 	}
-
+	
 	public boolean textboxKeyTyped(char c, int i) {
 		if (digitsOnly) {
 			switch (c) {

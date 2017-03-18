@@ -1,6 +1,8 @@
 package sonar.core.helpers;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -10,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import sonar.core.api.energy.EnergyType;
 import sonar.core.utils.CustomColour;
 
 public class FontHelper {
@@ -31,6 +34,19 @@ public class FontHelper {
 		default:
 			return render.drawString(info, x, y, colour);
 		}
+	}
+
+	public static int text(List<String> info, int gap, int x, int y, int colour) {
+		return text(info, gap, 0, info.size(), x, y, colour);
+	}
+
+	public static int text(List<String> info, int start, int stop, int gap, int x, int y, int colour) {
+		int textPos = 0;
+		for (int i = start; i < Math.min(stop, info.size()); i++) {
+			String s = info.get(i);
+			textPos += text(s, x, y + i * gap, colour);
+		}
+		return textPos;
 	}
 
 	public static int textCentre(String info, int xSize, int y, CustomColour colour) {
@@ -94,26 +110,34 @@ public class FontHelper {
 	}
 
 	public static String formatStorage(long power) {
+		return formatStorage(EnergyType.RF, power);
+	}
+
+	public static String formatStorage(EnergyType type, long power) {
 		if ((power < 1000)) {
-			return power + " RF";
+			return power + " " + type.getStorageSuffix();
 		} else if ((power < 1000000)) {
-			return roundValue(1, (float) power / 1000) + " KRF";
+			return roundValue(1, (float) power / 1000) + " K" + type.getStorageSuffix();
 		} else if ((power < 1000000000)) {
-			return roundValue(1, (float) power / 1000000) + " MRF";
+			return roundValue(1, (float) power / 1000000) + " M" + type.getStorageSuffix();
 		}
-		return roundValue(2, (float) power / 1000000000) + " BRF";
+		return roundValue(2, (float) power / 1000000000) + " B" + type.getStorageSuffix();
 
 	}
 
 	public static String formatOutput(long power) {
+		return formatOutput(EnergyType.RF, power);
+	}
+
+	public static String formatOutput(EnergyType type, long power) {
 		if ((power < 1000)) {
-			return power + " RF/t";
+			return power + " " + type.getUsageSuffix();
 		} else if ((power < 1000000)) {
-			return roundValue(1, (float) power / 1000) + " KRF/t";
+			return roundValue(1, (float) power / 1000) + " K" + type.getUsageSuffix();
 		} else if ((power < 1000000000)) {
-			return roundValue(1, (float) power / 1000000) + " MRF/t";
+			return roundValue(1, (float) power / 1000000) + " M" + type.getUsageSuffix();
 		}
-		return roundValue(2, (float) power / 1000000000) + " BRF/t";
+		return roundValue(2, (float) power / 1000000000) + " B" + type.getUsageSuffix();
 
 	}
 
@@ -199,5 +223,109 @@ public class FontHelper {
 			list = i != 0 ? (list + ", " + string) : string;
 		}
 		return list;
+	}
+
+	public static ArrayList<String> breakUpStringIntoLines(String multiline, int charLimit) {
+		ArrayList<String> lines = new ArrayList();
+		String s = multiline;
+		char[] chars = s.toCharArray();
+		boolean endOfString = false;
+		int start = 0;
+		int end = start;
+		while (start < chars.length - 1) {
+			int charCount = 0;
+			int lastSpace = 0;
+			while (charCount < charLimit) {
+				if (chars[charCount + start] == ' ') {
+					lastSpace = charCount;
+				}
+				charCount++;
+				if (charCount + start == s.length()) {
+					endOfString = true;
+					break;
+				}
+			}
+			end = endOfString ? s.length() : (lastSpace > 0) ? lastSpace + start : charCount + start;
+			lines.add(s.substring(start, end));
+			start = end + 1;
+		}
+		return lines;
+	}
+
+	public static ArrayList<String> breakLines(ArrayList<String> lines, String str, int wrapWidth) {
+		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
+		int i = sizeStringToWidth(render, str, wrapWidth);
+		if (str.length() <= i) {
+			lines.add(str);
+			return lines;
+		} else {
+			String s = str.substring(0, i);
+			char c0 = str.charAt(i);
+			boolean flag = c0 == 32 || c0 == 10;
+			String s1 = render.getFormatFromString(s) + str.substring(i + (flag ? 1 : 0));
+			lines.add(s);
+			return breakLines(lines, s1, wrapWidth);
+		}
+	}
+
+	// clone of private method in FontRenderer
+	public static int sizeStringToWidth(FontRenderer render, String str, int wrapWidth) {
+		int i = str.length();
+		int j = 0;
+		int k = 0;
+		int l = -1;
+
+		for (boolean flag = false; k < i; ++k) {
+			char c0 = str.charAt(k);
+
+			switch (c0) {
+			case '\u00a3':
+				// FOR PAGE NUMBERS!!!! DON'T USE THIS OTHERWISE
+				break;
+			case '\n':
+				--k;
+				break;
+			case ' ':
+				l = k;
+			default:
+				j += render.getCharWidth(c0);
+
+				if (flag) {
+					++j;
+				}
+
+				break;
+			case '\u00a7':
+				if (k < i - 1) {
+					++k;
+					char c1 = str.charAt(k);
+
+					if (c1 != 108 && c1 != 76) {
+						if (c1 == 114 || c1 == 82 || isFormatColor(c1)) {
+							flag = false;
+						}
+					} else {
+						flag = true;
+					}
+				}
+			}
+
+			if (c0 == 10) {
+				++k;
+				l = k;
+				break;
+			}
+
+			if (j > wrapWidth) {
+				break;
+			}
+		}
+
+		return k != i && l != -1 && l < k ? l : k;
+	}
+
+	// clone of private method in FontRenderer
+	public static boolean isFormatColor(char colorChar) {
+		return colorChar >= 48 && colorChar <= 57 || colorChar >= 97 && colorChar <= 102 || colorChar >= 65 && colorChar <= 70;
 	}
 }

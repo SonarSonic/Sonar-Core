@@ -10,8 +10,8 @@ public class EnergyType implements IRegistryObject {
 	public static final EnergyType EU = new EnergyType("Energy Units", "EU", "EU/T", (double) 1 / 4);
 	public static final EnergyType MJ = new EnergyType("Minecraft Joules", "J", "J/T", (double) 2.5);
 	public static final EnergyType AE = new EnergyType("Applied Energistics", "AE", "AE/t", (double) 1 / 2);
-	public static final EnergyType TESLA = new EnergyType("Tesla", "TESLA", "Tesla/t", (double) 1);
-	public static final EnergyType FE = new EnergyType("Forge Energy", "Forge Energy", "Forge/T", (double) 1);
+	public static final EnergyType TESLA = new EnergyType("Tesla", "T", "T/t", (double) 1);
+	public static final EnergyType FE = new EnergyType("Forge Energy", "FE", "FE/T", (double) 1);
 	//public static final EnergyType SONAR = new EnergyType("Sonar", "S", "S/t", (double) 1);
 
 	private String name = "";

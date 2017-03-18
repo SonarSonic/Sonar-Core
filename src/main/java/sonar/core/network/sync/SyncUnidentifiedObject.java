@@ -12,7 +12,7 @@ import sonar.core.helpers.NBTHelper.SyncType;
 public class SyncUnidentifiedObject extends SyncPart {
 
 	public Object obj = null;
-	public ObjectType objectType = null;
+	public ObjectType objType = null;
 
 	public SyncUnidentifiedObject(int id) {
 		super(id);
@@ -21,7 +21,7 @@ public class SyncUnidentifiedObject extends SyncPart {
 	public void set(Object obj, ObjectType objectType) {
 		if (obj != null && (this.obj == null || !obj.equals(this.obj))) {
 			this.obj = obj;
-			this.objectType = objectType;
+			this.objType = objectType;
 			this.markChanged();
 		}
 	}
@@ -32,7 +32,7 @@ public class SyncUnidentifiedObject extends SyncPart {
 	}
 
 	public boolean hasObject() {
-		return obj != null && objectType != null;
+		return obj != null && objType != null;
 	}
 
 	public boolean hasObject(NBTTagCompound tag) {
@@ -52,8 +52,8 @@ public class SyncUnidentifiedObject extends SyncPart {
 	@Override
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		if (hasObject()) {
-			nbt.setInteger(getTagName() + "type", objectType.ordinal());
-			NBTHelper.writeNBTBase(nbt, objectType.tagType, obj, getTagName() + "obj");
+			nbt.setInteger(getTagName() + "type", objType.ordinal());
+			NBTHelper.writeNBTBase(nbt, objType.tagType, obj, getTagName() + "obj");
 		}
 		return nbt;
 	}
@@ -61,8 +61,8 @@ public class SyncUnidentifiedObject extends SyncPart {
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (hasObject(nbt)) {
-			objectType = ObjectType.values()[nbt.getInteger(getTagName() + "type")];
-			obj = NBTHelper.readNBTBase(nbt, objectType.tagType, getTagName() + "obj");
+			objType = ObjectType.values()[nbt.getInteger(getTagName() + "type")];
+			obj = NBTHelper.readNBTBase(nbt, objType.tagType, getTagName() + "obj");
 		}
 	}
 }

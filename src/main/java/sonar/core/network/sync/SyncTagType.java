@@ -195,7 +195,7 @@ public abstract class SyncTagType<T> extends SyncPart {
 
 	@Override
 	public void readFromBuf(ByteBuf buf) {
-		setObject((T) NBTHelper.readBufBase(buf, nbtType, getTagName()));
+		current = (T) NBTHelper.readBufBase(buf, nbtType, getTagName());
 	}
 
 	@Override
@@ -223,7 +223,7 @@ public abstract class SyncTagType<T> extends SyncPart {
 	}
 
 	public void setObject(T object) {
-		if (current != object) {
+		if (!current.equals(object)) {
 			current = object;
 			markChanged();
 		}

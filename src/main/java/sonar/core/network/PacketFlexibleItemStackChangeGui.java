@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -20,15 +21,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import sonar.core.SonarCore;
 import sonar.core.api.IFlexibleGui;
 
-public class PacketFlexibleChangeGui extends PacketMultipart {
+public class PacketFlexibleItemStackChangeGui extends PacketCoords {
 	public int guiID;
 	public int returnID;
 
-	public PacketFlexibleChangeGui() {
+	public PacketFlexibleItemStackChangeGui() {
 	}
 
-	public PacketFlexibleChangeGui(UUID partUUID, BlockPos pos, int guiID, int returnID) {
-		super(partUUID, pos);
+	public PacketFlexibleItemStackChangeGui(BlockPos pos, int guiID, int returnID) {
+		super(pos);
 		this.guiID = guiID;
 		this.returnID = returnID;
 	}
@@ -45,18 +46,19 @@ public class PacketFlexibleChangeGui extends PacketMultipart {
 		buf.writeInt(returnID);
 	}
 
-	public static class Handler extends PacketMultipartHandler<PacketFlexibleChangeGui> {
+	public static class Handler implements IMessageHandler<PacketFlexibleItemStackChangeGui, IMessage> {
 
 		@Override
-		public IMessage processMessage(PacketFlexibleChangeGui message, IMultipartContainer target, IMultipart part, MessageContext ctx) {
-			if (!(part instanceof IFlexibleGui)) {
-				return null;
-			}
+		public IMessage onMessage(PacketFlexibleItemStackChangeGui message, MessageContext ctx) {
 			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
 				public void run() {
 					EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
+					ItemStack stack = player.getHeldItemMainhand();
+					if (!(stack.getItem() instanceof IFlexibleGui)) {
+						return;
+					}
 					SonarCore.instance.guiHandler.lastID.put(player, message.returnID);
-					SonarCore.instance.guiHandler.openBasicMultipart(true, message.partUUID, player, player.getEntityWorld(), message.pos, message.guiID);
+					SonarCore.instance.guiHandler.openBasicItemStack(true, stack, player, player.getEntityWorld(), message.pos, message.guiID);
 				}
 			});
 			return null;

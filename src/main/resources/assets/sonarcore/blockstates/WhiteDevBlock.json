@@ -1,0 +1,12 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {"all":"sonarcore:blocks/white_dev_block"},
+        "model":"cube_all",
+        "transform":"forge:default-block"
+     },
+    "variants": {
+        "normal": [{}],
+        "inventory": [{}]
+    }
+}

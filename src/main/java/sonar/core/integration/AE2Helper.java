@@ -1,8 +1,13 @@
 package sonar.core.integration;
-/*
-import sonar.core.api.ActionType;
-import sonar.core.api.StoredFluidStack;
-import sonar.core.api.StoredItemStack;
+
+import appeng.api.AEApi;
+import appeng.api.config.Actionable;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IAEStack;
+import sonar.core.api.fluids.StoredFluidStack;
+import sonar.core.api.inventories.StoredItemStack;
+import sonar.core.api.utils.ActionType;
 
 public class AE2Helper {
 
@@ -15,7 +20,7 @@ public class AE2Helper {
 	}
 
 	public static StoredItemStack convertAEItemStack(IAEStack stack) {
-		if (stack.isItem()) {
+		if (stack != null && stack.isItem()) {
 			IAEItemStack item = (IAEItemStack) stack;
 			return new StoredItemStack(item.getItemStack(), item.getStackSize());
 		}
@@ -23,7 +28,7 @@ public class AE2Helper {
 	}
 
 	public static StoredFluidStack convertAEFluidStack(IAEStack stack) {
-		if (stack.isFluid()) {
+		if (stack != null && stack.isFluid()) {
 			IAEFluidStack fluid = (IAEFluidStack) stack;
 			return new StoredFluidStack(fluid.getFluidStack(), fluid.getStackSize());
 		}
@@ -48,4 +53,3 @@ public class AE2Helper {
 		}
 	}
 }
-*/

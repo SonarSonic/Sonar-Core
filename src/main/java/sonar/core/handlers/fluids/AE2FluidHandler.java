@@ -1,30 +1,32 @@
 package sonar.core.handlers.fluids;
-/*
+
 import java.util.List;
 
+import appeng.api.networking.security.IActionHost;
+import appeng.api.networking.security.MachineSource;
+import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IItemList;
+import appeng.me.GridAccessException;
+import appeng.me.helpers.IGridProxyable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Loader;
-import sonar.core.api.ActionType;
-import sonar.core.api.FluidHandler;
-import sonar.core.api.InventoryHandler.StorageSize;
 import sonar.core.api.SonarAPI;
-import sonar.core.api.StoredFluidStack;
+import sonar.core.api.StorageSize;
+import sonar.core.api.asm.EnergyHandler;
+import sonar.core.api.asm.FluidHandler;
+import sonar.core.api.fluids.ISonarFluidHandler;
+import sonar.core.api.fluids.StoredFluidStack;
+import sonar.core.api.utils.ActionType;
+import sonar.core.handlers.energy.AEProvider;
 import sonar.core.integration.AE2Helper;
 
-public class AE2FluidProvider extends FluidHandler {
+@FluidHandler(modid = "appliedenergistics2", handlerID = AE2FluidHandler.name, priority = 4)
+public class AE2FluidHandler implements ISonarFluidHandler {
 
-	public static String name = "AE2-Fluids";
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	public boolean isLoadable() {
-		return Loader.isModLoaded("appliedenergistics2");
-	}
-
+	public static final String name = "AE2 Fluid Provider"; 
+	
 	@Override
 	public boolean canHandleFluids(TileEntity tile, EnumFacing dir) {
 		return tile instanceof IGridProxyable;
@@ -71,7 +73,7 @@ public class AE2FluidProvider extends FluidHandler {
 		IGridProxyable proxy = (IGridProxyable) tile;
 		try {
 			IStorageGrid storage = proxy.getProxy().getStorage();
-			StoredFluidStack fluid = SonarAPI.getFluidHelper().getStackToAdd(remove.stored, remove, AE2Helper.convertAEItemStack(storage.getFluidInventory().extractItems(AE2Helper.convertStoredFluidStack(remove), AE2Helper.getActionable(action), new MachineSource(((IActionHost) tile)))));
+			StoredFluidStack fluid = SonarAPI.getFluidHelper().getStackToAdd(remove.stored, remove, AE2Helper.convertAEFluidStack(storage.getFluidInventory().extractItems(AE2Helper.convertStoredFluidStack(remove), AE2Helper.getActionable(action), new MachineSource(((IActionHost) tile)))));
 			if (fluid == null || fluid.stored == 0) {
 				return null;
 			}
@@ -83,4 +85,3 @@ public class AE2FluidProvider extends FluidHandler {
 	}
 
 }
-*/

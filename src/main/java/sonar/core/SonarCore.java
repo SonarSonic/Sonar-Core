@@ -50,9 +50,10 @@ import sonar.core.network.FlexibleGuiHandler;
 import sonar.core.network.PacketBlockInteraction;
 import sonar.core.network.PacketByteBuf;
 import sonar.core.network.PacketByteBufMultipart;
-import sonar.core.network.PacketFlexibleChangeGui;
+import sonar.core.network.PacketFlexibleMultipartChangeGui;
 import sonar.core.network.PacketFlexibleCloseGui;
 import sonar.core.network.PacketFlexibleContainer;
+import sonar.core.network.PacketFlexibleItemStackChangeGui;
 import sonar.core.network.PacketFlexibleOpenGui;
 import sonar.core.network.PacketInvUpdate;
 import sonar.core.network.PacketMultipartSync;
@@ -73,7 +74,7 @@ import sonar.core.upgrades.MachineUpgradeRegistry;
 public class SonarCore {
 
 	public static final String modid = "sonarcore";
-	public static final String version = "3.2.5";
+	public static final String version = "3.2.6";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -107,6 +108,8 @@ public class SonarCore {
 	public static Block reinforcedStoneSlab_half, reinforcedStoneBrickSlab_half, reinforcedDirtSlab_half, reinforcedDirtBrickSlab_half;
 	public static Block reinforcedStoneSlab_double, reinforcedStoneBrickSlab_double, reinforcedDirtSlab_double, reinforcedDirtBrickSlab_double;
 
+	public static Block black_dev_block, white_dev_block;
+	
 	public static final Random rand = new Random();
 
 	public static CreativeTabs tab = new CreativeTabs("SonarCore") {
@@ -208,7 +211,8 @@ public class SonarCore {
 			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 16, Side.SERVER);
 			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 17, Side.CLIENT);
 			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 18, Side.SERVER);
-			network.registerMessage(PacketFlexibleChangeGui.Handler.class, PacketFlexibleChangeGui.class, 19, Side.SERVER);
+			network.registerMessage(PacketFlexibleMultipartChangeGui.Handler.class, PacketFlexibleMultipartChangeGui.class, 19, Side.SERVER);
+			network.registerMessage(PacketFlexibleItemStackChangeGui.Handler.class, PacketFlexibleItemStackChangeGui.class, 20, Side.SERVER);
 		}
 	}
 

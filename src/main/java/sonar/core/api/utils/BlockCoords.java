@@ -167,6 +167,10 @@ public class BlockCoords {
 		}
 		return world = SonarCore.proxy.getDimension(getDimension());
 	}
+	
+	public boolean isChunkLoaded(){
+		return getWorld().isBlockLoaded(pos, false);
+	}
 
 	public static void writeToBuf(ByteBuf tag, BlockCoords coords) {
 		tag.writeInt(coords.pos.getX());
@@ -231,8 +235,8 @@ public class BlockCoords {
 
 	}
 
-	public static List<BlockCoords> readBlockCoords(NBTTagCompound tag, String tagName) {
-		List<BlockCoords> coords = new ArrayList();
+	public static ArrayList<BlockCoords> readBlockCoords(NBTTagCompound tag, String tagName) {
+		ArrayList<BlockCoords> coords = new ArrayList();
 		if (tag.hasKey(tagName)) {
 			NBTTagList list = tag.getTagList(tagName, 10);
 			for (int i = 0; i < list.tagCount(); i++) {

@@ -10,6 +10,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -113,7 +114,10 @@ public class FlexibleGuiHandler {
 	public static void changeGui(IFlexibleGui guiTile, int id, int returnID, World world, EntityPlayer player) {
 		if (guiTile instanceof SonarMultipart) {
 			SonarMultipart multipart = (SonarMultipart) guiTile;
-			SonarCore.network.sendToServer(new PacketFlexibleChangeGui(multipart.getUUID(), multipart.getPos(), id, returnID));
+			SonarCore.network.sendToServer(new PacketFlexibleMultipartChangeGui(multipart.getUUID(), multipart.getPos(), id, returnID));
+		}
+		if(guiTile instanceof Item){
+			SonarCore.network.sendToServer(new PacketFlexibleItemStackChangeGui(player.getPosition(), id, returnID));
 		}
 	}
 

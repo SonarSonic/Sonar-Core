@@ -204,7 +204,7 @@ public class InventoryHelper extends InventoryWrapper {
 	}
 
 	public StoredItemStack removeItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
-		if (tile != null && filter == null || filter.allowed(stack.getFullStack())) {
+		if (tile != null && (filter == null || filter.allowed(stack.getFullStack()))) {
 			List<ISonarInventoryHandler> handlers = SonarCore.inventoryHandlers;
 			for (ISonarInventoryHandler handler : handlers) {
 				if (handler.canHandleItems(tile, dir)) {

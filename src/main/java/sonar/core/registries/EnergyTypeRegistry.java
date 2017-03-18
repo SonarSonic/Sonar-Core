@@ -12,6 +12,7 @@ public class EnergyTypeRegistry extends RegistryHelper<EnergyType> {
 		registerObject(EnergyType.EU);
 		registerObject(EnergyType.TESLA);
 		registerObject(EnergyType.RF);
+		registerObject(EnergyType.FE);
 	}
 
 	@Override
@@ -21,7 +22,7 @@ public class EnergyTypeRegistry extends RegistryHelper<EnergyType> {
 
 	public EnergyType getEnergyType(String storage) {
 		for (EnergyType type : getObjects()) {
-			if (type.getStorageSuffix().equals(storage)) {
+			if (type.getName().equals(storage)) {
 				return type;
 			}
 		}
