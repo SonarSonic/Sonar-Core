@@ -29,7 +29,7 @@ public abstract class SonarItemScreen extends SonarItem {
 				if (world.isAirBlock(pos)) {
 					if (side != EnumFacing.UP) {
 						world.setBlockState(pos, getScreenBlock().getDefaultState(), 3);
-						--stack.stackSize;
+						stack.shrink(1);
 					}
 					return EnumActionResult.SUCCESS;
 				} else {

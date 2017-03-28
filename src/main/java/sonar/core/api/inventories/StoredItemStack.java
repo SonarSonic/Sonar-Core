@@ -17,7 +17,7 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 
 	public StoredItemStack(ItemStack stack) {
 		this.item = stack.copy();
-		this.stored = stack.stackSize;
+		this.stored = stack.getCount();
 	}
 
 	public StoredItemStack(ItemStack stack, long stored) {
@@ -27,13 +27,13 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 
 	public void add(ItemStack stack) {
 		if (equalStack(stack)) {
-			stored += stack.stackSize;
+			stored += stack.getCount();
 		}
 	}
 
 	public void remove(ItemStack stack) {
 		if (equalStack(stack)) {
-			stored -= stack.stackSize;
+			stored -= stack.getCount();
 		}
 	}
 
@@ -59,7 +59,7 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 	}
 
 	public boolean equalStack(ItemStack stack) {
-		if (this.item == null || stack == null || stack.stackSize == 0) {
+		if (this.item == null || stack == null || stack.getCount() == 0) {
 			return false;
 		}
 		if (!this.item.isItemEqual(stack)) {
@@ -73,7 +73,7 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		item = ItemStack.loadItemStackFromNBT(nbt);
+		item = new ItemStack(nbt);
 		stored = nbt.getLong("stored");
 	}
 
@@ -126,13 +126,13 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 	public ItemStack getFullStack() {
 		int min = getValidStackSize();
 		ItemStack stack = item.copy();
-		stack.stackSize = min;
+		stack.setCount(min);
 		return stack;
 	}
 
 	public ItemStack getActualStack() {
 		ItemStack fullStack = getFullStack();
-		if (fullStack.stackSize <= 0) {
+		if (fullStack.getCount() <= 0) {
 			return null;
 		}
 		return fullStack;

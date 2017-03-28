@@ -166,7 +166,7 @@ public class RenderHelper {
 	public static void renderStoredItemStackOverlay(ItemStack stack, long stored, int x, int y, String string, boolean depth) {
 		if (stack != null) {
 			FontRenderer font = getFontFromStack(stack);
-			stack.stackSize = 1;
+			stack.setCount(1);
 			if (stored > 0 || string != null) {
 				String s1 = string == null ? FontHelper.formatStackSize(stored) : string;
 
@@ -422,13 +422,13 @@ public class RenderHelper {
 	}
 
 	public static void drawBoundingBox(AxisAlignedBB box, BlockPos pos, float partialTicks, float r, float g, float b, float alpha) {
-		EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		enableBlend();
 		tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		glLineWidth(5.0F);
 		disableTexture2D();
 		depthMask(false);
-		if (Minecraft.getMinecraft().theWorld.getWorldBorder().contains(pos)) {
+		if (Minecraft.getMinecraft().world.getWorldBorder().contains(pos)) {
 			double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) partialTicks;
 			double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) partialTicks;
 			double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) partialTicks;

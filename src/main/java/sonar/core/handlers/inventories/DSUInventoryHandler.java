@@ -55,7 +55,7 @@ public class DSUInventoryHandler implements ISonarInventoryHandler {
 		if (stack != null) {
 			if (add.equalStack(stack)) {
 				long max = inv.getMaxStoredCount();
-				long storedItems = stack.stackSize;
+				long storedItems = stack.getCount();
 				if (max == storedItems) {
 					return add;
 				}
@@ -68,7 +68,7 @@ public class DSUInventoryHandler implements ISonarInventoryHandler {
 					return new StoredItemStack(add.getItemStack(), remove);
 				} else {
 					if (!action.shouldSimulate())
-						inv.setStoredItemCount(stack.stackSize + (int) add.getStackSize());
+						inv.setStoredItemCount(stack.getCount() + (int) add.getStackSize());
 					return null;
 				}
 			}
@@ -86,15 +86,15 @@ public class DSUInventoryHandler implements ISonarInventoryHandler {
 		IDeepStorageUnit inv = (IDeepStorageUnit) tile;
 		ItemStack stack = inv.getStoredItemType();
 		if (remove.equalStack(stack)) {
-			if (remove.getStackSize() >= stack.stackSize) {
+			if (remove.getStackSize() >= stack.getCount()) {
 				stack = stack.copy();
-				remove.stored -= stack.stackSize;
+				remove.stored -= stack.getCount();
 				if (!action.shouldSimulate())
 					inv.setStoredItemCount(0);
 				return remove;
 			} else {
 				if (!action.shouldSimulate())
-					inv.setStoredItemCount(stack.stackSize - (int) remove.getStackSize());
+					inv.setStoredItemCount(stack.getCount() - (int) remove.getStackSize());
 				return null;
 			}
 		}

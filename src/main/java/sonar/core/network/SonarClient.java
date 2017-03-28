@@ -25,12 +25,12 @@ public class SonarClient extends SonarCommon {
 
 	@Override
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
-		return (ctx.side.isClient() ? Minecraft.getMinecraft().thePlayer : super.getPlayerEntity(ctx));
+		return (ctx.side.isClient() ? Minecraft.getMinecraft().player : super.getPlayerEntity(ctx));
 	}
 
 	@Override
 	public World getDimension(int dimensionID) {
-		return FMLCommonHandler.instance().getEffectiveSide().isClient() ? Minecraft.getMinecraft().theWorld : super.getDimension(dimensionID);
+		return FMLCommonHandler.instance().getEffectiveSide().isClient() ? Minecraft.getMinecraft().world : super.getDimension(dimensionID);
 	}
 
 	public IThreadListener getThreadListener(MessageContext ctx) {

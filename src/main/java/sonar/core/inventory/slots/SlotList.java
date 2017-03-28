@@ -31,7 +31,7 @@ public class SlotList extends Slot {
 		ItemStack copy = null;
 		if (stack != null) {
 			copy = stack.copy();
-			copy.stackSize = 1;
+			copy.setCount(1);
 		}
 		this.inventory.setInventorySlotContents(this.getSlotIndex(), copy);
 		this.inventory.markDirty();

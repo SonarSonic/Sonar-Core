@@ -40,7 +40,7 @@ public class RefinedStorageHandler implements ISonarInventoryHandler {
 		if (network != null) {
 			int toAdd = (int) Math.min(Integer.MAX_VALUE, add.stored);
 			ItemStack stack = network.insertItem(add.getFullStack(), toAdd, action.shouldSimulate());
-			add.stored -= stack == null ? toAdd : toAdd - stack.stackSize;
+			add.stored -= stack == null ? toAdd : toAdd - stack.getCount();
 		}
 		return add;
 	}
@@ -52,7 +52,7 @@ public class RefinedStorageHandler implements ISonarInventoryHandler {
 		if (network != null) {
 			int toRemove = (int) Math.min(Integer.MAX_VALUE, remove.stored);
 			ItemStack stack = network.extractItem(remove.getFullStack(), toRemove, action.shouldSimulate());
-			remove.stored -= stack == null ? 0 : stack.stackSize;
+			remove.stored -= stack == null ? 0 : stack.getCount();
 		}
 		return remove;
 	}

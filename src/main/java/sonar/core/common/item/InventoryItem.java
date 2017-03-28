@@ -29,7 +29,7 @@ public class InventoryItem implements IInventory {
 			}
 			readFromNBT(stack.getTagCompound());
 		} else {
-			readFromNBT(stack.getSubCompound(tag, true));
+			readFromNBT(stack.getOrCreateSubCompound(tag));
 		}
 	}
 
@@ -44,7 +44,7 @@ public class InventoryItem implements IInventory {
 	public ItemStack decrStackSize(int slot, int amount) {
 		ItemStack stack = getStackInSlot(slot);
 		if (stack != null) {
-			if (stack.stackSize > amount) {
+			if (stack.getCount() > amount) {
 				stack = stack.splitStack(amount);
 				markDirty();
 			} else {
@@ -67,8 +67,8 @@ public class InventoryItem implements IInventory {
 	public void setInventorySlotContents(int slot, ItemStack stack, boolean isRemote) {
 		inventory[slot] = stack;
 
-		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-			stack.stackSize = getInventoryStackLimit();
+		if (stack != null && stack.getCount() > getInventoryStackLimit()) {
+			stack.setCount(getInventoryStackLimit());
 		}
 		if (!isRemote) {
 			markDirty();
@@ -97,14 +97,14 @@ public class InventoryItem implements IInventory {
 
 	public void markDirty() {
 		for (int i = 0; i < getSizeInventory(); ++i) {
-			if (getStackInSlot(i) != null && getStackInSlot(i).stackSize == 0) {
+			if (getStackInSlot(i) != null && getStackInSlot(i).getCount() == 0) {
 				inventory[i] = null;
 			}
 		}
 		if (useStackTag) {
 			writeToNBT(invItem.getTagCompound());
 		} else {
-			writeToNBT(invItem.getSubCompound(tag, true));
+			writeToNBT(invItem.getOrCreateSubCompound(tag));
 		}
 	}
 
@@ -129,7 +129,7 @@ public class InventoryItem implements IInventory {
 			NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
 			int slot = item.getInteger("Slot");
 			if (slot >= 0 && slot < getSizeInventory()) {
-				inventory[slot] = ItemStack.loadItemStackFromNBT(item);
+				inventory[slot] = new ItemStack(item);
 			}
 		}
 	}
@@ -160,7 +160,7 @@ public class InventoryItem implements IInventory {
 				return 0;
 			}
 		} else {
-			return stack.getSubCompound(tag, true).getInteger("invsize");
+			return stack.getOrCreateSubCompound(tag).getInteger("invsize");
 		}
 	}
 

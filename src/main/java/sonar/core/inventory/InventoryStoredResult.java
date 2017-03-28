@@ -60,11 +60,6 @@ public class InventoryStoredResult extends InventoryCraftResult {
 		module.markDirty();
 	}
 
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return true;
-	}
-
 	public boolean isStackValidForSlot(int par1, ItemStack par2ItemStack) {
 		return true;
 	}

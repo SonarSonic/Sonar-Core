@@ -17,7 +17,7 @@ public class RecipeOreStack implements ISonarRecipeObject, ISonarRecipeItem {
 		List<ItemStack> stacks = new ArrayList();
 		for (ItemStack ore : OreDictionary.getOres(oreType)) {
 			ItemStack newStack = ore.copy();
-			newStack.stackSize = stackSize;
+			newStack.setCount(stackSize);
 			stacks.add(newStack);
 		}
 		this.cachedRegister = stacks;
@@ -44,7 +44,7 @@ public class RecipeOreStack implements ISonarRecipeObject, ISonarRecipeItem {
 			}
 		} else if (object instanceof String) {
 			return oreType.equals(object);
-		} else if (object instanceof ItemStack && type.checkStackSize(stackSize, ((ItemStack) object).stackSize)) {
+		} else if (object instanceof ItemStack && type.checkStackSize(stackSize, ((ItemStack) object).getCount())) {
 			int oreID = OreDictionary.getOreID(oreType);
 			for (int id : OreDictionary.getOreIDs((ItemStack) object)) {
 				if (oreID == id) {

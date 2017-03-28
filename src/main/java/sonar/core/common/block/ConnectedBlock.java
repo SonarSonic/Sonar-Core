@@ -73,11 +73,6 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
-		super.getSubBlocks(item, tab, list);
-	}
-
 	public int getMetaFromState(IBlockState state) {
 		return 0;
 	}

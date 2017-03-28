@@ -27,10 +27,10 @@ public class InventoryHelper extends InventoryWrapper {
 			final ItemStack stored = inv.getStackInSlot(slot);
 			if (stored != null) {
 				ItemStack stack = stored.copy();
-				if (add.equalStack(stack) && stack.stackSize < limit && stack.stackSize < stack.getMaxStackSize()) {
-					long used = Math.min(add.item.getMaxStackSize() - stack.stackSize, Math.min(add.stored, limit - stack.stackSize));
+				if (add.equalStack(stack) && stack.getCount() < limit && stack.getCount() < stack.getMaxStackSize()) {
+					long used = Math.min(add.item.getMaxStackSize() - stack.getCount(), Math.min(add.stored, limit - stack.getCount()));
 					if (used > 0) {
-						stack.stackSize += used;
+						stack.setCount((int) (stack.getCount() + used));
 						add.stored -= used;
 						if (!action.shouldSimulate()) {
 							inv.setInventorySlotContents(slot, stack.copy());
@@ -58,10 +58,10 @@ public class InventoryHelper extends InventoryWrapper {
 	public static boolean removeStack(IInventory inv, StoredItemStack remove, ItemStack stored, int slot, ActionType action) {
 		ItemStack stack = stored.copy();
 		if (remove.equalStack(stack)) {
-			long used = (long) Math.min(remove.stored, Math.min(inv.getInventoryStackLimit(), stack.stackSize));
-			stack.stackSize -= used;
+			long used = (long) Math.min(remove.stored, Math.min(inv.getInventoryStackLimit(), stack.getCount()));
+			stack.setCount((int) (stack.getCount()-used));
 			remove.stored -= used;
-			if (stack.stackSize == 0) {
+			if (stack.getCount() == 0) {
 				stack = null;
 			}
 			if (!action.shouldSimulate()) {
@@ -90,7 +90,7 @@ public class InventoryHelper extends InventoryWrapper {
 		for (int i = 0; i < inv.getSizeInventory(); i++) {
 			ItemStack stack = inv.getStackInSlot(i);
 			if (stack != null) {
-				stored += stack.stackSize;
+				stored += stack.getCount();
 				addStackToList(list, inv.getStackInSlot(i));
 			}
 		}
@@ -103,7 +103,7 @@ public class InventoryHelper extends InventoryWrapper {
 		for (int i = 0; i < inv.getSlots(); i++) {
 			ItemStack stack = inv.getStackInSlot(i);
 			if (stack != null) {
-				stored += stack.stackSize;
+				stored += stack.getCount();
 				addStackToList(list, stack);
 			}
 		}
@@ -141,8 +141,8 @@ public class InventoryHelper extends InventoryWrapper {
 		List<EntityItem> drops = new ArrayList();
 		while (!(drop.stored <= 0)) {
 			ItemStack dropStack = drop.getItemStack();
-			dropStack.stackSize = (int) Math.min(drop.stored, dropStack.getMaxStackSize());
-			drop.stored -= dropStack.stackSize;
+			dropStack.setCount((int) Math.min(drop.stored, dropStack.getMaxStackSize()));
+			drop.stored -= dropStack.getCount();
 			drops.add(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, dropStack));
 		}
 		if (drop.stored < 0) {
@@ -164,7 +164,7 @@ public class InventoryHelper extends InventoryWrapper {
 			if (side == EnumFacing.EAST) {
 				item.motionX = 0.1;
 			}
-			world.spawnEntityInWorld(item);
+			world.spawnEntity(item);
 		}
 	}
 

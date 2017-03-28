@@ -12,7 +12,7 @@ public abstract class PacketCoordsHandler<T extends PacketCoords> implements IMe
 	public IMessage onMessage(T message, MessageContext ctx) {
 		EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);		
 		if (player != null) {
-			return processMessage(message, player.worldObj, player);
+			return processMessage(message, player.getEntityWorld(), player);
 		}
 		return null;
 	}

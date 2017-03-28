@@ -106,7 +106,7 @@ public class SonarHelper {
 	}
 
 	public static EntityPlayerMP getPlayerFromName(String player) {
-		List<EntityPlayerMP> server = FMLCommonHandler.instance().getMinecraftServerInstance().getServer().getPlayerList().getPlayerList();
+		List<EntityPlayerMP> server = FMLCommonHandler.instance().getMinecraftServerInstance().getServer().getPlayerList().getPlayers();
 		for (EntityPlayerMP entityPlayer : server) {
 			if (entityPlayer.getName().equals(player)) {
 				return entityPlayer;

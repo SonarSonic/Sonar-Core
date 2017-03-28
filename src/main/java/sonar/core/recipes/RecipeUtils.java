@@ -20,7 +20,7 @@ public class RecipeUtils {
 	public static List<ItemStack> addStack(List<ItemStack> stacks, ItemStack stack) {
 		if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
 			for (int i = 0; i <= stack.getMaxDamage(); i++) {
-				stacks.add(new ItemStack(stack.getItem(), stack.stackSize, i));
+				stacks.add(new ItemStack(stack.getItem(), stack.getCount(), i));
 			}
 		} else {
 			stacks.add(stack);

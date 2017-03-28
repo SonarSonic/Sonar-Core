@@ -138,8 +138,8 @@ public class EnergyHelper extends EnergyWrapper {
 				if (value != 0) {
 					if (storage.getEnergyStored() + value <= storage.getMaxEnergyStored()) {
 						storage.setEnergyStored(storage.getEnergyStored() + value);
-						item.stackSize -= 1;
-						if (item.stackSize <= 0) {
+						item.shrink(1);
+						if (item.getCount() <= 0) {
 							item = null;
 						}
 						return item;

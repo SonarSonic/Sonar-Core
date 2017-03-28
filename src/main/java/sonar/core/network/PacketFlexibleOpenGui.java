@@ -49,7 +49,7 @@ public class PacketFlexibleOpenGui extends PacketCoords {
 		public IMessage onMessage(PacketFlexibleOpenGui message, MessageContext ctx) {
 			Minecraft.getMinecraft().addScheduledTask(new Runnable() {
 				public void run() {
-					EntityPlayer player = FMLClientHandler.instance().getClient().thePlayer;
+					EntityPlayer player = FMLClientHandler.instance().getClient().player;
 					int id = message.tag.getInteger("id");
 					Pair<Object, IFlexibleGui> gui = SonarCore.instance.guiHandler.getFlexibleGui(id, player, player.getEntityWorld(), message.pos, message.tag);
 					if (!message.change) {

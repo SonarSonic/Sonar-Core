@@ -60,7 +60,7 @@ public class InventoryStoredCrafting extends InventoryCrafting {
 		if (stack != null) {
 			ItemStack itemstack;
 
-			if (stack.stackSize <= par2) {
+			if (stack.getCount() <= par2) {
 				itemstack = stack.copy();
 				stack = null;
 				inv.setInventorySlotContents(slotID + 1 + offset, null);
@@ -69,7 +69,7 @@ public class InventoryStoredCrafting extends InventoryCrafting {
 			} else {
 				itemstack = stack.splitStack(par2);
 
-				if (stack.stackSize == 0) {
+				if (stack.getCount() == 0) {
 					stack = null;
 				}
 
@@ -95,11 +95,6 @@ public class InventoryStoredCrafting extends InventoryCrafting {
 	@Override
 	public void markDirty() {
 		inv.markDirty();
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return true;
 	}
 
 }

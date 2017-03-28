@@ -29,14 +29,14 @@ public class SlotLarge extends Slot {
 		StoredItemStack stored = largeInv.getLargeStack(getSlotIndex());
 		if (stored != null && stored.getStackSize()!=0) {
 			ItemStack item = stored.getFullStack();
-			item.stackSize = (int) stored.stored;
+			item.setCount((int) stored.stored);
 			return item;
 		}
 		return null;
 	}
 
 	public void putStack(ItemStack stack) {
-		largeInv.slots[getSlotIndex()] = stack != null && stack.stackSize != 0 ? new StoredItemStack(stack) : null;
+		largeInv.slots[getSlotIndex()] = stack != null && stack.getCount() != 0 ? new StoredItemStack(stack) : null;
 		onSlotChanged();
 	}
 

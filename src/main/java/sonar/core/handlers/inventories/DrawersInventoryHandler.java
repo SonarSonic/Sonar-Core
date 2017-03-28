@@ -31,7 +31,7 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
 			IDrawerGroup drawers = (IDrawerGroup) tile;
 			if (slot < drawers.getDrawerCount()) {
 				IDrawer draw = drawers.getDrawer(slot);
-				ItemStack item = draw.getStoredItemCopy();
+				ItemStack item = draw.getStoredItemPrototype();
 				if (item != null) {
 					return new StoredItemStack(item);
 				} else {
@@ -52,7 +52,7 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
 			for (int i = 0; i < drawers.getDrawerCount(); i++) {
 				if (drawers.getDrawer(i) != null) {
 					IDrawer draw = drawers.getDrawer(i);					
-					ItemStack item = draw.getStoredItemCopy();
+					ItemStack item = draw.getStoredItemPrototype();
 					maxStorage+=draw.getMaxCapacity();
 					stored+=draw.getStoredItemCount();
 					if (item != null){						

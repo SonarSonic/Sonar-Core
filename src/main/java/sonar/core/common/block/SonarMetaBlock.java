@@ -10,7 +10,7 @@ import sonar.core.common.block.properties.IMetaRenderer;
 public class SonarMetaBlock extends ItemMultiTexture {
 
 	public SonarMetaBlock(Block block) {
-		super(block, block, new Function<ItemStack, String>() {
+		super(block, block, new ItemMultiTexture.Mapper() {
 			public String apply(ItemStack stack) {
 				Block block = Block.getBlockFromItem(stack.getItem());
 				if (block instanceof IMetaRenderer) {

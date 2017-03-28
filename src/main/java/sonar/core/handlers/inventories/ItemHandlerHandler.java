@@ -51,7 +51,7 @@ public class ItemHandlerHandler implements ISonarInventoryHandler {
 			if (stack != null && add.stored != 0) {
 				add.remove(SonarAPI.getItemHelper().getStackToAdd(add.stored, add, new StoredItemStack(stack)));
 			} else {
-				add.stored -= add.getFullStack().stackSize;
+				add.stored -= add.getFullStack().getCount();
 			}
 		}
 		return add;
@@ -65,7 +65,7 @@ public class ItemHandlerHandler implements ISonarInventoryHandler {
 				return null;
 			ItemStack current = handler.getStackInSlot(i);
 			if (current != null && remove.equalStack(current)) {
-				int removeSize = (int) Math.min(current.stackSize, remove.getStackSize());
+				int removeSize = (int) Math.min(current.getCount(), remove.getStackSize());
 				ItemStack stack = handler.extractItem(i, removeSize, action.shouldSimulate());
 				if (stack != null) {
 					remove.remove(new StoredItemStack(stack));

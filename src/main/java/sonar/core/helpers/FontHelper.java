@@ -99,13 +99,13 @@ public class FontHelper {
 	/** sends a chat message to the Player & translates it */
 	public static void sendMessage(String string, World world, EntityPlayer player) {
 		if (!world.isRemote) {
-			player.addChatComponentMessage(new TextComponentTranslation(string));
+			player.sendMessage(new TextComponentTranslation(string));
 		}
 	}
 
 	public static void sendMessage(ITextComponent component, World world, EntityPlayer player) {
 		if (!world.isRemote) {
-			player.addChatComponentMessage(component);
+			player.sendMessage(component);
 		}
 	}
 

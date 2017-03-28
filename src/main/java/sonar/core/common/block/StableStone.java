@@ -49,11 +49,6 @@ public class StableStone extends ConnectedBlock {
 		// this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Variants.NORMAL));
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item item, CreativeTabs tab, List list) {
-		super.getSubBlocks(item, tab, list);
-	}
-
 	public int getMetaFromState(IBlockState state) {
 		// return state.getValue(VARIANT).ordinal();
 		return 0;

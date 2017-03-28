@@ -60,7 +60,8 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	}
 
 	@Override
-	public final boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if (player != null) {
 			TileEntity target = world.getTileEntity(pos);
 			if (target != null && target instanceof TileEntitySonar) {
@@ -123,7 +124,6 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 		if (dropStandard(world, pos)) {
 			return super.getDrops(world, pos, state, fortune);
 		}
-
 		return Lists.newArrayList(getSpecialDrop(world, pos));
 	}
 
@@ -248,7 +248,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 				float f2 = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
 
 				EntityItem dropStack = new EntityItem(world, pos.getX() + f, pos.getY() + f1, pos.getZ() + f2, stack);
-				world.spawnEntityInWorld(dropStack);
+				world.spawnEntity(dropStack);
 			}
 		}
 		super.breakBlock(world, pos, state);

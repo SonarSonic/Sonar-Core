@@ -33,14 +33,14 @@ public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {
 			if (!ignoreNBT && !ItemStack.areItemStackTagsEqual(stack2, stack)) {
 				return false;
 			}
-			return type.checkStackSize(stack.stackSize, stack2.stackSize);
+			return type.checkStackSize(stack.getCount(), stack2.getCount());
 		}
 		if (object instanceof StoredItemStack) {
 			StoredItemStack stack2 = (StoredItemStack) object;
 			if (!stack2.equalStack(stack)) {
 				return false;
 			}
-			return type.checkStackSize(stack.stackSize, (int) stack2.stored);
+			return type.checkStackSize(stack.getCount(), (int) stack2.stored);
 		}
 		return false;
 	}
@@ -57,7 +57,7 @@ public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {
 
 	@Override
 	public int getStackSize() {
-		return stack.stackSize;
+		return stack.getCount();
 	}
 
 }

@@ -15,7 +15,7 @@ public class ItemStackHelper {
 	 * @param stack2 second stack your checking
 	 * @return if they are equal and can be merged */
 	public static boolean equalStacks(ItemStack stack1, ItemStack stack2) {
-		return equalStacksRegular(stack1, stack2) && !isCircuit(stack1.getItem()) && stack1.stackSize < stack1.getMaxStackSize();
+		return equalStacksRegular(stack1, stack2) && !isCircuit(stack1.getItem()) && stack1.getCount() < stack1.getMaxStackSize();
 	}
 
 	/** checks if two itemstacks are the same - ignores the stack size
@@ -31,8 +31,8 @@ public class ItemStackHelper {
 	public static ItemStack restoreItemStack(ItemStack stack, int size) {
 		ItemStack result = stack.copy();
 
-		if (result.stackSize <= 0) {
-			result.stackSize = size;
+		if (result.getCount() <= 0) {
+			result.setCount(size);
 
 		}
 		return result;
@@ -57,8 +57,8 @@ public class ItemStackHelper {
 	public static ItemStack createStack(Object obj) {
 		if (obj instanceof ItemStack) {
 			ItemStack stack = ((ItemStack) obj).copy();
-			if (stack.stackSize == 0) {
-				stack.stackSize = 1;
+			if (stack.getCount() == 0) {
+				stack.setCount(1);
 			}
 			return stack;
 		} else if (obj instanceof Item) {
@@ -99,8 +99,8 @@ public class ItemStackHelper {
 	}
 
 	public static ItemStack reduceStackSize(ItemStack stack, int i) {
-		stack.stackSize -= i;
-		if (stack.stackSize <= 0) {
+		stack.shrink(i);
+		if (stack.getCount() <= 0) {
 			stack = null;
 		}
 		return stack;

@@ -50,6 +50,11 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 			return inv.extractItem(slot, amount, simulate);
 		}
 
+		@Override
+		public int getSlotLimit(int slot) {
+			return inv.getSlotLimit(slot);
+		}
+
 	}
 
 	public AbstractSonarInventory(int size) {
@@ -57,7 +62,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		this.slots = new ItemStack[size];
 	}
 
-	public IItemHandler getItemHandler(EnumFacing side){
+	public IItemHandler getItemHandler(EnumFacing side) {
 		face = side;
 		return embeddedHandler;
 	}
@@ -75,7 +80,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 				NBTTagCompound compound = list.getCompoundTagAt(i);
 				byte b = compound.getByte("Slot");
 				if (b >= 0 && b < this.slots.length) {
-					this.slots[b] = ItemStack.loadItemStackFromNBT(compound);
+					this.slots[b] = new ItemStack(compound);
 				}
 			}
 		}
@@ -107,7 +112,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 
 	public ItemStack decrStackSize(int slot, int var2) {
 		if (this.slots[slot] != null) {
-			if (this.slots[slot].stackSize <= var2) {
+			if (this.slots[slot].getCount() <= var2) {
 				ItemStack itemstack = this.slots[slot];
 				this.slots[slot] = null;
 				markDirty();
@@ -115,7 +120,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 			}
 			ItemStack itemstack = this.slots[slot].splitStack(var2);
 
-			if (this.slots[slot].stackSize == 0) {
+			if (this.slots[slot].getCount() == 0) {
 				this.slots[slot] = null;
 			}
 			markDirty();
@@ -138,8 +143,8 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
 		this.slots[i] = itemstack;
 
-		if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit())) {
-			itemstack.stackSize = getInventoryStackLimit();
+		if ((itemstack != null) && (itemstack.getCount() > getInventoryStackLimit())) {
+			itemstack.setCount(getInventoryStackLimit());
 		}
 		markDirty();
 	}
@@ -215,7 +220,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		final ItemStack stored = getStackInSlot(slot);
-		if (stored == null || stored.stackSize == 0 || amount == 0) {
+		if (stored == null || stored.getCount() == 0 || amount == 0) {
 			return null;
 		}
 		StoredItemStack remove = new StoredItemStack(stored, amount);
@@ -224,4 +229,23 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		return remove.getActualStack();
 	}
 
+	@Override
+	public boolean isEmpty() {
+		for (ItemStack itemstack : this.slots) {
+			if (!itemstack.isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return true;
+	}
+
+	@Override
+	public int getSlotLimit(int slot) {
+		return this.getInventoryStackLimit();
+	}
 }

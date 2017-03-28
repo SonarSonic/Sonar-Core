@@ -56,7 +56,8 @@ public class SonarSeeds extends Item implements IPlantable {
 	}
 
 	@Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		ItemStack stack = player.getHeldItem(hand);
 		if (this.greenhouseTier == 0 || !SonarLoader.calculatorLoaded()) {
 			if (side != EnumFacing.UP) {
 				return EnumActionResult.PASS;
@@ -64,7 +65,7 @@ public class SonarSeeds extends Item implements IPlantable {
 				IBlockState state = world.getBlockState(pos);
 				if (state.getBlock().canSustainPlant(state, world, pos, EnumFacing.UP, this) && world.isAirBlock(pos.offset(EnumFacing.UP))) {
 					world.setBlockState(pos.offset(side), cropBlock.getDefaultState());
-					--stack.stackSize;
+					stack.shrink(1);
 					return EnumActionResult.SUCCESS;
 				} else {
 					return EnumActionResult.PASS;

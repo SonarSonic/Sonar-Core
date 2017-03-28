@@ -21,16 +21,15 @@ public class SlotBlockedInventory extends Slot {
 	@Override
 	public ItemStack decrStackSize(int size) {
 		if (getHasStack()) {
-			this.stackSize += Math.min(size, getStack().stackSize);
+			this.stackSize += Math.min(size, getStack().getCount());
 		}
-
 		return super.decrStackSize(size);
 	}
 
 	@Override
-	public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
+	public ItemStack onTake(EntityPlayer player, ItemStack stack) {
 		onCrafting(stack);
-		super.onPickupFromSlot(player, stack);
+		return super.onTake(player, stack);
 	}
 
 	@Override

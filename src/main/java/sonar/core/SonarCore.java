@@ -114,8 +114,8 @@ public class SonarCore {
 
 	public static CreativeTabs tab = new CreativeTabs("SonarCore") {
 		@Override
-		public Item getTabIconItem() {
-			return Item.getItemFromBlock(reinforcedStoneBlock);
+		public ItemStack getTabIconItem() {
+			return new ItemStack(Item.getItemFromBlock(reinforcedStoneBlock));
 		}
 	};
 
