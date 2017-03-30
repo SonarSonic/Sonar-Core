@@ -19,7 +19,7 @@ public class SlotLarge extends Slot {
 	}
 
 	public boolean isItemValid(ItemStack stack) {
-		if (stack == null)
+		if (stack.isEmpty())
 			return false;
 		StoredItemStack stored = largeInv.getLargeStack(getSlotIndex());
 		return stored == null ? largeInv.isItemValidForSlot(getSlotIndex(), stack) : stored.equalStack(stack);
@@ -32,7 +32,7 @@ public class SlotLarge extends Slot {
 			item.setCount((int) stored.stored);
 			return item;
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	public void putStack(ItemStack stack) {

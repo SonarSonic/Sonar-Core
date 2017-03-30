@@ -65,10 +65,11 @@ public class SonarHelper {
 
 	/* public static int pullEnergy(TileEntity tile, EnumFacing dir, int amount, boolean simulate) { if (tile instanceof IEnergyProvider) { IEnergyProvider handler = (IEnergyProvider) tile; return handler.extractEnergy(dir, amount, simulate); } return 0; } */
 	/** checks if a tile implements IWrench and IDropTile and drops it accordingly */
+	/*
 	public static void dropTile(EntityPlayer player, Block block, World world, BlockPos pos) {
 		ItemStack stack = player.getHeldItemMainhand();
 		TileEntity te = world.getTileEntity(pos);
-		if (SonarLoader.calculatorLoaded() && block == GameRegistry.findBlock("calculator", "ConductorMastBlock")) {
+		if (SonarLoader.calculatorLoaded() && block == Calculator.conductormastBlock) {
 			if (world.getBlockState(pos.offset(EnumFacing.DOWN, 1)).getBlock() == GameRegistry.findBlock("calculator", "ConductorMast")) {
 				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 1), world.getBlockState(pos.offset(EnumFacing.DOWN, 1)), te, stack);
 			} else if (world.getBlockState(pos.offset(EnumFacing.DOWN, 2)).getBlock() == GameRegistry.findBlock("calculator", "ConductorMast")) {
@@ -80,8 +81,8 @@ public class SonarHelper {
 		} else {
 			block.harvestBlock(world, player, pos, world.getBlockState(pos), te, stack);
 		}
-
 	}
+	*/
 
 	public static Entity getEntity(Class entityClass, IWorldPosition tile, int range, boolean nearest) {
 		BlockCoords coords = tile.getCoords();
@@ -179,11 +180,11 @@ public class SonarHelper {
 
 	public static ItemStack createStackedBlock(Block block, int meta) {
 		if (block == null) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 		Item item = Item.getItemFromBlock(block);
 		if (item == null) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 		int j = 0;
 		if (item.getHasSubtypes()) {

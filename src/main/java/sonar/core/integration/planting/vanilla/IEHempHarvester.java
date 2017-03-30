@@ -1,5 +1,6 @@
 package sonar.core.integration.planting.vanilla;
 
+/*
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,3 +64,4 @@ public class IEHempHarvester implements IHarvester {
 	
 
 }
+*/

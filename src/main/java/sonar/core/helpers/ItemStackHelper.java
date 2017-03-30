@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import sonar.core.api.utils.ICalculatorCircuit;
 import sonar.core.integration.SonarLoader;
 
 public class ItemStackHelper {
@@ -24,7 +25,7 @@ public class ItemStackHelper {
 	 * @param stack2second stack your checking
 	 * @return if they are equal and can be merged */
 	public static boolean equalStacksRegular(ItemStack stack1, ItemStack stack2) {
-		return stack1 != null && stack2 != null && stack1.getItem() == stack2.getItem() && stack1.getItemDamage() == stack2.getItemDamage() && ItemStack.areItemStackTagsEqual(stack1, stack2);
+		return !stack1.isEmpty() && !stack2.isEmpty() && stack1.getItem() == stack2.getItem() && stack1.getItemDamage() == stack2.getItemDamage() && ItemStack.areItemStackTagsEqual(stack1, stack2);
 	}
 
 	/** fixes the problem with ItemStacks having no stack size, and sets it to the inputted number */
@@ -41,16 +42,7 @@ public class ItemStackHelper {
 	/** @param item Item you are checking
 	 * @return if the stack is an circuit */
 	public static boolean isCircuit(Item item) {
-		if (SonarLoader.calculatorLoaded()) {
-			if (item == GameRegistry.findItem("calculator", "CircuitBoard")) {
-				return true;
-			} else if (item == GameRegistry.findItem("calculator", "CircuitDamaged")) {
-				return true;
-			} else if (item == GameRegistry.findItem("calculator", "CircuitDirty")) {
-				return true;
-			}
-		}
-		return false;
+		return item instanceof ICalculatorCircuit;
 	}
 
 	/** turns blocks/items into ItemStacks */
@@ -96,15 +88,6 @@ public class ItemStackHelper {
 			}
 		}
 		return false;
-	}
-
-	public static ItemStack reduceStackSize(ItemStack stack, int i) {
-		stack.shrink(i);
-		if (stack.getCount() <= 0) {
-			stack = null;
-		}
-		return stack;
-
 	}
 
 }

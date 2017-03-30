@@ -24,8 +24,9 @@ public class SonarBlocks extends SonarCore {
 	public static Block registerBlock(String name, Block block) {
 		block.setCreativeTab(tab);
 		block.setUnlocalizedName(name);
-		GameRegistry.register(block.setRegistryName(name));
-		GameRegistry.register(new SonarBlockTip(block).setRegistryName(name));
+		block.setRegistryName(modid, name);
+		GameRegistry.register(block);
+		GameRegistry.register(new SonarBlockTip(block).setRegistryName(modid, name));
 		registeredBlocks.add(block);
 		return block;
 	}
@@ -33,8 +34,9 @@ public class SonarBlocks extends SonarCore {
 	public static Block registerMetaBlock(String name, Block block) {
 		block.setCreativeTab(tab);
 		block.setUnlocalizedName(name);
-		GameRegistry.register(block.setRegistryName(name));
-		GameRegistry.register(new SonarMetaBlock(block).setRegistryName(name));
+		block.setRegistryName(modid, name);
+		GameRegistry.register(block);
+		GameRegistry.register(new SonarMetaBlock(block).setRegistryName(modid, name));
 		registeredBlocks.add(block);
 		return block;
 	}

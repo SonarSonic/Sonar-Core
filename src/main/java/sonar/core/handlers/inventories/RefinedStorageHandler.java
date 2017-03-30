@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;

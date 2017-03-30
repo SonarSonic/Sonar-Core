@@ -48,7 +48,7 @@ public class SonarCrafting extends SonarCore {
 	}
 
 	public static void addShaped(ItemStack result, Object... input) {
-		if (result != null && result.getItem() != null && input != null) {
+		if (!result.isEmpty() && input != null) {
 			try {
 				GameRegistry.addRecipe(result, input);
 			} catch (Exception exception) {
@@ -58,7 +58,7 @@ public class SonarCrafting extends SonarCore {
 	}
 
 	public static void addShapedOre(ItemStack result, Object... input) {
-		if (result != null && result.getItem() != null && input != null) {
+		if (!result.isEmpty() && input != null) {
 			try {
 				ShapedOreRecipe oreRecipe = new ShapedOreRecipe(result, input);
 				GameRegistry.addRecipe(oreRecipe);
@@ -69,7 +69,7 @@ public class SonarCrafting extends SonarCore {
 	}
 
 	public static void addShapeless(ItemStack result, Object... input) {
-		if (result != null && result.getItem() != null && input != null) {
+		if (!result.isEmpty() && input != null) {
 			try {
 				GameRegistry.addShapelessRecipe(result, input);
 			} catch (Exception exception) {
@@ -79,7 +79,7 @@ public class SonarCrafting extends SonarCore {
 	}
 
 	public static void addShapelessOre(ItemStack result, Object... input) {
-		if (result != null && result.getItem() != null && input != null) {
+		if (!result.isEmpty() && input != null) {
 			try {
 				ShapelessOreRecipe oreRecipe = new ShapelessOreRecipe(result, input);
 				GameRegistry.addRecipe(oreRecipe);

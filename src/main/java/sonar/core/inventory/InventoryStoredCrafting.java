@@ -51,33 +51,27 @@ public class InventoryStoredCrafting extends InventoryCrafting {
 
 	@Override
 	public ItemStack removeStackFromSlot(int par1) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
 	public ItemStack decrStackSize(int slotID, int par2) {
 		ItemStack stack = inv.getStackInSlot(slotID + 1 + offset);
-		if (stack != null) {
+		if (!stack.isEmpty()) {
 			ItemStack itemstack;
-
 			if (stack.getCount() <= par2) {
 				itemstack = stack.copy();
-				stack = null;
-				inv.setInventorySlotContents(slotID + 1 + offset, null);
+				stack =  ItemStack.EMPTY;
+				inv.setInventorySlotContents(slotID + 1 + offset, ItemStack.EMPTY);
 				this.eventHandler.onCraftMatrixChanged(this);
 				return itemstack;
 			} else {
 				itemstack = stack.splitStack(par2);
-
-				if (stack.getCount() == 0) {
-					stack = null;
-				}
-
 				this.eventHandler.onCraftMatrixChanged(this);
 				return itemstack;
 			}
 		} else {
-			return null;
+			return ItemStack.EMPTY;
 		}
 	}
 

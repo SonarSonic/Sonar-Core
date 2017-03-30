@@ -1,5 +1,7 @@
 package sonar.core.common.tileentity;
 
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -15,17 +17,17 @@ import sonar.core.inventory.SonarInventory;
 
 public class TileEntityEnergyInventory extends TileEntityEnergy implements IInventory {
 
-	public void discharge(int id) {
-		slots()[id] = SonarAPI.getEnergyHelper().dischargeItem(slots()[id], this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
+	public void discharge(int id) {		
+		SonarAPI.getEnergyHelper().dischargeItem(slots().get(id), this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
 	}
 
 	public void charge(int id) {
-		slots()[id] = SonarAPI.getEnergyHelper().chargeItem(slots()[id], this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
+		SonarAPI.getEnergyHelper().chargeItem(slots().get(id), this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
 	}
 
 	public SonarInventory inv;
 
-	public SonarInventory getTileInv() {
+	public SonarInventory inv() {
 		return inv;
 	}
 	
@@ -43,43 +45,43 @@ public class TileEntityEnergyInventory extends TileEntityEnergy implements IInve
 		return super.getCapability(capability, facing);
 	}
 	
-	public ItemStack[] slots() {
+	public List<ItemStack> slots() {
 		return inv.slots;
 	}
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		super.readData(nbt, type);
-		getTileInv().readData(nbt, type);
+		inv().readData(nbt, type);
 	}
 
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
-		getTileInv().writeData(nbt, type);
+		inv().writeData(nbt, type);
 		return nbt;
 	}
 
 	public int getSizeInventory() {
-		return getTileInv().getSizeInventory();
+		return inv().getSizeInventory();
 	}
 
 	public ItemStack getStackInSlot(int slot) {
-		return getTileInv().getStackInSlot(slot);
+		return inv().getStackInSlot(slot);
 	}
 
 	public ItemStack decrStackSize(int slot, int var2) {
-		return getTileInv().decrStackSize(slot, var2);
+		return inv().decrStackSize(slot, var2);
 	}
 
 	public ItemStack removeStackFromSlot(int slot) {
-		return getTileInv().getStackInSlot(slot);
+		return inv().getStackInSlot(slot);
 	}
 
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
-		getTileInv().setInventorySlotContents(i, itemstack);
+		inv().setInventorySlotContents(i, itemstack);
 	}
 
 	public int getInventoryStackLimit() {
-		return getTileInv().getInventoryStackLimit();
+		return inv().getInventoryStackLimit();
 	}
 
 	public boolean isUseableByPlayer(EntityPlayer player) {
@@ -87,15 +89,15 @@ public class TileEntityEnergyInventory extends TileEntityEnergy implements IInve
 	}
 
 	public void openInventory(EntityPlayer player) {
-		getTileInv().openInventory(player);
+		inv().openInventory(player);
 	}
 
 	public void closeInventory(EntityPlayer player) {
-		getTileInv().closeInventory(player);
+		inv().closeInventory(player);
 	}
 
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return getTileInv().isItemValidForSlot(slot, stack);
+		return inv().isItemValidForSlot(slot, stack);
 	}
 
 	public String getName() {
@@ -114,18 +116,28 @@ public class TileEntityEnergyInventory extends TileEntityEnergy implements IInve
 	}
 
 	public int getField(int id) {
-		return getTileInv().getField(id);
+		return inv().getField(id);
 	}
 
 	public void setField(int id, int value) {
-		getTileInv().setField(id, value);
+		inv().setField(id, value);
 	}
 
 	public int getFieldCount() {
-		return getTileInv().getFieldCount();
+		return inv().getFieldCount();
 	}
 
 	public void clear() {
-		getTileInv().clear();
+		inv().clear();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return inv().isEmpty();
+	}
+
+	@Override
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return inv().isUsableByPlayer(player);
 	}
 }

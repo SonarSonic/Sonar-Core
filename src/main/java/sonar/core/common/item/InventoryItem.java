@@ -5,6 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants;
@@ -12,14 +13,14 @@ import net.minecraftforge.common.util.Constants;
 public class InventoryItem implements IInventory {
 	private String name = "Inventory Item";
 	private final ItemStack invItem;
-	private ItemStack[] inventory;
+	public NonNullList<ItemStack> inventory;
 	private static String invTag = "inv";
 	private String tag;
 	private boolean useStackTag;
 	public int size;
 
 	public InventoryItem(ItemStack stack, int size, String tag, boolean useStackTag) {
-		inventory = new ItemStack[size];
+		inventory = NonNullList.<ItemStack>withSize(size, ItemStack.EMPTY);
 		invItem = stack;
 		this.tag = tag;
 		this.useStackTag = useStackTag;
@@ -34,21 +35,21 @@ public class InventoryItem implements IInventory {
 	}
 
 	public int getSizeInventory() {
-		return inventory.length;
+		return inventory.size();
 	}
 
 	public ItemStack getStackInSlot(int slot) {
-		return inventory[slot];
+		return inventory.get(slot);
 	}
 
 	public ItemStack decrStackSize(int slot, int amount) {
 		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
+		if (!stack.isEmpty()) {
 			if (stack.getCount() > amount) {
 				stack = stack.splitStack(amount);
 				markDirty();
 			} else {
-				setInventorySlotContents(slot, null);
+				setInventorySlotContents(slot, ItemStack.EMPTY);
 			}
 		}
 		return stack;
@@ -56,7 +57,7 @@ public class InventoryItem implements IInventory {
 
 	public ItemStack removeStackFromSlot(int slot) {
 		ItemStack stack = getStackInSlot(slot);
-		setInventorySlotContents(slot, null);
+		setInventorySlotContents(slot, ItemStack.EMPTY);
 		return stack;
 	}
 
@@ -65,9 +66,9 @@ public class InventoryItem implements IInventory {
 	}
 
 	public void setInventorySlotContents(int slot, ItemStack stack, boolean isRemote) {
-		inventory[slot] = stack;
+		inventory.set(slot, stack);
 
-		if (stack != null && stack.getCount() > getInventoryStackLimit()) {
+		if (!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()) {
 			stack.setCount(getInventoryStackLimit());
 		}
 		if (!isRemote) {
@@ -96,11 +97,6 @@ public class InventoryItem implements IInventory {
 	}
 
 	public void markDirty() {
-		for (int i = 0; i < getSizeInventory(); ++i) {
-			if (getStackInSlot(i) != null && getStackInSlot(i).getCount() == 0) {
-				inventory[i] = null;
-			}
-		}
 		if (useStackTag) {
 			writeToNBT(invItem.getTagCompound());
 		} else {
@@ -129,7 +125,7 @@ public class InventoryItem implements IInventory {
 			NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
 			int slot = item.getInteger("Slot");
 			if (slot >= 0 && slot < getSizeInventory()) {
-				inventory[slot] = new ItemStack(item);
+                inventory.set(slot, new ItemStack(item));
 			}
 		}
 	}
@@ -178,7 +174,22 @@ public class InventoryItem implements IInventory {
 
 	public void clear() {
 		for (int i = 0; i < this.getSizeInventory(); i++)
-			this.setInventorySlotContents(i, null);
+			this.setInventorySlotContents(i, ItemStack.EMPTY);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		for (ItemStack itemstack : this.inventory) {
+			if (!itemstack.isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return true;
 	}
 
 }

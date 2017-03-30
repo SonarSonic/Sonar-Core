@@ -25,7 +25,7 @@ public class InventoryHelper extends InventoryWrapper {
 	public static boolean addStack(IInventory inv, StoredItemStack add, int slot, int limit, ActionType action) {
 		if (inv.isItemValidForSlot(slot, add.item)) {
 			final ItemStack stored = inv.getStackInSlot(slot);
-			if (stored != null) {
+			if (!stored.isEmpty()) {
 				ItemStack stack = stored.copy();
 				if (add.equalStack(stack) && stack.getCount() < limit && stack.getCount() < stack.getMaxStackSize()) {
 					long used = Math.min(add.item.getMaxStackSize() - stack.getCount(), Math.min(add.stored, limit - stack.getCount()));
@@ -41,9 +41,10 @@ public class InventoryHelper extends InventoryWrapper {
 			} else {
 				long used = Math.min(add.item.getMaxStackSize(), Math.min(add.stored, limit));
 				if (used > 0) {
+					ItemStack stack =  new StoredItemStack(add.getFullStack()).setStackSize(used).getFullStack();
 					add.stored -= used;
 					if (!action.shouldSimulate()) {
-						inv.setInventorySlotContents(slot, new StoredItemStack(add.getFullStack()).setStackSize(used).getFullStack());
+						inv.setInventorySlotContents(slot,stack);
 						inv.markDirty();
 					}
 				}
@@ -89,7 +90,7 @@ public class InventoryHelper extends InventoryWrapper {
 		long stored = 0;
 		for (int i = 0; i < inv.getSizeInventory(); i++) {
 			ItemStack stack = inv.getStackInSlot(i);
-			if (stack != null) {
+			if (!stack.isEmpty()) {
 				stored += stack.getCount();
 				addStackToList(list, inv.getStackInSlot(i));
 			}
@@ -102,7 +103,7 @@ public class InventoryHelper extends InventoryWrapper {
 		long stored = 0;
 		for (int i = 0; i < inv.getSlots(); i++) {
 			ItemStack stack = inv.getStackInSlot(i);
-			if (stack != null) {
+			if (!stack.isEmpty()) {
 				stored += stack.getCount();
 				addStackToList(list, stack);
 			}
@@ -170,7 +171,7 @@ public class InventoryHelper extends InventoryWrapper {
 
 	public ItemStack addItems(TileEntity tile, StoredItemStack stack, ActionType type) {
 		if (stack == null || tile == null) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 		StoredItemStack returned = defHandler.addStack(stack.copy(), tile, (EnumFacing) null, type);
 		StoredItemStack add = getStackToAdd(stack.getStackSize(), stack.copy(), returned);
@@ -179,7 +180,7 @@ public class InventoryHelper extends InventoryWrapper {
 
 	public ItemStack removeItems(TileEntity tile, StoredItemStack stack, ActionType type) {
 		if (stack == null || tile == null) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 		StoredItemStack returned = defHandler.removeStack(stack.copy(), tile, (EnumFacing) null, type);
 		StoredItemStack add = getStackToAdd(stack.getStackSize(), stack.copy(), returned);

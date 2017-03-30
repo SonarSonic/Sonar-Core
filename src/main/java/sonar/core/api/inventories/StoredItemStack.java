@@ -59,7 +59,7 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 	}
 
 	public boolean equalStack(ItemStack stack) {
-		if (this.item == null || stack == null || stack.getCount() == 0) {
+		if (this.item.isEmpty()) {
 			return false;
 		}
 		if (!this.item.isItemEqual(stack)) {
@@ -133,14 +133,14 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 	public ItemStack getActualStack() {
 		ItemStack fullStack = getFullStack();
 		if (fullStack.getCount() <= 0) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 		return fullStack;
 	}
 
 	public static ItemStack getActualStack(StoredItemStack stack) {
 		if (stack == null) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 		return stack.getActualStack();
 	}

@@ -62,7 +62,7 @@ public class EnergyHelper extends EnergyWrapper {
 	}
 
 	public long receiveEnergy(ItemStack stack, long maxReceive, ActionType type) {
-		if (maxReceive != 0 && stack != null) {
+		if (maxReceive != 0 && !stack.isEmpty()) {
 			ISonarEnergyContainerHandler handler = this.canTransferEnergy(stack);
 			if (handler != null) {
 				long receive = StoredEnergyStack.convert(maxReceive, EnergyType.RF, handler.getProvidedType());
@@ -77,7 +77,7 @@ public class EnergyHelper extends EnergyWrapper {
 	}
 
 	public long extractEnergy(ItemStack stack, long maxExtract, ActionType type) {
-		if (maxExtract != 0 && stack != null) {
+		if (maxExtract != 0 && !stack.isEmpty()) {
 			ISonarEnergyContainerHandler handler = this.canTransferEnergy(stack);
 			if (handler != null) {
 				long receive = StoredEnergyStack.convert(maxExtract, EnergyType.RF, handler.getProvidedType());
@@ -113,7 +113,7 @@ public class EnergyHelper extends EnergyWrapper {
 	}
 
 	public ItemStack chargeItem(ItemStack item, TileEntity tile, final long maxTransferRF) {
-		if (tile != null && !tile.getWorld().isRemote && item != null && maxTransferRF != 0) {
+		if (tile != null && !tile.getWorld().isRemote && !item.isEmpty() && maxTransferRF != 0) {
 			long maxTransfer = Math.min(performExtract(chargingHandler, tile, maxTransferRF, null, ActionType.SIMULATE), receiveEnergy(item, maxTransferRF, ActionType.SIMULATE));
 			if (maxTransfer != 0) {
 				performExtract(chargingHandler, tile, receiveEnergy(item, maxTransfer, ActionType.PERFORM), null, ActionType.PERFORM);
@@ -124,7 +124,7 @@ public class EnergyHelper extends EnergyWrapper {
 	}
 
 	public ItemStack dischargeItem(ItemStack item, TileEntity tile, final long maxTransferRF) {
-		if (item != null && !tile.getWorld().isRemote && tile != null && maxTransferRF != 0) {
+		if (!item.isEmpty() && !tile.getWorld().isRemote && tile != null && maxTransferRF != 0) {
 			long maxTransfer = Math.min(extractEnergy(item, maxTransferRF, ActionType.SIMULATE), performReceive(chargingHandler, tile, maxTransferRF, null, ActionType.SIMULATE));
 
 			if (maxTransfer != 0) {

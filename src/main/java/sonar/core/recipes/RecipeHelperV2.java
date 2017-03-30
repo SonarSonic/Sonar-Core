@@ -263,7 +263,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 				return ((ISonarRecipeItem) obj).getOutputStack();
 			}
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	/** @param type the type of ingredients to match

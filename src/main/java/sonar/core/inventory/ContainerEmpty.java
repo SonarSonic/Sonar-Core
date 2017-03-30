@@ -10,15 +10,7 @@ public class ContainerEmpty extends ContainerSync {
 
 	public ContainerEmpty(InventoryPlayer player, TileEntitySonar tile) {
 		super(tile);
-		for (int i = 0; i < 3; ++i) {
-			for (int j = 0; j < 9; ++j) {
-				this.addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-			}
-		}
-
-		//for (int i = 0; i < 9; ++i) {
-		//	this.addSlotToContainer(new Slot(player, i, 8 + i * 18, 142));
-		//}
+		addInventory(player, 8, 84);
 	}
 
 	@Override
@@ -26,39 +18,7 @@ public class ContainerEmpty extends ContainerSync {
 		return true;
 	}
 
-	public final ItemStack transferStackInSlot(EntityPlayer player, int id) {
-		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(id);
-
-		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
-
-			if (id < 27) {
-				if (!this.mergeItemStack(itemstack1, 27, 36, false)) {
-					return null;
-				}
-			} else if (id >= 27 && id < 36) {
-				if (!this.mergeItemStack(itemstack1, 0, 27, false)) {
-					return null;
-				}
-			} else if (!this.mergeItemStack(itemstack1, 0, 36, false)) {
-				return null;
-			}
-
-			if (itemstack1.getCount() == 0) {
-				slot.putStack((ItemStack) null);
-			} else {
-				slot.onSlotChanged();
-			}
-
-			if (itemstack1.getCount() == itemstack.getCount()) {
-				return null;
-			}
-
-			slot.onTake(player, itemstack1);
-		}
-
-		return itemstack;
+	public final ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
+		return TransferSlotsManager.DEFAULT.transferStackInSlot(this, null, player, slotID);
 	}
 }

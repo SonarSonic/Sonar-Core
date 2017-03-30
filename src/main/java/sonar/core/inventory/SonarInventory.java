@@ -31,7 +31,7 @@ public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (stack == null) {
+		if (stack.isEmpty()) {
 			return stack;
 		}
 		if (!(tile instanceof ISidedInventory) || (SonarHelper.intContains(((ISidedInventory) tile).getSlotsForFace(face), slot) && ((ISidedInventory) tile).canInsertItem(slot, stack, face))) {
@@ -42,14 +42,14 @@ public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		ItemStack stack = slots[slot];
-		if (stack == null) {
-			return null;
+		ItemStack stack = slots.get(slot);
+		if (stack.isEmpty()) {
+			return ItemStack.EMPTY;
 		}
 		if (!(tile instanceof ISidedInventory) || (SonarHelper.intContains(((ISidedInventory) tile).getSlotsForFace(face), slot) && ((ISidedInventory) tile).canExtractItem(slot, stack, face))) {
 			return super.extractItem(slot, amount, simulate);
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override

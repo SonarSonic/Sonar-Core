@@ -28,7 +28,7 @@ public class SyncItemEnergyStorage extends SyncEnergyStorage implements ICapabil
 	}
 
 	public SyncItemEnergyStorage setItemStack(ItemStack stack) {
-		if (stack != null) {
+		if (!stack.isEmpty()) {
 			this.stack = stack;
 			if (stack.hasTagCompound()){
 				readFromNBT(stack.getTagCompound());
@@ -40,7 +40,7 @@ public class SyncItemEnergyStorage extends SyncEnergyStorage implements ICapabil
 	@Override
 	public void markChanged() {
 		super.markChanged();
-		if (stack != null){
+		if (!stack.isEmpty()){
 			if(!stack.hasTagCompound()){
 				stack.setTagCompound(new NBTTagCompound());
 			}

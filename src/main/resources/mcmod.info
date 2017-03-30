@@ -10,7 +10,7 @@
 "credits": "Created by Ollie Lansdell",
 "logoFile": "",
 "screenshots": [],
-"dependencies": ["CoFHLib","CoFHCore","CoFHAPI","WailaAPI","ForgeMultipart"],
+"dependencies": ["cofhlib","cofhcore","cofhapi","wailaapi","forgemultipart"],
 "dependants": ["calculator","practicallogistics2","fluxnetworks"],
 "useDependencyInformation": true
 }

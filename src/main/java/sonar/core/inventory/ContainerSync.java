@@ -11,7 +11,7 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.PacketTileSync;
 import sonar.core.utils.IWorldPosition;
 
-public abstract class ContainerSync extends Container {
+public abstract class ContainerSync extends ContainerSonar {
 
 	SyncType[] types = new SyncType[] { SyncType.DEFAULT_SYNC };
 	public INBTSyncable sync;

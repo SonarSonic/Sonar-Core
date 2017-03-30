@@ -29,11 +29,6 @@ public abstract class JEICategory extends BlankRecipeCategory implements IRecipe
 	}
 
 	@Override
-	public String getRecipeCategoryUid() {
-		return getUid();
-	}
-
-	@Override
 	public IRecipeWrapper getRecipeWrapper(JEIRecipe recipe) {
 		return recipe;
 	}
@@ -45,6 +40,6 @@ public abstract class JEICategory extends BlankRecipeCategory implements IRecipe
 
 	@Override
 	public String getRecipeCategoryUid(JEIRecipe id) {
-		return getRecipeCategoryUid();
+		return getUid();
 	}
 }

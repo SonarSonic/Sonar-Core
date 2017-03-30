@@ -31,18 +31,18 @@ public class InventoryStoredResult extends InventoryCraftResult {
 	@Override
 	public ItemStack decrStackSize(int slot, int remove) {
 		ItemStack stack = module.getStackInSlot(0 + offset);
-		if (stack != null) {
+		if (!stack.isEmpty()) {
 			ItemStack itemstack = stack;
-			module.setInventorySlotContents(0, null);
+			module.setInventorySlotContents(0, ItemStack.EMPTY);
 			return itemstack;
 		} else {
-			return null;
+			return ItemStack.EMPTY;
 		}
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int par1) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override

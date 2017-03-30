@@ -56,12 +56,12 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 		return nbt;
 	}
 
-	public void discharge(int id) {
-		slots()[id] = SonarAPI.getEnergyHelper().dischargeItem(slots()[id], this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
+	public void discharge(int id) {		
+		SonarAPI.getEnergyHelper().dischargeItem(slots().get(id), this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
 	}
 
 	public void charge(int id) {
-		slots()[id] = SonarAPI.getEnergyHelper().chargeItem(slots()[id], this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
+		SonarAPI.getEnergyHelper().chargeItem(slots().get(id), this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
 	}
 
 	public void addEnergy(EnumFacing... faces) {

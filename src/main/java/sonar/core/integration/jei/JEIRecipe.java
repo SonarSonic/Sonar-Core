@@ -32,31 +32,7 @@ public abstract class JEIRecipe<T extends JEIRecipe> implements IRecipeWrapper {
 	}
 
 	@Override
-	public List getInputs() {
-		return inputs;
-	}
-
-	@Override
-	public List getOutputs() {
-		return outputs;
-	}
-
-	@Override
-	public List<FluidStack> getFluidInputs() {
-		return null;
-	}
-
-	@Override
-	public List<FluidStack> getFluidOutputs() {
-		return null;
-	}
-
-	@Override
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-	}
-
-	@Override
-	public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight) {
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public class DischargeValues implements IRecipeHelper {
 	public static void addValue(Object object, int power) {
 		if (object != null) {
 			ItemStack stack = ItemStackHelper.createStack(object);
-			if (stack != null)
+			if (!stack.isEmpty())
 				dischargeList.put(stack, power);
 		}
 	}

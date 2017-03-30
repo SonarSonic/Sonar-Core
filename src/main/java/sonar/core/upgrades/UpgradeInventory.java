@@ -49,7 +49,7 @@ public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
 	}
 
 	public boolean addUpgrade(ItemStack stack) {
-		if (stack != null) {
+		if (!stack.isEmpty()) {
 			String upgrade = SonarCore.machineUpgrades.getSecondaryObject(stack.getItem());
 			if (upgrade != null) {
 				if (allowed.contains(upgrade) && maxUpgrades.get(upgrade).intValue() != upgrades.get(upgrade).intValue()) {

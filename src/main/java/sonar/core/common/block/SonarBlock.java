@@ -180,15 +180,16 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 			worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
 		}
 	}
-
+	/*
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		
 		if (orientation)
 			return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 		else {
 			return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
 		}
 	}
-
+	*/
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemstack) {
 		if (orientation)
@@ -214,7 +215,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 					int[] slots = inv.dropSlots();
 					for (int i = 0; i < slots.length; i++) {
 						ItemStack itemstack = inv.getStackInSlot(slots[i]);
-						if (itemstack != null) {
+						if (!itemstack.isEmpty()) {
 							drops.add(itemstack);
 						}
 					}
@@ -223,7 +224,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 				IInventory inv = (IInventory) entity;
 				for (int i = 0; i < inv.getSizeInventory(); i++) {
 					ItemStack itemstack = inv.getStackInSlot(i);
-					if (itemstack != null) {
+					if (!itemstack.isEmpty()) {
 						drops.add(itemstack);
 					}
 				}
@@ -233,7 +234,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 				ItemStack[] additionalStacks = additionalInv.getAdditionalStacks();
 				if (additionalStacks != null) {
 					for (ItemStack stack : additionalStacks) {
-						if (stack != null) {
+						if (!stack.isEmpty()) {
 							drops.add(stack);
 						}
 					}
@@ -242,7 +243,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 		}
 
 		for (ItemStack stack : drops) {
-			if (stack != null) {
+			if (!stack.isEmpty()) {
 				float f = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
 				float f1 = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
 				float f2 = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
@@ -257,7 +258,9 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 	@Override
 	public ArrayList<ItemStack> wrenchBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops) {
-		SonarHelper.dropTile(player, world.getBlockState(pos).getBlock(), world, pos);
+		ItemStack stack = player.getHeldItemMainhand();
+		TileEntity te = world.getTileEntity(pos);
+		world.getBlockState(pos).getBlock().harvestBlock(world, player, pos, world.getBlockState(pos), te, stack);
 		return null;
 	}
 

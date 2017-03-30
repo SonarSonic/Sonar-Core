@@ -109,10 +109,10 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 		int target = (int) Math.floor(slot / numStacks);
 		StoredItemStack stack = slots[target];
 		if (stack == null || stack.getStackSize() == 0) {
-			return null;
+			return ItemStack.EMPTY;
 		} else {
 			int actualSize = getSlotSize(stack, target, slot);
-			return actualSize == 0 ? null : stack.copy().setStackSize(actualSize).getActualStack();
+			return actualSize == 0 ? ItemStack.EMPTY : stack.copy().setStackSize(actualSize).getActualStack();
 		}
 	}
 	
@@ -146,7 +146,7 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (stack != null && stack.getCount() != 0 && isItemValidForSlot(slot, stack)) {
+		if (stack.getCount() != 0 && isItemValidForSlot(slot, stack)) {
 			int target = (int) Math.floor(slot / numStacks);
 			StoredItemStack stored = slots[target];
 			if (stored == null || stored.getStackSize() == 0 || stored.equalStack(stack) && stored.getStackSize() < numStacks * stack.getMaxStackSize()) {
@@ -159,7 +159,7 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 							stored = slots[target] = new StoredItemStack(stack.copy(), maxAdd);
 						}
 					}
-					return maxAdd == stack.getCount() ? null : new StoredItemStack(stack.copy()).setStackSize(stack.getCount() - maxAdd).getActualStack();
+					return maxAdd == stack.getCount() ? ItemStack.EMPTY : new StoredItemStack(stack.copy()).setStackSize(stack.getCount() - maxAdd).getActualStack();
 				}
 			}
 		}
@@ -169,22 +169,18 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
+		if (!stack.isEmpty()) {
 			int toRemove = Math.min(amount, stack.getCount());
 			if (toRemove == 0)
-				return null;
+				return ItemStack.EMPTY;
 			int target = (int) Math.floor(slot / numStacks);
 			StoredItemStack stored = slots[target];
 			if (!simulate) {
 				stored.stored -= toRemove;
-				if (stored.stored == 0) {
-					slots[target] = null;
-				}
-
 			}
 			return new StoredItemStack(stack.copy()).setStackSize(toRemove).getActualStack();
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	public boolean isItemValidForSlot(int slot, ItemStack item) {

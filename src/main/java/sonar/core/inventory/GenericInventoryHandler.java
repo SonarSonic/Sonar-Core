@@ -20,7 +20,7 @@ public class GenericInventoryHandler {
 	public static StoredItemStack getStack(int slot, IInventory inv, EnumFacing dir) {
 		if (slot < inv.getSizeInventory()) {
 			ItemStack stack = inv.getStackInSlot(slot);
-			if (stack != null)
+			if (!stack.isEmpty())
 				return new StoredItemStack(stack);
 		}
 		return null;
@@ -62,7 +62,7 @@ public class GenericInventoryHandler {
 		for (int i = 0; i < invSize; i++) {
 			int slot = slots != null ? slots[i] : i;
 			final ItemStack stored = inv.getStackInSlot(slot);
-			if (stored != null) {
+			if (!stored.isEmpty()) {
 				if (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canExtractItem(slot, stored, dir)) {
 					if (!InventoryHelper.removeStack(inv, remove, stored, slot, action)) {
 						return null;
