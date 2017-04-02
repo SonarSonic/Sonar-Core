@@ -7,6 +7,7 @@ import mcmultipart.multipart.IMultipart;
 import mcmultipart.multipart.IMultipartContainer;
 import mcmultipart.multipart.MultipartHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -53,10 +54,11 @@ public class PacketRequestMultipartSync extends PacketCoords<PacketRequestMultip
 					if (part != null && part instanceof SonarMultipart) {
 						SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
 							public void run() {
-								((SonarMultipart) part).forceNextSync();
-								((SonarMultipart) part).onSyncPacketRequested(player);
-								SonarMultipartHelper.sendMultipartSyncAround((SonarMultipart) part, 64);
-								
+								SonarMultipart multipart = (SonarMultipart) part;
+								multipart.forceNextSync();
+								multipart.onSyncPacketRequested(player);
+								SonarMultipartHelper.sendMultipartSyncToPlayer(multipart, (EntityPlayerMP)player);
+								multipart.sendUpdatePacket(true);
 							}
 						});
 						return null;

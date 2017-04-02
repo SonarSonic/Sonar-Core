@@ -18,6 +18,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import sonar.core.SonarCore;
+import sonar.core.api.nbt.INBTSyncable;
+import sonar.core.helpers.NBTHelper.SyncType;
 
 /** an object with a blocks x, y and z coordinates */
 public class BlockCoords {
@@ -28,7 +30,9 @@ public class BlockCoords {
 	private int dimension;
 	private boolean hasDimension;
 	private World world;
-
+	
+	
+	public BlockCoords(){}
 	/** @param x block x coordinate
 	 * @param y block y coordinate
 	 * @param z block z coordinate */

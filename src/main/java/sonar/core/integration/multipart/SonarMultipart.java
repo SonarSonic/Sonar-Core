@@ -183,8 +183,7 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 		return new Pair(false, face);
 	}
 
-	public void onSyncPacketRequested(EntityPlayer player) {
-	}
+	public void onSyncPacketRequested(EntityPlayer player) {}
 
 	public void requestSyncPacket() {
 		SonarCore.network.sendToServer(new PacketRequestMultipartSync(this.getPos(), this.getUUID()));

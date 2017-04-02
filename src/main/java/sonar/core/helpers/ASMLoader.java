@@ -60,7 +60,7 @@ public class ASMLoader {
 			SonarCore.logger.info(type.getSimpleName() + " loaded successfully: {}", asm.getClassName());
 			break;
 		case MODID:
-			SonarCore.logger.error(String.format("Couldn't load " + type.getSimpleName() + "%s for modid %s", asm.getClassName(), modid));
+			SonarCore.logger.error(String.format("Couldn't load " + type.getSimpleName() + " %s for modid %s ", asm.getClassName(), modid));
 			break;
 		default:
 			break;

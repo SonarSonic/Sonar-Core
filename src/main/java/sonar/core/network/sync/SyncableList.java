@@ -3,6 +3,8 @@ package sonar.core.network.sync;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.minecraft.nbt.NBTTagCompound;
+import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 
 public class SyncableList {
@@ -47,11 +49,11 @@ public class SyncableList {
 	}
 
 	public void onPartSynced(IDirtyPart part) {
-		//ArrayList list = (part instanceof ISyncPart ? changedSyncParts : changedDirtyParts);
-		//list.remove(part);
+		// ArrayList list = (part instanceof ISyncPart ? changedSyncParts : changedDirtyParts);
+		// list.remove(part);
 	}
-	
-	public void onPartsSynced(){
+
+	public void onPartsSynced() {
 		changedSyncParts.clear();
 		changedDirtyParts.clear();
 	}
@@ -63,5 +65,10 @@ public class SyncableList {
 	public ArrayList<ISyncPart> getStandardSyncParts() {
 		return syncParts;
 	}
-
+	/**ONLY WORKS WITH LISTS WITH ISYNCPARTS in EXACTLY THE SAME POSITIONS!!!!*/
+	public void copyFrom(SyncableList list) {
+		NBTTagCompound copy = new NBTTagCompound();
+		NBTHelper.writeSyncParts(copy, SyncType.SAVE, list, true);
+		NBTHelper.readSyncParts(copy, SyncType.SAVE, this);
+	}
 }
