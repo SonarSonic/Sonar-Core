@@ -24,8 +24,9 @@ public class RFItemHandler implements ISonarEnergyContainerHandler {
 		if (item instanceof IEnergyContainerItem) {
 			IEnergyContainerItem receiver = (IEnergyContainerItem) item;
 			if (receiver.getMaxEnergyStored(stack) > 0) {
-				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-				transfer.stored -= receiver.receiveEnergy(stack, transferRF, action.shouldSimulate());
+				int transferRF = Math.min(receiver.getMaxEnergyStored(stack) - receiver.getEnergyStored(stack), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+				if (transferRF > 0)
+					transfer.stored -= receiver.receiveEnergy(stack, transferRF, action.shouldSimulate());
 			}
 		}
 		if (transfer.stored == 0)
@@ -39,8 +40,9 @@ public class RFItemHandler implements ISonarEnergyContainerHandler {
 		if (item instanceof IEnergyContainerItem) {
 			IEnergyContainerItem receiver = (IEnergyContainerItem) item;
 			if (receiver.getMaxEnergyStored(stack) > 0) {
-				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-				transfer.stored -= receiver.extractEnergy(stack, transferRF, action.shouldSimulate());
+				int transferRF = Math.min(receiver.getEnergyStored(stack), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+				if (transferRF > 0)
+					transfer.stored -= receiver.extractEnergy(stack, transferRF, action.shouldSimulate());
 			}
 		}
 		if (transfer.stored == 0)

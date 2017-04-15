@@ -2,6 +2,8 @@ package sonar.core.integration.minetweaker;
 
 import java.util.ArrayList;
 
+import com.google.common.collect.Lists;
+
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
@@ -28,7 +30,7 @@ public class SonarRemoveRecipe implements IUndoableAction {
 			return;
 		}
 
-		ArrayList adaptedInputs = new ArrayList();
+		ArrayList adaptedInputs = Lists.newArrayList();
 		for (Object input : inputs) {
 			if (input == null) {
 				MineTweakerAPI.logError(String.format("An ingredient of a %s was null", helper.getRecipeID()));

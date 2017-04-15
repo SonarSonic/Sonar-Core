@@ -6,7 +6,6 @@ import appeng.api.AEApi;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.storage.IStorageGrid;
-import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
@@ -14,7 +13,6 @@ import appeng.me.GridAccessException;
 import appeng.me.helpers.IGridProxyable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.Loader;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.StorageSize;
 import sonar.core.api.asm.InventoryHandler;
@@ -22,6 +20,7 @@ import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.AE2Helper;
+import sonar.core.utils.SimpleProfiler;
 
 @InventoryHandler(modid = "appliedenergistics2", handlerID = AE2InventoryProvider.name, priority = 2)
 public class AE2InventoryProvider implements ISonarInventoryHandler {
@@ -57,6 +56,7 @@ public class AE2InventoryProvider implements ISonarInventoryHandler {
 
 	@Override
 	public StorageSize getItems(List<StoredItemStack> storedStacks, TileEntity tile, EnumFacing dir) {
+		SimpleProfiler.start("ae2");
 		long maxStorage = 0;
 		IGridProxyable proxy = (IGridProxyable) tile;
 		try {
@@ -72,6 +72,7 @@ public class AE2InventoryProvider implements ISonarInventoryHandler {
 		} catch (GridAccessException e) {
 			e.printStackTrace();
 		}
+		SimpleProfiler.finishMicro("ae2");
 		return new StorageSize(maxStorage, maxStorage);
 	}
 
@@ -110,6 +111,11 @@ public class AE2InventoryProvider implements ISonarInventoryHandler {
 			e.printStackTrace();
 		}
 		return remove;
+	}
+
+	@Override
+	public boolean isLargeInventory() {
+		return true;
 	}
 
 }

@@ -101,4 +101,9 @@ public class DSUInventoryHandler implements ISonarInventoryHandler {
 		return remove;
 	}
 
+	@Override
+	public boolean isLargeInventory() {
+		return false; //it's only one stack so not really a large inventory.
+	}
+
 }

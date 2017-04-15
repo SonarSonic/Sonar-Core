@@ -1,6 +1,6 @@
 package sonar.core.integration.jei;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import mezz.jei.api.IGuiHelper;
 import net.minecraft.item.ItemStack;
@@ -20,7 +20,7 @@ public interface IJEIHandler {
 		
 	public IRecipeHelperV2 getRecipeHelper();
 	
-	public ArrayList<JEIRecipeV2> getJEIRecipes();
+	public List<JEIRecipeV2> getJEIRecipes();
 	
 	public ItemStack getCrafterItemStack();
 }

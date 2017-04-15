@@ -1,7 +1,8 @@
 package sonar.core.integration;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -20,7 +21,7 @@ import sonar.core.common.tileentity.TileEntitySonar;
 /** Integrations with WAILA - Registers all HUDs */
 public class SonarWailaModule {
 
-	public static List<String> FMPProviders = new ArrayList();
+	public static List<String> FMPProviders = Lists.newArrayList();
 
 	public static void register() {
 		ModuleRegistrar.instance().registerBodyProvider(new HUDSonar(), TileEntitySonar.class);

@@ -3,6 +3,8 @@ package sonar.core.upgrades;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
+import com.google.common.collect.Lists;
+
 import gnu.trove.map.hash.THashMap;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
@@ -16,7 +18,7 @@ import sonar.core.network.sync.SyncPart;
 
 public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
 
-	public ArrayList<String> allowed = new ArrayList();
+	public ArrayList<String> allowed = Lists.newArrayList();
 	public THashMap<String, Integer> upgrades = new THashMap<String, Integer>();
 	public THashMap<String, Integer> maxUpgrades = new THashMap<String, Integer>();
 	//public boolean markDirty = true;
@@ -86,7 +88,7 @@ public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
 	}
 
 	public ArrayList<ItemStack> getDrops() {
-		ArrayList<ItemStack> drops = new ArrayList();
+		ArrayList<ItemStack> drops = Lists.newArrayList();
 		for (Entry<String, Integer> entry : upgrades.entrySet()) {
 			Item item = SonarCore.machineUpgrades.getPrimaryObject(entry.getKey());
 			if (item != null && entry.getValue() != 0) {

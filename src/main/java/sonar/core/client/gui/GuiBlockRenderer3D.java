@@ -1,6 +1,5 @@
 package sonar.core.client.gui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -8,6 +7,9 @@ import java.util.Map.Entry;
 import javax.vecmath.Vector3d;
 
 import org.lwjgl.opengl.GL11;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import mcmultipart.MCMultiPartMod;
 import mcmultipart.multipart.IMultipart;
@@ -44,10 +46,10 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 
 	public final Vector3d origin = new Vector3d();
 	public final Vector3d eye = new Vector3d();
-	// public HashMap<IBlockState, BlockCoords> blocks = new HashMap();
-	public HashMap<BlockPos, IBlockState> blocks = new HashMap();
-	public HashMap<BlockPos, TileEntity> entities = new HashMap();
-	public HashMap<BlockPos, List<MultipartStateOverride>> multiparts = new HashMap();
+	// public HashMap<IBlockState, BlockCoords> blocks = Maps.newHashMap();
+	public HashMap<BlockPos, IBlockState> blocks = Maps.newHashMap();
+	public HashMap<BlockPos, TileEntity> entities = Maps.newHashMap();
+	public HashMap<BlockPos, List<MultipartStateOverride>> multiparts = Maps.newHashMap();
 	public int cubeSize;
 
 	public GuiBlockRenderer3D(int cubeSize) {
@@ -73,7 +75,7 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 
 	public void addMultiparts(List<Object> parts, BlockPos pos) {
 		if (validPos(pos)) {
-			List<MultipartStateOverride> newParts = new ArrayList();
+			List<MultipartStateOverride> newParts = Lists.newArrayList();
 			for (Object part : parts) {
 				if (part instanceof MultipartStateOverride) {
 					newParts.add((MultipartStateOverride) part);

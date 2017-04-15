@@ -6,7 +6,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.asm.FluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
-import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.FluidHelper.ITankFilter;
 

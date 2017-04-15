@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -29,7 +28,6 @@ public class RefinedStorageHandler implements ISonarInventoryHandler {
 
 	@Override
 	public StoredItemStack getStack(int slot, TileEntity tile, EnumFacing dir) {
-
 		return null;// need implementing
 	}
 
@@ -68,6 +66,11 @@ public class RefinedStorageHandler implements ISonarInventoryHandler {
 			}
 		}
 		return new StorageSize(0, 0); // doesn't show storage yet
+	}
+
+	@Override
+	public boolean isLargeInventory() {
+		return true;
 	}
 
 }

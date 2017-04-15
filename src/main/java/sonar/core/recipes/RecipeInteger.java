@@ -1,7 +1,8 @@
 package sonar.core.recipes;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import net.minecraft.item.ItemStack;
 
@@ -25,7 +26,7 @@ public class RecipeInteger implements ISonarRecipeObject {
 
 	@Override
 	public List<ItemStack> getJEIValue() {
-		return new ArrayList();
+		return Lists.newArrayList();
 	}
 
 	@Override

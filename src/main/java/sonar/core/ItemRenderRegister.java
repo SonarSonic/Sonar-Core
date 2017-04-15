@@ -1,12 +1,22 @@
 package sonar.core;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
+import sonar.core.common.block.properties.IMetaRenderer;
 
 public class ItemRenderRegister {
 	public static void register() {
 		/*
 		for (Item item : SonarItems.registeredItems) {
 			if (item.getHasSubtypes()) {
-				List<ItemStack> stacks = new ArrayList();
+				List<ItemStack> stacks = Lists.newArrayList();
 				item.getSubItems(item, SonarCore.tab, stacks);
 				for (ItemStack stack : stacks) {
 					String variant = "variant=meta" + stack.getItemDamage();
@@ -20,6 +30,6 @@ public class ItemRenderRegister {
 				ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(new ResourceLocation(SonarCore.modid, item.getUnlocalizedName().substring(5)), "inventory"));
 			}
 		}
-		*/
+	*/
 	}
 }

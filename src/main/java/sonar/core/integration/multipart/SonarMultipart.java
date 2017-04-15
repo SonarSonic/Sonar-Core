@@ -25,7 +25,6 @@ import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.PacketRequestMultipartSync;
 import sonar.core.network.sync.IDirtyPart;
-import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.ISyncableListener;
 import sonar.core.network.sync.SyncableList;
 import sonar.core.utils.IRemovable;
@@ -38,7 +37,7 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 	public SyncableList syncList = new SyncableList(this);
 	public AxisAlignedBB collisionBox = null;
 	public boolean wasRemoved = false;
-	public boolean firstTick = false;
+	public boolean isValid = false;
 	protected boolean forceSync;
 	public boolean isDirty = false;
 
@@ -52,9 +51,9 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 	}
 
 	public void update() {
-		if (!firstTick) {
-			this.onFirstTick();
-			firstTick = true;
+		if (!isValid && !wasRemoved) {
+			this.validate();
+			isValid = true;
 		}
 		if (isDirty) {
 			this.markDirty();
@@ -62,7 +61,25 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 		}
 	}
 
-	public void onFirstTick() {
+	public void validate() {
+		isValid = true;
+	}
+
+	public void invalidate() {
+		isValid = false;
+	}
+
+	@Override
+	public void onRemoved() {
+		super.onRemoved();
+		invalidate();
+		wasRemoved = true;
+	}
+
+	@Override
+	public void onUnloaded() {
+		super.onUnloaded();
+		invalidate();
 	}
 
 	public UUID getUUID() {
@@ -91,11 +108,6 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 			return null;
 		}
 		return new BlockCoords(getContainer().getPosIn(), getContainer().getWorldIn());
-	}
-
-	@Override
-	public void onRemoved() {
-		wasRemoved = true;
 	}
 
 	@Override
@@ -183,7 +195,8 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 		return new Pair(false, face);
 	}
 
-	public void onSyncPacketRequested(EntityPlayer player) {}
+	public void onSyncPacketRequested(EntityPlayer player) {
+	}
 
 	public void requestSyncPacket() {
 		SonarCore.network.sendToServer(new PacketRequestMultipartSync(this.getPos(), this.getUUID()));

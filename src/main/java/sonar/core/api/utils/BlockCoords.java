@@ -5,21 +5,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.common.collect.Lists;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import sonar.core.SonarCore;
-import sonar.core.api.nbt.INBTSyncable;
-import sonar.core.helpers.NBTHelper.SyncType;
 
 /** an object with a blocks x, y and z coordinates */
 public class BlockCoords {
@@ -29,10 +27,10 @@ public class BlockCoords {
 	private BlockPos pos;
 	private int dimension;
 	private boolean hasDimension;
-	private World world;
-	
-	
-	public BlockCoords(){}
+
+	public BlockCoords() {
+	}
+
 	/** @param x block x coordinate
 	 * @param y block y coordinate
 	 * @param z block z coordinate */
@@ -45,7 +43,6 @@ public class BlockCoords {
 		this.pos = new BlockPos(x, y, z);
 		this.hasDimension = true;
 		this.dimension = world.provider.getDimension();
-		this.world = world;
 	}
 
 	public BlockCoords(int x, int y, int z, int dimension) {
@@ -63,7 +60,6 @@ public class BlockCoords {
 		this.pos = pos;
 		this.hasDimension = true;
 		this.dimension = world.provider.getDimension();
-		this.world = world;
 	}
 
 	public BlockCoords(BlockPos pos, int dimension) {
@@ -166,13 +162,18 @@ public class BlockCoords {
 	}
 
 	public World getWorld() {
-		if (world != null) {
-			return world;
-		}
-		return world = SonarCore.proxy.getDimension(getDimension());
+		return SonarCore.proxy.getDimension(getDimension());
 	}
-	
-	public boolean isChunkLoaded(){
+
+	public boolean insideChunk(ChunkPos pos) {
+		return pos.chunkXPos == getX() >> 4 && pos.chunkZPos == getZ() >> 4;
+	}
+
+	public boolean insideChunk(int chunkX, int chunkZ) {
+		return chunkX == getX() >> 4 && chunkZ == getZ() >> 4;
+	}
+
+	public boolean isChunkLoaded() {
 		return getWorld().isBlockLoaded(pos, false);
 	}
 
@@ -240,7 +241,7 @@ public class BlockCoords {
 	}
 
 	public static ArrayList<BlockCoords> readBlockCoords(NBTTagCompound tag, String tagName) {
-		ArrayList<BlockCoords> coords = new ArrayList();
+		ArrayList<BlockCoords> coords = Lists.newArrayList();
 		if (tag.hasKey(tagName)) {
 			NBTTagList list = tag.getTagList(tagName, 10);
 			for (int i = 0; i < list.tagCount(); i++) {

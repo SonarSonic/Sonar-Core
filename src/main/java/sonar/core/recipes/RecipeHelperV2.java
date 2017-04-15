@@ -19,7 +19,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 
 	/** the list of recipes */
 
-	public ArrayList<T> recipes = new ArrayList();
+	public ArrayList<T> recipes = Lists.newArrayList();
 	public ArrayList<Class<?>> validInputs = Lists.newArrayList(ISonarRecipeObject.class, ItemStack.class, Item.class, Block.class, ItemStack[].class, List.class, String.class, Integer.class);
 	public ArrayList<Class<?>> validOutputs = Lists.newArrayList(ISonarRecipeObject.class, ItemStack.class, Item.class, Block.class, String.class, Integer.class);
 
@@ -124,7 +124,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 			return (ISonarRecipeObject) obj;
 		} else if (obj instanceof List) {
 			List list = (List) obj;
-			List<ISonarRecipeObject> buildList = new ArrayList();
+			List<ISonarRecipeObject> buildList = Lists.newArrayList();
 			if (!list.isEmpty()) {
 				for (Object listObj : list) {
 					if (listObj != null) {
@@ -247,7 +247,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 	
 	/** extracts the value of each {@link ISonarRecipeObject} into a new list */
 	public static List getValuesFromList(List<ISonarRecipeObject> list) {
-		ArrayList values = new ArrayList();
+		ArrayList values = Lists.newArrayList();
 		list.forEach(obj -> values.add(obj.getValue()));
 		return values;
 	}

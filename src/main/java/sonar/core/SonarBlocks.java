@@ -2,6 +2,8 @@ package sonar.core;
 
 import java.util.ArrayList;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.Material;
@@ -19,7 +21,7 @@ import sonar.core.common.block.StableStone.Variants;
 
 public class SonarBlocks extends SonarCore {
 
-	public static ArrayList<Block> registeredBlocks = new ArrayList();
+	public static ArrayList<Block> registeredBlocks = Lists.newArrayList();
 
 	public static Block registerBlock(String name, Block block) {
 		block.setCreativeTab(tab);

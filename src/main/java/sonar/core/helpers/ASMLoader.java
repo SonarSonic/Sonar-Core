@@ -1,5 +1,8 @@
 package sonar.core.helpers;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -7,6 +10,14 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import org.apache.logging.log4j.Level;
+import org.objectweb.asm.Type;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+
+import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
@@ -54,13 +65,13 @@ public class ASMLoader {
 	public static void log(ASMLog log, Class type, ASMData asm, String modid) {
 		switch (log) {
 		case ERROR:
-			SonarCore.logger.error(type.getSimpleName() + " couldn't be loaded: {}", asm.getClassName());
+			SonarCore.logger.error("%s couldn't be loaded: {}", type.getSimpleName(), asm.getClassName());
 			break;
 		case LOADED:
-			SonarCore.logger.info(type.getSimpleName() + " loaded successfully: {}", asm.getClassName());
+			SonarCore.logger.info("%s loaded successfully: {}", type.getSimpleName(), asm.getClassName());
 			break;
 		case MODID:
-			SonarCore.logger.error(String.format("Couldn't load " + type.getSimpleName() + " %s for modid %s ", asm.getClassName(), modid));
+			SonarCore.logger.error("Couldn't load %s %s for modid %s ", type.getSimpleName(), asm.getClassName(), modid);
 			break;
 		default:
 			break;
@@ -70,7 +81,7 @@ public class ASMLoader {
 	public static <T> List<T> getInstances(@Nonnull ASMDataTable asmDataTable, Class annotation, Class<T> instanceClass, boolean checkModid, boolean sortPriority) {
 		String annotationClassName = annotation.getCanonicalName();
 		Set<ASMDataTable.ASMData> asmDatas = asmDataTable.getAll(annotationClassName);
-		ArrayList<ASMDataTable.ASMData> data = new ArrayList();
+		ArrayList<ASMDataTable.ASMData> data = Lists.newArrayList();
 		asmDatas.forEach(asmData -> data.add(asmData));
 
 		if (sortPriority) {
@@ -102,6 +113,28 @@ public class ASMLoader {
 		}
 
 		return instances;
+	}
+
+	public static <T> void injectInstances(ASMDataTable data, Class annotation, Class<T> instanceClass, Function<ASMDataTable.ASMData, T> create) {
+		for (ASMDataTable.ASMData entry : data.getAll(annotation.getName())) {
+			final String targetClass = entry.getClassName();
+			final String targetName = entry.getObjectName();
+			T i = create.apply(entry);
+			if (i == null) {
+				return;
+			}
+			try {
+				Field field = Class.forName(targetClass).getDeclaredField(targetName);
+				if ((field.getModifiers() & Modifier.STATIC) != Modifier.STATIC) {
+					SonarCore.logger.warn("Unable to inject instance %s at %s.%s (Non-Static)", i.toString(), targetClass, targetName);
+				}
+				EnumHelper.setFailsafeFieldValue(field, null, i);
+			} catch (Exception e) {
+				e.printStackTrace();
+				SonarCore.logger.warn("Unable to inject instance %s at %s.%s", i.toString(), targetClass, targetName);
+			}
+
+		}
 	}
 
 	public static <T> List<Pair<ASMDataTable.ASMData, Class<? extends T>>> getClasses(@Nonnull ASMDataTable asmDataTable, Class annotation, Class<T> instanceClass, boolean checkModid) {

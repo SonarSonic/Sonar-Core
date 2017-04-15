@@ -39,6 +39,7 @@ public class PacketTileSyncUpdate extends PacketTileSync {
 				//TODO 
 				//tile.getWorld().markBlockRangeForRenderUpdate(tile.getPos(), tile.getPos());
 				tile.getWorld().getChunkFromBlockCoords(tile.getPos()).setChunkModified();
+				tile.getWorld().markBlockRangeForRenderUpdate(tile.getPos(), tile.getPos());
 			}
 			return null;
 		}

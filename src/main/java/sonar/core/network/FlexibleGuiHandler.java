@@ -1,12 +1,12 @@
 package sonar.core.network;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.google.common.collect.Maps;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -30,9 +30,9 @@ public class FlexibleGuiHandler {
 	public Object lastScreen;
 	public Object lastContainer;
 	public Pair<Object, IFlexibleGui> lastGui;
-	public Map<EntityPlayer, Object> lastContainers = new HashMap();
-	public Map<EntityPlayer, Pair<Object, IFlexibleGui>> lastGuis = new HashMap();
-	public Map<EntityPlayer, Integer> lastID = new HashMap();
+	public Map<EntityPlayer, Object> lastContainers = Maps.newHashMap();
+	public Map<EntityPlayer, Pair<Object, IFlexibleGui>> lastGuis = Maps.newHashMap();
+	public Map<EntityPlayer, Integer> lastID = Maps.newHashMap();
 
 	public static String MULTIPART = "multipart", TILEENTITY = "tile", ITEM = "item", ID = "id", UUID = "uuid";
 

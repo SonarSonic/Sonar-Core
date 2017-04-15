@@ -1,6 +1,5 @@
 package sonar.core;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -25,6 +24,7 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -50,10 +50,10 @@ import sonar.core.network.FlexibleGuiHandler;
 import sonar.core.network.PacketBlockInteraction;
 import sonar.core.network.PacketByteBuf;
 import sonar.core.network.PacketByteBufMultipart;
-import sonar.core.network.PacketFlexibleMultipartChangeGui;
 import sonar.core.network.PacketFlexibleCloseGui;
 import sonar.core.network.PacketFlexibleContainer;
 import sonar.core.network.PacketFlexibleItemStackChangeGui;
+import sonar.core.network.PacketFlexibleMultipartChangeGui;
 import sonar.core.network.PacketFlexibleOpenGui;
 import sonar.core.network.PacketInvUpdate;
 import sonar.core.network.PacketMultipartSync;
@@ -74,7 +74,7 @@ import sonar.core.upgrades.MachineUpgradeRegistry;
 public class SonarCore {
 
 	public static final String modid = "sonarcore";
-	public static final String version = "3.2.6";
+	public static final String version = "3.2.7";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -133,10 +133,6 @@ public class SonarCore {
 		SonarCrafting.registerCraftingRecipes();
 		logger.info("Register Crafting Recipes");
 
-		logger.info("Registering Renderers");
-		proxy.registerRenderThings();
-		logger.info("Registered Renderers");
-
 		for (int i = 0; i < 16; i++) {
 			OreDictionary.registerOre("sonarStableStone", SonarCore.stableStone[i]);
 			OreDictionary.registerOre("sonarStableStone", SonarCore.stablestonerimmedBlock[i]);
@@ -145,6 +141,7 @@ public class SonarCore {
 
 		ASMDataTable asmDataTable = event.getAsmData();
 		ASMLoader.load(asmDataTable);
+		proxy.preInit(event);
 	}
 
 	@EventHandler
@@ -169,6 +166,7 @@ public class SonarCore {
 		planters.register();
 		harvesters.register();
 		fertilisers.register();
+		proxy.load(event);
 	}
 
 	@EventHandler
@@ -185,6 +183,12 @@ public class SonarCore {
 		logger.info("Registered " + energyHandlers.size() + " Energy Handlers");
 		logger.info("Registered " + energyContainerHandlers.size() + " Energy Container Providers");
 		logger.info("Registered " + machineUpgrades.getMap().size() + " Machine Upgrades");
+		proxy.postLoad(event);
+	}
+
+	@EventHandler
+	public void serverClose(FMLServerStoppingEvent event) {
+		proxy.serverClose(event);
 	}
 
 	private void registerPackets() {
@@ -216,7 +220,7 @@ public class SonarCore {
 		}
 	}
 
-	public static void registerItems(ArrayList<ISonarRegistryItem> items) {
+	public static void registerItems(List<ISonarRegistryItem> items) {
 		for (ISonarRegistryItem item : items) {
 			Item toRegister = item.getItem();
 			GameRegistry.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(item.getRegistryName()) : toRegister);
@@ -224,8 +228,8 @@ public class SonarCore {
 		}
 	}
 
-	public static void registerBlocks(ArrayList<ISonarRegistryBlock> blocks) {
-		for (ISonarRegistryBlock block : blocks) {
+	public static void registerBlocks(List<ISonarRegistryBlock> registeredBlocks) {
+		for (ISonarRegistryBlock block : registeredBlocks) {
 			Block toRegister = block.getBlock();
 			GameRegistry.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(block.getRegistryName()) : toRegister);
 			GameRegistry.register(new SonarBlockTip(toRegister).setRegistryName(block.getRegistryName()));

@@ -1,6 +1,9 @@
 package sonar.core.network.sync;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,7 +17,7 @@ import sonar.core.helpers.NBTHelper.SyncType;
 /** for use with objects which implement INBTSyncable and have an Empty Constructor for instances */
 public class SyncNBTAbstractList<T extends INBTSyncable> extends SyncPart {
 
-	public ArrayList<T> objs = new ArrayList();
+	public List<T> objs = Lists.newArrayList();
 	public Class<T> type;
 
 	public SyncNBTAbstractList(Class<T> type, int id) {
@@ -28,11 +31,11 @@ public class SyncNBTAbstractList<T extends INBTSyncable> extends SyncPart {
 		objs = new ArrayList(capacity);
 	}
 
-	public ArrayList<T> getObjects() {
+	public List<T> getObjects() {
 		return objs;
 	}
 
-	public void setObjects(ArrayList<T> list) {
+	public void setObjects(List<T> list) {
 		objs = list;
 		markChanged();
 	}
@@ -63,14 +66,14 @@ public class SyncNBTAbstractList<T extends INBTSyncable> extends SyncPart {
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(getTagName())) {
-			ArrayList newObjs = new ArrayList();
+			List newObjs = Lists.newArrayList();
 			NBTTagList tagList = nbt.getTagList(getTagName(), Constants.NBT.TAG_COMPOUND);
 			for (int i = 0; i < tagList.tagCount(); i++) {
 				newObjs.add(NBTHelper.instanceNBTSyncable(this.type, tagList.getCompoundTagAt(i)));
 			}
 			objs = newObjs;
 		} else if (nbt.getBoolean(getTagName() + "E")) {
-			objs = new ArrayList();
+			objs = Lists.newArrayList();
 		}
 	}
 

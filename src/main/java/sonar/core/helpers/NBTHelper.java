@@ -6,20 +6,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.Lists;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagEnd;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagLong;
-import net.minecraft.nbt.NBTTagShort;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -100,7 +92,7 @@ public class NBTHelper {
 		} else if (tag.hasKey(tagName)) {
 			NBTTagList list = tag.getTagList(tagName, 10);
 			if (objectList == null) {
-				objectList = new ArrayList();
+				objectList = Lists.newArrayList();
 			}
 
 			for (int i = 0; i < list.tagCount(); i++) {
@@ -133,10 +125,10 @@ public class NBTHelper {
 
 	public static NBTTagCompound writeSyncedNBTObjectList(String tagName, NBTTagCompound tag, NBTRegistryHelper helper, List objectList, List lastList) {
 		if (objectList == null) {
-			objectList = new ArrayList();
+			objectList = Lists.newArrayList();
 		}
 		if (lastList == null) {
-			lastList = new ArrayList();
+			lastList = Lists.newArrayList();
 		}
 		NBTTagList list = new NBTTagList();
 		int size = Math.max(objectList.size(), lastList.size());
@@ -181,7 +173,7 @@ public class NBTHelper {
 	}
 
 	public static List<? extends INBTObject> readNBTObjectList(String tagName, NBTTagCompound tag, RegistryHelper<? extends INBTObject> helper) {
-		List<INBTObject> objects = new ArrayList();
+		List<INBTObject> objects = Lists.newArrayList();
 		if (tag.hasKey(tagName)) {
 			NBTTagList list = tag.getTagList(tagName, 10);
 			for (int i = 0; i < list.tagCount(); i++) {

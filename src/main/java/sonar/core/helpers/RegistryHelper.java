@@ -1,8 +1,9 @@
 package sonar.core.helpers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.Lists;
 
 import gnu.trove.map.hash.THashMap;
 import sonar.core.SonarCore;
@@ -10,7 +11,7 @@ import sonar.core.api.IRegistryObject;
 
 public abstract class RegistryHelper<T extends IRegistryObject> {
 
-	private List<T> objects = new ArrayList();
+	private List<T> objects = Lists.newArrayList();
 	private Map<String, Integer> objectIDs = new THashMap<String, Integer>();
 	private Map<Integer, String> objectNames = new THashMap<Integer, String>();
 

@@ -2,8 +2,9 @@ package sonar.core.helpers;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -226,7 +227,7 @@ public class FontHelper {
 	}
 
 	public static ArrayList<String> breakUpStringIntoLines(String multiline, int charLimit) {
-		ArrayList<String> lines = new ArrayList();
+		ArrayList<String> lines = Lists.newArrayList();
 		String s = multiline;
 		char[] chars = s.toCharArray();
 		boolean endOfString = false;

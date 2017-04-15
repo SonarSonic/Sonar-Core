@@ -50,6 +50,7 @@ public interface ISonarInventoryHandler {
 	 * @return an {@link StorageSize} object, ensure that capacity and stored items have been fully accounted for */
 	public StorageSize getItems(List<StoredItemStack> storedStacks, TileEntity tile, EnumFacing dir);
 	
-	//public void transferItems(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, IInventoryFilter filter);
+	/**used to determine how often to refresh in PL2 - this is only true for AE2, Ender IO and Refined Storage at the moment*/
+	public boolean isLargeInventory();
 	
 }

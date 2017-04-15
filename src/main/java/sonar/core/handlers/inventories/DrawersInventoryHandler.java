@@ -83,4 +83,9 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
 	public StoredItemStack removeStack(StoredItemStack remove, TileEntity tile, EnumFacing dir, ActionType action) {
 		return remove;
 	}
+
+	@Override
+	public boolean isLargeInventory() {
+		return false;
+	}
 }

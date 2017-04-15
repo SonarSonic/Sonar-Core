@@ -87,4 +87,9 @@ public class ItemHandlerHandler implements ISonarInventoryHandler {
 		return remove;
 	}
 
+	@Override
+	public boolean isLargeInventory() {
+		return false; //some may be, most won't
+	}
+
 }

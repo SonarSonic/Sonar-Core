@@ -2,8 +2,6 @@ package sonar.core.handlers.inventories;
 
 import java.util.List;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -13,8 +11,6 @@ import sonar.core.api.asm.InventoryHandler;
 import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
-import sonar.core.helpers.InventoryHelper;
-import sonar.core.inventory.GenericInventoryHandler;
 import sonar.core.inventory.ILargeInventory;
 import sonar.core.inventory.SonarLargeInventory;
 
@@ -80,5 +76,10 @@ public class ILargeInventoryHandler implements ISonarInventoryHandler {
 			}
 		}
 		return remove;
+	}
+
+	@Override
+	public boolean isLargeInventory() {
+		return false; //the name suggest otherwise but ILargeInventories generally don't have that many slots
 	}
 }

@@ -3,6 +3,8 @@ package sonar.core.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -20,6 +22,8 @@ import sonar.core.handlers.inventories.IInventoryHandler;
 
 public class InventoryHelper extends InventoryWrapper {
 
+	public static ItemStack EMPTY = null; //TODO make this ItemStack.EMPTY on update.
+	
 	public static ISonarInventoryHandler defHandler = new IInventoryHandler();
 
 	public static boolean addStack(IInventory inv, StoredItemStack add, int slot, int limit, ActionType action) {
@@ -138,7 +142,7 @@ public class InventoryHelper extends InventoryWrapper {
 	}
 
 	public void spawnStoredItemStack(StoredItemStack drop, World world, int x, int y, int z, EnumFacing side) {
-		List<EntityItem> drops = new ArrayList();
+		List<EntityItem> drops = Lists.newArrayList();
 		while (!(drop.stored <= 0)) {
 			ItemStack dropStack = drop.getItemStack();
 			dropStack.stackSize = (int) Math.min(drop.stored, dropStack.getMaxStackSize());
@@ -219,7 +223,7 @@ public class InventoryHelper extends InventoryWrapper {
 
 	public void transferItems(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, IInventoryFilter filter) {
 		if (from != null && to != null) {
-			ArrayList<StoredItemStack> stacks = new ArrayList();
+			ArrayList<StoredItemStack> stacks = Lists.newArrayList();
 			List<ISonarInventoryHandler> handlers = SonarCore.inventoryHandlers;
 			for (ISonarInventoryHandler handler : handlers) {
 				if (handler.canHandleItems(from, dirFrom)) {

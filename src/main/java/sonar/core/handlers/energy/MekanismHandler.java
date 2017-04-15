@@ -6,7 +6,6 @@ import mekanism.api.util.CapabilityUtils;
 import mekanism.common.capabilities.Capabilities;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import sonar.core.api.asm.EnergyHandler;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.energy.StoredEnergyStack;

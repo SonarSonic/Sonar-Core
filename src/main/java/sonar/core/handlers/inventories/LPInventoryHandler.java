@@ -58,7 +58,7 @@ public class LPInventoryProvider extends InventoryHandler {
 				return items;
 			}
 		}
-		return new ArrayList();
+		return Lists.newArrayList();
 	}
 
 	public boolean isLoadable() {

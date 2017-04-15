@@ -1,10 +1,12 @@
 package sonar.core.integration.jei;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
@@ -23,7 +25,7 @@ public class JEIHelper {
 
 	public static class RecipeMapper {
 
-		public Map<RecipeObjectType, Map<Integer, RecipeMapping>> map = new HashMap();
+		public Map<RecipeObjectType, Map<Integer, RecipeMapping>> map = Maps.newHashMap();
 
 		public RecipeMapper() {}
 
@@ -38,7 +40,7 @@ public class JEIHelper {
 
 		public void map(RecipeObjectType type, int recipePos, RecipeMapping mapping) {
 			if (map.get(type) == null) {
-				map.put(type, new HashMap());
+				map.put(type, Maps.newHashMap());
 			}
 			map.get(type).put(recipePos, mapping);
 		}
@@ -87,7 +89,7 @@ public class JEIHelper {
 	}
 	
 	public static ArrayList<JEIRecipeV2> getJEIRecipes(IRecipeHelperV2 recipeHelper, Class<? extends JEIRecipeV2> recipeClass) {
-		ArrayList<JEIRecipeV2> recipesV2 = new ArrayList();
+		ArrayList<JEIRecipeV2> recipesV2 = Lists.newArrayList();
 		if (recipeHelper != null && recipeHelper instanceof RecipeHelperV2) {
 			RecipeHelperV2 helper = (RecipeHelperV2) recipeHelper;
 			for (ISonarRecipe recipe : (ArrayList<ISonarRecipe>) helper.getRecipes()) {

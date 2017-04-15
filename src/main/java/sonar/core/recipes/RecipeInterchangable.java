@@ -3,12 +3,14 @@ package sonar.core.recipes;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.item.ItemStack;
 
 public class RecipeInterchangable implements ISonarRecipeObject, ISonarRecipeItem {
 
 	public List<ISonarRecipeObject> validInputs;
-	public List<Object> cachedObjects = new ArrayList();
+	public List<Object> cachedObjects = Lists.newArrayList();
 
 	public RecipeInterchangable(List<ISonarRecipeObject> validInputs) {
 		this.validInputs = validInputs;

@@ -1,9 +1,10 @@
 package sonar.core.helpers;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.Maps;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -13,7 +14,7 @@ import net.minecraftforge.oredict.OreDictionary;
 @Deprecated
 public abstract class ValueHelper implements IRecipeHelper {
 
-	protected Map<Object, Integer> recipeList = new HashMap();
+	protected Map<Object, Integer> recipeList = Maps.newHashMap();
 
 	/** add all your recipes here */
 	public abstract void addRecipes();

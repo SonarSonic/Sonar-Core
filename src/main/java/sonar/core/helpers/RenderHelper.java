@@ -1,5 +1,31 @@
 package sonar.core.helpers;
 
+import static net.minecraft.client.renderer.GlStateManager.alphaFunc;
+import static net.minecraft.client.renderer.GlStateManager.blendFunc;
+import static net.minecraft.client.renderer.GlStateManager.color;
+import static net.minecraft.client.renderer.GlStateManager.depthMask;
+import static net.minecraft.client.renderer.GlStateManager.disableAlpha;
+import static net.minecraft.client.renderer.GlStateManager.disableBlend;
+import static net.minecraft.client.renderer.GlStateManager.disableDepth;
+import static net.minecraft.client.renderer.GlStateManager.disableLighting;
+import static net.minecraft.client.renderer.GlStateManager.disableRescaleNormal;
+import static net.minecraft.client.renderer.GlStateManager.disableTexture2D;
+import static net.minecraft.client.renderer.GlStateManager.enableAlpha;
+import static net.minecraft.client.renderer.GlStateManager.enableBlend;
+import static net.minecraft.client.renderer.GlStateManager.enableDepth;
+import static net.minecraft.client.renderer.GlStateManager.enableLighting;
+import static net.minecraft.client.renderer.GlStateManager.enableRescaleNormal;
+import static net.minecraft.client.renderer.GlStateManager.enableTexture2D;
+import static net.minecraft.client.renderer.GlStateManager.glLineWidth;
+import static net.minecraft.client.renderer.GlStateManager.popAttrib;
+import static net.minecraft.client.renderer.GlStateManager.popMatrix;
+import static net.minecraft.client.renderer.GlStateManager.pushAttrib;
+import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
+import static net.minecraft.client.renderer.GlStateManager.rotate;
+import static net.minecraft.client.renderer.GlStateManager.scale;
+import static net.minecraft.client.renderer.GlStateManager.translate;
+import static net.minecraft.client.renderer.GlStateManager.tryBlendFuncSeparate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,14 +60,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
+import net.minecraftforge.common.model.TRSRTransformation;
 import sonar.core.SonarCore;
+import sonar.core.client.BlockModelsCache;
 import sonar.core.client.gui.GuiSonar;
 import sonar.core.client.renderers.TransformationMatrix;
 import sonar.core.client.renderers.Vector;
-
-import static net.minecraft.client.renderer.GlStateManager.*;
 
 public class RenderHelper {
 
@@ -309,36 +336,35 @@ public class RenderHelper {
 	}
 
 	public static void renderItemIntoGUI(ItemStack stack, int x, int y) {
-		renderItemModelIntoGUI(stack, x, y, itemRender.getItemModelWithOverrides(stack, (World) null, (EntityLivingBase) null));
+		IBakedModel model = BlockModelsCache.INSTANCE.getOrLoadModel(stack);
+		if (model != null) {
+			renderItemModelIntoGUI(stack, x, y, model);
+		}
 	}
 
-	protected static void renderItemModelIntoGUI(ItemStack stack, int x, int y, IBakedModel bakedmodel) {
+	public static void renderItemModelIntoGUI(ItemStack stack, int x, int y, IBakedModel bakedmodel) {
 		pushMatrix();
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		textureManager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 		enableRescaleNormal();
-		// GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		// GlStateManager.enableNormalize();
 		enableAlpha();
 		alphaFunc(516, 0.1F);
 		enableBlend();
 		blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		color(1.0F, 1.0F, 1.0F, 1.0F);
 		setupGuiTransform(x, y, bakedmodel.isGui3d());
-		// GL11.glVertex3d(1, 1, 0.04);
 		GL11.glScaled(1, 1, 0.04);
-		bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
+		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
 		itemRender.renderItem(stack, bakedmodel);
 		disableAlpha();
 		disableRescaleNormal();
 		disableLighting();
 		popMatrix();
-		// GlStateManager.disableNormalize();
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		textureManager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 	}
 
-	private static void setupGuiTransform(int xPosition, int yPosition, boolean isGui3d) {
+	public static void setupGuiTransform(int xPosition, int yPosition, boolean isGui3d) {
 		// GlStateManager.translate((float) xPosition, (float) yPosition, 100.0F + itemRender.zLevel);
 		translate(8.0F, 8.0F, 0.0F);
 		scale(1.0F, -1.0F, 1.0F);

@@ -123,7 +123,7 @@ public class MachineSides extends DirtyPart implements ISyncPart {
 	}
 
 	public ArrayList<EnumFacing> getSidesWithConfig(MachineSideConfig side) {
-		ArrayList<EnumFacing> sides = new ArrayList();
+		ArrayList<EnumFacing> sides = Lists.newArrayList();
 		for (EnumFacing facing : allowedDirs) {
 			if (configs[facing.getIndex()].name() == side.name()) {
 				sides.add(facing);

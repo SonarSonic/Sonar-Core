@@ -1,7 +1,8 @@
 package sonar.core.integration.planting.vanilla;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import blusunrize.immersiveengineering.common.blocks.plant.BlockIECrop;
 import net.minecraft.block.state.IBlockState;
@@ -43,7 +44,7 @@ public class IEHempHarvester implements IHarvester {
 
 	@Override
 	public List<ItemStack> getDrops(World world, BlockPos pos, IBlockState state, int fortune) {	
-		List<ItemStack> drops = new ArrayList();
+		List<ItemStack> drops = Lists.newArrayList();
 		((BlockIECrop) state.getBlock()).getDrops(world, pos, state, fortune).forEach(stack -> drops.add((ItemStack) stack));
 		((BlockIECrop) state.getBlock()).getDrops(world, pos.offset(EnumFacing.UP), world.getBlockState(pos.offset(EnumFacing.UP)), fortune).forEach(stack -> drops.add((ItemStack) stack));
 		

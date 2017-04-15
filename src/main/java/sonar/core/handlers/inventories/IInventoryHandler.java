@@ -3,17 +3,13 @@ package sonar.core.handlers.inventories;
 import java.util.List;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import sonar.core.api.SonarAPI;
 import sonar.core.api.StorageSize;
 import sonar.core.api.asm.InventoryHandler;
 import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
-import sonar.core.helpers.InventoryHelper;
 import sonar.core.inventory.GenericInventoryHandler;
 
 @InventoryHandler(modid = "sonarcore", handlerID = IInventoryHandler.name, priority = 0)
@@ -44,5 +40,10 @@ public class IInventoryHandler implements ISonarInventoryHandler {
 	@Override
 	public StoredItemStack removeStack(StoredItemStack remove, TileEntity tile, EnumFacing dir, ActionType action) {
 		return GenericInventoryHandler.removeStack(remove, (IInventory) tile, dir, action);
+	}
+
+	@Override
+	public boolean isLargeInventory() {
+		return false;
 	}
 }

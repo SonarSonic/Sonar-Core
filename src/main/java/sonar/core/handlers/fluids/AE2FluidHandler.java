@@ -11,15 +11,12 @@ import appeng.me.GridAccessException;
 import appeng.me.helpers.IGridProxyable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.Loader;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.StorageSize;
-import sonar.core.api.asm.EnergyHandler;
 import sonar.core.api.asm.FluidHandler;
 import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
-import sonar.core.handlers.energy.AEProvider;
 import sonar.core.integration.AE2Helper;
 
 @FluidHandler(modid = "appliedenergistics2", handlerID = AE2FluidHandler.name, priority = 4)

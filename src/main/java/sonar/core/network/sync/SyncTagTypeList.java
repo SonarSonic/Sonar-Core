@@ -2,6 +2,8 @@ package sonar.core.network.sync;
 
 import java.util.ArrayList;
 
+import com.google.common.collect.Lists;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -13,7 +15,7 @@ import sonar.core.helpers.NBTHelper.SyncType;
 /** for use with objects which implement INBTSyncable and have an Empty Constructor for instances */
 public class SyncTagTypeList<T> extends SyncPart {
 
-	public ArrayList<T> objs = new ArrayList();
+	public ArrayList<T> objs = Lists.newArrayList();
 	private int nbtType = -1;	
 
 	public SyncTagTypeList(int nbtType, int id) {
@@ -63,7 +65,7 @@ public class SyncTagTypeList<T> extends SyncPart {
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(getTagName())) {
-			ArrayList newObjs = new ArrayList();
+			ArrayList newObjs = Lists.newArrayList();
 			NBTTagList tagList = nbt.getTagList(getTagName(), Constants.NBT.TAG_COMPOUND);
 			for (int i = 0; i < tagList.tagCount(); i++) {	
 				NBTTagCompound tag = tagList.getCompoundTagAt(i);
@@ -71,7 +73,7 @@ public class SyncTagTypeList<T> extends SyncPart {
 			}
 			objs = newObjs;
 		} else if (nbt.getBoolean(getTagName() + "E")) {
-			objs = new ArrayList();
+			objs = Lists.newArrayList();
 		}
 	}
 

@@ -13,7 +13,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -54,9 +53,9 @@ public abstract class GuiSonar extends GuiContainer {
 		this.fieldList.clear();
 		this.initGui();
 	}
-	
-	public void initButtons(){
-		this.buttonList.clear();			
+
+	public void initButtons() {
+		this.buttonList.clear();
 	}
 
 	// public void initGui(boolean pause) {}
@@ -165,7 +164,16 @@ public abstract class GuiSonar extends GuiContainer {
 		super.keyTyped(c, i);
 	}
 
-	public void onTextFieldChanged(SonarTextField field) {
+	public void onTextFieldChanged(SonarTextField field) {}
+
+	public SonarTextField getFocusedField() {
+		for (SonarTextField f : fieldList) {
+			if (f.isFocused()) {
+				return f;
+			}
+		}
+		return null;
+
 	}
 
 	@Override
@@ -173,15 +181,15 @@ public abstract class GuiSonar extends GuiContainer {
 		super.mouseClicked(i, j, k);
 		fieldList.forEach(field -> field.mouseClicked(i - guiLeft, j - guiTop, k));
 	}
-	
-	public int getGuiLeft(){
+
+	public int getGuiLeft() {
 		return guiLeft;
 	}
-	
-	public int getGuiTop(){
+
+	public int getGuiTop() {
 		return guiTop;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static class PauseButton extends SonarButtons.ImageButton {
 
@@ -199,7 +207,7 @@ public abstract class GuiSonar extends GuiContainer {
 		}
 
 		public void drawButtonForegroundLayer(int x, int y) {
-			ArrayList list = new ArrayList();
+			ArrayList list = Lists.newArrayList();
 			list.add(TextFormatting.BLUE + "" + TextFormatting.UNDERLINE + (paused ? FontHelper.translate("buttons.resume") : FontHelper.translate("buttons.pause")));
 			if (machine instanceof IProcessMachine) {
 				list.add("Current: " + (int) ((double) ((IProcessMachine) machine).getCurrentProcessTime() / ((IProcessMachine) machine).getProcessTime() * 100) + " %");
@@ -227,7 +235,7 @@ public abstract class GuiSonar extends GuiContainer {
 		}
 
 		public void drawButtonForegroundLayer(int x, int y) {
-			ArrayList list = new ArrayList();
+			ArrayList list = Lists.newArrayList();
 			list.add(TextFormatting.BLUE + "" + TextFormatting.UNDERLINE + FontHelper.translate("buttons.circuits"));
 			for (Entry<String, Integer> entry : upgrades.getInstalledUpgrades().entrySet()) {
 				int max = upgrades.maxUpgrades.get(entry.getKey());

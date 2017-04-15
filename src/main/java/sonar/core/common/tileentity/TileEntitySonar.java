@@ -22,7 +22,6 @@ import sonar.core.integration.IWailaInfo;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.IDirtyPart;
-import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.ISyncableListener;
 import sonar.core.network.sync.SyncableList;
 import sonar.core.utils.IWorldPosition;
