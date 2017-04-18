@@ -9,6 +9,8 @@ import sonar.core.integration.SonarLoader;
 
 public class ItemStackHelper {
 
+	public static ItemStack EMPTY = null; // TODO make this ItemStack.EMPTY on update.
+
 	/** checks if the two itemstacks are equal and can be merged
 	 * 
 	 * @param stack1 first stack your checking
@@ -30,12 +32,27 @@ public class ItemStackHelper {
 	/** fixes the problem with ItemStacks having no stack size, and sets it to the inputted number */
 	public static ItemStack restoreItemStack(ItemStack stack, int size) {
 		ItemStack result = stack.copy();
-
 		if (result.stackSize <= 0) {
 			result.stackSize = size;
-
 		}
 		return result;
+	}
+
+	public static ItemStack grow(ItemStack stack, int stackSize) {
+		if (stack != EMPTY) {
+			stack.stackSize += stackSize;
+		}
+		return stack;
+	}
+
+	public static ItemStack shrink(ItemStack stack, int stackSize) {
+		if (stack != EMPTY) {
+			stack.stackSize -= stackSize;
+		}
+		if (stack.stackSize <= 0) {
+			stack = EMPTY;
+		}
+		return stack;
 	}
 
 	/** @param item Item you are checking

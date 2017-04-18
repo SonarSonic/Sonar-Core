@@ -12,9 +12,6 @@ public @interface EnergyHandler {
 
 	/**specify the MODID required for the handler to load*/
 	String modid();
-
-	/**the identification string of the TileHandler*/
-	String handlerID();
 	
 	int priority();
 }

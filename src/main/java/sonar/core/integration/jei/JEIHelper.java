@@ -73,6 +73,7 @@ public class JEIHelper {
 			this.yPos = yPos;
 		}
 	}
+	
 	public static Object createJEIRecipe(ISonarRecipe recipe, RecipeHelperV2<ISonarRecipe> helper) {
 		if (SonarLoader.calculatorLoaded && (Loader.isModLoaded("jei") || Loader.isModLoaded("JEI"))) {
 			for (Handlers handler : CalculatorJEI.Handlers.values()) {

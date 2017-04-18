@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import sonar.core.SonarCore;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
 
@@ -59,11 +60,17 @@ public class PacketMultipartSync extends PacketMultipart {
 		@Override
 		public IMessage processMessage(PacketMultipartSync message, IMultipartContainer target, IMultipart part, MessageContext ctx) {
 			if (part.getWorld().isRemote) {
-				if (part != null && part instanceof INBTSyncable) {
-					INBTSyncable sync = (INBTSyncable) part;
-					sync.readData(message.tag, message.type != null ? message.type : SyncType.DEFAULT_SYNC);
-				}
-				part.getWorld().getChunkFromBlockCoords(part.getPos()).setChunkModified();
+
+				SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
+					@Override
+					public void run() {
+						if (part != null && part instanceof INBTSyncable) {
+							INBTSyncable sync = (INBTSyncable) part;
+							sync.readData(message.tag, message.type != null ? message.type : SyncType.DEFAULT_SYNC);
+						}
+						part.getWorld().getChunkFromBlockCoords(part.getPos()).setChunkModified();
+					}
+				});
 			}
 			return null;
 		}

@@ -22,10 +22,8 @@ import sonar.core.api.utils.ActionType;
 import sonar.core.integration.AE2Helper;
 import sonar.core.utils.SimpleProfiler;
 
-@InventoryHandler(modid = "appliedenergistics2", handlerID = AE2InventoryProvider.name, priority = 2)
+@InventoryHandler(modid = "appliedenergistics2", priority = 2)
 public class AE2InventoryProvider implements ISonarInventoryHandler {
-
-	public static final String name = "AE2-Inventory";
 
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {

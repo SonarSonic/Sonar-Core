@@ -12,10 +12,8 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.EUHelper;
 
-@EnergyHandler(modid = "IC2", handlerID = EUHandler.name, priority = 4)
+@EnergyHandler(modid = "IC2", priority = 4)
 public class EUHandler implements ISonarEnergyHandler {
-
-	public static final String name = "EU-Provider";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {

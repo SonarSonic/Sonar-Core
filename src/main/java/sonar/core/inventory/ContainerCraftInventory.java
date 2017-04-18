@@ -15,7 +15,7 @@ public abstract class ContainerCraftInventory extends Container {
 	protected World worldObj;
 
 	public ContainerCraftInventory(EntityPlayer player, InventoryPlayer inv, InventoryItem inventory) {
-		this.worldObj = player.worldObj;
+		this.worldObj = player.getEntityWorld();
 		this.inventory = inventory;
 		this.player = player;
 	}

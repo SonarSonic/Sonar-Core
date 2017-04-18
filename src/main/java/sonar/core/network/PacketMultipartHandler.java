@@ -15,8 +15,8 @@ public abstract class PacketMultipartHandler<T extends PacketMultipart> implemen
 
 	public final IMessage onMessage(T message, MessageContext ctx) {
 		EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
-		if (player != null && player.worldObj != null) {
-			Object target = SonarMultipartHelper.getTile(player.worldObj, message.pos);
+		if (player != null && player.getEntityWorld() != null) {
+			Object target = SonarMultipartHelper.getTile(player.getEntityWorld(), message.pos);
 			if (target != null && target instanceof IMultipartContainer) {
 				IMultipart part = ((IMultipartContainer) target).getPartFromID(message.partUUID);
 				return part != null ? processMessage(message, (IMultipartContainer) target, part, ctx) : null;

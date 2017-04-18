@@ -1,9 +1,6 @@
 package sonar.core.helpers;
 
 import java.util.Collection;
-import java.util.function.Function;
-
-import com.google.common.collect.Lists;
 
 public class ListHelper {
 

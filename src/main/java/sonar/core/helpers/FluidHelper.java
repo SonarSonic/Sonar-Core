@@ -8,7 +8,10 @@ import com.google.common.collect.Lists;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import sonar.core.SonarCore;
+import sonar.core.api.StorageSize;
 import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
@@ -99,5 +102,33 @@ public class FluidHelper extends FluidWrapper {
 
 	public static interface ITankFilter {
 		public boolean allowed(FluidStack stack);
+	}
+
+	public static StoredFluidStack addStack(StoredFluidStack add, IFluidHandler handler, EnumFacing dir, ActionType action) {
+		add.stored -= handler.fill(add.getFullStack(), !action.shouldSimulate());
+		return add;
+	}
+
+	public static StoredFluidStack removeStack(StoredFluidStack remove, IFluidHandler handler, EnumFacing dir, ActionType action) {
+		FluidStack drained = null;
+		remove.stored -= (drained = handler.drain(remove.getFullStack(), !action.shouldSimulate())) != null ? drained.amount : 0;
+		return remove;
+	}
+
+	public static StorageSize getFluids(List<StoredFluidStack> fluids, IFluidHandler handler, EnumFacing dir) {
+		long stored = 0;
+		long maxStorage = 0;
+		IFluidTankProperties[] tankInfo = handler.getTankProperties();
+		if (tankInfo != null) {
+			for (IFluidTankProperties info : tankInfo) {
+				FluidStack contents = info.getContents();
+				if (contents != null && contents.amount != 0) {
+					stored += contents.amount;
+					fluids.add(new StoredFluidStack(contents, info.getCapacity()));
+				}
+				maxStorage += info.getCapacity();
+			}
+		}
+		return new StorageSize(stored, maxStorage);
 	}
 }

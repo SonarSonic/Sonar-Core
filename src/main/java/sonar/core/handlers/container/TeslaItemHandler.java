@@ -8,10 +8,8 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.energy.GenericTeslaHandler;
 
-@EnergyContainerHandler(modid = "tesla", handlerID = TeslaItemHandler.name, priority = 2)
+@EnergyContainerHandler(modid = "tesla", priority = 2)
 public class TeslaItemHandler implements ISonarEnergyContainerHandler {
-
-	public static final String name = "TESLA Item Handler";
 
 	@Override
 	public boolean canHandleItem(ItemStack stack) {

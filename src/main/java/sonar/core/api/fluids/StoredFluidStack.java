@@ -55,8 +55,13 @@ public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 		return this;
 	}
 
+	public StoredFluidStack setStackSize(StoredFluidStack stack) {
+		this.stored = stack == null ? 0 : stack.getStackSize();
+		return this;
+	}
+
 	public boolean equalStack(FluidStack stack) {
-		if (this.fluid == null || stack == null || stack.amount == 0) {
+		if (this.fluid == null || stack == null){ //|| stack.amount == 0) {
 			return false;
 		}
 		return this.fluid.isFluidEqual(stack);

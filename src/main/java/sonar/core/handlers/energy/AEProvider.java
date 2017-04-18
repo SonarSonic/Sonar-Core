@@ -12,11 +12,9 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.AE2Helper;
 
-@EnergyHandler(modid = "appliedenergistics2", handlerID = AEProvider.name, priority = 4)
+@EnergyHandler(modid = "appliedenergistics2", priority = 4)
 public class AEProvider implements ISonarEnergyHandler {
-
-	public static final String name = "AE-Provider";
-
+	
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
 		return (tile instanceof IAEPowerStorage || tile instanceof IEnergyGrid);

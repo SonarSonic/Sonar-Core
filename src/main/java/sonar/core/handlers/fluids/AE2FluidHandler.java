@@ -19,10 +19,8 @@ import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.AE2Helper;
 
-@FluidHandler(modid = "appliedenergistics2", handlerID = AE2FluidHandler.name, priority = 4)
+@FluidHandler(modid = "appliedenergistics2", priority = 4)
 public class AE2FluidHandler implements ISonarFluidHandler {
-
-	public static final String name = "AE2 Fluid Provider"; 
 	
 	@Override
 	public boolean canHandleFluids(TileEntity tile, EnumFacing dir) {

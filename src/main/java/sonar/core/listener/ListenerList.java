@@ -27,7 +27,7 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
 
 	public void updateState() {
 		boolean[] states = new boolean[maxTypes];
-		lists: for (ListenerList<L> list : this.getValidLists()) {
+		lists: for (ListenerList<L> list : this.getValidLists(false)) {
 			for (ListenerTally<L> tally : list) {
 				boolean hasAll = true;
 				for (int i = 0; i < states.length; i++) {
@@ -66,7 +66,7 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
 		return false;
 	}
 
-	public boolean hasListeners(int... types) {
+	public boolean hasListeners(int...types) {
 		for (int i : types) {
 			if (hasTypes[i]) {
 				return true;
@@ -135,33 +135,35 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
 		hasTypes = new boolean[maxTypes];
 	}
 
-	private List<ListenerList<L>> getValidLists() {
+	private List<ListenerList<L>> getValidLists(boolean local) {
 		List<ListenerList<L>> getValidLists = new ArrayList<ListenerList<L>>();
 		getValidLists.add(this);
-		for (ISonarListenable<L> listenable : (List<ISonarListenable<L>>) subLists.clone()) {
-			// TODO what about sub sub lists?
-			if (listenable.isValid()) {
-				getValidLists.add((ListenerList<L>) listenable.getListenerList());
-			} else {
-				subLists.remove(listenable);
+		if (!local) {
+			for (ISonarListenable<L> listenable : (List<ISonarListenable<L>>) subLists.clone()) {
+				// TODO what about sub sub lists?
+				if (listenable.isValid()) {
+					getValidLists.add((ListenerList<L>) listenable.getListenerList());
+				} else {
+					subLists.remove(listenable);
+				}
 			}
 		}
 		return getValidLists;
 	}
 
-	public void addListener(EntityPlayer listener, Enum... enums) {
+	public void addListener(EntityPlayer listener, Enum...enums) {
 		addListener((L) findListener(listener), ListHelper.getOrdinals(enums));
 	}
 
-	public void addListener(EntityPlayer listener, int... types) {
+	public void addListener(EntityPlayer listener, int...types) {
 		addListener((L) findListener(listener), types);
 	}
 
-	public void addListener(L listener, Enum... enums) {
+	public void addListener(L listener, Enum...enums) {
 		addListener(listener, ListHelper.getOrdinals(enums));
 	}
 
-	public void addListener(L listener, int... types) {
+	public void addListener(L listener, int...types) {
 		if (listener.isValid()) {
 			Pair<ListenerTally<L>, Boolean> tally = getTally(listener, true);
 			if (tally.a != null) {
@@ -176,26 +178,30 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
 		}
 	}
 
-	public void removeListener(EntityPlayer listener, Enum... enums) {
-		removeListener((L) findListener(listener), ListHelper.getOrdinals(enums));
+	public void removeListener(EntityPlayer listener, boolean local, Enum...enums) {
+		removeListener((L) findListener(listener), local, ListHelper.getOrdinals(enums));
 	}
 
-	public void removeListener(EntityPlayer listener, int... types) {
-		removeListener((L) findListener(listener), types);
+	public void removeListener(EntityPlayer listener, boolean local, int...types) {
+		removeListener((L) findListener(listener), local, types);
 	}
 
-	public void removeListener(L listener, Enum... enums) {
-		removeListener(listener, ListHelper.getOrdinals(enums));
+	public void removeListener(ListenerTally<L> listener, boolean local, Enum...enums) {
+		removeListener(listener.listener, local, ListHelper.getOrdinals(enums));
 	}
 
-	public void removeListener(L listener, int... types) {
+	public void removeListener(L listener, boolean local, Enum...enums) {
+		removeListener(listener, local, ListHelper.getOrdinals(enums));
+	}
+
+	public void removeListener(L listener, boolean local, int...types) {
 		List<Integer> valid = getValidTypes(types);
-		for (ListenerList<L> list : getValidLists()) {
+		for (ListenerList<L> list : getValidLists(local)) {
 			Pair<ListenerTally<L>, Boolean> tally = list.getTally(listener, false);
 			if (tally.a != null) {
 				for (int t : Lists.newArrayList(valid)) {
 					if (tally.a.tallies[t] > 0) {
-						tally.a.tallies[t]--;	
+						tally.a.tallies[t]--;
 						valid.remove(Integer.valueOf(t));
 					}
 				}
@@ -216,7 +222,7 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
 	}
 
 	public PlayerListener findListener(EntityPlayer player) {
-		for (ListenerList<L> list : getValidLists()) {
+		for (ListenerList<L> list : getValidLists(false)) {
 			for (ListenerTally<L> tally : list) {
 				if (tally.listener instanceof PlayerListener && ((PlayerListener) tally.listener).player.isEntityEqual(player)) {
 					return (PlayerListener) tally.listener;
@@ -237,25 +243,47 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
 			}
 		}
 		if (create) {
-			ListenerTally<L> created = new ListenerTally<L>(listener, maxTypes);
+			ListenerTally<L> created = new ListenerTally<L>(this, listener, maxTypes);
 			add(created);
 			return new Pair(created, true);
 		}
 		return new Pair(null, false);
 	}
 
-	public List<L> getListeners(Enum... enums) {
+	public List<ListenerTally<L>> getTallies(Enum...enums) {
+		return getTallies(ListHelper.getOrdinals(enums));
+	}
+
+	public List<ListenerTally<L>> getTallies(int...types) {
+		List<Integer> valid = getValidTypes(types);
+		List<ListenerTally<L>> tallies = Lists.newArrayList();
+		if (valid.isEmpty() || !hasListeners(valid)) {
+			return tallies;
+		}
+		getValidLists(false).forEach(list -> list.forEach(tally -> {
+			if (!tallies.contains(tally)) {
+				for (int type : valid) {
+					if (tally.getTally(type) > 0) {
+						tallies.add(tally);
+					}
+				}
+			}
+		}));
+		return tallies;
+	}
+
+	public List<L> getListeners(Enum...enums) {
 		return getListeners(ListHelper.getOrdinals(enums));
 	}
 
 	/** gets all listeners, including those in sublists */
-	public List<L> getListeners(int... types) {
+	public List<L> getListeners(int...types) {
 		List<Integer> valid = getValidTypes(types);
 		List<L> listeners = Lists.newArrayList();
 		if (valid.isEmpty() || !hasListeners(valid)) {
 			return listeners;
 		}
-		getValidLists().forEach(list -> list.forEach(tally -> {
+		getValidLists(false).forEach(list -> list.forEach(tally -> {
 			if (!listeners.contains(tally.listener)) {
 				for (int type : valid) {
 					if (tally.getTally(type) > 0) {
@@ -285,16 +313,12 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
 		return false;
 	}
 
-	public void onListenerAdded(ListenerTally<L> tally) {
-	}
+	public void onListenerAdded(ListenerTally<L> tally) {}
 
-	public void onListenerRemoved(ListenerTally<L> tally) {
-	}
+	public void onListenerRemoved(ListenerTally<L> tally) {}
 
-	public void onSubListenableAdded(ISonarListenable<L> tally) {
-	}
+	public void onSubListenableAdded(ISonarListenable<L> tally) {}
 
-	public void onSubListenableRemoved(ISonarListenable<L> tally) {
-	}
+	public void onSubListenableRemoved(ISonarListenable<L> tally) {}
 
 }

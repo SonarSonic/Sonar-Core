@@ -11,10 +11,8 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.energy.GenericForgeEnergyHandler;
 
-@EnergyHandler(modid = "EnderIO", handlerID = EnderIOCapacitorHandler.name, priority = -1)
+@EnergyHandler(modid = "EnderIO", priority = -1)
 public class EnderIOCapacitorHandler implements ISonarEnergyHandler {
-
-	public static final String name = "Forge-capacitor-Handler";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
@@ -31,7 +29,6 @@ public class EnderIOCapacitorHandler implements ISonarEnergyHandler {
 			energyStack.setMaxOutput(network.getMaxOutput());
 			return energyStack;
 		}
-
 		return GenericForgeEnergyHandler.getEnergy(energyStack, tile, dir);
 	}
 
@@ -46,7 +43,6 @@ public class EnderIOCapacitorHandler implements ISonarEnergyHandler {
 				transfer = null;
 			return transfer;
 		}
-
 		return GenericForgeEnergyHandler.addEnergy(transfer, tile, dir, action);
 	}
 
@@ -64,7 +60,6 @@ public class EnderIOCapacitorHandler implements ISonarEnergyHandler {
 				transfer = null;
 			return transfer;
 		}
-
 		return GenericForgeEnergyHandler.removeEnergy(transfer, tile, dir, action);
 	}
 

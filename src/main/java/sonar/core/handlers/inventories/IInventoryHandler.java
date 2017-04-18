@@ -12,10 +12,8 @@ import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.inventory.GenericInventoryHandler;
 
-@InventoryHandler(modid = "sonarcore", handlerID = IInventoryHandler.name, priority = 0)
+@InventoryHandler(modid = "sonarcore", priority = 0)
 public class IInventoryHandler implements ISonarInventoryHandler {
-
-	public static final String name = "Standard Inventory";
 
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {

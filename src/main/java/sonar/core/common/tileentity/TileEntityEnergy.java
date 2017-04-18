@@ -139,7 +139,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	///// * IC2 *//////
 	public void onFirstTick() {
 		super.onFirstTick();
-		if (!this.worldObj.isRemote && SonarLoader.ic2Loaded()) {
+		if (!this.getWorld().isRemote && SonarLoader.ic2Loaded()) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 		}
 	}
@@ -147,7 +147,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		if (!this.worldObj.isRemote) {
+		if (!this.getWorld().isRemote) {
 			if (SonarLoader.ic2Loaded()) {
 				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 			}

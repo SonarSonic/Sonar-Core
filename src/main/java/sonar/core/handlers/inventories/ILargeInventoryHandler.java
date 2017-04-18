@@ -14,10 +14,8 @@ import sonar.core.api.utils.ActionType;
 import sonar.core.inventory.ILargeInventory;
 import sonar.core.inventory.SonarLargeInventory;
 
-@InventoryHandler(modid = "sonarcore", handlerID = ILargeInventoryHandler.name, priority = -1)
+@InventoryHandler(modid = "sonarcore", priority = -1)
 public class ILargeInventoryHandler implements ISonarInventoryHandler {
-
-	public static final String name = "Large Inventory";
 
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {

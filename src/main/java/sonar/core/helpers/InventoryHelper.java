@@ -22,8 +22,8 @@ import sonar.core.handlers.inventories.IInventoryHandler;
 
 public class InventoryHelper extends InventoryWrapper {
 
-	public static ItemStack EMPTY = null; //TODO make this ItemStack.EMPTY on update.
-	
+	public static ItemStack EMPTY = null; // TODO make this ItemStack.EMPTY on update.
+
 	public static ISonarInventoryHandler defHandler = new IInventoryHandler();
 
 	public static boolean addStack(IInventory inv, StoredItemStack add, int slot, int limit, ActionType action) {
@@ -191,15 +191,17 @@ public class InventoryHelper extends InventoryWrapper {
 	}
 
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
-		if (stack == null) {
+		long maxAdd = maxAdd(filter, stack.getStackSize());
+		if (maxAdd == 0) {
 			return null;
 		}
 		if (tile != null && (filter == null || filter.allowed(stack.getFullStack()))) {
 			List<ISonarInventoryHandler> handlers = SonarCore.inventoryHandlers;
 			for (ISonarInventoryHandler handler : handlers) {
 				if (handler.canHandleItems(tile, dir)) {
-					StoredItemStack returned = handler.addStack(stack.copy(), tile, dir, type);
-					StoredItemStack add = getStackToAdd(stack.getStackSize(), stack.copy(), returned);
+					StoredItemStack returned = handler.addStack(stack.copy().setStackSize(maxAdd), tile, dir, type);
+					StoredItemStack add = getStackToAdd(maxAdd, stack.copy(), returned);
+					onAdd(filter, add.getStackSize());
 					return add;
 				}
 			}
@@ -208,12 +210,17 @@ public class InventoryHelper extends InventoryWrapper {
 	}
 
 	public StoredItemStack removeItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
+		long maxRemove = maxRemove(filter, stack.getStackSize());
+		if (maxRemove == 0) {
+			return null;
+		}
 		if (tile != null && (filter == null || filter.allowed(stack.getFullStack()))) {
 			List<ISonarInventoryHandler> handlers = SonarCore.inventoryHandlers;
 			for (ISonarInventoryHandler handler : handlers) {
 				if (handler.canHandleItems(tile, dir)) {
-					StoredItemStack returned = handler.removeStack(stack.copy(), tile, dir, type);
-					StoredItemStack remove = getStackToAdd(stack.getStackSize(), stack.copy(), returned);
+					StoredItemStack returned = handler.removeStack(stack.copy().setStackSize(maxRemove), tile, dir, type);
+					StoredItemStack remove = getStackToAdd(maxRemove, stack.copy(), returned);
+					onRemove(filter, remove.getStackSize());
 					return remove;
 				}
 			}
@@ -235,9 +242,9 @@ public class InventoryHelper extends InventoryWrapper {
 				return;
 			}
 			for (StoredItemStack stack : stacks) {
-				StoredItemStack removed = removeItems(from, stack.copy(), dirFrom, ActionType.SIMULATE, filter);
+				StoredItemStack removed = removeItems(from, stack.copy(), dirFrom, ActionType.SIMULATE, copy(filter));
 				if (removed != null) {
-					StoredItemStack add = addItems(to, removed.copy(), dirTo, ActionType.SIMULATE, filter);
+					StoredItemStack add = addItems(to, removed.copy(), dirTo, ActionType.SIMULATE, copy(filter));
 					if (add != null) {
 						removeItems(from, add.copy(), dirFrom, ActionType.PERFORM, filter);
 						addItems(to, removed.copy(), dirTo, ActionType.PERFORM, filter);
@@ -245,6 +252,122 @@ public class InventoryHelper extends InventoryWrapper {
 				}
 			}
 		}
+	}
+
+	public static IInventoryFilter copy(IInventoryFilter filter) {
+		if (filter == null || !(filter instanceof ITransferOverride)) {
+			return null;
+		}
+		return ((ITransferOverride) filter).copy();
+	}
+
+	public static void reset(IInventoryFilter filter) {
+		if (filter == null || !(filter instanceof ITransferOverride)) {
+			return;
+		}
+		((ITransferOverride) filter).reset();
+	}
+
+	public static long maxAdd(IInventoryFilter filter, long l) {
+		if (filter == null || !(filter instanceof ITransferOverride)) {
+			return l;
+		}
+		return Math.min(((ITransferOverride) filter).getMaxAdd(), l);
+	}
+
+	public static void onAdd(IInventoryFilter filter, long added) {
+		if (filter == null || !(filter instanceof ITransferOverride)) {
+			return;
+		}
+		((ITransferOverride) filter).add(added);
+	}
+
+	public static long maxRemove(IInventoryFilter filter, long maxRemove) {
+		if (filter == null || !(filter instanceof ITransferOverride)) {
+			return maxRemove;
+		}
+		return Math.min(((ITransferOverride) filter).getMaxRemove(), maxRemove);
+	}
+
+	public static void onRemove(IInventoryFilter filter, long removed) {
+		if (filter == null || !(filter instanceof ITransferOverride)) {
+			return;
+		}
+		((ITransferOverride) filter).remove(removed);
+	}
+
+	public static class DefaultTransferOverride implements ITransferOverride {
+
+		public long maxAdd, maxRemove;
+		public long currentAdd, currentRemove;
+
+		public DefaultTransferOverride(long max) {
+			this.maxAdd = max;
+			this.currentAdd = max;
+			this.maxRemove = max;
+			this.currentRemove = max;
+		}
+
+		public DefaultTransferOverride(long maxAdd, long maxRemove) {
+			this.maxAdd = maxAdd;
+			this.currentAdd = maxAdd;
+			this.maxRemove = maxRemove;
+			this.currentRemove = maxRemove;
+		}
+
+		public boolean canTransfer() {
+			return currentAdd != 0 || currentRemove != 0;
+		}
+
+		public ITransferOverride copy() {
+			return new DefaultTransferOverride(maxAdd, maxRemove);
+		}
+
+		@Override
+		public boolean allowed(ItemStack stack) {
+			return true;
+		}
+
+		public void reset() {
+			currentAdd = maxAdd;
+			currentRemove = maxRemove;
+		}
+
+		@Override
+		public void add(long added) {
+			currentAdd -= added;
+		}
+
+		@Override
+		public void remove(long removed) {
+			currentRemove -= removed;
+		}
+
+		@Override
+		public long getMaxRemove() {
+			return currentRemove;
+		}
+
+		@Override
+		public long getMaxAdd() {
+			return currentAdd;
+		}
+
+	}
+
+	public static interface ITransferOverride extends IInventoryFilter {
+
+		public ITransferOverride copy();
+
+		public void reset();
+
+		public void add(long added);
+
+		public void remove(long removed);
+
+		public long getMaxRemove();
+
+		public long getMaxAdd();
 	}
 
 	public static interface IInventoryFilter {

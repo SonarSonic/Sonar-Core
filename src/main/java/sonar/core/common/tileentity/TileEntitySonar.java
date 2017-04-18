@@ -38,11 +38,11 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 	}
 
 	public boolean isClient() {
-		return worldObj == null ? false : worldObj.isRemote;
+		return getWorld() == null ? false : getWorld().isRemote;
 	}
 
 	public boolean isServer() {
-		return worldObj == null ? true : !worldObj.isRemote;
+		return getWorld() == null ? true : !getWorld().isRemote;
 	}
 
 	public void onLoad() {
@@ -137,7 +137,7 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 	}
 
 	public void sendSyncPacket(EntityPlayer player) {
-		if (worldObj.isRemote) {
+		if (getWorld().isRemote) {
 			return;
 		}
 		if (player != null && player instanceof EntityPlayerMP) {

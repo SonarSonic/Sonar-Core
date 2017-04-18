@@ -11,10 +11,8 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.network.sync.SyncEnergyStorage;
 
-@EnergyHandler(modid = "sonarcore", handlerID = SonarHandler.name, priority = 1)
+@EnergyHandler(modid = "sonarcore", priority = 1)
 public class SonarHandler implements ISonarEnergyHandler {
-
-	public static final String name = "Sonar-Provider";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {

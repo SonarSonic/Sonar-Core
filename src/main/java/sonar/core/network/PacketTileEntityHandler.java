@@ -12,8 +12,8 @@ public abstract class PacketTileEntityHandler<T extends PacketCoords> implements
 	public final IMessage onMessage(T message, MessageContext ctx) {
 		IMessage returnMessage = null;
 		EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
-		if (player != null && player.worldObj != null) {
-			TileEntity target = player.worldObj.getTileEntity(message.pos);
+		if (player != null && player.getEntityWorld() != null) {
+			TileEntity target = player.getEntityWorld().getTileEntity(message.pos);
 			if (target != null) {
 				processMessage(player, ctx, message, target);
 			}

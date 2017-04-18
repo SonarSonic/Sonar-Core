@@ -13,10 +13,8 @@ import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 
-@InventoryHandler(modid = "sonarcore", handlerID = DSUInventoryHandler.name, priority = 3)
+@InventoryHandler(modid = "sonarcore", priority = 3)
 public class DSUInventoryHandler implements ISonarInventoryHandler {
-
-	public static final String name = "DSU-Inventory";
 
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {

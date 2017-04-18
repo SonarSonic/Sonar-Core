@@ -37,6 +37,7 @@ public class PacketBlockInteraction extends PacketCoords {
 	public static class Handler extends PacketCoordsHandler<PacketBlockInteraction> {
 		@Override
 		public IMessage processMessage(PacketBlockInteraction message, World world, EntityPlayer player) {
+			
 			if (!world.isRemote) {
 				IBlockState state = world.getBlockState(message.pos);
 				Block target = state.getBlock();

@@ -57,7 +57,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		this.slots = new ItemStack[size];
 	}
 
-	public IItemHandler getItemHandler(EnumFacing side){
+	public IItemHandler getItemHandler(EnumFacing side) {
 		face = side;
 		return embeddedHandler;
 	}
@@ -68,7 +68,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	}
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		if (type.isType(SyncType.SAVE)) {
+		if (canSync(type)) {
 			NBTTagList list = nbt.getTagList(getTagName(), 10);
 			this.slots = new ItemStack[this.getSizeInventory()];
 			for (int i = 0; i < list.tagCount(); i++) {
@@ -82,7 +82,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	}
 
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
-		if (type.isType(SyncType.SAVE)) {
+		if (canSync(type)) {
 			NBTTagList list = new NBTTagList();
 			for (int i = 0; i < this.slots.length; i++) {
 				if (this.slots[i] != null) {
@@ -152,11 +152,9 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		return true;
 	}
 
-	public void openInventory(EntityPlayer player) {
-	}
+	public void openInventory(EntityPlayer player) {}
 
-	public void closeInventory(EntityPlayer player) {
-	}
+	public void closeInventory(EntityPlayer player) {}
 
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return true;
@@ -168,8 +166,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		return 0;
 	}
 
-	public void setField(int id, int value) {
-	}
+	public void setField(int id, int value) {}
 
 	public int getFieldCount() {
 		return 0;
@@ -192,7 +189,11 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 
 	@Override
 	public boolean canSync(SyncType sync) {
-		return sync.isType(SyncType.SAVE);
+		return sync.isType(getSyncTypes());
+	}
+
+	public SyncType[] getSyncTypes() {
+		return new SyncType[] { SyncType.SAVE };
 	}
 
 	@Override

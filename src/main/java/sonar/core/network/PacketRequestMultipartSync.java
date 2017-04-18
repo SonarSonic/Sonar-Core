@@ -20,8 +20,7 @@ public class PacketRequestMultipartSync extends PacketCoords<PacketRequestMultip
 
 	public UUID uuid;
 
-	public PacketRequestMultipartSync() {
-	}
+	public PacketRequestMultipartSync() {}
 
 	public PacketRequestMultipartSync(BlockPos pos, UUID uuid) {
 		super(pos);
@@ -48,22 +47,22 @@ public class PacketRequestMultipartSync extends PacketCoords<PacketRequestMultip
 		@Override
 		public IMessage processMessage(EntityPlayer player, MessageContext ctx, PacketRequestMultipartSync message, TileEntity tile) {
 			if (!tile.getWorld().isRemote) {
-				IMultipartContainer container = MultipartHelper.getPartContainer(tile.getWorld(), tile.getPos());
-				if (container != null) {
-					IMultipart part = container.getPartFromID(message.uuid);
-					if (part != null && part instanceof SonarMultipart) {
-						SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
-							public void run() {
+				SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
+					public void run() {
+						IMultipartContainer container = MultipartHelper.getPartContainer(tile.getWorld(), tile.getPos());
+						if (container != null) {
+							IMultipart part = container.getPartFromID(message.uuid);
+							if (part != null && part instanceof SonarMultipart) {
 								SonarMultipart multipart = (SonarMultipart) part;
 								multipart.forceNextSync();
 								multipart.onSyncPacketRequested(player);
-								SonarMultipartHelper.sendMultipartSyncToPlayer(multipart, (EntityPlayerMP)player);
+								SonarMultipartHelper.sendMultipartSyncToPlayer(multipart, (EntityPlayerMP) player);
 								multipart.sendUpdatePacket(true);
 							}
-						});
-						return null;
+						}
 					}
-				}
+				});
+				return null;
 			}
 			return null;
 		}

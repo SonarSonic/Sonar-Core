@@ -12,8 +12,7 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 	public ItemStack item;
 	public long stored;
 
-	public StoredItemStack() {
-	}
+	public StoredItemStack() {}
 
 	public StoredItemStack(ItemStack stack) {
 		this.item = stack.copy();
@@ -58,8 +57,13 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 		return this;
 	}
 
+	public StoredItemStack setStackSize(StoredItemStack stack) {
+		this.stored = stack == null ? 0 : stack.getStackSize();
+		return this;
+	}
+
 	public boolean equalStack(ItemStack stack) {
-		if (this.item == null || stack == null || stack.stackSize == 0) {
+		if (this.item == null || stack == null) { // || stack.stackSize == 0) {
 			return false;
 		}
 		if (!this.item.isItemEqual(stack)) {

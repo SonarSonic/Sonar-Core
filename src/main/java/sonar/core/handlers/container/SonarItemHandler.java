@@ -8,10 +8,8 @@ import sonar.core.api.energy.ISonarEnergyItem;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
-@EnergyContainerHandler(modid = "sonarcore", handlerID = SonarItemHandler.name, priority = 1)
+@EnergyContainerHandler(modid = "sonarcore", priority = 1)
 public class SonarItemHandler implements ISonarEnergyContainerHandler {
-
-	public static final String name = "Sonar Item Handler";
 
 	@Override
 	public boolean canHandleItem(ItemStack stack) {

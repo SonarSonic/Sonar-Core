@@ -16,10 +16,8 @@ import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
 
-@FluidHandler(modid = "refinedstorage", handlerID = RefinedStorageHandler.name, priority = 2)
+@FluidHandler(modid = "refinedstorage", priority = 2)
 public class RefinedStorageHandler implements ISonarFluidHandler {
-
-	public static final String name = "RefinedStorage";
 
 	@Override
 	public boolean canHandleFluids(TileEntity tile, EnumFacing dir) {

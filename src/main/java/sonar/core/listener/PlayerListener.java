@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 public class PlayerListener implements ISonarListener {
 
 	public EntityPlayerMP player;
+	//public ListenerList<PlayerListener> source;
 
 	public PlayerListener(EntityPlayer player) {
 		this((EntityPlayerMP)player);

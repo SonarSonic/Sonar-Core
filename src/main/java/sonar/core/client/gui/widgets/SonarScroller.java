@@ -2,23 +2,35 @@ package sonar.core.client.gui.widgets;
 
 import org.lwjgl.input.Mouse;
 
+import sonar.core.client.gui.GuiGridElement;
+
 public class SonarScroller {
 
 	public boolean renderScroller = true;
 	public float currentScroll;
 	public boolean isScrolling;
 	public boolean wasClicking;
-	public int left, start, end, width;
+	public int left, top, length, width;
+	public ScrollerOrientation orientation = ScrollerOrientation.VERTICAL;
 
 	public SonarScroller(int scrollerLeft, int scrollerStart, int length, int width) {
 		this.left = scrollerLeft;
-		this.start = scrollerStart;
-		this.end = scrollerStart + length;
+		this.top = scrollerStart;
+		this.length = length;
 		this.width = width;
+	}
+
+	public SonarScroller setOrientation(ScrollerOrientation orientation) {
+		this.orientation = orientation;
+		return this;
 	}
 
 	public float getCurrentScroll() {
 		return currentScroll;
+	}
+
+	public void handleMouse(GuiGridElement grid) {
+		handleMouse(grid.isScrollable(), grid.getGridSize());
 	}
 
 	public void handleMouse(boolean needsScrollBars, int listSize) {
@@ -38,12 +50,12 @@ public class SonarScroller {
 				currentScroll = 1.0F;
 		}
 	}
-	
-	public void drawScreen(int x, int y, boolean needsScrollBars){
+
+	public void drawScreen(int x, int y, boolean needsScrollBars) {
 		float lastScroll = currentScroll;
 		boolean flag = Mouse.isButtonDown(0);
 
-		if (!this.wasClicking && flag && x >= left && y >= start && x < left + width && y < end) {
+		if (!this.wasClicking && flag && x >= left && y >= top && x < left + width && y < (top + length)) {
 			this.isScrolling = needsScrollBars;
 		}
 		if (!flag) {
@@ -52,7 +64,11 @@ public class SonarScroller {
 		this.wasClicking = flag;
 
 		if (this.isScrolling) {
-			this.currentScroll = ((float) (y - start) - 7.5F) / ((float) (end - start) - 15.0F);
+			if (orientation.isVertical()) {
+				this.currentScroll = ((float) (y - top) - 7.5F) / ((float) length - 15.0F);
+			} else {
+				this.currentScroll = ((float) (x - left) - 7.5F) / ((float) width - 15.0F);
+			}
 
 			if (currentScroll < 0.0F)
 				currentScroll = 0.0F;
