@@ -1,11 +1,33 @@
-###Sonar Core by Ollie Lansdell
+### Sonar Core by Ollie Lansdell
 Feel free to make commits, suggestions and general contributions to the mod, however you must always follow my conditions below on top of the MIT License.
 
 - BEFORE POSTING BUGS: Please ensure you are running the latest versions of my mods.
 - Also note, if you do report an issue or suggest an enchancement, I have no obligation to fix it or respond as the majority of my time is take up by other work.
 
+## Adding Sonar Core as a dependency
+You can add this project as a dependency by using CurseForge's Maven.
+
+Add the below into you build.gradle, not in the buildscript
+
+```
+repositories {
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+}
+```
+
+Once you have the repo added to your list, you can add SonarCore like so.
+
+```
+compileOnly "sonar-core:SonarCore:1.10.2:3.2.8"
+```
+
+To add other mods combine the projects curse url (e.g. sonar_core, calculator, appliedenergistics2) and then the file name seperated by a colon. For this to work as expected change all dashes in the file name to colons!
+
   
-####Conditions - on top of MIT License:
+#### Conditions - on top of MIT License:
   - No mod installers.
   - Full credit must always be given to me.
   - No re-releases of any form unless I have given expressed permission
