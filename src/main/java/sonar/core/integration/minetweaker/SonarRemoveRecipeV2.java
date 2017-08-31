@@ -1,6 +1,7 @@
 package sonar.core.integration.minetweaker;
 
 import java.util.ArrayList;
+import java.util.function.BiFunction;
 
 import com.google.common.collect.Lists;
 
@@ -25,9 +26,11 @@ public class SonarRemoveRecipeV2<T extends RecipeHelperV2> implements IUndoableA
 	public ISonarRecipe recipe;
 	public boolean liquidStack, wasNull, wrongSize;
 	public T helper;
+	public BiFunction<ISonarRecipe, T, Object> createRecipe;
 
-	public SonarRemoveRecipeV2(T helper, RecipeObjectType type, ArrayList ingredients) {
+	public SonarRemoveRecipeV2(T helper, RecipeObjectType type, ArrayList ingredients, BiFunction<ISonarRecipe, T, Object> createRecipe) {
 		this.helper = helper;
+		this.createRecipe = createRecipe;
 		this.type = type;
 		if (helper instanceof DefinedRecipeHelper && (type == RecipeObjectType.OUTPUT ? ingredients.size() != ((DefinedRecipeHelper) helper).getOutputSize() : ingredients.size() != ((DefinedRecipeHelper) helper).getInputSize())) {
 			MineTweakerAPI.logError("A " + helper.getRecipeID() + " recipe was the wrong size");
@@ -75,7 +78,7 @@ public class SonarRemoveRecipeV2<T extends RecipeHelperV2> implements IUndoableA
 			if (!removed){
 				MineTweakerAPI.logError(String.format("%s: Removing Recipe - Failed to remove recipe %s", helper.getRecipeID(), ingredients));
 			}else{
-				MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(JEIHelper.createJEIRecipe(recipe, helper));
+				MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(createRecipe.apply(recipe, helper));
 			}
 		}
 	}
@@ -89,7 +92,7 @@ public class SonarRemoveRecipeV2<T extends RecipeHelperV2> implements IUndoableA
 	public void undo() {
 		if (recipe != null && !wasNull && !liquidStack && !wrongSize) {
 			helper.addRecipe(recipe);
-			MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(JEIHelper.createJEIRecipe(recipe, helper));
+			MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(createRecipe.apply(recipe, helper));
 		}
 	}
 

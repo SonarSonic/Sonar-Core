@@ -37,7 +37,7 @@ public class EnderIOCapacitorHandler implements ISonarEnergyHandler {
 		TileCapBank bank = (TileCapBank) tile;
 		ICapBankNetwork network = bank.getNetwork();
 		if (network != null) {
-			int transferRF = Math.min((int) network.getMaxEnergyStoredL(), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+			int transferRF = Math.min(network.getMaxInput(), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
 			transfer.stored -= network.receiveEnergy(transferRF, action.shouldSimulate());
 			if (transfer.stored == 0)
 				transfer = null;
@@ -51,7 +51,7 @@ public class EnderIOCapacitorHandler implements ISonarEnergyHandler {
 		TileCapBank bank = (TileCapBank) tile;
 		ICapBankNetwork network = bank.getNetwork();
 		if (network != null) {
-			int transferRF = Math.min(Math.min(network.getMaxOutput(), (int) (network.getMaxEnergyStoredL() - network.getEnergyStoredL())), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+			int transferRF = Math.min(Math.min(network.getMaxOutput(), (int) (network.getEnergyStoredL())), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
 			transfer.stored -= transferRF;
 			if (!action.shouldSimulate()) {
 				network.addEnergy(-transferRF);

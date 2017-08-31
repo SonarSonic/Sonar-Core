@@ -9,8 +9,7 @@ public abstract class BaseSyncListPart extends DirtyPart implements ISyncableLis
 
 	public SyncableList syncList = new SyncableList(this);
 
-	public BaseSyncListPart() {
-	}
+	public BaseSyncListPart() {}
 
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {

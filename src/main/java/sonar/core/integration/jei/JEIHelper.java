@@ -12,8 +12,6 @@ import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
-import sonar.calculator.mod.integration.jei.CalculatorJEI;
-import sonar.calculator.mod.integration.jei.CalculatorJEI.Handlers;
 import sonar.core.integration.SonarLoader;
 import sonar.core.recipes.IRecipeHelperV2;
 import sonar.core.recipes.ISonarRecipe;
@@ -73,7 +71,7 @@ public class JEIHelper {
 			this.yPos = yPos;
 		}
 	}
-	
+	/*
 	public static Object createJEIRecipe(ISonarRecipe recipe, RecipeHelperV2<ISonarRecipe> helper) {
 		if (SonarLoader.calculatorLoaded && (Loader.isModLoaded("jei") || Loader.isModLoaded("JEI"))) {
 			for (Handlers handler : CalculatorJEI.Handlers.values()) {
@@ -88,6 +86,7 @@ public class JEIHelper {
 		}
 		return null;
 	}
+	*/
 	
 	public static ArrayList<JEIRecipeV2> getJEIRecipes(IRecipeHelperV2 recipeHelper, Class<? extends JEIRecipeV2> recipeClass) {
 		ArrayList<JEIRecipeV2> recipesV2 = Lists.newArrayList();

@@ -2,7 +2,7 @@ package sonar.core.handlers.energy;
 
 import mekanism.api.energy.IStrictEnergyAcceptor;
 import mekanism.api.energy.IStrictEnergyStorage;
-import mekanism.api.util.CapabilityUtils;
+import mekanism.common.util.CapabilityUtils;
 import mekanism.common.capabilities.Capabilities;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -43,7 +43,7 @@ public class MekanismHandler implements ISonarEnergyHandler {
 			acceptor = (IStrictEnergyAcceptor) tile;
 		}
 		if (acceptor != null && acceptor.canReceiveEnergy(dir)) {			
-			transfer.stored -= action.shouldSimulate() ? Math.min(acceptor.getMaxEnergy() - acceptor.getEnergy(), transfer.stored) : acceptor.transferEnergyToAcceptor(dir, transfer.stored);
+			transfer.stored -= acceptor.acceptEnergy(dir, transfer.stored, action.shouldSimulate());
 	
 		}
 		if (transfer.stored == 0)

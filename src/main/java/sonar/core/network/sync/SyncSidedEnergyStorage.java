@@ -22,7 +22,7 @@ public class SyncSidedEnergyStorage extends SyncEnergyStorage {
 	}
 
 	public SyncEnergyStorage setCurrentFace(EnumFacing facing) {
-		currentFace = facing.getOpposite();
+		currentFace = facing;
 		return this;
 	}
 

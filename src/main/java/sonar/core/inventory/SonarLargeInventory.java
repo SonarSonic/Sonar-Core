@@ -141,7 +141,7 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		if (stack != null && stack.stackSize != 0 && isItemValidForSlot(slot, stack)) {
-			int target = (int) Math.floor(slot / numStacks);
+			int target = (int)((double)slot / getSlots())/getLargeSize();
 			StoredItemStack stored = slots[target];
 			if (stored == null || stored.getStackSize() == 0 || stored.equalStack(stack) && stored.getStackSize() < numStacks * stack.getMaxStackSize()) {
 				int maxAdd = (int) Math.min(numStacks * stack.getMaxStackSize() - (stored != null ? stored.getStackSize() : 0), stack.stackSize);

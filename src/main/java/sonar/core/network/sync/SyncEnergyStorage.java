@@ -169,7 +169,6 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 	public long removeEnergy(long maxExtract, ActionType action) {
 
 		long energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
-
 		if (!action.shouldSimulate()) {
 			energy -= energyExtracted;
 			this.markChanged();
