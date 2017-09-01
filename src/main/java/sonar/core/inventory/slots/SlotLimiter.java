@@ -6,7 +6,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-
 public class SlotLimiter extends Slot {
 
 	public Item item;
@@ -24,7 +23,7 @@ public class SlotLimiter extends Slot {
 	}
 
 	public boolean isItemValid(ItemStack stack) {
-		if (stack ==null || stack.getItem() == item) {
+		if (stack == null || stack.getItem() == item) {
 			return false;
 		}
 		return true;

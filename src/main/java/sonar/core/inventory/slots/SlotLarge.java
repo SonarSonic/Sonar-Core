@@ -22,7 +22,7 @@ public class SlotLarge extends Slot {
 		if (stack == null)
 			return false;
 		StoredItemStack stored = largeInv.getLargeStack(getSlotIndex());
-		return stored == null ? largeInv.isItemValidForSlot(getSlotIndex(), stack) : stored.equalStack(stack);
+		return stored == null ? largeInv.isItemValidForPos(getSlotIndex(), stack) : stored.equalStack(stack);
 	}
 
 	public ItemStack getStack() {

@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
 import sonar.core.integration.planting.IHarvester;
-
+/* this is causing weirdness and it's not worth fixing right now...
 public class IEHempHarvester implements IHarvester {
 
 	@Override
@@ -58,9 +58,7 @@ public class IEHempHarvester implements IHarvester {
 			world.setBlockState(pos, state.getBlock().getDefaultState());
 			return;
 		}
-		world.setBlockToAir(pos);
-		
+		world.setBlockToAir(pos);		
 	}
-	
-
 }
+*/

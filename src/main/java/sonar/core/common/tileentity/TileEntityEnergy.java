@@ -147,10 +147,8 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		if (!this.getWorld().isRemote) {
-			if (SonarLoader.ic2Loaded()) {
-				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-			}
+		if (!this.getWorld().isRemote && SonarLoader.ic2Loaded()) {
+			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 		}
 	}
 

@@ -144,12 +144,12 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 		if (isServer() && SonarLoader.ic2Loaded()) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 		}
-	}
-
+	}	
+	
 	@Override
-	public void onChunkUnload() {
-		super.onChunkUnload();
-		if (isServer() && SonarLoader.ic2Loaded()) {
+	public void invalidate() {
+		super.invalidate();
+		if (!this.getWorld().isRemote && SonarLoader.ic2Loaded()) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 		}
 	}

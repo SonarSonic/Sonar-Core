@@ -236,7 +236,7 @@ public class SonarHelper {
 				BlockCoords coords = new BlockCoords(current);
 				if (!handlers.contains(coords)) {
 					handlers.add(coords);
-					addCoords(block, w, current, max, handlers, dirs);
+					addCoords(block, w, current, max, handlers, SonarHelper.convertArray(EnumFacing.values()));
 				}
 			}
 		}
