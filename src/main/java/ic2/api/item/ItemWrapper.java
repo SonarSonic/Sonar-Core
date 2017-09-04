@@ -27,9 +27,8 @@ public class ItemWrapper {
 			if (boxable.canBeStoredInToolbox(stack)) return true;
 		}
 		
-		if (item instanceof IBoxable && ((IBoxable) item).canBeStoredInToolbox(stack)) return true;
+		return item instanceof IBoxable && ((IBoxable) item).canBeStoredInToolbox(stack);
 		
-		return false;
 	}
 	
 	public static void registerMetalArmor(Item item, IMetalArmor armor) {
@@ -43,8 +42,7 @@ public class ItemWrapper {
 			if (metalArmor.isMetalArmor(stack, player)) return true;
 		}
 		
-		if (item instanceof IMetalArmor && ((IMetalArmor) item).isMetalArmor(stack, player)) return true;
+		return item instanceof IMetalArmor && ((IMetalArmor) item).isMetalArmor(stack, player);
 		
-		return false;
 	}
 }

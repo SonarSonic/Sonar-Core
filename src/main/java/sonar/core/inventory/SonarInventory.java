@@ -1,6 +1,5 @@
 package sonar.core.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,14 +16,17 @@ public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 		this.tile = tile;
 	}
 
+    @Override
 	public String getName() {
 		return tile.getBlockType().getUnlocalizedName();
 	}
 
+    @Override
 	public boolean hasCustomName() {
 		return false;
 	}
 
+    @Override
 	public ITextComponent getDisplayName() {
 		return new TextComponentTranslation(tile.getBlockType().getUnlocalizedName());
 	}
@@ -34,7 +36,7 @@ public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 		if (stack.isEmpty()) {
 			return stack;
 		}
-		if (!(tile instanceof ISidedInventory) || (SonarHelper.intContains(((ISidedInventory) tile).getSlotsForFace(face), slot) && ((ISidedInventory) tile).canInsertItem(slot, stack, face))) {
+        if (!(tile instanceof ISidedInventory) || SonarHelper.intContains(((ISidedInventory) tile).getSlotsForFace(face), slot) && ((ISidedInventory) tile).canInsertItem(slot, stack, face)) {
 			return super.insertItem(slot, stack, simulate);
 		}
 		return stack;
@@ -46,7 +48,7 @@ public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 		if (stack.isEmpty()) {
 			return ItemStack.EMPTY;
 		}
-		if (!(tile instanceof ISidedInventory) || (SonarHelper.intContains(((ISidedInventory) tile).getSlotsForFace(face), slot) && ((ISidedInventory) tile).canExtractItem(slot, stack, face))) {
+        if (!(tile instanceof ISidedInventory) || SonarHelper.intContains(((ISidedInventory) tile).getSlotsForFace(face), slot) && ((ISidedInventory) tile).canExtractItem(slot, stack, face)) {
 			return super.extractItem(slot, amount, simulate);
 		}
 		return ItemStack.EMPTY;

@@ -1,9 +1,9 @@
 package sonar.core.recipes;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.entity.player.EntityPlayer;
 
 public abstract class ValueHelperV2 extends DefinedRecipeHelper<DefaultSonarRecipe.Value> {
 
@@ -11,6 +11,7 @@ public abstract class ValueHelperV2 extends DefinedRecipeHelper<DefaultSonarReci
 		super(inputSize, outputSize, shapeless);
 	}
 
+    @Override
 	public DefaultSonarRecipe.Value buildRecipe(ArrayList<ISonarRecipeObject> recipeInputs, ArrayList<ISonarRecipeObject> recipeOutputs, List additionals, boolean shapeless) {
 		return new DefaultSonarRecipe.Value(recipeInputs, recipeOutputs, shapeless, (int) additionals.get(0));
 	}

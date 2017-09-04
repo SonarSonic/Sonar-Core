@@ -8,9 +8,9 @@ import sonar.core.network.sync.IDirtyPart;
 
 public interface ISonarInventory extends IInventory, IDirtyPart, INBTSyncable, IItemHandler {
 
-	public ISonarInventory setStackLimit(int limit);
+    ISonarInventory setStackLimit(int limit);
 
 	//public ISonarInventory setHandledSide(EnumFacing side);
 	
-	public IItemHandler getItemHandler(EnumFacing side);
+    IItemHandler getItemHandler(EnumFacing side);
 }

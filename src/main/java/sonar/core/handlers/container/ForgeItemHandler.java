@@ -8,10 +8,8 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.energy.GenericForgeEnergyHandler;
 
-@EnergyContainerHandler(modid = "sonarcore", handlerID = ForgeItemHandler.name, priority = 0)
+@EnergyContainerHandler(modid = "sonarcore", priority = 0)
 public class ForgeItemHandler implements ISonarEnergyContainerHandler {
-
-	public static final String name = "Forge Item Handler";
 
 	@Override
 	public boolean canHandleItem(ItemStack stack) {
@@ -37,5 +35,4 @@ public class ForgeItemHandler implements ISonarEnergyContainerHandler {
 	public EnergyType getProvidedType() {
 		return EnergyType.FE;
 	}
-
 }

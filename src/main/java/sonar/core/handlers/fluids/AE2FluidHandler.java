@@ -1,7 +1,5 @@
 package sonar.core.handlers.fluids;
 
-import java.util.List;
-
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.storage.IStorageGrid;
@@ -11,21 +9,18 @@ import appeng.me.GridAccessException;
 import appeng.me.helpers.IGridProxyable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.Loader;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.StorageSize;
-import sonar.core.api.asm.EnergyHandler;
 import sonar.core.api.asm.FluidHandler;
 import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
-import sonar.core.handlers.energy.AEProvider;
 import sonar.core.integration.AE2Helper;
 
-@FluidHandler(modid = "appliedenergistics2", handlerID = AE2FluidHandler.name, priority = 4)
-public class AE2FluidHandler implements ISonarFluidHandler {
+import java.util.List;
 
-	public static final String name = "AE2 Fluid Provider"; 
+@FluidHandler(modid = "appliedenergistics2", priority = 4)
+public class AE2FluidHandler implements ISonarFluidHandler {
 	
 	@Override
 	public boolean canHandleFluids(TileEntity tile, EnumFacing dir) {
@@ -57,7 +52,7 @@ public class AE2FluidHandler implements ISonarFluidHandler {
 		IGridProxyable proxy = (IGridProxyable) tile;
 		try {
 			IStorageGrid storage = proxy.getProxy().getStorage();
-			IAEFluidStack fluid = storage.getFluidInventory().injectItems(AE2Helper.convertStoredFluidStack(add), AE2Helper.getActionable(action), new MachineSource(((IActionHost) tile)));
+            IAEFluidStack fluid = storage.getFluidInventory().injectItems(AE2Helper.convertStoredFluidStack(add), AE2Helper.getActionable(action), new MachineSource((IActionHost) tile));
 			if (fluid == null || fluid.getStackSize() == 0) {
 				return null;
 			}
@@ -73,7 +68,7 @@ public class AE2FluidHandler implements ISonarFluidHandler {
 		IGridProxyable proxy = (IGridProxyable) tile;
 		try {
 			IStorageGrid storage = proxy.getProxy().getStorage();
-			StoredFluidStack fluid = SonarAPI.getFluidHelper().getStackToAdd(remove.stored, remove, AE2Helper.convertAEFluidStack(storage.getFluidInventory().extractItems(AE2Helper.convertStoredFluidStack(remove), AE2Helper.getActionable(action), new MachineSource(((IActionHost) tile)))));
+            StoredFluidStack fluid = SonarAPI.getFluidHelper().getStackToAdd(remove.stored, remove, AE2Helper.convertAEFluidStack(storage.getFluidInventory().extractItems(AE2Helper.convertStoredFluidStack(remove), AE2Helper.getActionable(action), new MachineSource((IActionHost) tile))));
 			if (fluid == null || fluid.stored == 0) {
 				return null;
 			}
@@ -83,5 +78,4 @@ public class AE2FluidHandler implements ISonarFluidHandler {
 		}
 		return remove;
 	}
-
 }

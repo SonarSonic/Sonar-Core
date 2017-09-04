@@ -1,9 +1,5 @@
 package sonar.core.client.renderers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -20,14 +16,18 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class SonarCustomStateMapper extends StateMapperBase implements ICustomModelLoader {
 
 	public final ArrayList<ISonarCustomRenderer> renderers;
 	public final Map<ResourceLocation, BlockRenderer<? extends TileEntity>> customModels;
 
 	public SonarCustomStateMapper() {
-		this.renderers = new ArrayList<ISonarCustomRenderer>();
-		this.customModels = new HashMap<ResourceLocation, BlockRenderer<? extends TileEntity>>();
+        this.renderers = new ArrayList<>();
+        this.customModels = new HashMap<>();
 		ModelLoaderRegistry.registerLoader(this);
 	}
 
@@ -47,7 +47,7 @@ public class SonarCustomStateMapper extends StateMapperBase implements ICustomMo
 			ClientRegistry.bindTileEntitySpecialRenderer(((ISonarTileRenderer) renderer).getTileEntity(), instance);
 		}
 		if (renderer.doInventoryRendering()) {
-			ModelResourceLocation itemModel = new ModelResourceLocation(blockModel.getResourceDomain() + ":" + blockModel.getResourcePath(), "inventory");
+            ModelResourceLocation itemModel = new ModelResourceLocation(blockModel.getResourceDomain() + ':' + blockModel.getResourcePath(), "inventory");
 			//customModels.put(itemModel, instance);
 			ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(block), renderer);
 		}

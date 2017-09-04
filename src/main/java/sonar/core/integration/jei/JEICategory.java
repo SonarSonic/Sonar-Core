@@ -1,11 +1,11 @@
 package sonar.core.integration.jei;
 
-import mezz.jei.api.recipe.BlankRecipeCategory;
+import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import sonar.core.helpers.FontHelper;
 
-public abstract class JEICategory extends BlankRecipeCategory implements IRecipeHandler<JEIRecipe> {
+public abstract class JEICategory implements IRecipeCategory, IRecipeHandler<JEIRecipe> {
 
 	private final IJEIHandler handler;
 

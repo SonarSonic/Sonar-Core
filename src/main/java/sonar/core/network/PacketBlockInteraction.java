@@ -47,6 +47,5 @@ public class PacketBlockInteraction extends PacketCoords {
 			}
 			return null;
 		}
-
 	}
 }

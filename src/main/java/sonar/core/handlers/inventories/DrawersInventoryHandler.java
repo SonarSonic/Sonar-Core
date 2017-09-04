@@ -1,10 +1,7 @@
 package sonar.core.handlers.inventories;
 
-import java.util.List;
-
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -15,10 +12,10 @@ import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 
-@InventoryHandler(modid="StorageDrawers", handlerID=DrawersInventoryHandler.name, priority = 2)
-public class DrawersInventoryHandler implements ISonarInventoryHandler {
+import java.util.List;
 
-	public static final String name = "Storage Drawers";
+@InventoryHandler(modid = "StorageDrawers", priority = 2)
+public class DrawersInventoryHandler implements ISonarInventoryHandler {
 
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {
@@ -83,4 +80,9 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
 	public StoredItemStack removeStack(StoredItemStack remove, TileEntity tile, EnumFacing dir, ActionType action) {
 		return remove;
 	}
+
+    @Override
+    public boolean isLargeInventory() {
+        return false;
+    }
 }

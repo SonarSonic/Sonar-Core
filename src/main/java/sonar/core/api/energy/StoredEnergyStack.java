@@ -7,14 +7,17 @@ import sonar.core.api.ISonarStack;
 import sonar.core.api.SonarAPI;
 import sonar.core.helpers.NBTHelper.SyncType;
 
-/** should only be in RF, inaccuracy due to conversion is a price we must pay at the moment */
+/**
+ * should only be in RF, inaccuracy due to conversion is a price we must pay at the moment
+ */
 public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 
 	public long stored, capacity, input, output, usage;
 	public boolean hasStorage, hasInput, hasOutput, hasUsage;
 	public EnergyType energyType;
 
-	public StoredEnergyStack() {}
+    public StoredEnergyStack() {
+    }
 
 	public StoredEnergyStack(EnergyType type) {
 		this.energyType = type;
@@ -171,6 +174,7 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 		return StorageTypes.ENERGY;
 	}
 
+    @Override
 	public StoredEnergyStack copy() {
 		StoredEnergyStack stack = new StoredEnergyStack(energyType);
 		stack.stored = stored;
@@ -244,8 +248,7 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 	}
 
 	public static long convert(long val, EnergyType current, EnergyType type) {
-		double inRF = (val / current.toRFConversion());
+        double inRF = val / current.toRFConversion();
 		return (long) (inRF * type.toRFConversion());
 	}
-
 }

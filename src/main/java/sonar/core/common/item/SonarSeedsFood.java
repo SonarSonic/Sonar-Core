@@ -1,9 +1,8 @@
 package sonar.core.common.item;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemFood;
@@ -21,6 +20,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.helpers.FontHelper;
 import sonar.core.integration.SonarLoader;
 
+import java.util.List;
+
 public class SonarSeedsFood extends ItemFood implements IPlantable {
 	private Block cropBlock;
 	private Block soilId;
@@ -35,8 +36,8 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
-		super.addInformation(stack, player, list, par4);
+    public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag par4) {
+        super.addInformation(stack, world, list, par4);
 
 		if (SonarLoader.calculatorLoaded()) {
 			String mode = FontHelper.translate("calculator.tools.calculator.greenhouse");
@@ -78,18 +79,17 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 		return EnumActionResult.PASS;
 	}
 
+    @Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
 		return cropBlock == Blocks.NETHER_WART ? EnumPlantType.Nether : EnumPlantType.Crop;
 	}
 
+    @Override
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
 		return cropBlock.getDefaultState();
 	}
 
 	public boolean canTierUse(int tier) {
-		if (tier >= this.greenhouseTier) {
-			return true;
-		}
-		return false;
+        return tier >= this.greenhouseTier;
 	}
 }

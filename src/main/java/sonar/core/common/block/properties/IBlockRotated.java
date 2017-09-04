@@ -5,5 +5,5 @@ import net.minecraft.util.EnumFacing;
 
 public interface IBlockRotated {
 
-	public EnumFacing getRotation(IBlockState state);
+    EnumFacing getRotation(IBlockState state);
 }

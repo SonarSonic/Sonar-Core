@@ -1,9 +1,9 @@
 package sonar.core.recipes;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.entity.player.EntityPlayer;
 
 public class DefaultSonarRecipe implements ISonarRecipe {
 	public ArrayList<ISonarRecipeObject> recipeInputs;
@@ -26,10 +26,12 @@ public class DefaultSonarRecipe implements ISonarRecipe {
 		return recipeOutputs;
 	}
 
+    @Override
 	public boolean matchingInputs(Object[] inputs) {
 		return RecipeHelperV2.matchingIngredients(RecipeObjectType.INPUT, recipeInputs, shapeless, inputs);
 	}
 
+    @Override
 	public boolean matchingOutputs(Object[] outputs) {
 		return RecipeHelperV2.matchingIngredients(RecipeObjectType.OUTPUT, recipeOutputs, shapeless, outputs);
 	}

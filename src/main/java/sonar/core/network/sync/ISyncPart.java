@@ -6,11 +6,11 @@ import sonar.core.helpers.NBTHelper.SyncType;
 
 public interface ISyncPart extends IDirtyPart, INBTSyncable {
 	
-	public void writeToBuf(ByteBuf buf);	
+    void writeToBuf(ByteBuf buf);
 
-	public void readFromBuf(ByteBuf buf);
+    void readFromBuf(ByteBuf buf);
 	
-	public boolean canSync(SyncType sync);
+    boolean canSync(SyncType sync);
 	
-	public String getTagName();
+    String getTagName();
 }

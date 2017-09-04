@@ -10,7 +10,7 @@
 "credits": "Created by Ollie Lansdell",
 "logoFile": "",
 "screenshots": [],
-"dependencies": ["cofhlib","cofhcore","cofhapi","wailaapi","forgemultipart"],
+"dependencies": ["redstoneflux","wailaapi","mekanism", "ic2"],
 "dependants": ["calculator","practicallogistics2","fluxnetworks"],
 "useDependencyInformation": true
 }

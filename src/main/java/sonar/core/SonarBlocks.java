@@ -1,32 +1,25 @@
 package sonar.core;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import sonar.core.common.block.BlockBase;
-import sonar.core.common.block.ConnectedBlock;
-import sonar.core.common.block.SonarBlockTip;
-import sonar.core.common.block.SonarFence;
-import sonar.core.common.block.SonarGate;
-import sonar.core.common.block.SonarMetaBlock;
-import sonar.core.common.block.SonarStairs;
-import sonar.core.common.block.StableStone;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import sonar.core.common.block.*;
 import sonar.core.common.block.StableStone.Variants;
+
+import java.util.ArrayList;
 
 public class SonarBlocks extends SonarCore {
 
-	public static ArrayList<Block> registeredBlocks = new ArrayList();
+    public static ArrayList<Block> registeredBlocks = new ArrayList<>();
 
 	public static Block registerBlock(String name, Block block) {
 		block.setCreativeTab(tab);
 		block.setUnlocalizedName(name);
 		block.setRegistryName(modid, name);
-		GameRegistry.register(block);
-		GameRegistry.register(new SonarBlockTip(block).setRegistryName(modid, name));
+        ForgeRegistries.BLOCKS.register(block);
+        ForgeRegistries.ITEMS.register(new SonarBlockTip(block).setRegistryName(modid, name));
 		registeredBlocks.add(block);
 		return block;
 	}
@@ -35,8 +28,8 @@ public class SonarBlocks extends SonarCore {
 		block.setCreativeTab(tab);
 		block.setUnlocalizedName(name);
 		block.setRegistryName(modid, name);
-		GameRegistry.register(block);
-		GameRegistry.register(new SonarMetaBlock(block).setRegistryName(modid, name));
+        ForgeRegistries.BLOCKS.register(block);
+        ForgeRegistries.ITEMS.register(new SonarMetaBlock(block).setRegistryName(modid, name));
 		registeredBlocks.add(block);
 		return block;
 	}
@@ -87,9 +80,9 @@ public class SonarBlocks extends SonarCore {
 		 */
 		int pos = 0;
 		for (Variants variant : Variants.values()) {
-			Block normal = registerBlock("StableStone" + "_" + variant.name(), new StableStone(Material.ROCK, 100 + pos).setHardness(2.0F));
-			Block rimmed = registerBlock("StableStoneRimmed" + "_" + variant.name(), new StableStone(Material.ROCK, 200 + pos).setHardness(2.0F));
-			Block black = registerBlock("StableStoneBlackRimmed" + "_" + variant.name(), new StableStone(Material.ROCK, 300 + pos).setHardness(2.0F));
+            Block normal = registerBlock("StableStone" + '_' + variant.name(), new StableStone(Material.ROCK, 100 + pos).setHardness(2.0F));
+            Block rimmed = registerBlock("StableStoneRimmed" + '_' + variant.name(), new StableStone(Material.ROCK, 200 + pos).setHardness(2.0F));
+            Block black = registerBlock("StableStoneBlackRimmed" + '_' + variant.name(), new StableStone(Material.ROCK, 300 + pos).setHardness(2.0F));
 			//if (pos == 0) {
 				stableStone[pos] = normal;
 				stablestonerimmedBlock[pos] = rimmed;

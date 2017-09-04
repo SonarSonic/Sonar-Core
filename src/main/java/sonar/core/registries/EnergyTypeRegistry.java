@@ -28,5 +28,4 @@ public class EnergyTypeRegistry extends RegistryHelper<EnergyType> {
 		}
 		return null;
 	}
-
 }

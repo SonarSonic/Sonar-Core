@@ -92,12 +92,12 @@ public abstract class SyncTagType<T> extends SyncPart {
 			this.current = (long) 0;
 		}
 
-		public void increaseBy(int i) {
+        public void increaseBy(long i) {
 			setObject(getObject() + i);
 			markChanged();
 		}
 
-		public void decreaseBy(int i) {
+        public void decreaseBy(long i) {
 			setObject(getObject() - i);
 			markChanged();
 		}
@@ -232,5 +232,4 @@ public abstract class SyncTagType<T> extends SyncPart {
 	public String toString() {
 		return current.toString();
 	}
-	
 }

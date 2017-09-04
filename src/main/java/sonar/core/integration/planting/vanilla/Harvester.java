@@ -1,13 +1,13 @@
 package sonar.core.integration.planting.vanilla;
 
-import java.util.List;
-
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import sonar.core.integration.planting.IHarvester;
+
+import java.util.List;
 
 public class Harvester implements IHarvester {
 
@@ -23,10 +23,7 @@ public class Harvester implements IHarvester {
 
 	@Override
 	public boolean canHarvest(World world, BlockPos pos, IBlockState state) {
-		if (state.getBlock() instanceof BlockCrops) {
-			return true;
-		}
-		return false;
+        return state.getBlock() instanceof BlockCrops;
 	}
 
 	@Override
@@ -47,5 +44,4 @@ public class Harvester implements IHarvester {
 		}
 		world.setBlockToAir(pos);
 	}
-
 }

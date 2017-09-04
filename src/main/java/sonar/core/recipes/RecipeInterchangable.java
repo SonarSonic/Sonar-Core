@@ -1,14 +1,14 @@
 package sonar.core.recipes;
 
+import net.minecraft.item.ItemStack;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.item.ItemStack;
 
 public class RecipeInterchangable implements ISonarRecipeObject, ISonarRecipeItem {
 
 	public List<ISonarRecipeObject> validInputs;
-	public List<Object> cachedObjects = new ArrayList();
+    public List<Object> cachedObjects = new ArrayList<>();
 
 	public RecipeInterchangable(List<ISonarRecipeObject> validInputs) {
 		this.validInputs = validInputs;
@@ -46,8 +46,8 @@ public class RecipeInterchangable implements ISonarRecipeObject, ISonarRecipeIte
 
 	@Override
 	public List<ItemStack> getJEIValue() {
-		ArrayList<ItemStack> values = new ArrayList<ItemStack>();
-		validInputs.forEach(obj -> obj.getJEIValue().forEach(stack -> values.add(stack)));
+        ArrayList<ItemStack> values = new ArrayList<>();
+        validInputs.forEach(obj -> values.addAll(obj.getJEIValue()));
 		return values;
 	}
 
@@ -55,5 +55,4 @@ public class RecipeInterchangable implements ISonarRecipeObject, ISonarRecipeIte
 	public int getStackSize() {
 		return validInputs.get(0).getStackSize();
 	}
-
 }

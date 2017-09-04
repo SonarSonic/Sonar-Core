@@ -1,10 +1,10 @@
-package sonar.core.network;
+/*package sonar.core.network;
 
 import java.util.UUID;
 
 import io.netty.buffer.ByteBuf;
-import mcmultipart.multipart.IMultipart;
-import mcmultipart.multipart.IMultipartContainer;
+import mcmultipart.api.container.IMultipartContainer;
+import mcmultipart.api.multipart.IMultipart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -64,3 +64,4 @@ public class PacketFlexibleMultipartChangeGui extends PacketMultipart {
 	}
 
 }
+*/

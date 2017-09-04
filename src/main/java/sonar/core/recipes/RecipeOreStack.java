@@ -1,10 +1,10 @@
 package sonar.core.recipes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeOreStack implements ISonarRecipeObject, ISonarRecipeItem {
 
@@ -14,7 +14,7 @@ public class RecipeOreStack implements ISonarRecipeObject, ISonarRecipeItem {
 
 	public RecipeOreStack(String oreType, int stackSize) {
 		this.oreType = oreType;
-		List<ItemStack> stacks = new ArrayList();
+        List<ItemStack> stacks = new ArrayList<>();
 		for (ItemStack ore : OreDictionary.getOres(oreType)) {
 			ItemStack newStack = ore.copy();
 			newStack.setCount(stackSize);

@@ -9,20 +9,20 @@ import sonar.core.inventory.SonarLargeInventory;
 public class TileEntityLargeInventory extends TileEntitySonar implements ILargeInventory {
 	public SonarLargeInventory inv;
 
-	public TileEntityLargeInventory() {}
+    public TileEntityLargeInventory() {
+    }
 	
 	public TileEntityLargeInventory(int size, int numStacks) {
 		inv = new SonarLargeInventory(size, numStacks);
 		syncList.addPart(inv);
 	}
 
+    @Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
+        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability || super.hasCapability(capability, facing);
 	}
 
+    @Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
 			return (T) inv.embeddedHandler;
@@ -34,5 +34,4 @@ public class TileEntityLargeInventory extends TileEntitySonar implements ILargeI
 	public SonarLargeInventory getTileInv() {
 		return inv;
 	}
-
 }

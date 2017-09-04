@@ -1,7 +1,7 @@
 package sonar.core.common.tileentity;
 
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
+import cofh.redstoneflux.api.IEnergyProvider;
+import cofh.redstoneflux.api.IEnergyReceiver;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyAcceptor;
@@ -15,6 +15,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fml.common.Optional;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.energy.EnergyMode;
 import sonar.core.api.energy.ISonarEnergyTile;
@@ -26,6 +27,10 @@ import sonar.core.integration.SonarLoader;
 import sonar.core.network.sync.SyncEnergyStorage;
 import sonar.core.network.sync.SyncSidedEnergyStorage;
 
+@Optional.InterfaceList({
+        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyProvider", modid = "redstoneflux"),
+        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyReceiver", modid = "redstoneflux")
+})
 public class TileEntityEnergySidedInventory extends TileEntitySidedInventory implements IEnergyReceiver, IEnergyProvider, ISonarEnergyTile, IEnergySource, IEnergySink {
 
 	public TileEntityEnergySidedInventory() {
@@ -41,6 +46,7 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 		energyMode = mode;
 	}
 
+    @Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		super.readData(nbt, type);
 		if (type.isType(SyncType.DROP)) {
@@ -48,6 +54,7 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 		}
 	}
 
+    @Override
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
 		if (type.isType(SyncType.DROP)) {
@@ -71,25 +78,27 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 		}
 	}
 
+    @Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		EnergyMode mode = getModeForSide(facing);
 		if (CapabilityEnergy.ENERGY == capability) {
 			return true;
 		}
 		if (SonarLoader.teslaLoaded && mode.canConnect()) {
-			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+            if (capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve() || capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend() || capability == TeslaCapabilities.CAPABILITY_HOLDER)
 				return true;
 		}
 		return super.hasCapability(capability, facing);
 	}
 
+    @Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		EnergyMode mode = getModeForSide(facing);
 		if (CapabilityEnergy.ENERGY == capability) {
 			return (T)storage.setCurrentFace(facing);
 		}
 		if (SonarLoader.teslaLoaded && mode.canConnect()) {
-			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve()) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend()) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+            if (capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve() || capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend() || capability == TeslaCapabilities.CAPABILITY_HOLDER)
 				return (T) storage;
 		}
 		return super.getCapability(capability, facing);
@@ -115,30 +124,36 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 
 	///// * CoFH *//////
 	@Override
+    @Optional.Method(modid = "redstoneflux")
 	public final boolean canConnectEnergy(EnumFacing from) {
 		return getModeForSide(from).canConnect();
 	}
 
 	@Override
+    @Optional.Method(modid = "redstoneflux")
 	public final int getEnergyStored(EnumFacing from) {
 		return storage.getEnergyStored();
 	}
 
 	@Override
+    @Optional.Method(modid = "redstoneflux")
 	public final int getMaxEnergyStored(EnumFacing from) {
 		return storage.getMaxEnergyStored();
 	}
 
 	@Override
+    @Optional.Method(modid = "redstoneflux")
 	public final int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
 		return getModeForSide(from).canSend() ? storage.extractEnergy(maxExtract, simulate) : 0;
 	}
 
 	@Override
+    @Optional.Method(modid = "redstoneflux")
 	public final int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 		return getModeForSide(from).canRecieve() ? storage.receiveEnergy(maxReceive, simulate) : 0;
 	}
 
+    @Override
 	public void onFirstTick() {
 		super.onFirstTick();
 		if (isServer() && SonarLoader.ic2Loaded()) {
@@ -147,9 +162,9 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	}
 
 	@Override
-	public void onChunkUnload() {
-		super.onChunkUnload();
-		if (isServer() && SonarLoader.ic2Loaded()) {
+    public void invalidate() {
+        super.invalidate();
+        if (!this.getWorld().isRemote && SonarLoader.ic2Loaded()) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 		}
 	}
@@ -173,8 +188,8 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	@Override
 	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
 		int addRF = this.storage.receiveEnergy((int) amount * 4, true);
-		this.storage.addEnergy((int) addRF, ActionType.getTypeForAction(false));
-		return amount - (addRF / 4);
+        this.storage.addEnergy(addRF, ActionType.getTypeForAction(false));
+        return amount - addRF / 4;
 	}
 
 	@Override
@@ -190,12 +205,10 @@ public class TileEntityEnergySidedInventory extends TileEntitySidedInventory imp
 	@Override
 	public void drawEnergy(double amount) {
 		this.storage.removeEnergy((long) (amount * 4), ActionType.getTypeForAction(false));
-
 	}
 
 	@Override
 	public int getSourceTier() {
 		return 4;
 	}
-
 }

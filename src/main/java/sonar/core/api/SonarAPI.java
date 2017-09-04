@@ -6,7 +6,9 @@ import sonar.core.api.wrappers.FluidWrapper;
 import sonar.core.api.wrappers.InventoryWrapper;
 import sonar.core.api.wrappers.RegistryWrapper;
 
-/** Use this for all your interaction with the mod. This will be initilized by Sonar Core if it is loaded. Make sure you only register stuff once Sonar Core is loaded therefore in the FMLPostInitializationEvent */
+/**
+ * Use this for all your interaction with the mod. This will be initilized by Sonar Core if it is loaded. Make sure you only register stuff once Sonar Core is loaded therefore in the FMLPostInitializationEvent
+ */
 public final class SonarAPI {
 
 	public static final String MODID = "sonarcore";

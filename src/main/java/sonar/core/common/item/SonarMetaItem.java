@@ -1,9 +1,6 @@
 package sonar.core.common.item;
 
-import java.util.List;
-
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,18 +15,21 @@ public class SonarMetaItem extends SonarItem {
 		this.hasSubtypes = true;
 	}
 
+    @Override
 	public int getMaxDamage() {
 		return 0;
 	}
 
+    @Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
 		for (int i = 0; i < numSubItems; i++) {
 			list.add(new ItemStack(this, 1, i));
 		}
 	}
 
+    @Override
 	public String getUnlocalizedName(ItemStack stack) {
-		return getUnlocalizedName() + "." + stack.getItemDamage();
+        return getUnlocalizedName() + '.' + stack.getItemDamage();
 	}
 }

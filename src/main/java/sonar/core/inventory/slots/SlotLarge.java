@@ -14,17 +14,20 @@ public class SlotLarge extends Slot {
 		largeInv = inventoryIn;
 	}
 
+    @Override
 	public int getSlotStackLimit() {
 		return largeInv.numStacks * 64;
 	}
 
+    @Override
 	public boolean isItemValid(ItemStack stack) {
 		if (stack.isEmpty())
 			return false;
 		StoredItemStack stored = largeInv.getLargeStack(getSlotIndex());
-		return stored == null ? largeInv.isItemValidForSlot(getSlotIndex(), stack) : stored.equalStack(stack);
+        return stored == null ? largeInv.isItemValidForPos(getSlotIndex(), stack) : stored.equalStack(stack);
 	}
 
+    @Override
 	public ItemStack getStack() {
 		StoredItemStack stored = largeInv.getLargeStack(getSlotIndex());
 		if (stored != null && stored.getStackSize()!=0) {
@@ -35,27 +38,29 @@ public class SlotLarge extends Slot {
 		return ItemStack.EMPTY;
 	}
 
+    @Override
 	public void putStack(ItemStack stack) {
 		largeInv.slots[getSlotIndex()] = stack != null && stack.getCount() != 0 ? new StoredItemStack(stack) : null;
 		onSlotChanged();
 	}
 
+    @Override
 	public ItemStack decrStackSize(int amount) {
 		return this.inventory.decrStackSize(getSlotIndex() * largeInv.numStacks, amount);
 	}
 
+    @Override
 	public void onSlotChanged() {
 		largeInv.markDirty();
 	}
 
+    @Override
 	public boolean isHere(IInventory inv, int slotIn) {
 		return slotIn == this.getSlotIndex();
 	}
 
+    @Override
 	public boolean isSameInventory(Slot other) {
-		if (other instanceof SlotLarge) {
-			return this.largeInv == ((SlotLarge) other).largeInv;
-		}
-		return false;
+        return other instanceof SlotLarge && this.largeInv == ((SlotLarge) other).largeInv;
 	}
 }

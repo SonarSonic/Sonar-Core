@@ -16,5 +16,4 @@ public class HarvesterRegistry extends RegistryHelper<IHarvester> {
 	public String registeryType() {
 		return "Harvesters";
 	}
-
 }

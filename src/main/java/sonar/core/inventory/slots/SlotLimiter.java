@@ -6,7 +6,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-
 public class SlotLimiter extends Slot {
 
 	public Item item;
@@ -16,17 +15,13 @@ public class SlotLimiter extends Slot {
 		this.item = disabled;
 	}
 
+    @Override
 	public boolean canTakeStack(EntityPlayer player) {
-		if (this.getStack() != null && this.getStack().getItem() == item) {
-			return false;
-		}
-		return true;
+        return this.getStack() == null || this.getStack().getItem() != item;
 	}
 
+    @Override
 	public boolean isItemValid(ItemStack stack) {
-		if (stack ==null || stack.getItem() == item) {
-			return false;
-		}
-		return true;
+        return stack != null && stack.getItem() != item;
 	}
 }

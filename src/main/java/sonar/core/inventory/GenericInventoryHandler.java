@@ -1,19 +1,16 @@
 package sonar.core.inventory;
 
-import java.util.List;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.StorageSize;
-import sonar.core.api.asm.InventoryHandler;
-import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.InventoryHelper;
+
+import java.util.List;
 
 public class GenericInventoryHandler {
 
@@ -41,7 +38,7 @@ public class GenericInventoryHandler {
 		}
 		for (int i = 0; i < invSize; i++) {
 			final int slot = slots != null ? slots[i] : i;
-			if ((!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, add.item, dir))) {
+            if (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, add.item, dir)) {
 				if (!InventoryHelper.addStack(inv, add, slot, limit, action)) {
 					return null;
 				}

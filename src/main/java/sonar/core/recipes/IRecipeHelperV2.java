@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public interface IRecipeHelperV2<T extends ISonarRecipe> {
 
-	public ArrayList<T> getRecipes();
+    ArrayList<T> getRecipes();
 	
-	public String getRecipeID();
+    String getRecipeID();
 }

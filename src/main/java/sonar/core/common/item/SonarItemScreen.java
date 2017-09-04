@@ -18,7 +18,7 @@ public abstract class SonarItemScreen extends SonarItem {
 			return EnumActionResult.PASS;
 		}
 		Block target = world.getBlockState(pos).getBlock();
-		if (!target.isBlockSolid(world, pos, side) || target == getScreenBlock() || !target.hasTileEntity(world.getBlockState(pos))) {
+        if (target == getScreenBlock() || !target.hasTileEntity(world.getBlockState(pos))) {
 			return EnumActionResult.PASS;
 		} else {
 			if (!player.canPlayerEdit(pos, side, stack)) {

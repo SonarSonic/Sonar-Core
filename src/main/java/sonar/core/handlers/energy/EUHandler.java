@@ -12,10 +12,8 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.EUHelper;
 
-@EnergyHandler(modid = "IC2", handlerID = EUHandler.name, priority = 4)
+@EnergyHandler(modid = "IC2", priority = 4)
 public class EUHandler implements ISonarEnergyHandler {
-
-	public static final String name = "EU-Provider";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
@@ -55,7 +53,7 @@ public class EUHandler implements ISonarEnergyHandler {
 
 			if (!action.shouldSimulate()) {
 				int maxAdd = (int) transfer.stored;
-				transfer.stored -= (maxAdd - sink.injectEnergy(dir, maxAdd, EUHelper.getVoltage(sink.getSinkTier())));
+                transfer.stored -= maxAdd - sink.injectEnergy(dir, maxAdd, EUHelper.getVoltage(sink.getSinkTier()));
 			} else {
 				transfer.stored -= Math.min(sink.getDemandedEnergy(), EUHelper.getVoltage(sink.getSinkTier()));
 			}
@@ -94,5 +92,4 @@ public class EUHandler implements ISonarEnergyHandler {
 	public EnergyType getProvidedType() {
 		return EnergyType.EU;
 	}
-
 }

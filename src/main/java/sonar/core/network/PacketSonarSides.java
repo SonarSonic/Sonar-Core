@@ -16,7 +16,8 @@ public class PacketSonarSides extends PacketCoords<PacketSonarSides> {
 	public EnumFacing side;
 	public MachineSideConfig config;
 	
-	public PacketSonarSides() {}
+    public PacketSonarSides() {
+    }
 
 	public PacketSonarSides(BlockPos pos, EnumFacing side, MachineSideConfig config) {
 		super(pos);
@@ -37,6 +38,7 @@ public class PacketSonarSides extends PacketCoords<PacketSonarSides> {
 		buf.writeInt(side.getIndex());
 		buf.writeInt(config.ordinal());
 	}
+
 	public static class Handler extends PacketTileEntityHandler<PacketSonarSides> {
 
 		@Override
@@ -51,5 +53,4 @@ public class PacketSonarSides extends PacketCoords<PacketSonarSides> {
 			return null;
 		}
 	}
-
 }

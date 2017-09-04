@@ -1,18 +1,18 @@
 package sonar.core.helpers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import gnu.trove.map.hash.THashMap;
 import sonar.core.SonarCore;
 import sonar.core.api.IRegistryObject;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public abstract class RegistryHelper<T extends IRegistryObject> {
 
-	private List<T> objects = new ArrayList();
-	private Map<String, Integer> objectIDs = new THashMap<String, Integer>();
-	private Map<Integer, String> objectNames = new THashMap<Integer, String>();
+    private List<T> objects = new ArrayList<>();
+    private Map<String, Integer> objectIDs = new THashMap<>();
+    private Map<Integer, String> objectNames = new THashMap<>();
 
 	public abstract void register();
 
@@ -81,5 +81,4 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 	public T getDefault(){
 		return null;
 	}
-
 }
