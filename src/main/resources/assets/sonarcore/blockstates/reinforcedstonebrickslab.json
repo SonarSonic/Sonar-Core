@@ -10,14 +10,8 @@
         "transform":"forge:default-block"
      },
     "variants": {
-    "inventory": [
-      {}
-    ],
-    "half=bottom": {
-      "model": "half_slab"
-    },
-    "half=top": {
-      "model": "upper_slab"
-    }
+        "inventory": [{}],        
+        "half=bottom": { "model":"half_slab" },
+        "half=top": { "model":"upper_slab" }
     }
 }

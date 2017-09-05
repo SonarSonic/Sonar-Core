@@ -1,18 +1,12 @@
 {
     "forge_marker": 1,
     "defaults": {
-    "textures": {
-      "all": "sonarcore:blocks/tougheneddirt"
-    },
+        "textures": {"all":"sonarcore:blocks/tougheneddirt"},
         "model":"cube_all",
         "transform":"forge:default-block"
      },
     "variants": {
-    "normal": [
-      {}
-    ],
-    "inventory": [
-      {}
-    ]
+        "normal": [{}],
+        "inventory": [{}]
     }
 }
