@@ -5,7 +5,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-/** a slot which doesn't allow Item Stacks to be placed in it */
+/**
+ * a slot which doesn't allow Item Stacks to be placed in it
+ */
 public class SlotBlockedInventory extends Slot {
 	private int stackSize;
 

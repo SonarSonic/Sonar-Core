@@ -1,13 +1,5 @@
 package sonar.core;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,9 +20,12 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.energy.ISonarEnergyContainerHandler;
 import sonar.core.api.energy.ISonarEnergyHandler;
@@ -46,35 +41,22 @@ import sonar.core.integration.SonarWailaModule;
 import sonar.core.integration.planting.FertiliserRegistry;
 import sonar.core.integration.planting.HarvesterRegistry;
 import sonar.core.integration.planting.PlanterRegistry;
-import sonar.core.network.FlexibleGuiHandler;
-import sonar.core.network.PacketBlockInteraction;
-import sonar.core.network.PacketByteBuf;
-import sonar.core.network.PacketByteBufMultipart;
-import sonar.core.network.PacketFlexibleMultipartChangeGui;
-import sonar.core.network.PacketFlexibleCloseGui;
-import sonar.core.network.PacketFlexibleContainer;
-import sonar.core.network.PacketFlexibleItemStackChangeGui;
-import sonar.core.network.PacketFlexibleOpenGui;
-import sonar.core.network.PacketInvUpdate;
-import sonar.core.network.PacketMultipartSync;
-import sonar.core.network.PacketRequestMultipartSync;
-import sonar.core.network.PacketRequestSync;
-import sonar.core.network.PacketSonarSides;
-import sonar.core.network.PacketStackUpdate;
-import sonar.core.network.PacketTileSync;
-import sonar.core.network.PacketTileSyncUpdate;
-import sonar.core.network.SonarCommon;
+import sonar.core.network.*;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.registries.EnergyTypeRegistry;
 import sonar.core.registries.ISonarRegistryBlock;
 import sonar.core.registries.ISonarRegistryItem;
 import sonar.core.upgrades.MachineUpgradeRegistry;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 @Mod(modid = SonarCore.modid, name = "SonarCore", version = SonarCore.version)
 public class SonarCore {
 
 	public static final String modid = "sonarcore";
-	public static final String version = "4.0.0";
+    public static final String version = "5.0.0";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -121,9 +103,9 @@ public class SonarCore {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		logger.info("Initilising API");
+        logger.info("Initialising API");
 		SonarAPI.init();
-		logger.info("Initilised API");
+        logger.info("Initialised API");
 
 		logger.info("Registering Blocks");
 		SonarBlocks.registerBlocks();
@@ -133,10 +115,6 @@ public class SonarCore {
 		SonarCrafting.registerCraftingRecipes();
 		logger.info("Register Crafting Recipes");
 
-		logger.info("Registering Renderers");
-		proxy.registerRenderThings();
-		logger.info("Registered Renderers");
-
 		for (int i = 0; i < 16; i++) {
 			OreDictionary.registerOre("sonarStableStone", SonarCore.stableStone[i]);
 			OreDictionary.registerOre("sonarStableStone", SonarCore.stablestonerimmedBlock[i]);
@@ -145,6 +123,7 @@ public class SonarCore {
 
 		ASMDataTable asmDataTable = event.getAsmData();
 		ASMLoader.load(asmDataTable);
+        proxy.preInit(event);
 	}
 
 	@EventHandler
@@ -169,6 +148,7 @@ public class SonarCore {
 		planters.register();
 		harvesters.register();
 		fertilisers.register();
+        proxy.load(event);
 	}
 
 	@EventHandler
@@ -185,6 +165,7 @@ public class SonarCore {
 		logger.info("Registered " + energyHandlers.size() + " Energy Handlers");
 		logger.info("Registered " + energyContainerHandlers.size() + " Energy Container Providers");
 		logger.info("Registered " + machineUpgrades.getMap().size() + " Machine Upgrades");
+        proxy.postLoad(event);
 	}
 
 	private void registerPackets() {
@@ -200,35 +181,35 @@ public class SonarCore {
 			network.registerMessage(PacketInvUpdate.Handler.class, PacketInvUpdate.class, 8, Side.CLIENT);
 			network.registerMessage(PacketTileSyncUpdate.Handler.class, PacketTileSyncUpdate.class, 9, Side.CLIENT);
 			
-			if (SonarLoader.mcmultipartLoaded) {
+            /*if (SonarLoader.mcmultipartLoaded) {
 				network.registerMessage(PacketMultipartSync.Handler.class, PacketMultipartSync.class, 10, Side.CLIENT);
 				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 11, Side.CLIENT);
 				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 12, Side.SERVER);
 				network.registerMessage(PacketRequestMultipartSync.Handler.class, PacketRequestMultipartSync.class, 13, Side.SERVER);
-			}
+            }*/
 			network.registerMessage(PacketFlexibleOpenGui.Handler.class, PacketFlexibleOpenGui.class, 14, Side.CLIENT);
 			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 15, Side.CLIENT);
 			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 16, Side.SERVER);
 			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 17, Side.CLIENT);
 			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 18, Side.SERVER);
-			network.registerMessage(PacketFlexibleMultipartChangeGui.Handler.class, PacketFlexibleMultipartChangeGui.class, 19, Side.SERVER);
+            //network.registerMessage(PacketFlexibleMultipartChangeGui.Handler.class, PacketFlexibleMultipartChangeGui.class, 19, Side.SERVER);
 			network.registerMessage(PacketFlexibleItemStackChangeGui.Handler.class, PacketFlexibleItemStackChangeGui.class, 20, Side.SERVER);
 		}
 	}
 
-	public static void registerItems(ArrayList<ISonarRegistryItem> items) {
+    public static void registerItems(List<ISonarRegistryItem> items) {
 		for (ISonarRegistryItem item : items) {
 			Item toRegister = item.getItem();
-			GameRegistry.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(item.getRegistryName()) : toRegister);
+            ForgeRegistries.ITEMS.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(item.getRegistryName()) : toRegister);
 			item.setItem(toRegister);
 		}
 	}
 
-	public static void registerBlocks(ArrayList<ISonarRegistryBlock> blocks) {
+    public static void registerBlocks(List<ISonarRegistryBlock> blocks) {
 		for (ISonarRegistryBlock block : blocks) {
 			Block toRegister = block.getBlock();
-			GameRegistry.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(block.getRegistryName()) : toRegister);
-			GameRegistry.register(new SonarBlockTip(toRegister).setRegistryName(block.getRegistryName()));
+            ForgeRegistries.BLOCKS.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(block.getRegistryName()) : toRegister);
+            ForgeRegistries.ITEMS.register(new SonarBlockTip(toRegister).setRegistryName(block.getRegistryName()));
 			block.setBlock(toRegister);
 			if (block.hasTileEntity()) {
 				GameRegistry.registerTileEntity(block.getTileEntity(), block.getRegistryName());
@@ -278,6 +259,6 @@ public class SonarCore {
 	}
 
 	public static int randInt(int min, int max) {
-		return rand.nextInt((max - min) + 1) + min;
+        return rand.nextInt(max - min + 1) + min;
 	}
 }

@@ -1,9 +1,6 @@
 package sonar.core.utils;
 
-import java.util.ArrayList;
-
 import com.google.common.collect.Lists;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +13,8 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.PacketSonarSides;
 import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.ISyncPart;
+
+import java.util.ArrayList;
 
 public class MachineSides extends DirtyPart implements ISyncPart {
 
@@ -37,10 +36,10 @@ public class MachineSides extends DirtyPart implements ISyncPart {
 		for (Object object : blocked) {
 			if (object != null) {
 				if (object instanceof EnumFacing) {
-					allowedDirs.remove((EnumFacing) object);
+                    allowedDirs.remove(object);
 				}
 				if (object instanceof MachineSideConfig) {
-					allowedSides.remove((MachineSideConfig) object);
+                    allowedSides.remove(object);
 				}
 			}
 		}
@@ -55,7 +54,7 @@ public class MachineSides extends DirtyPart implements ISyncPart {
 	}
 
 	public void sendPacket(int dimension, EnumFacing side) {
-		if ((tile instanceof IMachineSides)) {
+        if (tile instanceof IMachineSides) {
 			BlockPos pos = tile.getPos();
 			SonarCore.network.sendToAllAround(new PacketSonarSides(pos, side, getSideConfig(side)), new TargetPoint(dimension, pos.getX(), pos.getY(), pos.getZ(), 64));
 		}
@@ -123,9 +122,9 @@ public class MachineSides extends DirtyPart implements ISyncPart {
 	}
 
 	public ArrayList<EnumFacing> getSidesWithConfig(MachineSideConfig side) {
-		ArrayList<EnumFacing> sides = new ArrayList();
+        ArrayList<EnumFacing> sides = new ArrayList<>();
 		for (EnumFacing facing : allowedDirs) {
-			if (configs[facing.getIndex()].name() == side.name()) {
+            if (configs[facing.getIndex()].name().equals(side.name())) {
 				sides.add(facing);
 			}
 		}
@@ -150,7 +149,7 @@ public class MachineSides extends DirtyPart implements ISyncPart {
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		NBTTagCompound sideNBT = new NBTTagCompound();
 		for (int i = 0; i < 6; i++) {
-			sideNBT.setInteger("" + i, configs[i].ordinal());
+            sideNBT.setInteger(String.valueOf(i), configs[i].ordinal());
 		}
 		nbt.setTag(getTagName(), sideNBT);
 		return nbt;
@@ -160,8 +159,8 @@ public class MachineSides extends DirtyPart implements ISyncPart {
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		NBTTagCompound sideNBT = nbt.getCompoundTag(getTagName());
 		for (int i = 0; i < 6; i++) {
-			if (sideNBT.hasKey("" + i)) {
-				MachineSideConfig side = MachineSideConfig.values()[sideNBT.getInteger("" + i)];
+            if (sideNBT.hasKey(String.valueOf(i))) {
+                MachineSideConfig side = MachineSideConfig.values()[sideNBT.getInteger(String.valueOf(i))];
 				if (side != null)
 					configs[i] = side;
 			}

@@ -9,7 +9,7 @@ import sonar.core.utils.IMachineSides;
 import sonar.core.utils.MachineSideConfig;
 import sonar.core.utils.MachineSides;
 
-public abstract class TileEntitySidedInventory extends TileEntityInventory implements IMachineSides, ISidedInventory {
+public class TileEntitySidedInventory extends TileEntityInventory implements IMachineSides, ISidedInventory {
 
 	public MachineSides sides = new MachineSides(MachineSideConfig.INPUT, this, MachineSideConfig.NONE);
 	public int[] input, output;
@@ -39,13 +39,12 @@ public abstract class TileEntitySidedInventory extends TileEntityInventory imple
 		return sides;
 	}
 
+    @Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
+        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability || super.hasCapability(capability, facing);
 	}
 
+    @Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
 			return (T) inv.getItemHandler(facing);

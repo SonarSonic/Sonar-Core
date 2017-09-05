@@ -1,18 +1,7 @@
 package sonar.core.client.renderers;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.google.common.collect.ImmutableList;
-
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelBox;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.model.PositionTextureVertex;
-import net.minecraft.client.model.TexturedQuad;
+import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -22,8 +11,17 @@ import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-/** Class to render Techne models in 1.8+'s rendering system. Create one object of this class for every Techne model you wish to render, Call getBakedQuads with the desired vertex format to get a list of baked quads, it is advised to cache this.
- * @param <M> the generic type of your Techne model */
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Class to render Techne models in 1.8+'s rendering system. Create one object of this class for every Techne model you wish to render, Call getBakedQuads with the desired vertex format to get a list of baked quads, it is advised to cache this.
+ *
+ * @param <M> the generic type of your Techne model
+ */
 @SideOnly(Side.CLIENT)
 public class ModelTechne<M extends ModelBase> {
 	private final M model;
@@ -48,12 +46,14 @@ public class ModelTechne<M extends ModelBase> {
 		return texturedQuads;
 	}
 
-	/** Returns a list of baked quads to render this Techne model, use this method when the texture of the model is stitched to the texturemap The returned list should be cached.
+    /**
+     * Returns a list of baked quads to render this Techne model, use this method when the texture of the model is stitched to the texturemap The returned list should be cached.
 	 *
 	 * @param format vertex format to create baked quads with
 	 * @param icon an icon stitched to the texture map used to render this model
 	 * @param scale the scale factor to apply to the model
-	 * @return an immutable list of baked quads for this model */
+     * @return an immutable list of baked quads for this model
+     */
 	public List<BakedQuad> getBakedQuads(VertexFormat format, TextureAtlasSprite icon, double scale) {
 		if (icon == null) {
 			return getBakedQuads(format, scale);
@@ -66,11 +66,13 @@ public class ModelTechne<M extends ModelBase> {
 		}
 	}
 
-	/** Returns a list of baked quads to render this Techne model, use this method to render from a separate texture. The texture has to be bound first using Minecraft.getMinecraft().renderEngine.bindTexture() The returned list should be cached.
+    /**
+     * Returns a list of baked quads to render this Techne model, use this method to render from a separate texture. The texture has to be bound first using Minecraft.getMinecraft().renderEngine.bindTexture() The returned list should be cached.
 	 *
 	 * @param format vertex format to create baked quads with
 	 * @param scale the scale factor to apply to the model
-	 * @return an immutable list of baked quads for this model */
+     * @return an immutable list of baked quads for this model
+     */
 	public List<BakedQuad> getBakedQuads(VertexFormat format, double scale) {
 		List<BakedQuad> list = new ArrayList<>();
 		for (Tuple<ModelRenderer, List<TexturedQuad>> tuple : getTexturedQuads()) {
@@ -128,13 +130,13 @@ public class ModelTechne<M extends ModelBase> {
 		Vec3d vec3d = quad.vertexPositions[1].vector3D.subtractReverse(quad.vertexPositions[0].vector3D);
 		Vec3d vec3d1 = quad.vertexPositions[1].vector3D.subtractReverse(quad.vertexPositions[2].vector3D);
 		Vec3d vec3d2 = vec3d1.crossProduct(vec3d).normalize();
-		double[] normal = matrix.transform(vec3d2.xCoord, vec3d2.yCoord, vec3d2.zCoord);
+        double[] normal = matrix.transform(vec3d2.x, vec3d2.y, vec3d2.z);
 
 		//define vertex data for the quad
 		VertexData[] vertexData = new VertexData[quad.vertexPositions.length];
 		for (int i = 0; i < vertexData.length; i++) {
 			PositionTextureVertex vertex = quad.vertexPositions[i];
-			double[] pos = matrix.transform(vertex.vector3D.xCoord * scale, vertex.vector3D.yCoord * scale, vertex.vector3D.zCoord * scale);
+            double[] pos = matrix.transform(vertex.vector3D.x * scale, vertex.vector3D.y * scale, vertex.vector3D.z * scale);
 			vertexData[i] = new VertexData(format, (float) pos[0], (float) pos[1], (float) pos[2], icon.getInterpolatedU(vertex.texturePositionX * 16), icon.getInterpolatedV(vertex.texturePositionY * 8));
 			vertexData[i].setRGBA(1, 1, 1, 1);
 			vertexData[i].setNormal((float) normal[0], (float) normal[1], (float) normal[2]);
@@ -156,13 +158,13 @@ public class ModelTechne<M extends ModelBase> {
 		Vec3d vec3d = quad.vertexPositions[1].vector3D.subtractReverse(quad.vertexPositions[0].vector3D);
 		Vec3d vec3d1 = quad.vertexPositions[1].vector3D.subtractReverse(quad.vertexPositions[2].vector3D);
 		Vec3d vec3d2 = vec3d1.crossProduct(vec3d).normalize();
-		double[] normal = matrix.transform(vec3d2.xCoord, vec3d2.yCoord, vec3d2.zCoord);
+        double[] normal = matrix.transform(vec3d2.x, vec3d2.y, vec3d2.z);
 
 		//define vertex data for the quad
 		VertexData[] vertexData = new VertexData[quad.vertexPositions.length];
 		for (int i = 0; i < vertexData.length; i++) {
 			PositionTextureVertex vertex = quad.vertexPositions[i];
-			double[] pos = matrix.transform(vertex.vector3D.xCoord * scale, vertex.vector3D.yCoord * scale, vertex.vector3D.zCoord * scale);
+            double[] pos = matrix.transform(vertex.vector3D.x * scale, vertex.vector3D.y * scale, vertex.vector3D.z * scale);
 			vertexData[i] = new VertexData(format, (float) pos[0], (float) pos[1], (float) pos[2], vertex.texturePositionX, vertex.texturePositionY);
 			vertexData[i].setRGBA(1, 1, 1, 1);
 			vertexData[i].setNormal((float) normal[0], (float) normal[1], (float) normal[2]);

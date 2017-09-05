@@ -1,26 +1,26 @@
 package sonar.core.integration.jei;
 
-import java.util.ArrayList;
-
 import mezz.jei.api.IGuiHelper;
 import net.minecraft.item.ItemStack;
 import sonar.core.recipes.IRecipeHelperV2;
 
+import java.util.List;
+
 public interface IJEIHandler {
 	
-	public JEICategoryV2 getCategory(IGuiHelper guiHelper);
+    JEICategoryV2 getCategory(IGuiHelper guiHelper);
 	
-	public String getTextureName();
+    String getTextureName();
 	
-	public String getTitle();
+    String getTitle();
 	
-	public Class getRecipeClass();
+    Class getRecipeClass();
 
-	public String getUUID();
+    String getUUID();
 		
-	public IRecipeHelperV2 getRecipeHelper();
+    IRecipeHelperV2 getRecipeHelper();
 	
-	public ArrayList<JEIRecipeV2> getJEIRecipes();
+    List<JEIRecipeV2> getJEIRecipes();
 	
-	public ItemStack getCrafterItemStack();
+    ItemStack getCrafterItemStack();
 }

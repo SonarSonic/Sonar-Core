@@ -17,8 +17,10 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 		entity = (ILargeInventory) tile;
 	}
 
-	/** a rewrite of the mergeItemStack which accommodates for a
-	 * {@link ILargeInventory} */
+    /**
+     * a rewrite of the mergeItemStack which accommodates for a
+     * {@link ILargeInventory}
+     */
 	protected boolean mergeSpecial(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection) {
 		boolean flag = false;
 		int i = startIndex;
@@ -29,7 +31,7 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 
 		if (stack.isStackable()) {
 			while (stack.getCount() > 0 && (!reverseDirection && i < endIndex || reverseDirection && i >= startIndex)) {
-				Slot slot = (Slot) this.inventorySlots.get(i);
+                Slot slot = this.inventorySlots.get(i);
 				ItemStack itemstack = slot.getStack();
 				StoredItemStack stored = entity.getTileInv().getLargeStack(i);
 
@@ -75,7 +77,7 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 			}
 
 			while (!reverseDirection && i < endIndex || reverseDirection && i >= startIndex) {
-				Slot slot1 = (Slot) this.inventorySlots.get(i);
+                Slot slot1 = this.inventorySlots.get(i);
 				ItemStack itemstack1 = slot1.getStack();
 				if (slot1.isItemValid(stack)) {
 					if (slot1 instanceof SlotLarge) {
@@ -98,7 +100,6 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 								break;
 							}
 						}
-
 					} else if (itemstack1.isEmpty()) {
 						slot1.putStack(stack.copy());
 						slot1.onSlotChanged();
@@ -118,8 +119,11 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 		return flag;
 	}
 
-	/** special implementation which accommodates for a
-	 * {@link ILargeInventory} */
+    /**
+     * special implementation which accommodates for a
+     * {@link ILargeInventory}
+     */
+    @Override
 	public ItemStack slotClick(int slotID, int dragType, ClickType button, EntityPlayer player) {
 		if (!(slotID < entity.getTileInv().size) || button == ClickType.QUICK_MOVE) {
 			return super.slotClick(slotID, dragType, button, player);
@@ -146,14 +150,14 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 					}
 				} else if (!held.isEmpty()) {
 					if (clicked == null || clicked.getItemStack() == null || clicked.getStackSize() == 0) {
-						if (entity.getTileInv().isItemValidForSlot(slotID * entity.getTileInv().numStacks, held)) {
+                        if (entity.getTileInv().isItemValidForPos(slotID * entity.getTileInv().numStacks, held)) {
 							entity.getTileInv().setLargeStack(slotID, new StoredItemStack(held));
 							player.inventory.setItemStack(ItemStack.EMPTY);
 							return ItemStack.EMPTY;
 						}
 					} else if (clicked != null && clicked.getItemStack() != null) {
 						if (clicked.equalStack(held)) {
-							int maxAdd = (int) Math.min((held.getMaxStackSize() * entity.getTileInv().numStacks) - clicked.getStackSize(), held.getCount());
+                            int maxAdd = (int) Math.min(held.getMaxStackSize() * entity.getTileInv().numStacks - clicked.getStackSize(), held.getCount());
 							if (maxAdd > 0) {
 								StoredItemStack newStack = clicked.copy();
 								newStack.add(new StoredItemStack(held).setStackSize(maxAdd));
@@ -168,5 +172,4 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 		}
 		return ItemStack.EMPTY;
 	}
-
 }

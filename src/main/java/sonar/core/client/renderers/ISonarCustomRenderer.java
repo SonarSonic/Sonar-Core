@@ -1,30 +1,28 @@
 package sonar.core.client.renderers;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.ArrayList;
+
 public interface ISonarCustomRenderer extends ItemMeshDefinition {
 
-	public ModelResourceLocation getBlockModelResourceLocation();
+    ModelResourceLocation getBlockModelResourceLocation();
 
-	public Block getBlock();
+    Block getBlock();
 
-	public boolean hasStaticRendering();
+    boolean hasStaticRendering();
 
-	public TextureAtlasSprite getIcon();
+    TextureAtlasSprite getIcon();
 
-	public boolean doInventoryRendering();
+    boolean doInventoryRendering();
 
 	//public TileEntity getTileEntity();
 
-	public ArrayList<ResourceLocation> getAllTextures();
-
-	
+    ArrayList<ResourceLocation> getAllTextures();
 	
 	//public void renderWorldBlock(Tessellator tessellator, World world, BlockPos pos, double x, double y, double z, IBlockState state, Block block, TileEntity tile, boolean dynamicRender, float partialTick, int destroyStage);
 

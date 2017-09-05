@@ -4,8 +4,10 @@ public class DirtyPart implements IDirtyPart {
 
 	protected ISyncableListener listener;
 
-	public DirtyPart() {}
+    public DirtyPart() {
+    }
 
+    @Override
 	public DirtyPart setListener(ISyncableListener listener) {
 		this.listener = listener;
 		return this;

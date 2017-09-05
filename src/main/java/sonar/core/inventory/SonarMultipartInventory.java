@@ -1,4 +1,4 @@
-package sonar.core.inventory;
+/*package sonar.core.inventory;
 
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -31,4 +31,4 @@ public class SonarMultipartInventory extends AbstractSonarInventory<SonarMultipa
 		return new TextComponentTranslation(part.getItemStack().getUnlocalizedName());
 	}
 	
-}
+}*/

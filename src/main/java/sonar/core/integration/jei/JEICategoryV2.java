@@ -1,14 +1,18 @@
 package sonar.core.integration.jei;
 
+import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeCategory;
+import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import mezz.jei.util.Ingredients;
+import net.minecraft.client.Minecraft;
 import sonar.core.helpers.FontHelper;
 
-public abstract class JEICategoryV2 extends BlankRecipeCategory implements IRecipeHandler<JEIRecipeV2> {
+import java.util.Collections;
+import java.util.List;
+
+public abstract class JEICategoryV2 implements IRecipeCategory, IRecipeHandler<JEIRecipeV2> {
 
 	private final IJEIHandler handler;
 
@@ -52,4 +56,18 @@ public abstract class JEICategoryV2 extends BlankRecipeCategory implements IReci
 		setRecipe(recipeLayout, recipeWrapper, ingredients);
 	}
 
+    @Override
+    public IDrawable getIcon() {
+        return null;
+    }
+
+    @Override
+    public void drawExtras(Minecraft minecraft) {
+
+    }
+
+    @Override
+    public List<String> getTooltipStrings(int mouseX, int mouseY) {
+        return Collections.emptyList();
+    }
 }

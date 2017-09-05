@@ -1,6 +1,5 @@
 package sonar.core.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.item.ItemStack;
@@ -25,12 +24,12 @@ public class InventoryStoredResult extends InventoryCraftResult {
 
 	@Override
 	public ItemStack getStackInSlot(int par1) {
-		return module.getStackInSlot(0 + offset);
+        return module.getStackInSlot(offset);
 	}
 
 	@Override
 	public ItemStack decrStackSize(int slot, int remove) {
-		ItemStack stack = module.getStackInSlot(0 + offset);
+        ItemStack stack = module.getStackInSlot(offset);
 		if (!stack.isEmpty()) {
 			ItemStack itemstack = stack;
 			module.setInventorySlotContents(0, ItemStack.EMPTY);
@@ -47,7 +46,7 @@ public class InventoryStoredResult extends InventoryCraftResult {
 
 	@Override
 	public void setInventorySlotContents(int par1, ItemStack par2ItemStack) {
-		module.setInventorySlotContents(0 + offset, par2ItemStack);
+        module.setInventorySlotContents(offset, par2ItemStack);
 	}
 
 	@Override

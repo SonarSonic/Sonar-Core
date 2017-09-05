@@ -16,7 +16,7 @@ public interface IKineticRotor {
 
 	boolean isAcceptedType(ItemStack stack, GearboxType type);
 
-	public static enum GearboxType  {
+	enum GearboxType  {
 		WATER,
 		WIND,
 	}

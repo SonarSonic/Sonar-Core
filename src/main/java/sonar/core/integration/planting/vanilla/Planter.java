@@ -24,10 +24,7 @@ public class Planter implements IPlanter {
 
 	@Override
 	public boolean canTierPlant(ItemStack stack, int tier) {
-		if (stack.getItem() instanceof IPlantable) {
-			return true;
-		}
-		return false;
+        return stack.getItem() instanceof IPlantable;
 	}
 
 	@Override

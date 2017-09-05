@@ -7,7 +7,9 @@ import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 
-/** for use with objects which implement INBTSyncable and have an Empty Constructor for instances */
+/**
+ * for use with objects which implement INBTSyncable and have an Empty Constructor for instances
+ */
 public class SyncNBTAbstract<T extends INBTSyncable> extends SyncPart {
 
 	public T obj;
@@ -56,10 +58,6 @@ public class SyncNBTAbstract<T extends INBTSyncable> extends SyncPart {
 	}
 
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof SyncNBTAbstract) {
-			return ((SyncNBTAbstract) obj).getObject() == this.obj && this.getTagName().equals(((SyncNBTAbstract) obj).getTagName());
+        return obj != null && obj instanceof SyncNBTAbstract && ((SyncNBTAbstract) obj).obj == this.obj && this.getTagName().equals(((SyncNBTAbstract) obj).getTagName());
 		}
-		return false;
-	}
-
 }

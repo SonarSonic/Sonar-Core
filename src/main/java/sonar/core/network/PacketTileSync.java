@@ -58,8 +58,7 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 		public IMessage processMessage(EntityPlayer player, MessageContext ctx, PacketTileSync message, TileEntity tile) {
 			if (tile != null && tile.getWorld().isRemote) {
 				/* Object te = OLDMultipartHelper.checkObject(tile); if (te == null) { return null; } */
-				SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
-					public void run() {
+                SonarCore.proxy.getThreadListener(ctx).addScheduledTask(() -> {
 						SyncType type = SyncType.DEFAULT_SYNC;
 						if (message.type != null) {
 							type = message.type;
@@ -67,7 +66,6 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 						if (tile instanceof INBTSyncable) {
 							INBTSyncable sync = (INBTSyncable) tile;
 							sync.readData(message.tag, type);
-						}
 					}
 				});
 			}

@@ -14,7 +14,7 @@ public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 
 	public int id;
 	public IByteBufTile tile;
-	public ByteBufWritable[] writables = null;
+    public ByteBufWritable[] writables;
 	public ByteBuf buf;
 
 	public PacketByteBuf() {
@@ -58,17 +58,14 @@ public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 		@Override
 		public IMessage processMessage(EntityPlayer player, MessageContext ctx, PacketByteBuf message, TileEntity tile) {
 
-			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
-				public void run() {
+            SonarCore.proxy.getThreadListener(ctx).addScheduledTask(() -> {
 					if (tile instanceof IByteBufTile) {
 						IByteBufTile packet = (IByteBufTile) tile;
 						packet.readPacket(message.buf, message.id);
 					}
 					/* else { TileHandler handler = OLDMultipartHelper.getHandler(tile); if (handler != null && handler instanceof IByteBufTile) { ((IByteBufTile) handler).readPacket(message.buf, message.id); } } */
-				}
 			});
 			return null;
 		}
 	}
-
 }

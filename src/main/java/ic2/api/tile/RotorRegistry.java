@@ -36,7 +36,7 @@ public class RotorRegistry {
 
 	private static IRotorRegistry INSTANCE;
 
-	public static interface IRotorRegistry {
-		public <T extends TileEntity & IRotorProvider> void registerRotorProvider(Class<T> clazz);
+	public interface IRotorRegistry {
+		<T extends TileEntity & IRotorProvider> void registerRotorProvider(Class<T> clazz);
 	}
 }

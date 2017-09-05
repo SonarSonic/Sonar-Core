@@ -14,5 +14,4 @@ public class FertiliserRegistry extends RegistryHelper<IFertiliser> {
 	public String registeryType() {
 		return "Fertilisers";
 	}
-
 }

@@ -26,7 +26,8 @@ public class GenericForgeEnergyHandler {
 	public static StoredEnergyStack addEnergy(StoredEnergyStack transfer, ICapabilityProvider tile, EnumFacing dir, ActionType action) {
 		IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY, dir);
 		if (storage != null && (dir == null || storage.canReceive())) {
-			int transferRF = Math.min(storage.getMaxEnergyStored(), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+            int transferRF = Math.min(storage.getMaxEnergyStored() - storage.getEnergyStored(), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+            if (transferRF > 0)
 			transfer.stored -= storage.receiveEnergy(transferRF, action.shouldSimulate());
 		}
 		if (transfer.stored == 0)
@@ -37,7 +38,8 @@ public class GenericForgeEnergyHandler {
 	public static StoredEnergyStack removeEnergy(StoredEnergyStack transfer, ICapabilityProvider tile, EnumFacing dir, ActionType action) {
 		IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY, dir);
 		if (storage != null && (dir == null || storage.canExtract())) {
-			int transferRF = Math.min(storage.getMaxEnergyStored(), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+            int transferRF = Math.min(storage.getEnergyStored(), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+            if (transferRF > 0)
 			transfer.stored -= storage.extractEnergy(transferRF, action.shouldSimulate());
 		}
 		if (transfer.stored == 0)

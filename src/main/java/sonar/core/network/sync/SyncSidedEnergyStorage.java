@@ -6,7 +6,7 @@ import sonar.core.api.energy.ISonarEnergyTile;
 public class SyncSidedEnergyStorage extends SyncEnergyStorage {
 
 	private ISonarEnergyTile tile;
-	private EnumFacing currentFace = null;
+    private EnumFacing currentFace;
 
 	public SyncSidedEnergyStorage(ISonarEnergyTile tile, int capacity) {
 		this(tile, capacity, capacity, capacity);
@@ -28,12 +28,11 @@ public class SyncSidedEnergyStorage extends SyncEnergyStorage {
 
 	@Override
 	public boolean canExtract() {
-		return currentFace != null ? tile.getModeForSide(currentFace).canSend() : false;
+        return currentFace != null && tile.getModeForSide(currentFace).canSend();
 	}
 
 	@Override
 	public boolean canReceive() {
-		return currentFace != null ? tile.getModeForSide(currentFace).canRecieve() : false;
+        return currentFace != null && tile.getModeForSide(currentFace).canRecieve();
 	}
-
 }

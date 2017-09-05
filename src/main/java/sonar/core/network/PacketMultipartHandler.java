@@ -1,9 +1,9 @@
-package sonar.core.network;
+/*package sonar.core.network;
 
 import javax.annotation.Nullable;
 
-import mcmultipart.multipart.IMultipart;
-import mcmultipart.multipart.IMultipartContainer;
+import mcmultipart.api.container.IMultipartContainer;
+import mcmultipart.api.multipart.IMultipart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -27,4 +27,4 @@ public abstract class PacketMultipartHandler<T extends PacketMultipart> implemen
 
 	public abstract IMessage processMessage(T message, IMultipartContainer target, @Nullable IMultipart part, MessageContext ctx);
 
-}
+}*/

@@ -1,8 +1,8 @@
 package sonar.core.client.renderers;
 
-import javax.vecmath.Matrix4f;
-
 import net.minecraft.util.math.Vec3d;
+
+import javax.vecmath.Matrix4f;
 
 public class TransformationMatrix {
 
@@ -10,7 +10,9 @@ public class TransformationMatrix {
 
     private double [][] matrix;
 
-    /** TransformationMatrix for doing nothing (unity matrix) */
+    /**
+     * TransformationMatrix for doing nothing (unity matrix)
+     */
     public TransformationMatrix() {
         matrix = new double[SIZE][SIZE];
         for(int i=0;i<SIZE;i++) {
@@ -18,14 +20,18 @@ public class TransformationMatrix {
         }
     }
 
-    /** TransformationMatrix for a rotation (http://xkcd.com/184/)*/
+    /**
+     * TransformationMatrix for a rotation (http://xkcd.com/184/)
+     */
     public TransformationMatrix(double angle, double x, double y, double z) {
         matrix = new double[SIZE][SIZE];
         setRotation(angle, x, y, z);
         matrix[3][3] = 1;
     }
 
-    /** TransformationMatrix for a translation */
+    /**
+     * TransformationMatrix for a translation
+     */
     public TransformationMatrix(double x, double y, double z) {
         matrix = new double[SIZE][SIZE];
         setTranslation(x, y, z);
@@ -34,17 +40,23 @@ public class TransformationMatrix {
         }
     }
 
-    /** TransformationMatrix for a translation */
+    /**
+     * TransformationMatrix for a translation
+     */
     public TransformationMatrix(Vec3d translation) {
-        this(translation.xCoord, translation.yCoord, translation.zCoord);
+        this(translation.x, translation.y, translation.z);
     }
 
-    /** TransformationMatrix for a translation */
+    /**
+     * TransformationMatrix for a translation
+     */
     public TransformationMatrix(Vector translation) {
         this(translation.getX(), translation.getY(), translation.getZ());
     }
 
-    /** TransformationMatrix for a rotation and translation */
+    /**
+     * TransformationMatrix for a rotation and translation
+     */
     public TransformationMatrix(double angle, double x, double y, double z, Vector translation) {
         matrix = new double[SIZE][SIZE];
         setRotation(angle, x, y, z);
@@ -53,19 +65,21 @@ public class TransformationMatrix {
         matrix[3][3] = 1;
     }
 
-    /** Custom transformation */
+    /**
+     * Custom transformation
+     */
     public TransformationMatrix(double[][] data) {
         this();
         int m = SIZE-1>=data.length?data.length:SIZE-1;
         for(int i=0;i<m;i++) {
             int n = SIZE>=data[i].length?data[i].length:SIZE;
-            for(int j=0;j<n;j++) {
-                this.matrix[i][j] = data[i][j];
-            }
+            System.arraycopy(data[i], 0, this.matrix[i], 0, n);
         }
     }
 
-    /** sets the rotation compared to the absolute coordinates while keeping the translation */
+    /**
+     * sets the rotation compared to the absolute coordinates while keeping the translation
+     */
     public void setRotation(double angle, double x, double y, double z) {
         Vector axis = new Vector(x, y, z).normalize();
         angle = Math.toRadians(angle);
@@ -89,12 +103,16 @@ public class TransformationMatrix {
         matrix[2][2] = z*z*(1-cos) + cos;
     }
 
-    /** sets the translation compared to the absolute coordinates while keeping the rotation */
+    /**
+     * sets the translation compared to the absolute coordinates while keeping the rotation
+     */
     public void setTranslation(Vector v) {
         this.setTranslation(v.getX(), v.getY(), v.getZ());
     }
 
-    /** sets the translation compared to the absolute coordinates while keeping the rotation */
+    /**
+     * sets the translation compared to the absolute coordinates while keeping the rotation
+     */
     public void setTranslation(double x, double y, double z) {
         this.matrix[0][3] = x;
         this.matrix[1][3] = y;
@@ -103,13 +121,16 @@ public class TransformationMatrix {
 
     /**
      * gets the translation for this matrix
+     *
      * @return a vector with size 3 containing the translation components
      */
     public double[] getTranslation() {
         return new double[] {matrix[0][3], matrix[1][3], matrix[2][3]};
     }
 
-    /** scales the matrix */
+    /**
+     * scales the matrix
+     */
     public TransformationMatrix scale(double x, double y, double z) {
         TransformationMatrix m = new TransformationMatrix();
         m.matrix[0][0] = x;
@@ -119,8 +140,9 @@ public class TransformationMatrix {
         return this;
     }
 
-
-    /** Left multiplies this transformation matrix with the argument, for inverse transformations */
+    /**
+     * Left multiplies this transformation matrix with the argument, for inverse transformations
+     */
     public TransformationMatrix multiplyLeftWith(TransformationMatrix m) {
         double[][] newValues = new double[SIZE][SIZE];
         for(int i=0;i<SIZE;i++) {
@@ -136,7 +158,9 @@ public class TransformationMatrix {
         return this;
     }
 
-    /** Right multiplies this transformation matrix with the argument, for chaining transformations */
+    /**
+     * Right multiplies this transformation matrix with the argument, for chaining transformations
+     */
     public TransformationMatrix multiplyRightWith(TransformationMatrix m) {
         double[][] newValues = new double[SIZE][SIZE];
         for(int i=0;i<SIZE;i++) {
@@ -152,7 +176,9 @@ public class TransformationMatrix {
         return this;
     }
 
-    /** Transforms the given coordinates */
+    /**
+     * Transforms the given coordinates
+     */
     public double[] transform(double x, double y, double z) {
         double[] coords = new double[] {x, y, z, 1};
         double[] result = new double[3];

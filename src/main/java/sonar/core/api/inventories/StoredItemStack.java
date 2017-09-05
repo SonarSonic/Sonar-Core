@@ -37,38 +37,38 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 		}
 	}
 
+    @Override
 	public void add(StoredItemStack stack) {
 		if (equalStack(stack.item)) {
 			stored += stack.stored;
 		}
 	}
 
+    @Override
 	public void remove(StoredItemStack stack) {
 		if (equalStack(stack.item)) {
 			stored -= stack.stored;
 		}
 	}
 
+    @Override
 	public StoredItemStack copy() {
 		return new StoredItemStack(this.item, this.stored);
 	}
 
+    public StoredItemStack setStackSize(StoredItemStack stack) {
+        this.stored = stack == null ? 0 : stack.getStackSize();
+        return this;
+    }
+
+    @Override
 	public StoredItemStack setStackSize(long size) {
 		this.stored = size;
 		return this;
 	}
 
 	public boolean equalStack(ItemStack stack) {
-		if (this.item.isEmpty()) {
-			return false;
-		}
-		if (!this.item.isItemEqual(stack)) {
-			return false;
-		}
-		if (!ItemStack.areItemStackTagsEqual(stack, this.item)) {
-			return false;
-		}
-		return true;
+        return this.item != null && stack != null && this.item.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(stack, this.item);
 	}
 
 	@Override
@@ -107,6 +107,7 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 		return item;
 	}
 
+    @Override
 	public long getStackSize() {
 		return stored;
 	}
@@ -152,7 +153,7 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 
 	public String toString() {
 		if (item != null) {
-			return this.stored + "x" + this.item.getUnlocalizedName() + "@" + item.getItemDamage();
+            return this.stored + "x" + this.item.getUnlocalizedName() + '@' + item.getItemDamage();
 		} else {
 			return super.toString() + " : NULL";
 		}

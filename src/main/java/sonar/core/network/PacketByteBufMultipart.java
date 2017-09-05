@@ -1,10 +1,10 @@
-package sonar.core.network;
+/*package sonar.core.network;
 
 import java.util.UUID;
 
 import io.netty.buffer.ByteBuf;
-import mcmultipart.multipart.IMultipart;
-import mcmultipart.multipart.IMultipartContainer;
+import mcmultipart.api.container.IMultipartContainer;
+import mcmultipart.api.multipart.IMultipart;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -56,4 +56,4 @@ public class PacketByteBufMultipart extends PacketMultipart {
 			return null;
 		}
 	}
-}
+}*/

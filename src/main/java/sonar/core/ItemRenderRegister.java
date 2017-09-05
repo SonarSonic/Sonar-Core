@@ -1,12 +1,11 @@
 package sonar.core;
 
-
 public class ItemRenderRegister {
 	public static void register() {
 		/*
 		for (Item item : SonarItems.registeredItems) {
 			if (item.getHasSubtypes()) {
-				List<ItemStack> stacks = new ArrayList();
+				List<ItemStack> stacks = new ArrayList<>();
 				item.getSubItems(item, SonarCore.tab, stacks);
 				for (ItemStack stack : stacks) {
 					String variant = "variant=meta" + stack.getItemDamage();

@@ -1,4 +1,4 @@
-package sonar.core.network;
+/*package sonar.core.network;
 
 import java.util.UUID;
 
@@ -31,4 +31,4 @@ public class PacketMultipart extends PacketCoords {
 		buf.writeLong(partUUID.getLeastSignificantBits());
 	}
 
-}
+}*/

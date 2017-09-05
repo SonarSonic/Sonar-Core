@@ -1,30 +1,16 @@
 package sonar.core.client.renderers;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.vecmath.Matrix4f;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
-
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -39,14 +25,23 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.opengl.GL11;
 import sonar.core.common.block.properties.IBlockRotated;
 import sonar.core.helpers.RenderHelper;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.vecmath.Matrix4f;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
 @MethodsReturnNonnullByDefault
@@ -68,8 +63,8 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 	}
 
 	@Override
-	public BakedBlockModel<T> bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-		return new BakedBlockModel<>(format, renderer, bakedTextureGetter, true);
+    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+        return new BakedBlockModel<T>(format, renderer, bakedTextureGetter, true);
 	}
 
 	@Override
@@ -79,10 +74,10 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 
 	@Override
 	@ParametersAreNonnullByDefault
-	public void renderTileEntityAt(T te, double x, double y, double z, float partialTicks, int destroyStage) {
-
+    //public void renderTileEntityAt(T te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float f) {
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
 		World world = te.getWorld();
 		BlockPos pos = te.getPos();
 		IBlockState state = world.getBlockState(pos);
@@ -103,7 +98,6 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 
 		GL11.glTranslated(-x, -y, -z);
 		GL11.glPopMatrix();
-
 	}
 
 	public static class BakedBlockModel<T extends TileEntity> implements IBakedModel {
@@ -137,7 +131,6 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 				} else {
 					list = RenderHelper.transformQuads(list, new TransformationMatrix(-face.getHorizontalAngle(), 0, 1, 0, RenderHelper.getOffsetForFace(face)));
 				}
-
 			} else {
 				list = ImmutableList.of();
 			}
@@ -184,7 +177,7 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 		private final Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter;
 
 		public ItemRenderer(ISonarCustomRenderer renderer, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-			super(ImmutableList.<ItemOverride> of());
+            super(ImmutableList.of());
 			this.renderer = renderer;
 			//this.tile = renderer.getTileEntity();
 			this.tile = null;
@@ -200,7 +193,7 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 		}
 	}
 
-	public static class BakedItemModel<T extends TileEntity> implements IBakedModel, IPerspectiveAwareModel {
+    public static class BakedItemModel<T extends TileEntity> implements IBakedModel {
 		private final ISonarCustomRenderer renderer;
 		private final Block block;
 		private final T tile;

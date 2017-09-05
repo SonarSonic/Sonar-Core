@@ -1,16 +1,16 @@
 package sonar.core.client.gui;
 
-import java.util.ArrayList;
-
 import net.minecraft.client.gui.Gui;
 import sonar.core.utils.Pair;
+
+import java.util.ArrayList;
 
 public class GuiHelpOverlay<T extends GuiSonar> extends Gui {
 
 	public static boolean enableHelp;
 
 	public HelpOverlay<T> current;
-	public ArrayList<HelpOverlay<T>> overlays = new ArrayList<HelpOverlay<T>>();
+    public ArrayList<HelpOverlay<T>> overlays = new ArrayList<>();
 
 	public HelpOverlay<T> getCurrentOverlay() {
 		return current;
@@ -42,10 +42,7 @@ public class GuiHelpOverlay<T extends GuiSonar> extends Gui {
 
 	public boolean isMouseOver(T gui, int x, int y) {
 		int pos = x - gui.getGuiLeft();
-		if (x - gui.getGuiLeft() >= current.left && x - gui.getGuiLeft() <= current.left + current.width && y - gui.getGuiTop() >= current.top && y - gui.getGuiTop() <= current.top + current.height) {
-			return true;
-		}
-		return false;
+        return x - gui.getGuiLeft() >= current.left && x - gui.getGuiLeft() <= current.left + current.width && y - gui.getGuiTop() >= current.top && y - gui.getGuiTop() <= current.top + current.height;
 	}
 
 	public void onTileChanged(T gui) {
@@ -56,7 +53,7 @@ public class GuiHelpOverlay<T extends GuiSonar> extends Gui {
 
 	public Pair<Integer, HelpOverlay<T>> getValidOverlay(T gui) {
 		int pos = 0;
-		for (HelpOverlay overlay : overlays) {
+        for (HelpOverlay<T> overlay : overlays) {
 			if (!overlay.isCompletedSuccess(gui)) {
 				return new Pair(pos, overlay);
 			}
@@ -64,5 +61,4 @@ public class GuiHelpOverlay<T extends GuiSonar> extends Gui {
 		}
 		return new Pair(-1, null);
 	}
-
 }

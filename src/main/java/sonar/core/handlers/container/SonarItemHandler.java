@@ -8,11 +8,9 @@ import sonar.core.api.energy.ISonarEnergyItem;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
-@EnergyContainerHandler(modid = "sonarcore", handlerID = SonarItemHandler.name, priority = 1)
+@EnergyContainerHandler(modid = "sonarcore", priority = 1)
 public class SonarItemHandler implements ISonarEnergyContainerHandler {
 
-	public static final String name = "Sonar Item Handler";
-	
 	@Override
 	public boolean canHandleItem(ItemStack stack) {
 		return stack.getItem() != null && stack.getItem() instanceof ISonarEnergyItem;
@@ -22,10 +20,10 @@ public class SonarItemHandler implements ISonarEnergyContainerHandler {
 	public StoredEnergyStack addEnergy(StoredEnergyStack transfer, ItemStack stack, ActionType action) {
 		ISonarEnergyItem item = (ISonarEnergyItem) stack.getItem();
 		if (item instanceof ISonarEnergyItem) {
-			ISonarEnergyItem receiver = (ISonarEnergyItem) item;
-			if (receiver.getFullCapacity(stack) > 0) {
-				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-				transfer.stored -= receiver.addEnergy(stack, transferRF, action);
+            if (item.getFullCapacity(stack) > 0) {
+                long transferRF = Math.min(item.getFullCapacity(stack) - item.getEnergyLevel(stack), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+                if (transferRF > 0)
+                    transfer.stored -= item.addEnergy(stack, transferRF, action);
 			}
 		}
 		if (transfer.stored == 0)
@@ -37,10 +35,10 @@ public class SonarItemHandler implements ISonarEnergyContainerHandler {
 	public StoredEnergyStack removeEnergy(StoredEnergyStack transfer, ItemStack stack, ActionType action) {
 		ISonarEnergyItem item = (ISonarEnergyItem) stack.getItem();
 		if (item instanceof ISonarEnergyItem) {
-			ISonarEnergyItem receiver = (ISonarEnergyItem) item;
-			if (receiver.getFullCapacity(stack) > 0) {
-				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-				transfer.stored -= receiver.removeEnergy(stack, transferRF, action);
+            if (item.getFullCapacity(stack) > 0) {
+                long transferRF = Math.min(item.getEnergyLevel(stack), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+                if (transferRF > 0)
+                    transfer.stored -= item.removeEnergy(stack, transferRF, action);
 			}
 		}
 		if (transfer.stored == 0)
@@ -55,11 +53,10 @@ public class SonarItemHandler implements ISonarEnergyContainerHandler {
 			return;
 		}
 		if (item instanceof ISonarEnergyItem) {
-			ISonarEnergyItem receiver = (ISonarEnergyItem) item;
-			if (receiver.getFullCapacity(stack) > 0) {
-				energyStack.setStorageValues(receiver.getEnergyLevel(stack), receiver.getFullCapacity(stack));
-				energyStack.setMaxInput(receiver.addEnergy(stack, Integer.MAX_VALUE, ActionType.SIMULATE));
-				energyStack.setMaxOutput(receiver.removeEnergy(stack, Integer.MAX_VALUE, ActionType.SIMULATE));
+            if (item.getFullCapacity(stack) > 0) {
+                energyStack.setStorageValues(item.getEnergyLevel(stack), item.getFullCapacity(stack));
+                energyStack.setMaxInput(item.addEnergy(stack, Integer.MAX_VALUE, ActionType.SIMULATE));
+                energyStack.setMaxOutput(item.removeEnergy(stack, Integer.MAX_VALUE, ActionType.SIMULATE));
 			}
 		}
 	}
@@ -68,5 +65,4 @@ public class SonarItemHandler implements ISonarEnergyContainerHandler {
 	public EnergyType getProvidedType() {
 		return EnergyType.RF;
 	}
-
 }

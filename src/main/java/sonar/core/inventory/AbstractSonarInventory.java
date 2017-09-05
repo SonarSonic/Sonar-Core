@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -23,7 +22,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	public NonNullList<ItemStack> slots;
 	public int size;
 	public int limit = 64;
-	public EnumFacing face = null;
+    public EnumFacing face;
 	public IItemHandler embeddedHandler = new EmbeddedHandler(this);
 
 	public static class EmbeddedHandler implements IItemHandler {
@@ -57,47 +56,53 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		public int getSlotLimit(int slot) {
 			return inv.getSlotLimit(slot);
 		}
-
 	}
 
 	public AbstractSonarInventory(int size) {
 		super();
 		this.size = size;
-		this.slots = NonNullList.<ItemStack>withSize(size, ItemStack.EMPTY);
+        this.slots = NonNullList.withSize(size, ItemStack.EMPTY);
 	}
 
+    @Override
 	public IItemHandler getItemHandler(EnumFacing side) {
 		face = side;
 		return embeddedHandler;
 	}
 
+    @Override
 	public T setStackLimit(int limit) {
 		this.limit = limit;
 		return (T) this;
 	}
 
+    @Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		if (type.isType(SyncType.SAVE)) {
-			this.slots = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        if (canSync(type)) {
+            this.slots = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
 			ItemStackHelper.loadAllItems(nbt, this.slots);
 		}
 	}
 
+    @Override
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
-		if (type.isType(SyncType.SAVE)) {
+        if (canSync(type)) {
 			ItemStackHelper.saveAllItems(nbt, this.slots);
 		}
 		return nbt;
 	}
 
+    @Override
 	public int getSizeInventory() {
 		return size;
 	}
 
+    @Override
 	public ItemStack getStackInSlot(int slot) {
 		return slots.get(slot);
 	}
 
+    @Override
 	public ItemStack decrStackSize(int index, int count) {
 		ItemStack split = ItemStackHelper.getAndSplit(this.slots, index, count);
 		if (!ItemStack.areItemsEqual(split, slots.get(index))) {
@@ -106,6 +111,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		return split;
 	}
 
+    @Override
 	public ItemStack removeStackFromSlot(int index) {
 		ItemStack remove = ItemStackHelper.getAndRemove(this.slots, index);
 		if (!ItemStack.areItemsEqual(remove, slots.get(index))) {
@@ -114,6 +120,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		return remove;
 	}
 
+    @Override
 	public void setInventorySlotContents(int index, ItemStack stack) {
 		this.slots.set(index, stack);		
 		if (stack.getCount() > this.getInventoryStackLimit()) {
@@ -122,33 +129,39 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
         this.markDirty();
 	}
 
+    @Override
 	public int getInventoryStackLimit() {
 		return limit;
 	}
 
+    @Override
 	public void openInventory(EntityPlayer player) {
 	}
 
+    @Override
 	public void closeInventory(EntityPlayer player) {
 	}
 
+    @Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return true;
 	}
 
-	/*
-		*/
+    @Override
 	public int getField(int id) {
 		return 0;
 	}
 
+    @Override
 	public void setField(int id, int value) {
 	}
 
+    @Override
 	public int getFieldCount() {
 		return 0;
 	}
 
+    @Override
 	public void clear() {
 		for (int i = 0; i < this.getSizeInventory(); i++)
 			this.setInventorySlotContents(i, ItemStack.EMPTY);
@@ -166,7 +179,11 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 
 	@Override
 	public boolean canSync(SyncType sync) {
-		return sync.isType(SyncType.SAVE);
+        return sync.isType(getSyncTypes());
+    }
+
+    public SyncType[] getSyncTypes() {
+        return new SyncType[]{SyncType.SAVE};
 	}
 
 	@Override

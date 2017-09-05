@@ -1,15 +1,20 @@
-package sonar.core.integration.multipart;
+/*package sonar.core.integration.multipart;
 
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
-import mcmultipart.multipart.IMultipart;
-import mcmultipart.multipart.IMultipartContainer;
-import mcmultipart.multipart.MultipartHelper;
-import mcmultipart.multipart.PartSlot;
+/*import mcmultipart.multipart.PartSlot;
 import mcmultipart.raytrace.RayTraceUtils.AdvancedRayTraceResultPart;
+import mcmultipart.api.container.IMultipartContainer;
+import mcmultipart.api.container.IPartInfo;
+import mcmultipart.api.multipart.IMultipart;
+import mcmultipart.api.multipart.MultipartHelper;
+import mcmultipart.api.slot.IPartSlot;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -23,11 +28,11 @@ import sonar.core.network.utils.IByteBufTile;
 
 public class SonarMultipartHelper {
 
-	public static AdvancedRayTraceResultPart collisionRayTrace(IMultipartContainer container, Vec3d start, Vec3d end) {
+	public static RayTraceResult collisionRayTrace(IMultipartContainer container, Vec3d start, Vec3d end) {
 		double dist = Double.POSITIVE_INFINITY;
-		AdvancedRayTraceResultPart current = null;
-		for (IMultipart p : container.getParts()) {
-			AdvancedRayTraceResultPart result = p.collisionRayTrace(start, end);
+		RayTraceResult current = null;
+		for (Map.Entry<IPartSlot, ? extends IPartInfo> p : container.getParts().entrySet()) {
+			RayTraceResult result = p.getValue().getPart().collisionRayTrace(p.getValue(), start, end);
 			if (result == null) continue;
 			double d = result.squareDistanceTo(start);
 			if (d <= dist) {
@@ -40,7 +45,7 @@ public class SonarMultipartHelper {
 
 	public static Object getTile(World world, BlockPos pos) {
 		if (SonarLoader.mcmultipartLoaded) {
-			IMultipartContainer container = MultipartHelper.getPartContainer(world, pos);
+			Optional<IMultipartContainer> container = MultipartHelper.getContainer(world, pos);
 			if (container != null) {
 				return container;
 			}
@@ -70,9 +75,9 @@ public class SonarMultipartHelper {
 	}
 
 	public static IMultipart getPartFromHash(int hashCode, IMultipartContainer container) {
-		for (IMultipart part : container.getParts()) {
-			if (part != null && container.getPartID(part).hashCode() == hashCode) {
-				return part;
+		for (Map.Entry<IPartSlot, ? extends IPartInfo> p : container.getParts().entrySet()) {
+			if (p.getValue() != null && container.getPartID(p.getValue()).hashCode() == hashCode) {
+				return p.getValue().getPart();
 			}
 		}
 		return null;
@@ -149,3 +154,4 @@ public class SonarMultipartHelper {
 	}
 
 }
+*/

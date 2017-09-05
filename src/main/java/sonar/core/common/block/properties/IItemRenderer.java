@@ -4,5 +4,5 @@ import net.minecraft.util.IStringSerializable;
 
 public interface IItemRenderer  {
 	
-	public IStringSerializable[] getVariants();	
+    IStringSerializable[] getVariants();
 }

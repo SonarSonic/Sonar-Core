@@ -1,7 +1,7 @@
 package sonar.core.handlers.energy;
 
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
+import cofh.redstoneflux.api.IEnergyProvider;
+import cofh.redstoneflux.api.IEnergyReceiver;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.asm.EnergyHandler;
@@ -10,10 +10,8 @@ import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
-@EnergyHandler(modid = "sonarcore", handlerID = RFHandler.name, priority = 3)
+@EnergyHandler(modid = "redstoneflux", priority = 3)
 public class RFHandler implements ISonarEnergyHandler {
-
-	public static final String name = "RF-Provider";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {

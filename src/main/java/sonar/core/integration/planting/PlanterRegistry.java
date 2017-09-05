@@ -14,5 +14,4 @@ public class PlanterRegistry extends RegistryHelper<IPlanter> {
 	public String registeryType() {
 		return "Planters";
 	}
-
 }

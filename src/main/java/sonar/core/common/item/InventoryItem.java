@@ -20,7 +20,7 @@ public class InventoryItem implements IInventory {
 	public int size;
 
 	public InventoryItem(ItemStack stack, int size, String tag, boolean useStackTag) {
-		inventory = NonNullList.<ItemStack>withSize(size, ItemStack.EMPTY);
+        inventory = NonNullList.withSize(size, ItemStack.EMPTY);
 		invItem = stack;
 		this.tag = tag;
 		this.useStackTag = useStackTag;
@@ -34,14 +34,17 @@ public class InventoryItem implements IInventory {
 		}
 	}
 
+    @Override
 	public int getSizeInventory() {
 		return inventory.size();
 	}
 
+    @Override
 	public ItemStack getStackInSlot(int slot) {
 		return inventory.get(slot);
 	}
 
+    @Override
 	public ItemStack decrStackSize(int slot, int amount) {
 		ItemStack stack = getStackInSlot(slot);
 		if (!stack.isEmpty()) {
@@ -55,12 +58,14 @@ public class InventoryItem implements IInventory {
 		return stack;
 	}
 
+    @Override
 	public ItemStack removeStackFromSlot(int slot) {
 		ItemStack stack = getStackInSlot(slot);
 		setInventorySlotContents(slot, ItemStack.EMPTY);
 		return stack;
 	}
 
+    @Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		setInventorySlotContents(slot, stack, false);
 	}
@@ -76,14 +81,17 @@ public class InventoryItem implements IInventory {
 		}
 	}
 
+    @Override
 	public String getName() {
 		return name;
 	}
 
+    @Override
 	public boolean hasCustomName() {
 		return name.length() > 0;
 	}
 
+    @Override
 	public ITextComponent getDisplayName() {
 		return new TextComponentTranslation(name);
 	}
@@ -92,10 +100,12 @@ public class InventoryItem implements IInventory {
 		return name.length() > 0;
 	}
 
+    @Override
 	public int getInventoryStackLimit() {
 		return 64;
 	}
 
+    @Override
 	public void markDirty() {
 		if (useStackTag) {
 			writeToNBT(invItem.getTagCompound());
@@ -108,12 +118,15 @@ public class InventoryItem implements IInventory {
 		return true;
 	}
 
+    @Override
 	public void openInventory(EntityPlayer player) {
 	}
 
+    @Override
 	public void closeInventory(EntityPlayer player) {
 	}
 
+    @Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
 		return !(itemstack.getItem() instanceof InventoryContainerItem);
 	}
@@ -122,7 +135,7 @@ public class InventoryItem implements IInventory {
 		NBTTagList items = compound.getTagList(invTag, Constants.NBT.TAG_COMPOUND);
 
 		for (int i = 0; i < items.tagCount(); ++i) {
-			NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
+            NBTTagCompound item = items.getCompoundTagAt(i);
 			int slot = item.getInteger("Slot");
 			if (slot >= 0 && slot < getSizeInventory()) {
                 inventory.set(slot, new ItemStack(item));
@@ -130,7 +143,9 @@ public class InventoryItem implements IInventory {
 		}
 	}
 
-	/** A custom method to write our inventory to an ItemStack's NBT compound */
+    /**
+     * A custom method to write our inventory to an ItemStack's NBT compound
+     */
 	public void writeToNBT(NBTTagCompound compound) {
 		NBTTagList items = new NBTTagList();
 
@@ -160,18 +175,22 @@ public class InventoryItem implements IInventory {
 		}
 	}
 
+    @Override
 	public int getField(int id) {
 		return 0;
 	}
 
+    @Override
 	public void setField(int id, int value) {
 
 	}
 
+    @Override
 	public int getFieldCount() {
 		return 0;
 	}
 
+    @Override
 	public void clear() {
 		for (int i = 0; i < this.getSizeInventory(); i++)
 			this.setInventorySlotContents(i, ItemStack.EMPTY);
@@ -191,5 +210,4 @@ public class InventoryItem implements IInventory {
 	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
 	}
-
 }

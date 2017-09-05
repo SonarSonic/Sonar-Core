@@ -1,20 +1,20 @@
 package sonar.core.api.upgrades;
 
-import java.util.ArrayList;
-
 import gnu.trove.map.hash.THashMap;
 import net.minecraft.item.ItemStack;
 import sonar.core.api.nbt.INBTSyncable;
 
+import java.util.ArrayList;
+
 public interface IUpgradeInventory extends INBTSyncable {
 
-	public boolean addUpgrade(ItemStack stack);
+    boolean addUpgrade(ItemStack stack);
 
-	public ItemStack removeUpgrade(String type, int amount);
+    ItemStack removeUpgrade(String type, int amount);
 
-	public int getUpgradesInstalled(String upgrade);
+    int getUpgradesInstalled(String upgrade);
 	
-	public ArrayList<String> getAllowedUpgrades();	
+    ArrayList<String> getAllowedUpgrades();
 
-	public THashMap<String, Integer> getInstalledUpgrades();
+    THashMap<String, Integer> getInstalledUpgrades();
 }

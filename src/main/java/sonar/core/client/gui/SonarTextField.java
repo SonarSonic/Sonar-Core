@@ -6,10 +6,9 @@ import net.minecraft.client.gui.GuiTextField;
 public class SonarTextField extends GuiTextField {
 
 	private String defString = "";
-	private boolean digitsOnly = false;
+    private boolean digitsOnly;
 	private int outlineColour = -6250336, boxColour = -16777216;
 	
-
 	public SonarTextField(int id, FontRenderer renderer, int x, int y, int width, int height) {
 		super(id, renderer, x, y, width, height);
 	}
@@ -33,6 +32,7 @@ public class SonarTextField extends GuiTextField {
 		return this;
 	}
 	
+    @Override
 	public boolean textboxKeyTyped(char c, int i) {
 		if (digitsOnly) {
 			switch (c) {
@@ -59,10 +59,7 @@ public class SonarTextField extends GuiTextField {
 			case 211:
 				return super.textboxKeyTyped(c, i);
 			}
-			if (Character.isDigit(c)) {
-				return super.textboxKeyTyped(c, i);
-			}
-			return false;
+            return Character.isDigit(c) && super.textboxKeyTyped(c, i);
 		}
 		return super.textboxKeyTyped(c, i);
 	}
@@ -75,19 +72,20 @@ public class SonarTextField extends GuiTextField {
 		return Long.valueOf(getText().isEmpty() ? "0" : getText());
 	}
 
+    @Override
 	public void drawTextBox() {
 		this.setEnableBackgroundDrawing(true);
 		if (this.getVisible()) {
 			if (this.getEnableBackgroundDrawing()) {
-				drawRect(this.xPosition - 1, this.yPosition - 1, this.xPosition + this.width + 1, this.yPosition + this.height + 1, outlineColour);
-				drawRect(this.xPosition, this.yPosition, this.xPosition + this.width, this.yPosition + this.height, boxColour);
+                drawRect(this.x - 1, this.y - 1, this.x + this.width + 1, this.y + this.height + 1, outlineColour);
+                drawRect(this.x, this.y, this.x + this.width, this.y + this.height, boxColour);
 			}
 		}
 		this.setEnableBackgroundDrawing(false);
-		xPosition += 4;
-		this.yPosition += (this.height - 8) / 2;
+        x += 4;
+        this.y += (this.height - 8) / 2;
 		super.drawTextBox();
-		xPosition -= 4;
-		this.yPosition -= (this.height - 8) / 2;
+        x -= 4;
+        this.y -= (this.height - 8) / 2;
 	}
 }

@@ -1,7 +1,5 @@
 package sonar.core.network.sync;
 
-import java.util.ArrayList;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -10,10 +8,14 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 
-/** for use with objects which implement INBTSyncable and have an Empty Constructor for instances */
+import java.util.ArrayList;
+
+/**
+ * for use with objects which implement INBTSyncable and have an Empty Constructor for instances
+ */
 public class SyncTagTypeList<T> extends SyncPart {
 
-	public ArrayList<T> objs = new ArrayList();
+    public ArrayList<T> objs = new ArrayList<>();
 	private int nbtType = -1;	
 
 	public SyncTagTypeList(int nbtType, int id) {
@@ -25,7 +27,6 @@ public class SyncTagTypeList<T> extends SyncPart {
 		super(name);
 		this.nbtType = nbtType;
 	}
-
 
 	public ArrayList<T> getObjects() {
 		return objs;
@@ -63,15 +64,15 @@ public class SyncTagTypeList<T> extends SyncPart {
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(getTagName())) {
-			ArrayList newObjs = new ArrayList();
+            ArrayList newObjs = new ArrayList<>();
 			NBTTagList tagList = nbt.getTagList(getTagName(), Constants.NBT.TAG_COMPOUND);
 			for (int i = 0; i < tagList.tagCount(); i++) {	
 				NBTTagCompound tag = tagList.getCompoundTagAt(i);
-				newObjs.add((T) NBTHelper.readNBTBase(tag, nbtType, getTagName()));		
+                newObjs.add(NBTHelper.readNBTBase(tag, nbtType, getTagName()));
 			}
 			objs = newObjs;
-		} else if (nbt.getBoolean(getTagName() + "E")) {
-			objs = new ArrayList();
+        } else if (nbt.getBoolean(getTagName() + 'E')) {
+            objs = new ArrayList<>();
 		}
 	}
 
@@ -88,16 +89,12 @@ public class SyncTagTypeList<T> extends SyncPart {
 		if (!tagList.hasNoTags()) {
 			nbt.setTag(getTagName(), tagList);
 		} else {
-			nbt.setBoolean(getTagName() + "E", true);
+            nbt.setBoolean(getTagName() + 'E', true);
 		}
 		return nbt;
 	}
 
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof SyncTagTypeList) {
-			return ((SyncTagTypeList) obj).getObjects().equals(this.objs);
-		}
-		return false;
+        return obj != null && obj instanceof SyncTagTypeList && ((SyncTagTypeList) obj).getObjects().equals(this.objs);
 	}
-
 }
