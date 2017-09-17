@@ -21,6 +21,11 @@ public class RecipeInterchangable implements ISonarRecipeObject, ISonarRecipeIte
 	}
 
 	@Override
+	public boolean isNull() {
+		return cachedObjects.isEmpty();
+	}
+
+	@Override
 	public boolean matches(Object object, RecipeObjectType type) {
 		for (ISonarRecipeObject recipeObject : validInputs) {
 			if (recipeObject.matches(object, type)) {

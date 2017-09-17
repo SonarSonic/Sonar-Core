@@ -19,6 +19,11 @@ public class RecipeInteger implements ISonarRecipeObject {
 	}
 
 	@Override
+	public boolean isNull() {
+		return false;
+	}
+
+	@Override
 	public int getStackSize() {
 		return value;
 	}

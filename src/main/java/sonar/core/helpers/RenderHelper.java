@@ -29,7 +29,7 @@ import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import org.lwjgl.opengl.GL11;
 import sonar.core.SonarCore;
 import sonar.core.client.BlockModelsCache;
-import sonar.core.client.gui.GuiSonar;
+import sonar.core.client.gui.GuiSonarTile;
 import sonar.core.client.renderers.TransformationMatrix;
 import sonar.core.client.renderers.Vector;
 
@@ -143,7 +143,7 @@ public class RenderHelper {
 		vertexbuffer.pos(x, y, z).tex(u, v).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
 	}
 
-	public static void renderItem(GuiSonar screen, int x, int y, ItemStack stack) {
+	public static void renderItem(GuiSonarTile screen, int x, int y, ItemStack stack) {
 		translate(0.0F, 0.0F, 32.0F);
 		screen.setZLevel(200.0F);
 		itemRender.zLevel = 200.0F;

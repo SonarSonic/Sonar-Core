@@ -30,6 +30,11 @@ public class RecipeOreStack implements ISonarRecipeObject, ISonarRecipeItem {
 	}
 
 	@Override
+	public boolean isNull() {
+		return cachedRegister.isEmpty();
+	}
+
+	@Override
 	public ItemStack getOutputStack() {
 		ItemStack stack = cachedRegister.get(0).copy();
 		return stack;

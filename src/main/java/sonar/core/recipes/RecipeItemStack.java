@@ -25,6 +25,11 @@ public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {
 	}
 
 	@Override
+	public boolean isNull() {
+		return stack.isEmpty();
+	}
+
+	@Override
 	public boolean matches(Object object, RecipeObjectType type) {
 		if (object instanceof ItemStack) {
 			ItemStack stack2 = (ItemStack) object;

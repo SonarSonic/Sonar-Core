@@ -1,10 +1,21 @@
 package sonar.core.client.gui;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -12,7 +23,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 import sonar.core.SonarCore;
 import sonar.core.api.machines.IPausable;
 import sonar.core.api.machines.IProcessMachine;
@@ -22,17 +32,12 @@ import sonar.core.network.utils.IByteBufTile;
 import sonar.core.upgrades.UpgradeInventory;
 import sonar.core.utils.IWorldPosition;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-
-public abstract class GuiSonar extends GuiContainer {
+public abstract class GuiSonarTile extends GuiContainer {
 
 	public IWorldPosition entity;
-    protected List<SonarTextField> fieldList = new ArrayList<>();
+	protected List<SonarTextField> fieldList = new ArrayList<>();
 
-	public GuiSonar(Container container, IWorldPosition entity) {
+	public GuiSonarTile(Container container, IWorldPosition entity) {
 		super(container);
 		if (entity != null)
 			this.entity = entity;
@@ -45,9 +50,9 @@ public abstract class GuiSonar extends GuiContainer {
 		this.fieldList.clear();
 		this.initGui();
 	}
-	
-	public void initButtons(){
-		this.buttonList.clear();			
+
+	public void initButtons() {
+		this.buttonList.clear();
 	}
 
 	// public void initGui(boolean pause) {}
@@ -56,15 +61,15 @@ public abstract class GuiSonar extends GuiContainer {
 		this.zLevel = zLevel;
 	}
 
-    public SonarTextField getFocusedField() {
-        for (SonarTextField f : fieldList) {
-            if (f.isFocused()) {
-                return f;
-            }
-        }
-        return null;
+	public SonarTextField getFocusedField() {
+		for (SonarTextField f : fieldList) {
+			if (f.isFocused()) {
+				return f;
+			}
+		}
+		return null;
 
-    }
+	}
 
 	public void drawNormalToolTip(ItemStack stack, int x, int y) {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -75,10 +80,10 @@ public abstract class GuiSonar extends GuiContainer {
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
 	}
 
-    public void drawSpecialToolTip(List<String> list, int x, int y, FontRenderer font) {
+	public void drawSpecialToolTip(List<String> list, int x, int y, FontRenderer font) {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_LIGHTING);
-        drawHoveringText(list, x - guiLeft, y - guiTop, font == null ? fontRenderer : font);
+		drawHoveringText(list, x - guiLeft, y - guiTop, font == null ? fontRenderer : font);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
@@ -102,7 +107,7 @@ public abstract class GuiSonar extends GuiContainer {
 		float f1 = (float) (color >> 8 & 255) / 255.0F;
 		float f2 = (float) (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.color(f, f1, f2, f3);
 		GlStateManager.disableTexture2D();
@@ -118,12 +123,19 @@ public abstract class GuiSonar extends GuiContainer {
 		GlStateManager.disableBlend();
 	}
 
-    @Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		this.renderHoveredToolTip(mouseX, mouseY);
+	}
+
+	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
-        fieldList.forEach(SonarTextField::drawTextBox);
+		super.drawGuiContainerForegroundLayer(x, y);
+		fieldList.forEach(SonarTextField::drawTextBox);
 		RenderHelper.disableStandardItemLighting();
 
-        for (GuiButton guibutton : this.buttonList) {
+		for (GuiButton guibutton : this.buttonList) {
 			if (guibutton.isMouseOver()) {
 				guibutton.drawButtonForegroundLayer(x - this.guiLeft, y - this.guiTop);
 				break;
@@ -133,7 +145,7 @@ public abstract class GuiSonar extends GuiContainer {
 	}
 
 	@Override
-    protected void drawGuiContainerBackgroundLayer(float v, int i, int i1) {
+	protected void drawGuiContainerBackgroundLayer(float v, int i, int i1) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(this.getBackground());
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
@@ -144,8 +156,8 @@ public abstract class GuiSonar extends GuiContainer {
 	}
 
 	public void drawSonarCreativeTabHoveringText(String tabName, int mouseX, int mouseY) {
-        drawHoveringText(tabName, mouseX, mouseY);
-        //drawCreativeTabHoveringText(tabName, mouseX, mouseY);
+		drawHoveringText(tabName, mouseX, mouseY);
+		// drawCreativeTabHoveringText(tabName, mouseX, mouseY);
 	}
 
 	@Override
@@ -172,26 +184,26 @@ public abstract class GuiSonar extends GuiContainer {
 		super.mouseClicked(i, j, k);
 		fieldList.forEach(field -> field.mouseClicked(i - guiLeft, j - guiTop, k));
 	}
-	
-    @Override
-	public int getGuiLeft(){
+
+	@Override
+	public int getGuiLeft() {
 		return guiLeft;
 	}
-	
-    @Override
-	public int getGuiTop(){
+
+	@Override
+	public int getGuiTop() {
 		return guiTop;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static class PauseButton extends SonarButtons.ImageButton {
 
 		boolean paused;
 		public int id;
 		public IPausable machine;
-		public GuiSonar gui;
+		public GuiSonarTile gui;
 
-		public PauseButton(GuiSonar gui, IPausable machine, int id, int x, int y, boolean paused) {
+		public PauseButton(GuiSonarTile gui, IPausable machine, int id, int x, int y, boolean paused) {
 			super(id, x, y, new ResourceLocation("Calculator:textures/gui/buttons/buttons.png"), paused ? 51 : 34, 0, 16, 16);
 			this.gui = gui;
 			this.paused = paused;
@@ -199,14 +211,14 @@ public abstract class GuiSonar extends GuiContainer {
 			this.machine = machine;
 		}
 
-        @Override
+		@Override
 		public void drawButtonForegroundLayer(int x, int y) {
-            ArrayList<String> list = new ArrayList<>();
+			ArrayList<String> list = new ArrayList<>();
 			list.add(TextFormatting.BLUE + "" + TextFormatting.UNDERLINE + (paused ? FontHelper.translate("buttons.resume") : FontHelper.translate("buttons.pause")));
 			if (machine instanceof IProcessMachine) {
 				list.add("Current: " + (int) ((double) ((IProcessMachine) machine).getCurrentProcessTime() / ((IProcessMachine) machine).getProcessTime() * 100) + " %");
 			}
-            gui.drawHoveringText(list, x, y, gui.fontRenderer);
+			gui.drawHoveringText(list, x, y, gui.fontRenderer);
 		}
 
 		@Override
@@ -228,15 +240,15 @@ public abstract class GuiSonar extends GuiContainer {
 			this.id = id;
 		}
 
-        @Override
+		@Override
 		public void drawButtonForegroundLayer(int x, int y) {
-            ArrayList<String> list = new ArrayList<>();
+			ArrayList<String> list = new ArrayList<>();
 			list.add(TextFormatting.BLUE + "" + TextFormatting.UNDERLINE + FontHelper.translate("buttons.circuits"));
 			for (Entry<String, Integer> entry : upgrades.getInstalledUpgrades().entrySet()) {
 				int max = upgrades.maxUpgrades.get(entry.getKey());
-                list.add(entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().toLowerCase().substring(1) + ": " + entry.getValue() + '/' + max);
+				list.add(entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().toLowerCase().substring(1) + ": " + entry.getValue() + '/' + max);
 			}
-            drawHoveringText(list, x, y, fontRenderer);
+			drawHoveringText(list, x, y, fontRenderer);
 		}
 
 		@Override

@@ -13,6 +13,8 @@ public interface ISonarRecipeObject {
      * the stored value of this Recipe Object
      */
     Object getValue();
+    
+    boolean isNull();
 	
     int getStackSize();
 	

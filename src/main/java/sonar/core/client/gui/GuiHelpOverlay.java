@@ -5,7 +5,7 @@ import sonar.core.utils.Pair;
 
 import java.util.ArrayList;
 
-public class GuiHelpOverlay<T extends GuiSonar> extends Gui {
+public class GuiHelpOverlay<T extends GuiSonarTile> extends Gui {
 
 	public static boolean enableHelp;
 

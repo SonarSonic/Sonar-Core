@@ -55,7 +55,7 @@ public abstract class GuiGridElement<T> {
         return getGridSize() > gWidth * gHeight;
     }
 
-    public void renderGrid(GuiSonar gui, int x, int y) {
+    public void renderGrid(GuiSonarTile gui, int x, int y) {
         if (gridList.isEmpty()) {
             return;
         }
@@ -89,7 +89,7 @@ public abstract class GuiGridElement<T> {
     }
 
     public @Nullable
-    Pair<T, Integer> getElementHovered(GuiSonar gui, int x, int y) {
+    Pair<T, Integer> getElementHovered(GuiSonarTile gui, int x, int y) {
         List<T> list = gridList;
         int start = (int) (gridList.size() / gWidth * getCurrentScroll());
         int X = (x - gui.getGuiLeft() - xPos) / eWidth;
@@ -107,7 +107,7 @@ public abstract class GuiGridElement<T> {
         return new Pair(null, -2);
     }
 
-    public void mouseClicked(GuiSonar gui, int x, int y, int button) {
+    public void mouseClicked(GuiSonarTile gui, int x, int y, int button) {
         Pair<T, Integer> e = getElementHovered(gui, x, y);
         if (e.b != -2)
             onGridClicked(e.a, e.b, button, e.a == null);
