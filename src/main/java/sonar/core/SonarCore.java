@@ -58,7 +58,7 @@ public class SonarCore {
 	public static final String name = "SonarCore";
 	public static final String modid = "sonarcore";
 	public static final String version = "5.0.1";
-	public static final String mc_versions = "[1.12,1.12.1,1.12.2]";
+	public static final String mc_versions = "[1.12,1.12.2]";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;

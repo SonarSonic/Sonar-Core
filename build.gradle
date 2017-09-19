@@ -61,7 +61,7 @@ compileJava {
 minecraft {
     version = "${forge_version}"
     runDir = "run"
-    mappings = "snapshot_20170624"
+    mappings = "snapshot_20170919"
     makeObfSourceJar = false
 }
 
