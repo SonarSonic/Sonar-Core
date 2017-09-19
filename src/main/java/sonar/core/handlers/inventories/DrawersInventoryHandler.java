@@ -52,7 +52,7 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
 					ItemStack item = draw.getStoredItemPrototype();
 					maxStorage+=draw.getMaxCapacity();
 					stored+=draw.getStoredItemCount();
-					if (item != null){						
+					if (!item.isEmpty()){						
 						SonarAPI.getItemHelper().addStackToList(storedStacks, new StoredItemStack(item, draw.getStoredItemCount()));
 					}
 				}

@@ -7,8 +7,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.api.utils.ICalculatorCircuit;
 
 public class ItemStackHelper {
-    public static ItemStack EMPTY; // TODO make this ItemStack.EMPTY on update.
-
     /**
      * checks if the two itemstacks are equal and can be merged
 	 * 
@@ -52,18 +50,18 @@ public class ItemStackHelper {
 	}
 
     public static ItemStack grow(ItemStack stack, int stackSize) {
-        if (stack != EMPTY) {
+        if (!stack.isEmpty()) {
             stack.setCount(stack.getCount() + stackSize);
         }
         return stack;
     }
 
     public static ItemStack shrink(ItemStack stack, int stackSize) {
-        if (stack != EMPTY) {
+        if (!stack.isEmpty()) {
             stack.setCount(stack.getCount() - stackSize);
         }
         if (stack.getCount() <= 0) {
-            stack = EMPTY;
+            stack = ItemStack.EMPTY;
         }
         return stack;
     }

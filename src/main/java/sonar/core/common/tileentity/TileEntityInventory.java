@@ -32,8 +32,6 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 		if (inv instanceof SonarInventory) {
 			return ((SonarInventory) inv).slots;
 		} else {
-			//SonarCore.logger.error("INV ERROR: The inventory has no slots in " + this);
-			//return new ItemStack[inv.getSizeInventory()];
 			return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 		}
 	}
@@ -49,19 +47,6 @@ public class TileEntityInventory extends TileEntitySonar implements IInventory {
 			return (T) inv.getItemHandler(facing);
 		}
 		return super.getCapability(capability, facing);
-	}
-
-    @Override
-	public void readData(NBTTagCompound nbt, SyncType type) {
-		super.readData(nbt, type);
-		//getTileInv().readData(nbt, type);
-	}
-
-    @Override
-	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
-		super.writeData(nbt, type);
-		//getTileInv().writeData(nbt, type);
-		return nbt;
 	}
 
     @Override

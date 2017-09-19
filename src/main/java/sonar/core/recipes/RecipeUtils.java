@@ -44,7 +44,6 @@ public class RecipeUtils {
 			int i = 0;
             for (Ingredient stack : shaped) {
                 //stacks.set(i, addStack(new ArrayList<>(), stack.copy()));
-                System.out.println("test");
 				i++;
 			}
 		} else if (recipe instanceof ShapelessRecipes) {
@@ -52,7 +51,6 @@ public class RecipeUtils {
 			int i = 0;
             for (Ingredient stack : shaped.recipeItems) {
                 //stacks.set(i, addStack(new ArrayList<>(), stack.copy()));
-                System.out.println("test");
 				i++;
 			}
 		} else if (recipe instanceof ShapedOreRecipe) {

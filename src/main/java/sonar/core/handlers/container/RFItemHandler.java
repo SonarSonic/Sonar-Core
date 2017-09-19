@@ -13,7 +13,7 @@ public class RFItemHandler implements ISonarEnergyContainerHandler {
 
 	@Override
 	public boolean canHandleItem(ItemStack stack) {
-		return stack.getItem() != null && stack.getItem() instanceof IEnergyContainerItem;
+		return !stack.isEmpty() && stack.getItem() instanceof IEnergyContainerItem;
 	}
 
 	@Override

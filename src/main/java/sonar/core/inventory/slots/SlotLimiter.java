@@ -17,11 +17,11 @@ public class SlotLimiter extends Slot {
 
     @Override
 	public boolean canTakeStack(EntityPlayer player) {
-        return this.getStack() == null || this.getStack().getItem() != item;
+        return this.getStack().isEmpty() || this.getStack().getItem() != item;
 	}
 
     @Override
 	public boolean isItemValid(ItemStack stack) {
-        return stack != null && stack.getItem() != item;
+        return !stack.isEmpty() && stack.getItem() != item;
 	}
 }

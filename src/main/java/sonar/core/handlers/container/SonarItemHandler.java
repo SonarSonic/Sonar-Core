@@ -13,7 +13,7 @@ public class SonarItemHandler implements ISonarEnergyContainerHandler {
 
 	@Override
 	public boolean canHandleItem(ItemStack stack) {
-		return stack.getItem() != null && stack.getItem() instanceof ISonarEnergyItem;
+		return !stack.isEmpty() && stack.getItem() instanceof ISonarEnergyItem;
 	}
 
 	@Override

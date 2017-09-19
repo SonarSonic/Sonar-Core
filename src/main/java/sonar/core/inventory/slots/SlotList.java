@@ -11,27 +11,27 @@ public class SlotList extends Slot {
 		super(inv, slot, x, y);
 	}
 
-    @Override
-    public boolean canTakeStack(EntityPlayer player) {
-        return false;
-    }
+	@Override
+	public boolean canTakeStack(EntityPlayer player) {
+		return false;
+	}
 
-    @Override
-    public ItemStack decrStackSize(int size) {
+	@Override
+	public ItemStack decrStackSize(int size) {
 		this.inventory.setInventorySlotContents(this.getSlotIndex(), null);
 		this.inventory.markDirty();
-        return null;
-    }
+		return null;
+	}
 
-    @Override
+	@Override
 	public void onSlotChanged() {
 		putStack(this.getStack());
 	}
 
-    @Override
+	@Override
 	public void putStack(ItemStack stack) {
-		ItemStack copy = null;
-		if (stack != null) {
+		ItemStack copy = ItemStack.EMPTY;
+		if (stack.isEmpty()) {
 			copy = stack.copy();
 			copy.setCount(1);
 		}
@@ -39,7 +39,7 @@ public class SlotList extends Slot {
 		this.inventory.markDirty();
 	}
 
-    @Override
+	@Override
 	public int getSlotStackLimit() {
 		return 1;
 	}

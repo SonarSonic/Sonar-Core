@@ -74,7 +74,7 @@ public class SonarLoader {
     }
 
 	public static boolean isEnabled(ItemStack stack) {
-		if (stack == null) {
+		if (stack.isEmpty()) {
 			return true;
 		}
 		if (calculatorLoaded()) {

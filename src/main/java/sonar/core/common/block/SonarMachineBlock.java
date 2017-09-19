@@ -17,31 +17,23 @@ public abstract class SonarMachineBlock extends SonarBlock implements ITileEntit
 		super(material, orientation, wrenchable);
 	}
 
-    //public abstract TileEntity createNewTileEntity(World world, int i);
-	/*
-    public boolean eventReceived(IBlockState state, World world, BlockPos pos, int id, int param){
-		super.eventReceived(state, world, pos, id, param);
-		TileEntity tileentity = world.getTileEntity(pos);
-		return tileentity != null ? tileentity.receiveClientEvent(id, param) : false;
-	}
-	*/
-    @Override
-    public void addSpecialToolTip(ItemStack stack, EntityPlayer player, List<String> list) {
-	}
+	// public abstract TileEntity createNewTileEntity(World world, int i);
+	/* public boolean eventReceived(IBlockState state, World world, BlockPos
+	 * pos, int id, int param){ super.eventReceived(state, world, pos, id,
+	 * param); TileEntity tileentity = world.getTileEntity(pos); return
+	 * tileentity != null ? tileentity.receiveClientEvent(id, param) : false;
+	 * } */
+	@Override
+	public void addSpecialToolTip(ItemStack stack, EntityPlayer player, List<String> list) {}
 
-    @Override
-    public void standardInfo(ItemStack stack, EntityPlayer player, List<String> list) {
-    }
+	@Override
+	public void standardInfo(ItemStack stack, EntityPlayer player, List<String> list) {}
 
-    @Override
-    public void addSpecialToolTip(ItemStack itemStack, World world, List<String> list) {
+	@Override
+	public void addSpecialToolTip(ItemStack itemStack, World world, List<String> list) {}
 
-    }
-
-    @Override
-    public void standardInfo(ItemStack itemStack, World world, List<String> list) {
-
-	}
+	@Override
+	public void standardInfo(ItemStack itemStack, World world, List<String> list) {}
 
 	@Override
 	public boolean dropStandard(IBlockAccess world, BlockPos pos) {

@@ -19,14 +19,14 @@ public class SlotAllowed extends Slot {
 	public boolean isItemValid(ItemStack stack) {
 		if (items instanceof ItemStack[]) {
 			ItemStack[] itemList = (ItemStack[]) items;
-            for (ItemStack anItemList : itemList) {
-                if (anItemList != null && anItemList.getItem() == stack.getItem()) {
+            for (ItemStack itemstack : itemList) {
+                if (!itemstack.isEmpty() && itemstack.getItem() == stack.getItem()) {
 					return true;
 				}
 			}
 		} else if (items instanceof ItemStack) {
 			ItemStack itemstack = (ItemStack) items;
-			if (itemstack != null && itemstack.getItem() == stack.getItem()) {
+			if (!itemstack.isEmpty() && itemstack.getItem() == stack.getItem()) {
 				return true;
 			}
 		} else if (items instanceof Item) {

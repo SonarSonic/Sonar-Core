@@ -52,11 +52,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-@Mod(modid = SonarCore.modid, name = "SonarCore", version = SonarCore.version)
+@Mod(modid = SonarCore.modid, name = SonarCore.name, version = SonarCore.version, acceptedMinecraftVersions = SonarCore.mc_versions)
 public class SonarCore {
 
+	public static final String name = "SonarCore";
 	public static final String modid = "sonarcore";
-    public static final String version = "5.0.0";
+	public static final String version = "5.0.1";
+	public static final String mc_versions = "[1.12,1.12.1,1.12.2]";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -91,7 +93,7 @@ public class SonarCore {
 	public static Block reinforcedStoneSlab_double, reinforcedStoneBrickSlab_double, reinforcedDirtSlab_double, reinforcedDirtBrickSlab_double;
 
 	public static Block black_dev_block, white_dev_block;
-	
+
 	public static final Random rand = new Random();
 
 	public static CreativeTabs tab = new CreativeTabs("SonarCore") {
@@ -103,9 +105,9 @@ public class SonarCore {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-        logger.info("Initialising API");
+		logger.info("Initialising API");
 		SonarAPI.init();
-        logger.info("Initialised API");
+		logger.info("Initialised API");
 
 		logger.info("Registering Blocks");
 		SonarBlocks.registerBlocks();
@@ -123,7 +125,7 @@ public class SonarCore {
 
 		ASMDataTable asmDataTable = event.getAsmData();
 		ASMLoader.load(asmDataTable);
-        proxy.preInit(event);
+		proxy.preInit(event);
 	}
 
 	@EventHandler
@@ -148,7 +150,7 @@ public class SonarCore {
 		planters.register();
 		harvesters.register();
 		fertilisers.register();
-        proxy.load(event);
+		proxy.load(event);
 	}
 
 	@EventHandler
@@ -165,7 +167,7 @@ public class SonarCore {
 		logger.info("Registered " + energyHandlers.size() + " Energy Handlers");
 		logger.info("Registered " + energyContainerHandlers.size() + " Energy Container Providers");
 		logger.info("Registered " + machineUpgrades.getMap().size() + " Machine Upgrades");
-        proxy.postLoad(event);
+		proxy.postLoad(event);
 	}
 
 	private void registerPackets() {
@@ -180,36 +182,40 @@ public class SonarCore {
 			network.registerMessage(PacketStackUpdate.Handler.class, PacketStackUpdate.class, 7, Side.CLIENT);
 			network.registerMessage(PacketInvUpdate.Handler.class, PacketInvUpdate.class, 8, Side.CLIENT);
 			network.registerMessage(PacketTileSyncUpdate.Handler.class, PacketTileSyncUpdate.class, 9, Side.CLIENT);
-			
-            /*if (SonarLoader.mcmultipartLoaded) {
-				network.registerMessage(PacketMultipartSync.Handler.class, PacketMultipartSync.class, 10, Side.CLIENT);
-				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 11, Side.CLIENT);
-				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 12, Side.SERVER);
-				network.registerMessage(PacketRequestMultipartSync.Handler.class, PacketRequestMultipartSync.class, 13, Side.SERVER);
-            }*/
+
+			/* if (SonarLoader.mcmultipartLoaded) {
+			 * network.registerMessage(PacketMultipartSync.Handler.class,
+			 * PacketMultipartSync.class, 10, Side.CLIENT);
+			 * network.registerMessage(PacketByteBufMultipart.Handler.class,
+			 * PacketByteBufMultipart.class, 11, Side.CLIENT);
+			 * network.registerMessage(PacketByteBufMultipart.Handler.class,
+			 * PacketByteBufMultipart.class, 12, Side.SERVER);
+			 * network.registerMessage(PacketRequestMultipartSync.Handler.class,
+			 * PacketRequestMultipartSync.class, 13, Side.SERVER); } */
 			network.registerMessage(PacketFlexibleOpenGui.Handler.class, PacketFlexibleOpenGui.class, 14, Side.CLIENT);
 			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 15, Side.CLIENT);
 			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 16, Side.SERVER);
 			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 17, Side.CLIENT);
 			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 18, Side.SERVER);
-            //network.registerMessage(PacketFlexibleMultipartChangeGui.Handler.class, PacketFlexibleMultipartChangeGui.class, 19, Side.SERVER);
+			// network.registerMessage(PacketFlexibleMultipartChangeGui.Handler.class,
+			// PacketFlexibleMultipartChangeGui.class, 19, Side.SERVER);
 			network.registerMessage(PacketFlexibleItemStackChangeGui.Handler.class, PacketFlexibleItemStackChangeGui.class, 20, Side.SERVER);
 		}
 	}
 
-    public static void registerItems(List<ISonarRegistryItem> items) {
+	public static void registerItems(List<ISonarRegistryItem> items) {
 		for (ISonarRegistryItem item : items) {
 			Item toRegister = item.getItem();
-            ForgeRegistries.ITEMS.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(item.getRegistryName()) : toRegister);
+			ForgeRegistries.ITEMS.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(item.getRegistryName()) : toRegister);
 			item.setItem(toRegister);
 		}
 	}
 
-    public static void registerBlocks(List<ISonarRegistryBlock> blocks) {
+	public static void registerBlocks(List<ISonarRegistryBlock> blocks) {
 		for (ISonarRegistryBlock block : blocks) {
 			Block toRegister = block.getBlock();
-            ForgeRegistries.BLOCKS.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(block.getRegistryName()) : toRegister);
-            ForgeRegistries.ITEMS.register(new SonarBlockTip(toRegister).setRegistryName(block.getRegistryName()));
+			ForgeRegistries.BLOCKS.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(block.getRegistryName()) : toRegister);
+			ForgeRegistries.ITEMS.register(new SonarBlockTip(toRegister).setRegistryName(block.getRegistryName()));
 			block.setBlock(toRegister);
 			if (block.hasTileEntity()) {
 				GameRegistry.registerTileEntity(block.getTileEntity(), block.getRegistryName());
@@ -237,7 +243,7 @@ public class SonarCore {
 	}
 
 	public static void sendFullSyncAroundWithRenderUpdate(TileEntity tile, int spread) {
-		if (tile!=null && tile.getWorld()!=null && !tile.getWorld().isRemote && tile instanceof INBTSyncable) {
+		if (tile != null && tile.getWorld() != null && !tile.getWorld().isRemote && tile instanceof INBTSyncable) {
 			NBTTagCompound tag = ((INBTSyncable) tile).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendToAllAround(new PacketTileSyncUpdate(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
@@ -259,6 +265,6 @@ public class SonarCore {
 	}
 
 	public static int randInt(int min, int max) {
-        return rand.nextInt(max - min + 1) + min;
+		return rand.nextInt(max - min + 1) + min;
 	}
 }

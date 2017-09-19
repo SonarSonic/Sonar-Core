@@ -20,8 +20,6 @@ import java.util.List;
 
 public class InventoryHelper extends InventoryWrapper {
 
-    public static ItemStack EMPTY; //TODO make this ItemStack.EMPTY on update.
-
 	public static ISonarInventoryHandler defHandler = new IInventoryHandler();
 
 	public static boolean addStack(IInventory inv, StoredItemStack add, int slot, int limit, ActionType action) {
@@ -65,7 +63,7 @@ public class InventoryHelper extends InventoryWrapper {
 			stack.setCount((int) (stack.getCount()-used));
 			remove.stored -= used;
 			if (stack.getCount() == 0) {
-				stack = null;
+				stack = ItemStack.EMPTY;
 			}
 			if (!action.shouldSimulate()) {
 				inv.setInventorySlotContents(slot, stack);

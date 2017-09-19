@@ -9,11 +9,10 @@ import sonar.core.helpers.NBTHelper.SyncType;
 
 public class StoredItemStack implements ISonarStack<StoredItemStack> {
 
-	public ItemStack item;
+	public ItemStack item = ItemStack.EMPTY;
 	public long stored;
 
-	public StoredItemStack() {
-	}
+	public StoredItemStack() {}
 
 	public StoredItemStack(ItemStack stack) {
 		this.item = stack.copy();
@@ -68,7 +67,7 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 	}
 
 	public boolean equalStack(ItemStack stack) {
-        return this.item != null && stack != null && this.item.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(stack, this.item);
+        return !item.isEmpty() && !stack.isEmpty() && this.item.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(stack, this.item);
 	}
 
 	@Override
@@ -152,10 +151,10 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 	}
 
 	public String toString() {
-		if (item != null) {
+		if (!item.isEmpty()) {
             return this.stored + "x" + this.item.getUnlocalizedName() + '@' + item.getItemDamage();
 		} else {
-			return super.toString() + " : NULL";
+			return super.toString() + " : EMPTY";
 		}
 	}
 }

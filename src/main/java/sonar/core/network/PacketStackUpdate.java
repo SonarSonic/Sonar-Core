@@ -14,32 +14,30 @@ public class PacketStackUpdate implements IMessage {
 
 	public ItemStack stack;
 
-	public PacketStackUpdate() {
-	}
+	public PacketStackUpdate() {}
 
 	public PacketStackUpdate(ItemStack stack) {
 		this.stack = stack;
 	}
 
-    @Override
+	@Override
 	public void fromBytes(ByteBuf buf) {
-		if (buf.readBoolean())
-			this.stack = ByteBufUtils.readItemStack(buf);
+		this.stack = buf.readBoolean() ? ByteBufUtils.readItemStack(buf) : ItemStack.EMPTY;
 	}
 
-    @Override
+	@Override
 	public void toBytes(ByteBuf buf) {
-		if (stack != null) {
+		if (!stack.isEmpty()) {
 			buf.writeBoolean(true);
 			ByteBufUtils.writeItemStack(buf, stack);
-		}else{
+		} else {
 			buf.writeBoolean(false);
 		}
 	}
 
 	public static class Handler implements IMessageHandler<PacketStackUpdate, IMessage> {
 
-        @Override
+		@Override
 		public IMessage onMessage(PacketStackUpdate message, MessageContext ctx) {
 			EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 			if (player != null && ctx.side == Side.CLIENT) {

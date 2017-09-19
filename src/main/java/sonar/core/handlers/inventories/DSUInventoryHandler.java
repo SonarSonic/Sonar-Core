@@ -50,7 +50,7 @@ public class DSUInventoryHandler implements ISonarInventoryHandler {
 	public StoredItemStack addStack(StoredItemStack add, TileEntity tile, EnumFacing dir, ActionType action) {
 		IDeepStorageUnit inv = (IDeepStorageUnit) tile;
 		ItemStack stack = inv.getStoredItemType();
-		if (stack != null) {
+		if (!stack.isEmpty()) {
 			if (add.equalStack(stack)) {
 				long max = inv.getMaxStoredCount();
 				long storedItems = stack.getCount();
