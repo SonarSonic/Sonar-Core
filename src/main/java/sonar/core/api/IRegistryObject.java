@@ -2,7 +2,7 @@ package sonar.core.api;
 
 public interface IRegistryObject {
 
-	public boolean isLoadable();
+    boolean isLoadable();
 
-	public String getName();
+    String getName();
 }

@@ -34,7 +34,6 @@ public class StorageSize implements INBTSyncable {
 	public void add(StorageSize size) {
 		stored += size.stored;
 		max += size.max;
-
 	}
 
 	@Override

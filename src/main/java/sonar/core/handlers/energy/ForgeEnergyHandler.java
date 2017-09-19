@@ -9,10 +9,8 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.energy.GenericForgeEnergyHandler;
 
-@EnergyHandler(modid = "sonarcore", handlerID = ForgeEnergyHandler.name, priority = 0)
+@EnergyHandler(modid = "sonarcore", priority = 0)
 public class ForgeEnergyHandler implements ISonarEnergyHandler {
-
-	public static final String name = "Forge-Energy-Handler";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {

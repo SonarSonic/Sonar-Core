@@ -25,7 +25,7 @@ public class MachineUpgrade extends SonarItem {
 			if (!player.isSneaking()) {
 				if (upgrades.addUpgrade(player.getHeldItemMainhand())) {
 					stack.shrink(1);
-					FontHelper.sendMessage("" + upgrades.getInstalledUpgrades(), world, player);
+                    FontHelper.sendMessage(String.valueOf(upgrades.getInstalledUpgrades()), world, player);
 				} else {
 					if (upgrades.getAllowedUpgrades().contains(SonarCore.machineUpgrades.getSecondaryObject(stack.getItem()))) {
 						FontHelper.sendMessage(FontHelper.translate("upgrade.maximum"), world, player);

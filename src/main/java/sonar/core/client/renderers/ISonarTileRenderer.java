@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public interface ISonarTileRenderer extends ISonarCustomRenderer {
 
-	public Class<? extends TileEntity> getTileEntity();
+    Class<? extends TileEntity> getTileEntity();
 	
-	public TileEntitySpecialRenderer getTileRenderer();
+    TileEntitySpecialRenderer getTileRenderer();
 }

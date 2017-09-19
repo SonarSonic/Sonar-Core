@@ -6,22 +6,25 @@ import net.minecraft.world.World;
 
 public interface IFlexibleGui<T> {
 
-	public void onGuiOpened(T obj, int id, World world, EntityPlayer player, NBTTagCompound tag);
+    void onGuiOpened(T obj, int id, World world, EntityPlayer player, NBTTagCompound tag);
 	
-	/** @param obj either a TileEntity, Multipart or ItemStack
+    /**
+     * @param obj    either a TileEntity, Multipart or ItemStack
 	 * @param id the GUI ID
 	 * @param world the world instance
 	 * @param player the player instance
 	 * @param tag the tag for the gui
-	 * @return */
-	public Object getServerElement(T obj, int id, World world, EntityPlayer player, NBTTagCompound tag);
+     * @return
+     */
+    Object getServerElement(T obj, int id, World world, EntityPlayer player, NBTTagCompound tag);
 
-	/** @param obj either a TileEntity, Multipart or ItemStack
+    /**
+     * @param obj    either a TileEntity, Multipart or ItemStack
 	 * @param id the GUI ID
 	 * @param world the world instance
 	 * @param player the player instance
 	 * @param tag the tag for the gui
-	 * @return */
-	public Object getClientElement(T obj, int id, World world, EntityPlayer player, NBTTagCompound tag);
-
+     * @return
+     */
+    Object getClientElement(T obj, int id, World world, EntityPlayer player, NBTTagCompound tag);
 }

@@ -14,6 +14,7 @@ public abstract class SonarCustomRendererBlock<T extends TileEntity> extends Son
 		super(material, orientation, wrenchable);
 	}
 
+    @Override
 	public final IBlockStateSpecial<T, ? extends IBlockState> getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		return new BlockStateSpecial<>(state, pos, (T) world.getTileEntity(pos));
 	}

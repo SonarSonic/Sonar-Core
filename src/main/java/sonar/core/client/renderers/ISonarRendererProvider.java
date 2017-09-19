@@ -6,5 +6,5 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface ISonarRendererProvider {
 
 	@SideOnly(Side.CLIENT)
-	public ISonarCustomRenderer getRenderer();
+    ISonarCustomRenderer getRenderer();
 }

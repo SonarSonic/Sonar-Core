@@ -2,9 +2,13 @@ package sonar.core.api.utils;
 
 public enum ActionType {
 	
-	/** simulates the intended action */
+    /**
+     * simulates the intended action
+     */
 	SIMULATE,
-	/** performs the intended action */
+    /**
+     * performs the intended action
+     */
 	PERFORM;
 	
 	public boolean shouldSimulate() {
@@ -17,10 +21,9 @@ public enum ActionType {
 	}
 	
 	public static ActionType getTypeForAction(boolean simulate){
-		if(simulate==true){
+        if (simulate) {
 			return SIMULATE;
 		}			
 		return PERFORM;
-		
 	}
 }

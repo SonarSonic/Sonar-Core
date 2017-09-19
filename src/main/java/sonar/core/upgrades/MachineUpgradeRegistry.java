@@ -14,5 +14,4 @@ public class MachineUpgradeRegistry extends LinkedRegistryHelper<String, Item> {
 	public String registeryType() {
 		return "Machine Upgrade";
 	}
-
 }

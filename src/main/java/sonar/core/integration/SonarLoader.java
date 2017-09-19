@@ -1,19 +1,21 @@
 package sonar.core.integration;
 
-import java.lang.reflect.Method;
-
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
 
+import java.lang.reflect.Method;
+
 public class SonarLoader {
 
-	public static boolean wailaLoaded = false;
-	public static boolean teslaLoaded = false;
-	public static boolean calculatorLoaded = false;
-	public static boolean logisticsLoaded = false;
-	public static boolean mcmultipartLoaded = false;
-	public static boolean fluxedRedstone = false;
-	public static boolean ic2loaded = false;
+    public static boolean wailaLoaded;
+    public static boolean teslaLoaded;
+    public static boolean calculatorLoaded;
+    public static boolean logisticsLoaded;
+    public static boolean fluxedRedstone;
+    public static boolean mcmultipartLoaded;
+    public static boolean ic2loaded;
+    public static boolean jeiloaded;
+    public static boolean rfLoaded;
 
 	public static void initLoader() {
 		mcmultipartLoaded = Loader.isModLoaded("mcmultipart");
@@ -22,33 +24,41 @@ public class SonarLoader {
 		calculatorLoaded = Loader.isModLoaded("calculator") || Loader.isModLoaded("Calculator");
 		logisticsLoaded = Loader.isModLoaded("PracticalLogistics2") || Loader.isModLoaded("practicallogistics2");
 		fluxedRedstone = Loader.isModLoaded("fluxedredstone");
+        rfLoaded = Loader.isModLoaded("redstoneflux");
 		ic2loaded = Loader.isModLoaded("IC2") || Loader.isModLoaded("IC2".toLowerCase());
+        jeiloaded = Loader.isModLoaded("jei") || Loader.isModLoaded("JEI");
+    }
 
+    public static boolean jeiLoaded() {
+        return jeiloaded;
 	}
 
-	/** @returns if Industrial Craft is installed */
+    /**
+     * @returns if Industrial Craft is installed
+     */
 	public static boolean ic2Loaded() {
 		return ic2loaded;
 	}
 
-	/** @returns if Waila is installed */
+    /**
+     * @returns if Waila is installed
+     */
 	public static boolean wailaLoaded() {
 		return wailaLoaded;
 	}
 
-	/** @returns if Calculator is installed */
+    /**
+     * @returns if Calculator is installed
+     */
 	public static boolean calculatorLoaded() {
 		return calculatorLoaded;
 	}
 
-	/** @returns if Optics is installed */
+    /**
+     * @returns if Optics is installed
+     */
 	public static boolean opticsLoaded() {
 		return Loader.isModLoaded("Optics");
-	}
-
-	/** @returns if Practical Logistics is installed */
-	public static boolean logisticsLoaded() {
-		return logisticsLoaded;
 	}
 
 	/** @returns if Forge Multipart is installed */
@@ -56,8 +66,15 @@ public class SonarLoader {
 		return Loader.isModLoaded("ForgeMultipart");
 	}
 
+    /**
+     * @returns if Practical Logistics is installed
+     */
+    public static boolean logisticsLoaded() {
+        return logisticsLoaded;
+    }
+
 	public static boolean isEnabled(ItemStack stack) {
-		if (stack == null) {
+		if (stack.isEmpty()) {
 			return true;
 		}
 		if (calculatorLoaded()) {
@@ -81,6 +98,5 @@ public class SonarLoader {
 			}
 		}
 		return true;
-
 	}
 }

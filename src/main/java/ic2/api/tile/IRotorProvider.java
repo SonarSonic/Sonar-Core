@@ -13,20 +13,20 @@ public interface IRotorProvider {
 	/**
 	 * @return Radius of current rotor (in blocks), or 0 for no rotor
 	 */
-	public int getRotorDiameter();
+    int getRotorDiameter();
 
 	/**
 	 * @return The current direction the rotor is facing
 	 */
-	public EnumFacing getFacing();
+    EnumFacing getFacing();
 
 	/**
 	 * @return Angle (in degrees) to render the rotor at
 	 */
-	public float getAngle();
+    float getAngle();
 
 	/**
 	 * @return Texture of the current rotor, called every tick so remember to store in a variable
 	 */
-	public ResourceLocation getRotorRenderTexture();
+    ResourceLocation getRotorRenderTexture();
 }

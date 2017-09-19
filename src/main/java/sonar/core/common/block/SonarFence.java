@@ -16,12 +16,19 @@ public class SonarFence extends BlockFence {
 
 	public SonarFence(Material connectMaterial) {
 		super(connectMaterial, MapColor.GRAY);
-		// this.connectMaterial=connectMaterial;
+        setHardness(2.0f);
+        setResistance(10.0f);
+    }
+
+    public SonarFence(Material connectMaterial, float hardness, float resistance) {
+        super(connectMaterial, MapColor.GRAY);
+        setHardness(hardness);
+        setResistance(resistance);
 	}
 
 	public boolean canConnectTo(IBlockAccess worldIn, BlockPos pos) {
 		IBlockState state = worldIn.getBlockState(pos);
 		Block block = state.getBlock();
-		return block == Blocks.BARRIER ? false : ((!(block instanceof BlockFence) || state.getMaterial() != this.blockMaterial) && !(block instanceof BlockFenceGate || block instanceof SonarGate) ? (block.getMaterial(state).isOpaque() && block.isFullCube(state) ? block.getMaterial(state) != Material.GOURD : false) : true);
+        return block != Blocks.BARRIER && (block instanceof BlockFence && state.getMaterial() == this.blockMaterial || block instanceof BlockFenceGate || block.getMaterial(state).isOpaque() && block.isFullCube(state) && block.getMaterial(state) != Material.GOURD);
 	}
 }

@@ -20,19 +20,19 @@ public class GenericTeslaHandler {
 			return energyStack;
 		}
 		if (tile.hasCapability(TeslaCapabilities.CAPABILITY_HOLDER, dir)) {
-			ITeslaHolder holder = (ITeslaHolder) tile.getCapability(TeslaCapabilities.CAPABILITY_HOLDER, dir);
+            ITeslaHolder holder = tile.getCapability(TeslaCapabilities.CAPABILITY_HOLDER, dir);
 			if (holder != null)
 				energyStack.setStorageValues(holder.getStoredPower(), holder.getCapacity());
 		}
 		if (tile.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, dir)) {
-			ITeslaConsumer consumer = (ITeslaConsumer) tile.getCapability(TeslaCapabilities.CAPABILITY_CONSUMER, dir);
+            ITeslaConsumer consumer = tile.getCapability(TeslaCapabilities.CAPABILITY_CONSUMER, dir);
 			if (consumer != null) {
 				long simulateAdd = consumer.givePower(Long.MAX_VALUE, true);
 				energyStack.setMaxInput(simulateAdd);
 			}
 		}
 		if (tile.hasCapability(TeslaCapabilities.CAPABILITY_PRODUCER, dir)) {
-			ITeslaProducer producer = (ITeslaProducer) tile.getCapability(TeslaCapabilities.CAPABILITY_PRODUCER, dir);
+            ITeslaProducer producer = tile.getCapability(TeslaCapabilities.CAPABILITY_PRODUCER, dir);
 			if (producer != null) {
 				long simulateAdd = producer.takePower(Long.MAX_VALUE, true);
 				energyStack.setMaxInput(simulateAdd);
@@ -43,7 +43,7 @@ public class GenericTeslaHandler {
 
 	public static StoredEnergyStack addEnergy(StoredEnergyStack transfer, ICapabilityProvider tile, EnumFacing dir, ActionType action) {
 		if (tile.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, dir)) {
-			ITeslaConsumer consumer = (ITeslaConsumer) tile.getCapability(TeslaCapabilities.CAPABILITY_CONSUMER, dir);
+            ITeslaConsumer consumer = tile.getCapability(TeslaCapabilities.CAPABILITY_CONSUMER, dir);
 			if (consumer != null) {
 				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
 				transfer.stored -= consumer.givePower(transferRF, action.shouldSimulate());
@@ -56,7 +56,7 @@ public class GenericTeslaHandler {
 
 	public static StoredEnergyStack removeEnergy(StoredEnergyStack transfer, ICapabilityProvider tile, EnumFacing dir, ActionType action) {
 		if (tile.hasCapability(TeslaCapabilities.CAPABILITY_PRODUCER, dir)) {
-			ITeslaProducer producer = (ITeslaProducer) tile.getCapability(TeslaCapabilities.CAPABILITY_PRODUCER, dir);
+            ITeslaProducer producer = tile.getCapability(TeslaCapabilities.CAPABILITY_PRODUCER, dir);
 			if (producer != null) {
 				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
 				transfer.stored -= producer.takePower(transferRF, action.shouldSimulate());

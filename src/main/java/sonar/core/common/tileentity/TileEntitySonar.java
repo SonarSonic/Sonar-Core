@@ -1,7 +1,5 @@
 package sonar.core.common.tileentity;
 
-import java.util.List;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,10 +20,11 @@ import sonar.core.integration.IWailaInfo;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.IDirtyPart;
-import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.ISyncableListener;
 import sonar.core.network.sync.SyncableList;
 import sonar.core.utils.IWorldPosition;
+
+import java.util.List;
 
 public class TileEntitySonar extends TileEntity implements ISyncableListener, ITickable, INBTSyncable, IWailaInfo, IWorldPosition {
 
@@ -33,19 +32,20 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 	protected boolean forceSync;
 	protected BlockCoords coords = BlockCoords.EMPTY;
 	public boolean loaded = true;
-	public boolean isDirty = false;
+    public boolean isDirty;
 
 	public TileEntitySonar() {
 	}
 
 	public boolean isClient() {
-		return world == null ? false : world.isRemote;
+        return world != null && world.isRemote;
 	}
 
 	public boolean isServer() {
-		return world == null ? true : !world.isRemote;
+        return world == null || !world.isRemote;
 	}
 
+    @Override
 	public void onLoad() {
 	}
 
@@ -54,17 +54,7 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		markDirty();
 	}
 
-	public void update() {
-		if (loaded) {
-			onFirstTick();
-			loaded = !loaded;
-		}
-		if (isDirty) {
-			this.markDirty();
-			isDirty = !isDirty;
-		}
-	}
-
+    @Override
 	public BlockCoords getCoords() {
 		return coords;
 	}
@@ -82,10 +72,12 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		return nbt;
 	}
 
+    @Override
 	public NBTTagCompound getUpdateTag() {
 		return writeData(super.getUpdateTag(), SyncType.SYNC_OVERRIDE);
 	}
 
+    @Override
 	public void handleUpdateTag(NBTTagCompound tag) {
 		super.handleUpdateTag(tag);
 		this.readData(tag, SyncType.SYNC_OVERRIDE);
@@ -102,15 +94,18 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		readFromNBT(packet.getNbtCompound());
 	}
 
+    @Override
 	public void validate() {
 		super.validate();
 		coords = new BlockCoords(this);
 	}
 
+    @Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		NBTHelper.readSyncParts(nbt, type, syncList);
 	}
 
+    @Override
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		if (forceSync && type == SyncType.DEFAULT_SYNC) {
 			type = SyncType.SYNC_OVERRIDE;
@@ -120,6 +115,7 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		return nbt;
 	}
 
+    @Override
 	@SideOnly(Side.CLIENT)
 	public List<String> getWailaInfo(List<String> currenttip, IBlockState state) {
 		return currenttip;
@@ -156,7 +152,7 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 			SonarCore.sendFullSyncAroundWithRenderUpdate(this, 128);
 		} else {
 			getWorld().markBlockRangeForRenderUpdate(pos, pos);
-			getWorld().getChunkFromBlockCoords(getPos()).setChunkModified();
+            getWorld().getChunkFromBlockCoords(getPos()).setModified(true);
 		}
 		// may need some more stuff, here to make life easier
 	}
@@ -165,6 +161,7 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		return false;
 	}
 
+    @Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared() {
 		return maxRender() ? 65536.0D : super.getMaxRenderDistanceSquared();
@@ -184,4 +181,15 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		}
 	}
 
+    @Override
+    public void update() {
+        if (loaded) {
+            onFirstTick();
+            loaded = !loaded;
+        }
+        if (isDirty) {
+            this.markDirty();
+            isDirty = !isDirty;
+        }
+    }
 }

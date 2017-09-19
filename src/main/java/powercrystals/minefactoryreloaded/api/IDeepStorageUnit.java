@@ -31,5 +31,4 @@ public interface IDeepStorageUnit {
 	 *         May change based on the current type stored.
 	 */
 	int getMaxStoredCount();
-
 }

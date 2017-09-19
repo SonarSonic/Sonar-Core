@@ -16,5 +16,5 @@ public interface IMetalArmor {
 	 * @param player The player
 	 * @return Whether the armor piece is metal armor
 	 */
-	public boolean isMetalArmor(ItemStack itemstack, EntityPlayer player);
+    boolean isMetalArmor(ItemStack itemstack, EntityPlayer player);
 }

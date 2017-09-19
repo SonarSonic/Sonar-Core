@@ -48,20 +48,21 @@ public class SyncItemEnergyStorage extends SyncEnergyStorage implements ICapabil
 		}
 	}
 
+    @Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		if (SonarLoader.teslaLoaded) {
-			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+            if (capability == TeslaCapabilities.CAPABILITY_CONSUMER || capability == TeslaCapabilities.CAPABILITY_PRODUCER || capability == TeslaCapabilities.CAPABILITY_HOLDER)
 				return true;
 		}
 		return false;
 	}
 
+    @Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (SonarLoader.teslaLoaded) {
-			if ((capability == TeslaCapabilities.CAPABILITY_CONSUMER) || (capability == TeslaCapabilities.CAPABILITY_PRODUCER) || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+            if (capability == TeslaCapabilities.CAPABILITY_CONSUMER || capability == TeslaCapabilities.CAPABILITY_PRODUCER || capability == TeslaCapabilities.CAPABILITY_HOLDER)
 				return (T) this;
 		}
 		return null;
 	}
-
 }

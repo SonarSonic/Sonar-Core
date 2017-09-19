@@ -1,18 +1,20 @@
 package sonar.core.network.sync;
 
-import javax.annotation.Nullable;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 
-/**for use when the type of object stored is subject to change, this can only be used with primitives*/
+import javax.annotation.Nullable;
+
+/**
+ * for use when the type of object stored is subject to change, this can only be used with primitives
+ */
 public class SyncUnidentifiedObject extends SyncPart {
 
-	public Object obj = null;
-	public ObjectType objType = null;
+    public Object obj;
+    public ObjectType objType;
 
 	public SyncUnidentifiedObject(int id) {
 		super(id);

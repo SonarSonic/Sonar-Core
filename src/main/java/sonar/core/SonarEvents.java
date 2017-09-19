@@ -15,11 +15,9 @@ public class SonarEvents {
 				if (interact.allowLeftClick()) {
 					if (interact.isClickableSide(event.getWorld(), event.getPos(), event.getFace().getIndex())) {
 						event.setCanceled(true);
-						return;
 					}
 				}
 			}
 		}
 	}
-
 }

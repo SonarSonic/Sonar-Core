@@ -6,7 +6,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-
 public class SlotAllowed extends Slot {
 
 	public Object items;
@@ -16,17 +15,18 @@ public class SlotAllowed extends Slot {
 		this.items=items;
 	}
 
+    @Override
 	public boolean isItemValid(ItemStack stack) {
 		if (items instanceof ItemStack[]) {
 			ItemStack[] itemList = (ItemStack[]) items;
-			for (int i = 0; i < itemList.length; i++) {
-				if (itemList[i] != null && itemList[i].getItem() == stack.getItem()) {
+            for (ItemStack itemstack : itemList) {
+                if (!itemstack.isEmpty() && itemstack.getItem() == stack.getItem()) {
 					return true;
 				}
 			}
 		} else if (items instanceof ItemStack) {
 			ItemStack itemstack = (ItemStack) items;
-			if (itemstack != null && itemstack.getItem() == stack.getItem()) {
+			if (!itemstack.isEmpty() && itemstack.getItem() == stack.getItem()) {
 				return true;
 			}
 		} else if (items instanceof Item) {

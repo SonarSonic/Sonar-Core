@@ -20,5 +20,5 @@ public interface IItemHudInfo {
 
 	 */
 
-	public List<String> getHudInfo(ItemStack stack);
+	List<String> getHudInfo(ItemStack stack);
 }

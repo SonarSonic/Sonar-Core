@@ -44,7 +44,7 @@ public class IEHempHarvester implements IHarvester {
 
 	@Override
 	public List<ItemStack> getDrops(World world, BlockPos pos, IBlockState state, int fortune) {	
-		List<ItemStack> drops = new ArrayList();
+		List<ItemStack> drops = new ArrayList<>();
 		((BlockIECrop) state.getBlock()).getDrops(world, pos, state, fortune).forEach(stack -> drops.add((ItemStack) stack));
 		((BlockIECrop) state.getBlock()).getDrops(world, pos.offset(EnumFacing.UP), world.getBlockState(pos.offset(EnumFacing.UP)), fortune).forEach(stack -> drops.add((ItemStack) stack));
 		

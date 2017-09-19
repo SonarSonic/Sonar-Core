@@ -2,11 +2,8 @@ package sonar.core.network.utils;
 
 import io.netty.buffer.ByteBuf;
 
-/**to be replaced*/
-@Deprecated
 public interface IByteBufTile {
+    void writePacket(ByteBuf buf, int id);
 
-	public void writePacket(ByteBuf buf, int id);	
-
-	public void readPacket(ByteBuf buf, int id);
+    void readPacket(ByteBuf buf, int id);
 }

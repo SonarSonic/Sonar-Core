@@ -1,9 +1,10 @@
 package sonar.core.handlers.energy;
 
 import mekanism.api.energy.IStrictEnergyAcceptor;
+import mekanism.api.energy.IStrictEnergyOutputter;
 import mekanism.api.energy.IStrictEnergyStorage;
-import mekanism.api.util.CapabilityUtils;
 import mekanism.common.capabilities.Capabilities;
+import mekanism.common.util.CapabilityUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.asm.EnergyHandler;
@@ -12,22 +13,17 @@ import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
-//@EnergyHandler(modid = "Mekanism", handlerID = MekanismProvider.name) disabled due to integration issues :)
+@EnergyHandler(modid = "mekanism", priority = 4)
 public class MekanismHandler implements ISonarEnergyHandler {
-
-	public static final String name = "Mekanism-Provider";
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
-		if (tile != null && CapabilityUtils.hasCapability(tile, Capabilities.ENERGY_STORAGE_CAPABILITY, dir) || CapabilityUtils.hasCapability(tile, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, dir)) {
-			return true;
-		}
-		return tile instanceof IStrictEnergyStorage;
+        return tile != null && CapabilityUtils.hasCapability(tile, Capabilities.ENERGY_STORAGE_CAPABILITY, dir) || CapabilityUtils.hasCapability(tile, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, dir) || tile instanceof IStrictEnergyStorage;
 	}
 
 	@Override
 	public StoredEnergyStack getEnergy(StoredEnergyStack energyStack, TileEntity tile, EnumFacing dir) {
-		IStrictEnergyStorage storage = CapabilityUtils.getCapability(tile, Capabilities.ENERGY_STORAGE_CAPABILITY, null);
+        IStrictEnergyStorage storage = CapabilityUtils.getCapability(tile, Capabilities.ENERGY_STORAGE_CAPABILITY, dir);
 		if (storage == null && tile instanceof IStrictEnergyStorage) {
 			storage = (IStrictEnergyStorage) tile;
 		}
@@ -44,8 +40,12 @@ public class MekanismHandler implements ISonarEnergyHandler {
 			acceptor = (IStrictEnergyAcceptor) tile;
 		}
 		if (acceptor != null && acceptor.canReceiveEnergy(dir)) {			
-			transfer.stored -= action.shouldSimulate() ? Math.min(acceptor.getMaxEnergy() - acceptor.getEnergy(), transfer.stored) : acceptor.transferEnergyToAcceptor(dir, transfer.stored);
-	
+            transfer.stored -= acceptor.acceptEnergy(dir, transfer.stored, action.shouldSimulate());
+            /*IStrictEnergyStorage storage = CapabilityUtils.getCapability(tile, Capabilities.ENERGY_STORAGE_CAPABILITY, dir);
+            if (storage == null && tile instanceof IStrictEnergyStorage) {
+                storage = (IStrictEnergyStorage) tile;
+            }
+            transfer.stored -= action.shouldSimulate() ? Math.min(storage.getMaxEnergy() - storage.getEnergy(), transfer.stored) : acceptor.acceptEnergy(dir, transfer.stored, false);*/
 		}
 		if (transfer.stored == 0)
 			transfer = null;
@@ -54,18 +54,18 @@ public class MekanismHandler implements ISonarEnergyHandler {
 
 	@Override
 	public StoredEnergyStack removeEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
-		/*
-		IStrictEnergyStorage storage = CapabilityUtils.getCapability(tile, Capabilities.ENERGY_STORAGE_CAPABILITY, null);
+        IStrictEnergyOutputter outputter = CapabilityUtils.getCapability(tile, Capabilities.ENERGY_OUTPUTTER_CAPABILITY, dir);
+        if (outputter == null && tile instanceof IStrictEnergyOutputter) {
+            outputter = (IStrictEnergyOutputter) tile;
+        }
+        if (outputter != null && outputter.canOutputEnergy(dir)) {
+            IStrictEnergyStorage storage = CapabilityUtils.getCapability(tile, Capabilities.ENERGY_STORAGE_CAPABILITY, dir);
 		if (storage == null && tile instanceof IStrictEnergyStorage) {
 			storage = (IStrictEnergyStorage) tile;
 		}
-		if (storage != null) {
 			double maxRemove = Math.min(transfer.stored, storage.getEnergy());
-			transfer.stored -= maxRemove;
-			if (!action.shouldSimulate())
-				storage.setEnergy(storage.getEnergy() - maxRemove);
+            transfer.stored -= action.shouldSimulate() ? maxRemove : outputter.pullEnergy(dir, maxRemove, false);
 		}
-		*/
 		return transfer;
 	}
 	
@@ -73,5 +73,4 @@ public class MekanismHandler implements ISonarEnergyHandler {
 	public EnergyType getProvidedType() {
 		return EnergyType.MJ;
 	}
-
 }

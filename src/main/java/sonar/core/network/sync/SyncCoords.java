@@ -56,5 +56,4 @@ public class SyncCoords extends SyncPart {
 		if (nbt.hasKey(getTagName()))
 			this.c = BlockCoords.readFromNBT(nbt.getCompoundTag(this.getTagName()));
 	}
-
 }

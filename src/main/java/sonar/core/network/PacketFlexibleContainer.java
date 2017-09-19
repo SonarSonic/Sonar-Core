@@ -42,9 +42,7 @@ public class PacketFlexibleContainer implements IMessage {
 
 		@Override
 		public IMessage onMessage(PacketFlexibleContainer message, MessageContext ctx) {
-			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
-				@Override
-				public void run() {
+            SonarCore.proxy.getThreadListener(ctx).addScheduledTask(() -> {
 					EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 					Container container = player.openContainer;
 					if (container != null && container instanceof IFlexibleContainer) {
@@ -52,12 +50,9 @@ public class PacketFlexibleContainer implements IMessage {
 							((IFlexibleContainer.Syncable) container).readState(message.buf);
 						}
 						((IFlexibleContainer) container).refreshState();
-					}
 				}
 			});
 			return null;
 		}
-
 	}
-
 }

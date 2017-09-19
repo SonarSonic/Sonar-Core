@@ -1,12 +1,11 @@
-package sonar.core.network;
-
-import java.util.UUID;
+/*package sonar.core.network;
 
 import io.netty.buffer.ByteBuf;
-import mcmultipart.multipart.IMultipart;
-import mcmultipart.multipart.IMultipartContainer;
-import mcmultipart.multipart.MultipartHelper;
+import mcmultipart.api.container.IMultipartContainer;
+import mcmultipart.api.multipart.IMultipart;
+import mcmultipart.api.multipart.MultipartHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -14,6 +13,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import sonar.core.SonarCore;
 import sonar.core.integration.multipart.SonarMultipart;
 import sonar.core.integration.multipart.SonarMultipartHelper;
+
+import java.util.Optional;
+import java.util.UUID;
 
 public class PacketRequestMultipartSync extends PacketCoords<PacketRequestMultipartSync> {
 
@@ -47,24 +49,26 @@ public class PacketRequestMultipartSync extends PacketCoords<PacketRequestMultip
 		@Override
 		public IMessage processMessage(EntityPlayer player, MessageContext ctx, PacketRequestMultipartSync message, TileEntity tile) {
 			if (!tile.getWorld().isRemote) {
-				IMultipartContainer container = MultipartHelper.getPartContainer(tile.getWorld(), tile.getPos());
+                SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
+                    public void run() {
+                        Optional<IMultipartContainer> container = MultipartHelper.getContainer(tile.getWorld(), tile.getPos());
 				if (container != null) {
 					IMultipart part = container.getPartFromID(message.uuid);
 					if (part != null && part instanceof SonarMultipart) {
-						SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
-							public void run() {
-								((SonarMultipart) part).forceNextSync();
-								((SonarMultipart) part).onSyncPacketRequested(player);
-								SonarMultipartHelper.sendMultipartSyncAround((SonarMultipart) part, 64);
+                                SonarMultipart multipart = (SonarMultipart) part;
+                                multipart.forceNextSync();
+                                multipart.onSyncPacketRequested(player);
+                                SonarMultipartHelper.sendMultipartSyncToPlayer(multipart, (EntityPlayerMP) player);
+                                multipart.sendUpdatePacket(true);
 								
 							}
-						});
-						return null;
 					}
 				}
+                });
+                return null;
 			}
 			return null;
 		}
 	}
 
-}
+}*/

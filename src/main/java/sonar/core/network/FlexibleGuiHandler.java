@@ -1,12 +1,7 @@
 package sonar.core.network;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -21,27 +16,31 @@ import net.minecraftforge.fml.relauncher.Side;
 import sonar.core.SonarCore;
 import sonar.core.api.IFlexibleGui;
 import sonar.core.integration.SonarLoader;
-import sonar.core.integration.multipart.SonarMultipart;
-import sonar.core.integration.multipart.SonarMultipartHelper;
+//import sonar.core.integration.multipart.SonarMultipart;
+//import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.utils.Pair;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class FlexibleGuiHandler {
 
 	public Object lastScreen;
 	public Object lastContainer;
 	public Pair<Object, IFlexibleGui> lastGui;
-	public Map<EntityPlayer, Object> lastContainers = new HashMap();
-	public Map<EntityPlayer, Pair<Object, IFlexibleGui>> lastGuis = new HashMap();
-	public Map<EntityPlayer, Integer> lastID = new HashMap();
+    public Map<EntityPlayer, Object> lastContainers = new HashMap<>();
+    public Map<EntityPlayer, Pair<Object, IFlexibleGui>> lastGuis = new HashMap<>();
+    public Map<EntityPlayer, Integer> lastID = new HashMap<>();
 
 	public static String MULTIPART = "multipart", TILEENTITY = "tile", ITEM = "item", ID = "id", UUID = "uuid";
 
 	public Pair<Object, IFlexibleGui> getFlexibleGui(int id, EntityPlayer player, World world, BlockPos pos, NBTTagCompound tag) {
 		Object obj = null;
-		if (SonarLoader.mcmultipartLoaded && tag.getBoolean(MULTIPART)) {
+        /*if (SonarLoader.mcmultipartLoaded && tag.getBoolean(MULTIPART)) {
 			UUID uuid = tag.getUniqueId(UUID);
 			obj = SonarMultipartHelper.getPart(uuid, world, pos);
-		} else if (tag.getBoolean(TILEENTITY)) {
+        } else */if (tag.getBoolean(TILEENTITY)) {
 			obj = world.getTileEntity(pos);
 		} else if (tag.getBoolean(ITEM)) {
 			obj = player.getHeldItemMainhand();
@@ -52,7 +51,7 @@ public class FlexibleGuiHandler {
 		if (obj instanceof ItemStack && ((ItemStack) obj).getItem() instanceof IFlexibleGui) {
 			return new Pair(obj, ((ItemStack) obj).getItem());
 		} else if (obj instanceof IFlexibleGui) {
-			return new Pair(obj, ((IFlexibleGui) obj));
+            return new Pair(obj, obj);
 		}
 		return null;
 	}
@@ -66,7 +65,7 @@ public class FlexibleGuiHandler {
 		openGui(change, player, world, pos, id, tag);
 	}
 
-	public void openBasicMultipart(boolean change, UUID multipartUUID, EntityPlayer player, World world, BlockPos pos, int id) {
+    /*public void openBasicMultipart(boolean change, UUID multipartUUID, EntityPlayer player, World world, BlockPos pos, int id) {
 		if (world.isRemote) {
 			return;
 		}
@@ -74,7 +73,7 @@ public class FlexibleGuiHandler {
 		tag.setBoolean(MULTIPART, true);
 		tag.setUniqueId(UUID, multipartUUID);
 		openGui(change, player, world, pos, id, tag);
-	}
+    }*/
 
 	public void openBasicItemStack(boolean change, ItemStack stack, EntityPlayer player, World world, BlockPos pos, int id) {
 		if (world.isRemote) {
@@ -112,10 +111,10 @@ public class FlexibleGuiHandler {
 	}
 
 	public static void changeGui(IFlexibleGui guiTile, int id, int returnID, World world, EntityPlayer player) {
-		if (guiTile instanceof SonarMultipart) {
+        /*if (guiTile instanceof SonarMultipart) {
 			SonarMultipart multipart = (SonarMultipart) guiTile;
-			SonarCore.network.sendToServer(new PacketFlexibleMultipartChangeGui(multipart.getUUID(), multipart.getPos(), id, returnID));
-		}
+            SonarCore.network.sendToServer(new PacketFlexibleMultipartChangeGui(multipart.getUUID(), multipart.getCoords().getBlockPos(), id, returnID));
+        }*/
 		if(guiTile instanceof Item){
 			SonarCore.network.sendToServer(new PacketFlexibleItemStackChangeGui(player.getPosition(), id, returnID));
 		}
@@ -124,13 +123,11 @@ public class FlexibleGuiHandler {
 	public static Object getLastContainer(EntityPlayer player, Side side) {
 
 		return side.isServer() ? SonarCore.instance.guiHandler.lastContainers.get(player) : SonarCore.instance.guiHandler.lastContainer;
-
 	}
 
 	public static Pair<Object, IFlexibleGui> getLastGui(EntityPlayer player, Side side) {
 
 		return side.isServer() ? SonarCore.instance.guiHandler.lastGuis.get(player) : SonarCore.instance.guiHandler.lastGui;
-
 	}
 
 	public static void setLastContainer(Object obj, EntityPlayer player, Side side) {

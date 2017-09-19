@@ -3,7 +3,9 @@ package sonar.core.api.energy;
 import sonar.core.api.IRegistryObject;
 import sonar.core.api.wrappers.RegistryWrapper;
 
-/** used for the various energy types created by different mods You can create one yourself for custom energy systems and register it with {@link RegistryWrapper} NOTE: this may not accommodate for all energy systems as some have far more to them */
+/**
+ * used for the various energy types created by different mods You can create one yourself for custom energy systems and register it with {@link RegistryWrapper} NOTE: this may not accommodate for all energy systems as some have far more to them
+ */
 public class EnergyType implements IRegistryObject {
 
 	public static final EnergyType RF = new EnergyType("Redstone Flux", "RF", "RF/T", (double) 1);
@@ -31,6 +33,7 @@ public class EnergyType implements IRegistryObject {
 		return true;
 	}
 
+    @Override
 	public String getName() {
 		return name;
 	}
@@ -48,9 +51,6 @@ public class EnergyType implements IRegistryObject {
 	}
 	
 	public boolean equals(Object obj){
-		if(obj instanceof EnergyType){
-			return getName().equals(((EnergyType)obj).getName());
-		}
-		return false;
+        return obj instanceof EnergyType && getName().equals(((EnergyType) obj).getName());
 	}
 }

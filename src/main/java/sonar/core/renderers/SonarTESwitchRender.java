@@ -2,9 +2,7 @@ package sonar.core.renderers;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import sonar.core.helpers.RenderHelper;
 
 public abstract class SonarTESwitchRender extends TileEntitySpecialRenderer {
 	public ModelBase model;
@@ -16,7 +14,7 @@ public abstract class SonarTESwitchRender extends TileEntitySpecialRenderer {
 		this.off = off;
 	}
 
-	@Override
+	/*@Override
 	public void renderTileEntityAt(TileEntity entity, double x, double y, double z, float f, int par) {
 		if (entity!=null && entity.getWorld() != null) {
 			if (isActive(entity)) {
@@ -33,13 +31,14 @@ public abstract class SonarTESwitchRender extends TileEntitySpecialRenderer {
 			renderExtras(entity, x, y, z, f);
 			RenderHelper.finishRender();
 		}
-	}
+	}*/
 
-	/** for extra rotations and translations to be added, or rendering effects */
+    /**
+     * for extra rotations and translations to be added, or rendering effects
+     */
 	public void renderExtras(TileEntity entity, double x, double y, double z, float f) {
 
 	}
 
 	public abstract boolean isActive(TileEntity entity);
-
 }

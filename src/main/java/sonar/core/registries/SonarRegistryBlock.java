@@ -9,7 +9,7 @@ public class SonarRegistryBlock implements ISonarRegistryBlock {
 	public Block block;
 	public String name;
 	public Class<? extends TileEntity> tile;
-	public boolean ignoreNormalTab = false;
+    public boolean ignoreNormalTab;
 	
 	public SonarRegistryBlock(Block block, String name, Class<? extends TileEntity> tile) {
 		this.block = block;
@@ -82,5 +82,4 @@ public class SonarRegistryBlock implements ISonarRegistryBlock {
 		block.setHardness(hardness).setResistance(resistance);
 		return this;		
 	}
-
 }

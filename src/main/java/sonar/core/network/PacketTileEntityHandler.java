@@ -9,6 +9,7 @@ import sonar.core.SonarCore;
 
 public abstract class PacketTileEntityHandler<T extends PacketCoords> implements IMessageHandler<T, IMessage> {
 
+    @Override
 	public final IMessage onMessage(T message, MessageContext ctx) {
 		IMessage returnMessage = null;
 		EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
@@ -22,5 +23,4 @@ public abstract class PacketTileEntityHandler<T extends PacketCoords> implements
 	}
 
 	public abstract IMessage processMessage(EntityPlayer player, MessageContext ctx, T message, TileEntity target);
-
 }

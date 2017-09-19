@@ -1,7 +1,5 @@
 package sonar.core.handlers.inventories;
 
-import java.util.List;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -13,10 +11,10 @@ import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 
-@InventoryHandler(modid = "sonarcore", handlerID = DSUInventoryHandler.name, priority = 3)
-public class DSUInventoryHandler implements ISonarInventoryHandler {
+import java.util.List;
 
-	public static final String name = "DSU-Inventory";
+@InventoryHandler(modid = "sonarcore", priority = 3)
+public class DSUInventoryHandler implements ISonarInventoryHandler {
 
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {
@@ -52,7 +50,7 @@ public class DSUInventoryHandler implements ISonarInventoryHandler {
 	public StoredItemStack addStack(StoredItemStack add, TileEntity tile, EnumFacing dir, ActionType action) {
 		IDeepStorageUnit inv = (IDeepStorageUnit) tile;
 		ItemStack stack = inv.getStoredItemType();
-		if (stack != null) {
+		if (!stack.isEmpty()) {
 			if (add.equalStack(stack)) {
 				long max = inv.getMaxStoredCount();
 				long storedItems = stack.getCount();
@@ -101,4 +99,8 @@ public class DSUInventoryHandler implements ISonarInventoryHandler {
 		return remove;
 	}
 
+    @Override
+    public boolean isLargeInventory() {
+        return false; //it's only one stack so not really a large inventory.
+    }
 }

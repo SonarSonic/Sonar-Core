@@ -9,9 +9,10 @@ import sonar.core.helpers.NBTHelper.SyncType;
 public class CustomColour implements INBTSyncable {
 
 	public int red, green, blue;
-	private Integer rgb = null;
+    private Integer rgb;
 
-	public CustomColour(){}
+    public CustomColour() {
+    }
 	
 	public CustomColour(int r, int g, int b) {
 		red = r;

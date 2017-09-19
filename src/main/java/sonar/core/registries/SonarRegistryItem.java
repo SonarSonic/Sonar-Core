@@ -7,7 +7,7 @@ public class SonarRegistryItem implements ISonarRegistryItem {
 
 	public Item item;
 	public String name;	
-	public boolean ignoreNormalTab = false;
+    public boolean ignoreNormalTab;
 
 	public SonarRegistryItem(String name) {
 		this.item = new Item();
@@ -47,5 +47,4 @@ public class SonarRegistryItem implements ISonarRegistryItem {
 		ignoreNormalTab=true;
 		return this;
 	}
-
 }

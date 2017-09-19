@@ -15,9 +15,9 @@ public abstract class DefinedRecipeHelper<T extends ISonarRecipe> extends Recipe
 	}
 
 	public void addRecipe(Object... objs) {
-		ArrayList inputs = new ArrayList();
-		ArrayList outputs = new ArrayList();
-		ArrayList additionals = new ArrayList();
+        ArrayList inputs = new ArrayList<>();
+        ArrayList outputs = new ArrayList<>();
+        ArrayList additionals = new ArrayList<>();
 		for (int i = 0; i < objs.length; i++) {
 			Object obj = objs[i];
 			if (i < (reverseRecipes() ? getOutputSize() : getInputSize())) {
@@ -36,6 +36,7 @@ public abstract class DefinedRecipeHelper<T extends ISonarRecipe> extends Recipe
 		return false;
 	}
 
+    @Override
 	public boolean isValidRecipe(ArrayList<ISonarRecipeObject> recipeInputs, ArrayList<ISonarRecipeObject> recipeOutputs) {
 		return recipeInputs.size() == getInputSize() && recipeOutputs.size() == getOutputSize();
 	}

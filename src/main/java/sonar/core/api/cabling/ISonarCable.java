@@ -4,7 +4,7 @@ import sonar.core.api.utils.BlockCoords;
 
 public interface ISonarCable {
 	
-	public BlockCoords getCoords();
+    BlockCoords getCoords();
 	
-	public int registryID();
+    int registryID();
 }

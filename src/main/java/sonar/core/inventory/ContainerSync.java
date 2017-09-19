@@ -1,7 +1,6 @@
 package sonar.core.inventory;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.SonarCore;
@@ -24,7 +23,7 @@ public abstract class ContainerSync extends ContainerSonar {
 
 	public ContainerSync(TileEntitySonar tile) {
 		if (tile instanceof INBTSyncable) {
-			sync = (INBTSyncable) tile;
+            sync = tile;
 		}
 		this.tile = tile;
 	}

@@ -14,8 +14,6 @@ import sonar.core.api.StoredItemStack;
 
 public class LPInventoryProvider extends InventoryHandler {
 
-	public static String name = "LP-Inventory";
-
 	@Override
 	public String getName() {
 		return name;
@@ -58,7 +56,7 @@ public class LPInventoryProvider extends InventoryHandler {
 				return items;
 			}
 		}
-		return new ArrayList();
+		return new ArrayList<>();
 	}
 
 	public boolean isLoadable() {

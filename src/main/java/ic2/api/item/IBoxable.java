@@ -10,5 +10,5 @@ public interface IBoxable {
 	 * @param stack item to be stored
 	 * @return Whether to store the item in the toolbox or not
 	 */
-	public abstract boolean canBeStoredInToolbox(ItemStack stack);
+    boolean canBeStoredInToolbox(ItemStack stack);
 }

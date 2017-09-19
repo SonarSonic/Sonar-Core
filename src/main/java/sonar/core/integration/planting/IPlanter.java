@@ -9,14 +9,15 @@ import sonar.core.api.IRegistryObject;
 
 public interface IPlanter extends IRegistryObject {
 
-	public boolean canTierPlant(ItemStack stack, int tier);
+    boolean canTierPlant(ItemStack stack, int tier);
 
-	public EnumPlantType getPlantType(ItemStack stack, World world, BlockPos pos);
+    EnumPlantType getPlantType(ItemStack stack, World world, BlockPos pos);
 
-	/**@param stack
+    /**
+     * @param stack
 	 * @param world
 	 * @param pos where the plant is to be planted
-	 * @return */
-	public IBlockState getPlant(ItemStack stack, World world, BlockPos pos);
-
+     * @return
+     */
+    IBlockState getPlant(ItemStack stack, World world, BlockPos pos);
 }

@@ -5,5 +5,5 @@ import sonar.core.recipes.RecipeHelperV2;
 
 public interface ISonarJEIRecipeBuilder {
 
-	public Object buildRecipe(ISonarRecipe recipe, RecipeHelperV2<ISonarRecipe> helper);
+    Object buildRecipe(ISonarRecipe recipe, RecipeHelperV2<ISonarRecipe> helper);
 }

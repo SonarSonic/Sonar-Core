@@ -1,11 +1,11 @@
 package sonar.core.client.gui;
 
-import java.util.List;
-
 import sonar.core.helpers.FontHelper;
 import sonar.core.helpers.SonarHelper;
 
-public class HelpOverlay<G extends GuiSonar> {
+import java.util.List;
+
+public class HelpOverlay<G extends GuiSonarTile> {
 
 	public List<String> description;
 	public boolean completed;
@@ -27,5 +27,4 @@ public class HelpOverlay<G extends GuiSonar> {
 	public boolean canBeRendered(G gui){
 		return false;
 	}
-
 }

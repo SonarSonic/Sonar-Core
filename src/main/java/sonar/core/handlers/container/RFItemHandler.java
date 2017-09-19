@@ -1,6 +1,6 @@
 package sonar.core.handlers.container;
 
-import cofh.api.energy.IEnergyContainerItem;
+import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.item.ItemStack;
 import sonar.core.api.asm.EnergyContainerHandler;
 import sonar.core.api.energy.EnergyType;
@@ -8,24 +8,22 @@ import sonar.core.api.energy.ISonarEnergyContainerHandler;
 import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
-@EnergyContainerHandler(modid = "sonarcore", handlerID = RFItemHandler.name, priority = 3)
+@EnergyContainerHandler(modid = "redstoneflux", priority = 3)
 public class RFItemHandler implements ISonarEnergyContainerHandler {
-
-	public static final String name = "RF Item Handler";
 
 	@Override
 	public boolean canHandleItem(ItemStack stack) {
-		return stack.getItem() != null && stack.getItem() instanceof IEnergyContainerItem;
+		return !stack.isEmpty() && stack.getItem() instanceof IEnergyContainerItem;
 	}
 
 	@Override
 	public StoredEnergyStack addEnergy(StoredEnergyStack transfer, ItemStack stack, ActionType action) {
 		IEnergyContainerItem item = (IEnergyContainerItem) stack.getItem();
 		if (item instanceof IEnergyContainerItem) {
-			IEnergyContainerItem receiver = (IEnergyContainerItem) item;
-			if (receiver.getMaxEnergyStored(stack) > 0) {
-				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-				transfer.stored -= receiver.receiveEnergy(stack, transferRF, action.shouldSimulate());
+            if (item.getMaxEnergyStored(stack) > 0) {
+                int transferRF = Math.min(item.getMaxEnergyStored(stack) - item.getEnergyStored(stack), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+                if (transferRF > 0)
+                    transfer.stored -= item.receiveEnergy(stack, transferRF, action.shouldSimulate());
 			}
 		}
 		if (transfer.stored == 0)
@@ -37,10 +35,10 @@ public class RFItemHandler implements ISonarEnergyContainerHandler {
 	public StoredEnergyStack removeEnergy(StoredEnergyStack transfer, ItemStack stack, ActionType action) {
 		IEnergyContainerItem item = (IEnergyContainerItem) stack.getItem();
 		if (item instanceof IEnergyContainerItem) {
-			IEnergyContainerItem receiver = (IEnergyContainerItem) item;
-			if (receiver.getMaxEnergyStored(stack) > 0) {
-				int transferRF = transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE;
-				transfer.stored -= receiver.extractEnergy(stack, transferRF, action.shouldSimulate());
+            if (item.getMaxEnergyStored(stack) > 0) {
+                int transferRF = Math.min(item.getEnergyStored(stack), transfer.stored < Integer.MAX_VALUE ? (int) transfer.stored : Integer.MAX_VALUE);
+                if (transferRF > 0)
+                    transfer.stored -= item.extractEnergy(stack, transferRF, action.shouldSimulate());
 			}
 		}
 		if (transfer.stored == 0)
@@ -56,10 +54,9 @@ public class RFItemHandler implements ISonarEnergyContainerHandler {
 		}
 		if (item instanceof IEnergyContainerItem) {
 			if (item.getMaxEnergyStored(stack) > 0) {
-				IEnergyContainerItem receiver = (IEnergyContainerItem) item;
-				energyStack.setStorageValues(receiver.getEnergyStored(stack), receiver.getMaxEnergyStored(stack));
-				energyStack.setMaxInput(receiver.receiveEnergy(stack, Integer.MAX_VALUE, true));
-				energyStack.setMaxOutput(receiver.extractEnergy(stack, Integer.MAX_VALUE, true));
+                energyStack.setStorageValues(item.getEnergyStored(stack), item.getMaxEnergyStored(stack));
+                energyStack.setMaxInput(item.receiveEnergy(stack, Integer.MAX_VALUE, true));
+                energyStack.setMaxOutput(item.extractEnergy(stack, Integer.MAX_VALUE, true));
 			}
 		}
 	}
@@ -68,5 +65,4 @@ public class RFItemHandler implements ISonarEnergyContainerHandler {
 	public EnergyType getProvidedType() {
 		return EnergyType.RF;
 	}
-
 }

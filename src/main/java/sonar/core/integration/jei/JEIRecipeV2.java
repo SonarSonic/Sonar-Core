@@ -1,14 +1,13 @@
 package sonar.core.integration.jei;
 
-import java.util.List;
-
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 import sonar.core.recipes.ISonarRecipe;
 import sonar.core.recipes.RecipeHelperV2;
+
+import java.util.List;
 
 public abstract class JEIRecipeV2<T extends JEIRecipeV2> implements IRecipeWrapper {
 
@@ -43,5 +42,4 @@ public abstract class JEIRecipeV2<T extends JEIRecipeV2> implements IRecipeWrapp
 	public boolean handleClick(Minecraft minecraft, int mouseX, int mouseY, int mouseButton) {
 		return false;
 	}
-
 }

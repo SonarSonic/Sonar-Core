@@ -30,12 +30,7 @@ public class PacketRequestSync extends PacketCoords<PacketRequestSync> {
 					INBTSyncable sync = (INBTSyncable) tile;
 					sync.writeData(tag, SyncType.SYNC_OVERRIDE);
 					if (tile instanceof TileEntitySonar) {
-						SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
-							@Override
-							public void run() {
-								((TileEntitySonar) tile).onSyncPacketRequested(player);
-							}
-						});
+                        SonarCore.proxy.getThreadListener(ctx).addScheduledTask(() -> ((TileEntitySonar) tile).onSyncPacketRequested(player));
 					}
 					if (!tag.hasNoTags()) {
 						return new PacketTileSync(message.pos, tag);
@@ -45,5 +40,4 @@ public class PacketRequestSync extends PacketCoords<PacketRequestSync> {
 			return null;
 		}
 	}
-
 }

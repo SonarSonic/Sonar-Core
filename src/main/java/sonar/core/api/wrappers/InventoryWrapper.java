@@ -1,10 +1,7 @@
 package sonar.core.api.wrappers;
 
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -15,9 +12,12 @@ import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.InventoryHelper.IInventoryFilter;
 
+import java.util.List;
+
 public class InventoryWrapper {
 
-	/** convenience method, gets the stack to be added to the inventory from the remainder, can return null.
+	/** convenience method, gets the stack to be added to the inventory from the
+	 * remainder, can return null.
 	 * 
 	 * @param inputSize
 	 * @param stack
@@ -27,14 +27,15 @@ public class InventoryWrapper {
 		return null;
 	}
 
-	/** convenient method, adds the given stack to the list, used by {@link InventoryHandler}
+	/** convenient method, adds the given stack to the list, used by
+	 * {@link InventoryHandler}
 	 * 
 	 * @param list {@link StoredItemStack} list to add to
 	 * @param stack {@link StoredItemStack} to combine */
-	public void addStackToList(List<StoredItemStack> list, StoredItemStack stack) {
-	}
+	public void addStackToList(List<StoredItemStack> list, StoredItemStack stack) {}
 
-	/** convenient method, adds the given inventory {@link IInventory} to the list, used by {@link InventoryHandler}
+	/** convenient method, adds the given inventory {@link IInventory} to the
+	 * list, used by {@link InventoryHandler}
 	 * 
 	 * @param list {@link StoredItemStack} list to add to
 	 * @param inv {@link IInventory} to combine
@@ -43,7 +44,8 @@ public class InventoryWrapper {
 		return StorageSize.EMPTY;
 	}
 
-	/** convenient method, adds the given ItemHandler {@link IItemHandler} to the list, used by {@link InventoryHandler}
+	/** convenient method, adds the given ItemHandler {@link IItemHandler} to
+	 * the list, used by {@link InventoryHandler}
 	 * 
 	 * @param list {@link StoredItemStack} list to add to
 	 * @param inv {@link IItemHandler} to combine
@@ -60,9 +62,7 @@ public class InventoryWrapper {
 	 * @param y the Y coordinate it will be dropped from
 	 * @param z the Z coordinate it will be dropped from
 	 * @param side side to drop from */
-	public void spawnStoredItemStack(StoredItemStack drop, World world, int x, int y, int z, EnumFacing side) {
-	}
-
+	public void spawnStoredItemStack(StoredItemStack drop, World world, int x, int y, int z, EnumFacing side) {}
 
 	/** returns what was added */
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filters) {
@@ -74,8 +74,7 @@ public class InventoryWrapper {
 		return stack;
 	}
 
-	public void transferItems(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, IInventoryFilter filter) {
-	}
+	public void transferItems(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, IInventoryFilter filter) {}
 
 	public boolean isPlayerInventoryFull(EntityPlayer player) {
 		return player.inventory.getFirstEmptyStack() == -1;

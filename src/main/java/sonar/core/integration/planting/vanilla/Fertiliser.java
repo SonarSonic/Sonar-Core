@@ -1,7 +1,5 @@
 package sonar.core.integration.planting.vanilla;
 
-import java.util.Random;
-
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
@@ -10,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import sonar.core.integration.planting.IFertiliser;
+
+import java.util.Random;
 
 public class Fertiliser implements IFertiliser {
 
@@ -25,10 +25,7 @@ public class Fertiliser implements IFertiliser {
 
 	@Override
 	public boolean canFertilise(World world, BlockPos pos, IBlockState state) {
-		if (state.getBlock() instanceof IGrowable) {
-			return true;
-		}
-		return false;
+        return state.getBlock() instanceof IGrowable;
 	}
 
 	@Override
@@ -45,5 +42,4 @@ public class Fertiliser implements IFertiliser {
 	public void grow(World world, Random rand, BlockPos pos, IBlockState state) {
 		((IGrowable) state.getBlock()).grow(world, rand, pos, state);
 	}
-
 }
