@@ -20,12 +20,12 @@ public class SonarCommon {
 	}
 
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
-        return ctx.getServerHandler().player;
+        return ctx.getServerHandler().playerEntity;
 	}
 
 	public World getDimension(int dimensionID) {
 		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-        return server.getWorld(dimensionID);
+        return server.worldServerForDimension(dimensionID);
 	}
 
 	public IThreadListener getThreadListener(MessageContext ctx) {

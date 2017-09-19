@@ -135,7 +135,7 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 						at.z -= 0.5;
 						GL11.glRotated(180, 0, 1, 0);
 					}
-                    TileEntityRendererDispatcher.instance.render(tile, at.x, at.y, at.z, 0);
+                    TileEntityRendererDispatcher.instance.renderTileEntityAt(tile, at.x, at.y, at.z, 0);
 					if (tile.getClass() == TileEntityChest.class) {
 						GL11.glRotated(-180, 0, 1, 0);						
 					}
@@ -146,7 +146,7 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 
 	private void doWorldRenderPass(Vector3d trans, BlockRenderLayer layer) {
 
-        BufferBuilder wr = Tessellator.getInstance().getBuffer();
+        VertexBuffer wr = Tessellator.getInstance().getBuffer();
 		wr.begin(7, DefaultVertexFormats.BLOCK);
 
 		Tessellator.getInstance().getBuffer().setTranslation(trans.x, trans.y, trans.z);
@@ -167,7 +167,7 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 
     /*public void doMultipartRenderPass(Vector3d trans) {
 
-        BufferBuilder wr = Tessellator.getInstance().getBuffer();
+        VertexBuffer wr = Tessellator.getInstance().getBuffer();
 		wr.begin(7, DefaultVertexFormats.BLOCK);
 
 		Tessellator.getInstance().getBuffer().setTranslation(trans.x, trans.y, trans.z);
@@ -185,7 +185,7 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 
 	/* public void renderMultipartAt(List<Multipart> parts, BlockPos pos, float partialTicks, int destroyStage) { RenderHelper.disableStandardItemLighting(); GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA); GlStateManager.enableBlend(); GlStateManager.disableCull(); if (Minecraft.isAmbientOcclusionEnabled()) { GlStateManager.shadeModel(GL11.GL_SMOOTH); } else { GlStateManager.shadeModel(GL11.GL_FLAT); } for (Multipart part : parts) { try { } catch (Throwable e) { e.printStackTrace(); } } RenderHelper.enableStandardItemLighting(); } */
 
-    public void renderBlock(IBlockState state, BlockPos pos, IBlockAccess blockAccess, BufferBuilder worldRendererIn) {
+    public void renderBlock(IBlockState state, BlockPos pos, IBlockAccess blockAccess, VertexBuffer worldRendererIn) {
 
 		try {
 			BlockRendererDispatcher blockrendererdispatcher = mc.getBlockRendererDispatcher();
@@ -205,7 +205,7 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 		}
 	}
 
-    public void renderMultipart(IBlockState state, BlockPos pos, IBlockAccess blockAccess, BufferBuilder worldRendererIn) {
+    public void renderMultipart(IBlockState state, BlockPos pos, IBlockAccess blockAccess, VertexBuffer worldRendererIn) {
 
 		try {
 			BlockRendererDispatcher blockrendererdispatcher = mc.getBlockRendererDispatcher();
@@ -243,7 +243,7 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 		}
 	}
 
-	/* public void renderInGui() { BlockRendererDispatcher renderer = Minecraft.getMinecraft().getBlockRendererDispatcher(); GlStateManager.pushMatrix(); GlStateManager.rotate(33, 0,0, 1); GlStateManager.scale(64, 64, 64); Tessellator tessellator = Tessellator.getInstance(); BufferBuilder vertex = tessellator.getBuffer(); vertex.begin(7, DefaultVertexFormats.BLOCK); for (Entry<BlockPos, IBlockState> ren : blocks.entrySet()) { try { renderer.renderBlock(ren.getValue(), ren.getKey(), this, vertex); } catch (Exception e) { e.printStackTrace(); } } //tessellator.draw(); vertex.finishDrawing(); GlStateManager.popMatrix(); } */
+	/* public void renderInGui() { BlockRendererDispatcher renderer = Minecraft.getMinecraft().getBlockRendererDispatcher(); GlStateManager.pushMatrix(); GlStateManager.rotate(33, 0,0, 1); GlStateManager.scale(64, 64, 64); Tessellator tessellator = Tessellator.getInstance(); VertexBuffer vertex = tessellator.getBuffer(); vertex.begin(7, DefaultVertexFormats.BLOCK); for (Entry<BlockPos, IBlockState> ren : blocks.entrySet()) { try { renderer.renderBlock(ren.getValue(), ren.getKey(), this, vertex); } catch (Exception e) { e.printStackTrace(); } } //tessellator.draw(); vertex.finishDrawing(); GlStateManager.popMatrix(); } */
 
 	@Override
 	public TileEntity getTileEntity(BlockPos pos) {

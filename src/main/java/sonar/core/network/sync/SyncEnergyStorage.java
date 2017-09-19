@@ -1,6 +1,6 @@
 package sonar.core.network.sync;
 
-import cofh.redstoneflux.api.IEnergyStorage;
+import cofh.api.energy.IEnergyStorage;
 import io.netty.buffer.ByteBuf;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
@@ -16,7 +16,7 @@ import sonar.core.helpers.NBTHelper.SyncType;
         @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "tesla"),
         @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "tesla"),
         @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaProducer", modid = "tesla"),
-        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyStorage", modid = "redstoneflux")
+        @Optional.Interface(iface = "cofh.api.energy.IEnergyStorage", modid = "redstoneflux")
 })
 public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage, net.minecraftforge.energy.IEnergyStorage, IEnergyStorage, ISyncPart, ITeslaConsumer, ITeslaProducer, ITeslaHolder, INBTSerializable<NBTTagCompound> {
 

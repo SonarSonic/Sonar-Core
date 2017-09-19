@@ -2,7 +2,6 @@ package sonar.core.common.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemFood;
@@ -36,8 +35,8 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag par4) {
-        super.addInformation(stack, world, list, par4);
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean advanced) {
+		super.addInformation(stack, player, list, advanced);
 
 		if (SonarLoader.calculatorLoaded()) {
 			String mode = FontHelper.translate("calculator.tools.calculator.greenhouse");
@@ -58,14 +57,17 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 	}
 
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side,
+			float hitX, float hitY, float hitZ) {
 		ItemStack stack = player.getHeldItem(hand);
 		if (this.greenhouseTier == 0 || !SonarLoader.calculatorLoaded()) {
 			if (side != EnumFacing.UP) {
 				return EnumActionResult.PASS;
-			} else if (player.canPlayerEdit(pos, side, stack) && player.canPlayerEdit(pos.offset(EnumFacing.UP), side, stack)) {
+			} else if (player.canPlayerEdit(pos, side, stack)
+					&& player.canPlayerEdit(pos.offset(EnumFacing.UP), side, stack)) {
 				IBlockState state = world.getBlockState(pos);
-				if (state.getBlock().canSustainPlant(state, world, pos, EnumFacing.UP, this) && world.isAirBlock(pos.offset(EnumFacing.UP))) {
+				if (state.getBlock().canSustainPlant(state, world, pos, EnumFacing.UP, this)
+						&& world.isAirBlock(pos.offset(EnumFacing.UP))) {
 					world.setBlockState(pos.offset(side), cropBlock.getDefaultState());
 					stack.shrink(1);
 					return EnumActionResult.SUCCESS;
@@ -79,17 +81,17 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 		return EnumActionResult.PASS;
 	}
 
-    @Override
+	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
 		return cropBlock == Blocks.NETHER_WART ? EnumPlantType.Nether : EnumPlantType.Crop;
 	}
 
-    @Override
+	@Override
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
 		return cropBlock.getDefaultState();
 	}
 
 	public boolean canTierUse(int tier) {
-        return tier >= this.greenhouseTier;
+		return tier >= this.greenhouseTier;
 	}
 }

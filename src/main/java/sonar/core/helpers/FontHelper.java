@@ -25,7 +25,7 @@ public class FontHelper {
      * @param colour 0 = grey, 1 = black, 2 = white
      */
 	public static int text(String info, int x, int y, int colour) {
-        FontRenderer render = Minecraft.getMinecraft().fontRenderer;
+        FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		switch (colour) {
 		case 0:
 			return render.drawString(info, x, y, 4210752);
@@ -60,7 +60,7 @@ public class FontHelper {
      * @return
      */
 	public static int textCentre(String info, int xSize, int y, int colour) {
-        FontRenderer render = Minecraft.getMinecraft().fontRenderer;
+        FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		switch (colour) {
 		case 0:
 			return render.drawString(info, xSize / 2 - width(info) / 2, y, 4210752);
@@ -74,7 +74,7 @@ public class FontHelper {
 	}
 
 	public static int width(String info) {
-        FontRenderer render = Minecraft.getMinecraft().fontRenderer;
+        FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		return render.getStringWidth(info);
 	}
 
@@ -89,7 +89,7 @@ public class FontHelper {
      * @param colour  0 = Gray, 1= Black, 2 = White
      */
 	public static int textOffsetCentre(String info, int xCentre, int y, int colour) {
-        FontRenderer render = Minecraft.getMinecraft().fontRenderer;
+        FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		switch (colour) {
 		case 0:
 			return render.drawString(info, xCentre - width(info) / 2, y, 4210752);
@@ -254,7 +254,7 @@ public class FontHelper {
 	}
 
 	public static ArrayList<String> breakLines(ArrayList<String> lines, String str, int wrapWidth) {
-        FontRenderer render = Minecraft.getMinecraft().fontRenderer;
+        FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		int i = sizeStringToWidth(render, str, wrapWidth);
 		if (str.length() <= i) {
 			lines.add(str);

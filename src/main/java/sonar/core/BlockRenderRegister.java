@@ -15,7 +15,7 @@ public class BlockRenderRegister {
 			Item item = Item.getItemFromBlock(block);
 			if (item.getHasSubtypes()) {				
 				NonNullList<ItemStack> stacks = NonNullList.create();
-                item.getSubItems(SonarCore.tab, stacks);
+                item.getSubItems(item, SonarCore.tab, stacks);
 				for (ItemStack stack : stacks) {
 					String variant = "variant=meta" + stack.getItemDamage();
 					if(block instanceof IMetaRenderer){

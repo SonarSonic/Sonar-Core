@@ -23,7 +23,7 @@ public final class SonarButtons {
 
         @Override
 		public boolean mousePressed(Minecraft minecraft, int x, int y) {
-            isButtonDown = this.enabled && this.visible && x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
+            isButtonDown = this.enabled && this.visible && x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
 			return isButtonDown;
 		}
 
@@ -65,10 +65,10 @@ public final class SonarButtons {
          * Draws this button to the screen.
          */
         @Override
-        public void drawButton(Minecraft mc, int x, int y, float partialTicks) {
+        public void drawButton(Minecraft mc, int x, int y) {
 			if (this.visible) {
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                this.hovered = x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
+                this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
                 /*short short1 = 219;
 				int k = 0;
 
@@ -82,7 +82,7 @@ public final class SonarButtons {
 
 				mc.getTextureManager().bindTexture(texture);
 
-                this.drawTexturedModalRect(this.x, this.y, this.textureX, this.textureY, sizeX + 1, sizeY + 1);
+                this.drawTexturedModalRect(this.xPosition, this.yPosition, this.textureX, this.textureY, sizeX + 1, sizeY + 1);
 			}
 		}
 	}
@@ -105,10 +105,10 @@ public final class SonarButtons {
 		public abstract int getTextureY();
 
         @Override
-        public void drawButton(Minecraft mc, int x, int y, float partialTicks) {
+        public void drawButton(Minecraft mc, int x, int y) {
 			if (this.visible) {
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                this.hovered = x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
+                this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
                 /*short short1 = 219;
 				int k = 0;
 
@@ -122,7 +122,7 @@ public final class SonarButtons {
 
 				mc.getTextureManager().bindTexture(texture);
 
-                this.drawTexturedModalRect(this.x, this.y, getTextureX(), getTextureY(), sizeX + 1, sizeY + 1);
+                this.drawTexturedModalRect(this.xPosition, this.yPosition, getTextureX(), getTextureY(), sizeX + 1, sizeY + 1);
 			}
 		}
 	}

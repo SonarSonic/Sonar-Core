@@ -1,6 +1,6 @@
 package sonar.core.handlers.container;
 
-import cofh.redstoneflux.api.IEnergyContainerItem;
+import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.item.ItemStack;
 import sonar.core.api.asm.EnergyContainerHandler;
 import sonar.core.api.energy.EnergyType;

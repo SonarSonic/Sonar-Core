@@ -176,7 +176,7 @@ public class BlockCoords {
 		}
 
     public boolean insideChunk(ChunkPos pos) {
-        return pos.x >> 4 == getX() >> 4 && pos.z >> 4 == getZ() >> 4;
+        return pos.getXStart() >> 4 == getX() >> 4 && pos.getZStart() >> 4 == getZ() >> 4;
     }
 
     public boolean insideChunk(int chunkX, int chunkZ) {

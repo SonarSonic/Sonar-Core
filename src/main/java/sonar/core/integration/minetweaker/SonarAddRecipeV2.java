@@ -1,19 +1,24 @@
 package sonar.core.integration.minetweaker;
 
 import com.google.common.collect.Lists;
-import crafttweaker.CraftTweakerAPI;
-import crafttweaker.IAction;
-import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.liquid.ILiquidStack;
-import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.oredict.IOreDictEntry;
+
+import minetweaker.IUndoableAction;
+import minetweaker.MineTweakerAPI;
+import minetweaker.api.item.IItemStack;
+import minetweaker.api.liquid.ILiquidStack;
+import minetweaker.api.minecraft.MineTweakerMC;
+import minetweaker.api.oredict.IOreDictEntry;
+import minetweaker.api.player.IPlayer;
+import minetweaker.api.recipes.ICraftingInfo;
+import minetweaker.api.recipes.IRecipeAction;
 import net.minecraft.item.ItemStack;
 import sonar.core.SonarCore;
 import sonar.core.recipes.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class SonarAddRecipeV2<T extends RecipeHelperV2> implements IAction {
+public class SonarAddRecipeV2<T extends RecipeHelperV2> implements IUndoableAction{
 	public ArrayList<ISonarRecipeObject> inputs;
 	public ArrayList<ISonarRecipeObject> outputs;
 	public boolean liquidStack, wasNull, wrongSize;
@@ -21,29 +26,31 @@ public class SonarAddRecipeV2<T extends RecipeHelperV2> implements IAction {
 
 	public SonarAddRecipeV2(T helper, ArrayList inputs, ArrayList<ItemStack> outputs) {
 		this.helper = helper;
-		if (helper instanceof DefinedRecipeHelper && (inputs.size() != ((DefinedRecipeHelper) helper).getInputSize() || outputs.size() != ((DefinedRecipeHelper) helper).getOutputSize())) {
-            CraftTweakerAPI.logError("A " + helper.getRecipeID() + " recipe was the wrong size");
+		if (helper instanceof DefinedRecipeHelper && (inputs.size() != ((DefinedRecipeHelper) helper).getInputSize()
+				|| outputs.size() != ((DefinedRecipeHelper) helper).getOutputSize())) {
+			MineTweakerAPI.logError("A " + helper.getRecipeID() + " recipe was the wrong size");
 			wrongSize = true;
 			return;
 		}
-        ArrayList<ISonarRecipeObject> adaptedInputs = new ArrayList<>();
-        ArrayList<ISonarRecipeObject> adaptedOutputs = new ArrayList<>();
+		ArrayList<ISonarRecipeObject> adaptedInputs = new ArrayList<>();
+		ArrayList<ISonarRecipeObject> adaptedOutputs = new ArrayList<>();
 		for (Object input : inputs) {
 			if (input == null) {
-                CraftTweakerAPI.logError(String.format("An ingredient of a %s was null", helper.getRecipeID()));
+				MineTweakerAPI.logError(String.format("An ingredient of a %s was null", helper.getRecipeID()));
 				wasNull = true;
 				return;
 			}
 			if (input instanceof IItemStack) {
-                adaptedInputs.add(helper.buildRecipeObject(CraftTweakerMC.getItemStack((IItemStack) input)));
+				adaptedInputs.add(helper.buildRecipeObject(MineTweakerMC.getItemStack((IItemStack) input)));
 			} else if (input instanceof IOreDictEntry) {
 				adaptedInputs.add(new RecipeOreStack(((IOreDictEntry) input).getName(), 1));
 			} else if (input instanceof ILiquidStack) {
-                CraftTweakerAPI.logError(String.format("A liquid was passed into a %s, aborting!", helper.getRecipeID()));
+				MineTweakerAPI
+						.logError(String.format("A liquid was passed into a %s, aborting!", helper.getRecipeID()));
 				liquidStack = true;
 				return;
 			} else if (!(input instanceof ItemStack)) {
-                CraftTweakerAPI.logError(String.format("%s: Invalid ingredient: %s", helper.getRecipeID(), input));
+				MineTweakerAPI.logError(String.format("%s: Invalid ingredient: %s", helper.getRecipeID(), input));
 			} else {
 				adaptedInputs.add(helper.buildRecipeObject(input));
 			}
@@ -58,22 +65,25 @@ public class SonarAddRecipeV2<T extends RecipeHelperV2> implements IAction {
 	@Override
 	public void apply() {
 		if (!wasNull && !liquidStack && !wrongSize) {
-            boolean isShapeless = !(helper instanceof DefinedRecipeHelper) || ((DefinedRecipeHelper) helper).shapeless;
-            ISonarRecipe recipe = helper.buildRecipe((ArrayList<ISonarRecipeObject>) inputs.clone(), (ArrayList<ISonarRecipeObject>) outputs.clone(), new ArrayList<>(), isShapeless);
-			helper.addRecipe(recipe);	
+			boolean isShapeless = !(helper instanceof DefinedRecipeHelper) || ((DefinedRecipeHelper) helper).shapeless;
+			ISonarRecipe recipe = helper.buildRecipe((ArrayList<ISonarRecipeObject>) inputs.clone(),
+					(ArrayList<ISonarRecipeObject>) outputs.clone(), new ArrayList<>(), isShapeless);
+			helper.addRecipe(recipe);
 		} else {
-			SonarCore.logger.error(String.format("Failed to add %s recipe (%s = %s)", helper.getRecipeID(), inputs, outputs));
+			SonarCore.logger
+					.error(String.format("Failed to add %s recipe (%s = %s)", helper.getRecipeID(), inputs, outputs));
 		}
 	}
 
 	@Override
 	public String describe() {
-		return String.format("Adding %s recipe (%s = %s)", helper.getRecipeID(), helper.getValuesFromList(inputs), helper.getValuesFromList(outputs));
+		return String.format("Adding %s recipe (%s = %s)", helper.getRecipeID(), helper.getValuesFromList(inputs),
+				helper.getValuesFromList(outputs));
 	}
 
 	public static class Value extends SonarAddRecipeV2<ValueHelperV2> {
 
-        public int recipeValue;
+		public int recipeValue;
 
 		public Value(ValueHelperV2 helper, ArrayList inputs, ArrayList outputs, int recipeValue) {
 			super(helper, inputs, outputs);
@@ -83,10 +93,50 @@ public class SonarAddRecipeV2<T extends RecipeHelperV2> implements IAction {
 		@Override
 		public void apply() {
 			if (!wasNull && !liquidStack && !wrongSize) {
-				helper.addRecipe(helper.buildRecipe((ArrayList<ISonarRecipeObject>) inputs.clone(), (ArrayList<ISonarRecipeObject>) outputs.clone(), Lists.newArrayList(recipeValue), helper.shapeless));
+				helper.addRecipe(helper.buildRecipe((ArrayList<ISonarRecipeObject>) inputs.clone(),
+						(ArrayList<ISonarRecipeObject>) outputs.clone(), Lists.newArrayList(recipeValue),
+						helper.shapeless));
 			} else {
-				SonarCore.logger.error(String.format("Failed to add %s recipe (%s = %s)", helper.getRecipeID(), inputs, outputs));
+				SonarCore.logger.error(
+						String.format("Failed to add %s recipe (%s = %s)", helper.getRecipeID(), inputs, outputs));
 			}
 		}
 	}
+
+	@Override
+	public boolean canUndo() {
+		return false;
+	}
+
+	@Override
+	public String describeUndo() {
+		return null;
+	}
+
+	@Override
+	public Object getOverrideKey() {
+		return null;
+	}
+
+	@Override
+	public void undo() {
+		if (!wasNull && !liquidStack && !wrongSize) {
+			List values = helper.getValuesFromList(inputs);
+			ISonarRecipe recipe = helper.getRecipeFromInputs(null, values.toArray());
+			if (recipe == null) {
+				MineTweakerAPI.logError(String.format("%s: Adding Recipe - Couldn't find matching recipe %s", helper.getRecipeID(), values));
+				return;
+			}
+			boolean removed = helper.removeRecipe(recipe);			
+			if (!removed) {
+				MineTweakerAPI.logError(String.format("%s: Adding Recipe - Failed to remove recipe %s", helper.getRecipeID(), values));
+			}else{
+				MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipe);
+			}
+
+		} else {
+			SonarCore.logger.error(String.format("Adding Recipe - Failed to remove %s recipe (%s = %s)", helper.getRecipeID(), inputs, outputs));
+		}
+	}
+
 }

@@ -16,9 +16,9 @@ public class Vector {
     }
 
     public Vector(Vec3d vec) {
-        this.x = vec.x;
-        this.y = vec.y;
-        this.z = vec.z;
+        this.x = vec.xCoord;
+        this.y = vec.yCoord;
+        this.z = vec.zCoord;
     }
 
     public void setX(double x) {

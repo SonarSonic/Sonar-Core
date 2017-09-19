@@ -77,7 +77,7 @@ public abstract class SonarSlab extends BlockSlab {
      */
     @Override
 	@SideOnly(Side.CLIENT)
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
         if (this != Blocks.DOUBLE_STONE_SLAB) {
 			for (SonarSlab.EnumType blockstoneslab$enumtype : SonarSlab.EnumType.values()) {
 				if (blockstoneslab$enumtype != SonarSlab.EnumType.WOOD) {

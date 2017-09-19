@@ -1,6 +1,7 @@
 package sonar.core.common.item;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,8 +23,8 @@ public class SonarMetaItem extends SonarItem {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
-		if (this.isInCreativeTab(tab)) {
+	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+		if (getCreativeTab() == tab) {
 			for (int i = 0; i < numSubItems; i++) {
 				list.add(new ItemStack(this, 1, i));
 			}

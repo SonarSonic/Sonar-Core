@@ -1,7 +1,7 @@
 package sonar.core.common.tileentity;
 
-import cofh.redstoneflux.api.IEnergyProvider;
-import cofh.redstoneflux.api.IEnergyReceiver;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.*;
@@ -25,8 +25,8 @@ import sonar.core.network.sync.SyncEnergyStorage;
 import sonar.core.network.sync.SyncSidedEnergyStorage;
 
 @Optional.InterfaceList({
-        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyProvider", modid = "redstoneflux"),
-        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyReceiver", modid = "redstoneflux")
+        @Optional.Interface(iface = "cofh.api.energy.IEnergyProvider", modid = "redstoneflux"),
+        @Optional.Interface(iface = "cofh.api.energy.IEnergyReceiver", modid = "redstoneflux")
 })
 public abstract class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver, IEnergyProvider, ISonarEnergyTile, IEnergyTile, IEnergySink, IEnergySource {
 

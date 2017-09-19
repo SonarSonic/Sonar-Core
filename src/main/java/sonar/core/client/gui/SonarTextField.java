@@ -77,15 +77,15 @@ public class SonarTextField extends GuiTextField {
 		this.setEnableBackgroundDrawing(true);
 		if (this.getVisible()) {
 			if (this.getEnableBackgroundDrawing()) {
-                drawRect(this.x - 1, this.y - 1, this.x + this.width + 1, this.y + this.height + 1, outlineColour);
-                drawRect(this.x, this.y, this.x + this.width, this.y + this.height, boxColour);
+                drawRect(this.xPosition - 1, this.yPosition - 1, this.xPosition + this.width + 1, this.yPosition + this.height + 1, outlineColour);
+                drawRect(this.xPosition, this.yPosition, this.xPosition + this.width, this.yPosition + this.height, boxColour);
 			}
 		}
 		this.setEnableBackgroundDrawing(false);
-        x += 4;
-        this.y += (this.height - 8) / 2;
+		xPosition += 4;
+        this.yPosition += (this.height - 8) / 2;
 		super.drawTextBox();
-        x -= 4;
-        this.y -= (this.height - 8) / 2;
+		xPosition -= 4;
+        this.yPosition -= (this.height - 8) / 2;
 	}
 }

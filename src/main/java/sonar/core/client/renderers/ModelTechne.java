@@ -130,13 +130,13 @@ public class ModelTechne<M extends ModelBase> {
 		Vec3d vec3d = quad.vertexPositions[1].vector3D.subtractReverse(quad.vertexPositions[0].vector3D);
 		Vec3d vec3d1 = quad.vertexPositions[1].vector3D.subtractReverse(quad.vertexPositions[2].vector3D);
 		Vec3d vec3d2 = vec3d1.crossProduct(vec3d).normalize();
-        double[] normal = matrix.transform(vec3d2.x, vec3d2.y, vec3d2.z);
+        double[] normal = matrix.transform(vec3d2.xCoord, vec3d2.yCoord, vec3d2.zCoord);
 
 		//define vertex data for the quad
 		VertexData[] vertexData = new VertexData[quad.vertexPositions.length];
 		for (int i = 0; i < vertexData.length; i++) {
 			PositionTextureVertex vertex = quad.vertexPositions[i];
-            double[] pos = matrix.transform(vertex.vector3D.x * scale, vertex.vector3D.y * scale, vertex.vector3D.z * scale);
+            double[] pos = matrix.transform(vertex.vector3D.xCoord * scale, vertex.vector3D.yCoord * scale, vertex.vector3D.zCoord * scale);
 			vertexData[i] = new VertexData(format, (float) pos[0], (float) pos[1], (float) pos[2], icon.getInterpolatedU(vertex.texturePositionX * 16), icon.getInterpolatedV(vertex.texturePositionY * 8));
 			vertexData[i].setRGBA(1, 1, 1, 1);
 			vertexData[i].setNormal((float) normal[0], (float) normal[1], (float) normal[2]);
@@ -158,13 +158,13 @@ public class ModelTechne<M extends ModelBase> {
 		Vec3d vec3d = quad.vertexPositions[1].vector3D.subtractReverse(quad.vertexPositions[0].vector3D);
 		Vec3d vec3d1 = quad.vertexPositions[1].vector3D.subtractReverse(quad.vertexPositions[2].vector3D);
 		Vec3d vec3d2 = vec3d1.crossProduct(vec3d).normalize();
-        double[] normal = matrix.transform(vec3d2.x, vec3d2.y, vec3d2.z);
+        double[] normal = matrix.transform(vec3d2.xCoord, vec3d2.yCoord, vec3d2.zCoord);
 
 		//define vertex data for the quad
 		VertexData[] vertexData = new VertexData[quad.vertexPositions.length];
 		for (int i = 0; i < vertexData.length; i++) {
 			PositionTextureVertex vertex = quad.vertexPositions[i];
-            double[] pos = matrix.transform(vertex.vector3D.x * scale, vertex.vector3D.y * scale, vertex.vector3D.z * scale);
+            double[] pos = matrix.transform(vertex.vector3D.xCoord * scale, vertex.vector3D.yCoord * scale, vertex.vector3D.zCoord * scale);
 			vertexData[i] = new VertexData(format, (float) pos[0], (float) pos[1], (float) pos[2], vertex.texturePositionX, vertex.texturePositionY);
 			vertexData[i].setRGBA(1, 1, 1, 1);
 			vertexData[i].setNormal((float) normal[0], (float) normal[1], (float) normal[2]);

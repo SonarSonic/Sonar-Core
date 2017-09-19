@@ -44,7 +44,7 @@ public class TransformationMatrix {
      * TransformationMatrix for a translation
      */
     public TransformationMatrix(Vec3d translation) {
-        this(translation.x, translation.y, translation.z);
+        this(translation.xCoord, translation.yCoord, translation.zCoord);
     }
 
     /**

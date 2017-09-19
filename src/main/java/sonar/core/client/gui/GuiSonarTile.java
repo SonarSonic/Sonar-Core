@@ -7,11 +7,13 @@ import java.util.Map.Entry;
 
 import org.lwjgl.opengl.GL11;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
@@ -83,7 +85,7 @@ public abstract class GuiSonarTile extends GuiContainer {
 	public void drawSpecialToolTip(List<String> list, int x, int y, FontRenderer font) {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_LIGHTING);
-		drawHoveringText(list, x - guiLeft, y - guiTop, font == null ? fontRenderer : font);
+		drawHoveringText(list, x - guiLeft, y - guiTop, font == null ? fontRendererObj : font);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
@@ -107,7 +109,7 @@ public abstract class GuiSonarTile extends GuiContainer {
 		float f1 = (float) (color >> 8 & 255) / 255.0F;
 		float f2 = (float) (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder vertexbuffer = tessellator.getBuffer();
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.color(f, f1, f2, f3);
 		GlStateManager.disableTexture2D();
@@ -121,12 +123,6 @@ public abstract class GuiSonarTile extends GuiContainer {
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
-	}
-
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		this.renderHoveredToolTip(mouseX, mouseY);
 	}
 
 	@Override
@@ -156,7 +152,7 @@ public abstract class GuiSonarTile extends GuiContainer {
 	}
 
 	public void drawSonarCreativeTabHoveringText(String tabName, int mouseX, int mouseY) {
-		drawHoveringText(tabName, mouseX, mouseY);
+		drawHoveringText(Lists.newArrayList(tabName), mouseX, mouseY);
 		// drawCreativeTabHoveringText(tabName, mouseX, mouseY);
 	}
 
@@ -218,7 +214,7 @@ public abstract class GuiSonarTile extends GuiContainer {
 			if (machine instanceof IProcessMachine) {
 				list.add("Current: " + (int) ((double) ((IProcessMachine) machine).getCurrentProcessTime() / ((IProcessMachine) machine).getProcessTime() * 100) + " %");
 			}
-			gui.drawHoveringText(list, x, y, gui.fontRenderer);
+			gui.drawHoveringText(list, x, y, gui.fontRendererObj);
 		}
 
 		@Override
@@ -248,7 +244,7 @@ public abstract class GuiSonarTile extends GuiContainer {
 				int max = upgrades.maxUpgrades.get(entry.getKey());
 				list.add(entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().toLowerCase().substring(1) + ": " + entry.getValue() + '/' + max);
 			}
-			drawHoveringText(list, x, y, fontRenderer);
+			drawHoveringText(list, x, y, fontRendererObj);
 		}
 
 		@Override

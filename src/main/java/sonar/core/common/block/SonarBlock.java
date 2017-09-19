@@ -108,9 +108,9 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {
 		if (world.isRemote && allowLeftClick()) {
 			RayTraceResult movingPos = Minecraft.getMinecraft().objectMouseOver;
-            float hitX = (float) (movingPos.hitVec.x - movingPos.sideHit.getFrontOffsetX());
-            float hitY = (float) (movingPos.hitVec.y - movingPos.sideHit.getFrontOffsetY());
-            float hitZ = (float) (movingPos.hitVec.z - movingPos.sideHit.getFrontOffsetZ());
+            float hitX = (float) (movingPos.hitVec.xCoord - movingPos.sideHit.getFrontOffsetX());
+            float hitY = (float) (movingPos.hitVec.yCoord - movingPos.sideHit.getFrontOffsetY());
+            float hitZ = (float) (movingPos.hitVec.zCoord - movingPos.sideHit.getFrontOffsetZ());
 			SonarCore.network.sendToServer(new PacketBlockInteraction(pos, new BlockInteraction(movingPos.sideHit.getIndex(), hitX, hitY, hitZ, player.isSneaking() ? BlockInteractionType.SHIFT_LEFT : BlockInteractionType.LEFT)));
 		}
 	}

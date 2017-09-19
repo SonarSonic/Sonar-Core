@@ -1,20 +1,14 @@
 package sonar.core.recipes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RecipeUtils {
 
@@ -32,41 +26,6 @@ public class RecipeUtils {
 	public static List<ItemStack> addStacks(List<ItemStack> stacks, List<ItemStack> toAdd) {
 		for (ItemStack ore : toAdd) {
 			stacks = addStack(stacks, ore);
-		}
-		return stacks;
-	}
-
-	public static List<List<ItemStack>> configureStacks(IRecipe recipe) {
-        List<List<ItemStack>> stacks = Lists.newArrayList(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-
-		if (recipe instanceof ShapedRecipes) {
-            NonNullList<Ingredient> shaped = ((ShapedRecipes) recipe).recipeItems;
-			int i = 0;
-            for (Ingredient stack : shaped) {
-                //stacks.set(i, addStack(new ArrayList<>(), stack.copy()));
-				i++;
-			}
-		} else if (recipe instanceof ShapelessRecipes) {
-			ShapelessRecipes shaped = (ShapelessRecipes) recipe;
-			int i = 0;
-            for (Ingredient stack : shaped.recipeItems) {
-                //stacks.set(i, addStack(new ArrayList<>(), stack.copy()));
-				i++;
-			}
-		} else if (recipe instanceof ShapedOreRecipe) {
-			ShapedOreRecipe oreRecipe = (ShapedOreRecipe) recipe;
-			int i = 0;
-            for (Object obj : oreRecipe.getIngredients()) {//was getInput
-				stacks.set(i, getListFromObject(obj));
-				i++;
-			}
-		} else if (recipe instanceof ShapelessOreRecipe) {
-			ShapelessOreRecipe oreRecipe = (ShapelessOreRecipe) recipe;
-			int i = 0;
-            for (Object obj : oreRecipe.getIngredients()) {//was getInput
-				stacks.set(i, getListFromObject(obj));
-				i++;
-			}
 		}
 		return stacks;
 	}

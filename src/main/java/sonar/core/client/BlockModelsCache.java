@@ -12,18 +12,19 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
+import net.minecraftforge.common.model.TRSRTransformation;
 import sonar.core.helpers.RenderHelper;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
+import com.google.common.base.Function;
 
 ///AE3 Code: All credit goes to Elix_x https://github.com/AEModernMCPort/Applied-Energistics-3/blob/codename-andromeda/src/main/java/appeng/core/lib/client/render/model/ModelsCache.java
 public enum BlockModelsCache implements IResourceManagerReloadListener {
     INSTANCE;
 
-    public static final IModelState DEFAULTMODELSTATE = optional -> Optional.empty();
+    public static final IModelState DEFAULTMODELSTATE = optional -> optional.absent();
     public static final VertexFormat DEFAULTVERTEXFORMAT = DefaultVertexFormats.BLOCK;
     public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULTTEXTUREGETTER = texture -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(texture.toString());
 
@@ -51,7 +52,7 @@ public enum BlockModelsCache implements IResourceManagerReloadListener {
     public IBakedModel getOrLoadModel(ResourceLocation key, ResourceLocation location, IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> textureGetter) {
         IBakedModel model = getModel(key);
         if (model == null) {
-            model = getOrLoadModel(location).bake(state, format, textureGetter);
+            model = getOrLoadModel(location).bake(state, format, (com.google.common.base.Function<ResourceLocation, TextureAtlasSprite>) textureGetter);
             bakedCache.put(key, model);
         }
         return model;
