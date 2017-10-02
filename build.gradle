@@ -42,10 +42,6 @@ repositories {
         name = "MCMultipart"
         url "http://maven.amadornes.com/"
     }
-    maven {
-        name = "Thiakil"
-        url = "http://maven.thiakil.com/"
-    }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -61,7 +57,7 @@ compileJava {
 minecraft {
     version = "${forge_version}"
     runDir = "run"
-    mappings = "snapshot_20170919"
+    mappings = "snapshot_20171002"
     makeObfSourceJar = false
 }
 
@@ -85,7 +81,7 @@ dependencies {
     compileOnly "crafttweaker:CraftTweaker2:${crafttweaker_version}"
     compileOnly "storage-drawers:StorageDrawers:${storagedrawers_version}"
     compileOnly "deep-resonance:deepresonance:${deep_resonance_version}"
-    compileOnly "appeng:applied-llamagistics-1.12:${ae2_version}"
+    compileOnly "appeng:appliedenergistics2:${ae2_version}"
     compileOnly "eleccore-rendering-library:ElecCore:${elec_core_version}"
     compileOnly "mekanism:Mekanism:${mekanism_version}"
     compileOnly "refinedstorage:refinedstorage:${refinedstorage_version}:api"

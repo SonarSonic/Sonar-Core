@@ -2,13 +2,13 @@ package sonar.core.handlers.inventories;
 
 import appeng.api.AEApi;
 import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.IGridProxyable;
+import appeng.me.helpers.MachineSource;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.SonarAPI;
