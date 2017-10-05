@@ -22,7 +22,7 @@ public class AE2Helper {
 	public static StoredItemStack convertAEItemStack(IAEStack stack) {
 		if (stack != null && stack.isItem()) {
 			IAEItemStack item = (IAEItemStack) stack;
-			return new StoredItemStack(item.getItemStack(), item.getStackSize());
+			return new StoredItemStack(item.createItemStack(), item.getStackSize());
 		}
 		return null;
 	}
