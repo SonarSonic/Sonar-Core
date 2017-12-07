@@ -10,7 +10,7 @@ import sonar.core.integration.SonarLoader;
 
 public class SyncItemEnergyStorage extends SyncEnergyStorage implements ICapabilityProvider {
 
-	protected ItemStack stack;
+	public ItemStack stack = ItemStack.EMPTY;
 
 	public SyncItemEnergyStorage(ItemStack stack, int capacity) {
 		super(capacity);

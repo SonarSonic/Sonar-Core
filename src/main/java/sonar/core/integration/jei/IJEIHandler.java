@@ -15,7 +15,7 @@ public interface IJEIHandler {
     String getTitle();
 	
     Class getRecipeClass();
-
+    
     String getUUID();
 		
     IRecipeHelperV2 getRecipeHelper();

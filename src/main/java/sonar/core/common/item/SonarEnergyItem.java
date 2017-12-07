@@ -27,7 +27,7 @@ public class SonarEnergyItem extends SonarItem implements ISonarEnergyItem, IEne
 		this.capacity = capacity;
 		this.maxReceive = maxReceive;
 		this.maxExtract = maxExtract;
-		storage = new SyncItemEnergyStorage(null, capacity, maxReceive, maxExtract);
+		storage = new SyncItemEnergyStorage(ItemStack.EMPTY, capacity, maxReceive, maxExtract);
 		setMaxStackSize(1);
 	}
 
@@ -95,7 +95,7 @@ public class SonarEnergyItem extends SonarItem implements ISonarEnergyItem, IEne
 
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
-		storage = new SyncItemEnergyStorage(null, capacity, maxReceive, maxExtract);
+		storage = new SyncItemEnergyStorage(stack, capacity, maxReceive, maxExtract);
 		return storage;
 	}
 }

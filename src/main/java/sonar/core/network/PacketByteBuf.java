@@ -14,11 +14,10 @@ public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 
 	public int id;
 	public IByteBufTile tile;
-    public ByteBufWritable[] writables;
+	public ByteBufWritable[] writables;
 	public ByteBuf buf;
 
-	public PacketByteBuf() {
-	}
+	public PacketByteBuf() {}
 
 	public PacketByteBuf(IByteBufTile tile, BlockPos pos, int id, ByteBufWritable... writables) {
 		super(pos);
@@ -30,8 +29,8 @@ public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		super.fromBytes(buf);
+		this.buf = buf.retain();
 		this.id = buf.readInt();
-		this.buf = buf;
 	}
 
 	@Override
@@ -58,12 +57,16 @@ public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 		@Override
 		public IMessage processMessage(EntityPlayer player, MessageContext ctx, PacketByteBuf message, TileEntity tile) {
 
-            SonarCore.proxy.getThreadListener(ctx).addScheduledTask(() -> {
-					if (tile instanceof IByteBufTile) {
-						IByteBufTile packet = (IByteBufTile) tile;
-						packet.readPacket(message.buf, message.id);
-					}
-					/* else { TileHandler handler = OLDMultipartHelper.getHandler(tile); if (handler != null && handler instanceof IByteBufTile) { ((IByteBufTile) handler).readPacket(message.buf, message.id); } } */
+			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(() -> {
+				if (tile instanceof IByteBufTile) {
+					IByteBufTile packet = (IByteBufTile) tile;
+					packet.readPacket(message.buf, message.id);
+				}
+				message.buf.release();
+				/* else { TileHandler handler =
+				 * OLDMultipartHelper.getHandler(tile); if (handler != null &&
+				 * handler instanceof IByteBufTile) { ((IByteBufTile)
+				 * handler).readPacket(message.buf, message.id); } } */
 			});
 			return null;
 		}

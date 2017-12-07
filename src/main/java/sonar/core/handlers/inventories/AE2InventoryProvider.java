@@ -3,6 +3,7 @@ package sonar.core.handlers.inventories;
 import appeng.api.AEApi;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
@@ -34,7 +35,7 @@ public class AE2InventoryProvider implements ISonarInventoryHandler {
 		IGridProxyable proxy = (IGridProxyable) tile;
 		try {
 			IStorageGrid storage = proxy.getProxy().getStorage();
-			IItemList<IAEItemStack> items = storage.getItemInventory().getStorageList();
+			IItemList<IAEItemStack> items = storage.getInventory((IStorageChannel<T>) proxy).getStorageList();
 			if (items == null) {
 				return null;
 			}
