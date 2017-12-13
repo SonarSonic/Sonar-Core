@@ -150,7 +150,7 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 					}
 				} else if (!held.isEmpty()) {
 					if (clicked == null || clicked.getItemStack().isEmpty() || clicked.getStackSize() == 0) {
-                        if (entity.getTileInv().isItemValidForPos(slotID * entity.getTileInv().numStacks, held)) {
+                        if (entity.getTileInv().isItemValidForSlot(slotID * entity.getTileInv().numStacks, held)) {
 							entity.getTileInv().setLargeStack(slotID, new StoredItemStack(held));
 							player.inventory.setItemStack(ItemStack.EMPTY);
 							return ItemStack.EMPTY;

@@ -9,8 +9,7 @@ import sonar.core.inventory.SonarLargeInventory;
 public class TileEntityLargeInventory extends TileEntitySonar implements ILargeInventory {
 	public SonarLargeInventory inv;
 
-    public TileEntityLargeInventory() {
-    }
+    public TileEntityLargeInventory() {}
 	
 	public TileEntityLargeInventory(int size, int numStacks) {
 		inv = new SonarLargeInventory(size, numStacks);
