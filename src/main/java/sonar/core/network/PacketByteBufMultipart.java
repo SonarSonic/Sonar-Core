@@ -1,11 +1,14 @@
-/*package sonar.core.network;
+package sonar.core.network;
 
 import java.util.UUID;
 
 import io.netty.buffer.ByteBuf;
 import mcmultipart.api.container.IMultipartContainer;
 import mcmultipart.api.multipart.IMultipart;
+import mcmultipart.api.multipart.IMultipartTile;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import sonar.core.SonarCore;
@@ -13,47 +16,44 @@ import sonar.core.network.utils.IByteBufTile;
 
 public class PacketByteBufMultipart extends PacketMultipart {
 
-	public int id;
+	public int packetID;
 	public IByteBufTile tile;
 	public ByteBuf buf;
 
-	public PacketByteBufMultipart() {
-	}
+	public PacketByteBufMultipart() {}
 
-	public PacketByteBufMultipart(UUID partUUID, IByteBufTile tile, BlockPos pos, int id) {
-		super(partUUID, pos);
+	public PacketByteBufMultipart(int slotID, IByteBufTile tile, BlockPos pos, int packetID) {
+		super(slotID, pos);
 		this.tile = tile;
-		this.id = id;
+		this.packetID = packetID;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		super.fromBytes(buf);
-		this.id = buf.readInt();
-		this.buf = buf;
+		this.buf = buf.retain();
+		this.packetID = buf.readInt();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		super.toBytes(buf);
-		buf.writeInt(id);
-		tile.writePacket(buf, id);
+		buf.writeInt(packetID);
+		tile.writePacket(buf, packetID);
 	}
 
 	public static class Handler extends PacketMultipartHandler<PacketByteBufMultipart> {
 
 		@Override
-		public IMessage processMessage(PacketByteBufMultipart message, IMultipartContainer tile, IMultipart part, MessageContext ctx) {
-
-			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
-				public void run() {
-					if (part != null && part instanceof IByteBufTile) {
-						((IByteBufTile) part).readPacket(message.buf, message.id);
-					}
+		public IMessage processMessage(PacketByteBufMultipart message, EntityPlayer player, World world, IMultipartTile part, MessageContext ctx) {
+			SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(() -> {
+				if (part != null && part instanceof IByteBufTile) {
+					((IByteBufTile) part).readPacket(message.buf, message.packetID);
 				}
+				message.buf.release();
 			});
 
 			return null;
 		}
 	}
-}*/
+}

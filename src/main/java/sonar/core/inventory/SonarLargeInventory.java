@@ -22,41 +22,6 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 	public int size;
 	// public int max;
 
-	public IItemHandler embeddedHandler = new EmbeddedHandler(this);
-
-	public static class EmbeddedHandler implements IItemHandler {
-		SonarLargeInventory inv;
-
-		public EmbeddedHandler(SonarLargeInventory inv) {
-			this.inv = inv;
-		}
-
-		@Override
-		public int getSlots() {
-			return inv.getSlots();
-		}
-
-		@Override
-		public ItemStack getStackInSlot(int slot) {
-			return inv.getStackInSlot(slot);
-		}
-
-		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			return inv.insertItem(slot, stack, simulate);
-		}
-
-		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			return inv.extractItem(slot, amount, simulate);
-		}
-
-		@Override
-		public int getSlotLimit(int slot) {
-			return inv.getSlotLimit(slot);
-		}
-	}
-
 	public SonarLargeInventory(int size, int numStacks) {
 		super();
 		this.size = size;

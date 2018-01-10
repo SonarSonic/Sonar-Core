@@ -2,64 +2,45 @@ package sonar.core.registries;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
+import sonar.core.common.block.SonarBlockTip;
 
-public class SonarRegistryBlock implements ISonarRegistryBlock {
+public class SonarRegistryBlock<T extends Block> extends AbstractSonarRegistry<T> implements ISonarRegistryBlock<T> {
 
-	public Block block;
-	public String name;
 	public Class<? extends TileEntity> tile;
-    public boolean ignoreNormalTab;
-	
-	public SonarRegistryBlock(Block block, String name, Class<? extends TileEntity> tile) {
-		this.block = block;
-		this.name = name;
+	public boolean ignoreNormalTab;
+
+	public SonarRegistryBlock(T block, String name, Class<? extends TileEntity> tile) {
+		super(block, name);
 		this.tile = tile;
 	}
-	
-	public SonarRegistryBlock(Block block, String name) {
-		this.block = block;
-		this.name = name;
+
+	public SonarRegistryBlock(T block, String name) {
+		super(block, name);
 	}
 
 	@Override
-	public Block getBlock() {
-		return block;
-	}
-
-	@Override
-	public SonarRegistryBlock setBlock(Block block) {
-		this.block = block;
-		return this;
-	}
-
-	@Override
-	public String getRegistryName() {
-		return name;
-	}
-
-	@Override
-	public SonarRegistryBlock setRegistryName(String name) {
-		this.name = name;
-		return this;
+	public Item getItemBlock() {
+		return new SonarBlockTip(value);
 	}
 
 	@Override
 	public SonarRegistryBlock setCreativeTab(CreativeTabs tab) {
-		block.setCreativeTab(tab);
-		ignoreNormalTab=true;
+		value.setCreativeTab(tab);
+		ignoreNormalTab = true;
 		return this;
 	}
-	
-	public SonarRegistryBlock removeCreativeTab(){
-		block.setCreativeTab(null);
-		ignoreNormalTab=true;
+
+	public SonarRegistryBlock removeCreativeTab() {
+		value.setCreativeTab(null);
+		ignoreNormalTab = true;
 		return this;
 	}
 
 	@Override
 	public boolean hasTileEntity() {
-		return tile!=null;
+		return tile != null;
 	}
 
 	@Override
@@ -69,17 +50,22 @@ public class SonarRegistryBlock implements ISonarRegistryBlock {
 
 	@Override
 	public SonarRegistryBlock addTileEntity(Class<? extends TileEntity> tile) {
-		this.tile=tile;
+		this.tile = tile;
 		return this;
 	}
-	
-	public SonarRegistryBlock setProperties(){
-		block.setHardness(1.0F).setResistance(20.0F);
-		return this;		
+
+	public SonarRegistryBlock setProperties() {
+		value.setHardness(1.0F).setResistance(20.0F);
+		return this;
 	}
-	
-	public SonarRegistryBlock setProperties(float hardness, float resistance){
-		block.setHardness(hardness).setResistance(resistance);
-		return this;		
+
+	public SonarRegistryBlock setProperties(float hardness, float resistance) {
+		value.setHardness(hardness).setResistance(resistance);
+		return this;
+	}
+
+	@Override
+	public boolean shouldRegisterRenderer() {
+		return shouldRegisterRenderer;
 	}
 }

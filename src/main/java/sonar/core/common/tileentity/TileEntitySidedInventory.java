@@ -38,17 +38,4 @@ public class TileEntitySidedInventory extends TileEntityInventory implements IMa
 	public MachineSides getSideConfigs() {
 		return sides;
 	}
-
-    @Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability || super.hasCapability(capability, facing);
-	}
-
-    @Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
-			return (T) inv.getItemHandler(facing);
-		}
-		return super.getCapability(capability, facing);
-	}
 }

@@ -16,31 +16,46 @@ import net.minecraftforge.fml.relauncher.Side;
 import sonar.core.SonarCore;
 import sonar.core.api.IFlexibleGui;
 import sonar.core.integration.SonarLoader;
+import sonar.core.integration.multipart.SonarMultipartHelper;
+import sonar.core.integration.multipart.TileSonarMultipart;
 //import sonar.core.integration.multipart.SonarMultipart;
 //import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.utils.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+
+import mcmultipart.api.multipart.IMultipartTile;
 
 public class FlexibleGuiHandler {
 
 	public Object lastScreen;
 	public Object lastContainer;
 	public Pair<Object, IFlexibleGui> lastGui;
-    public Map<EntityPlayer, Object> lastContainers = new HashMap<>();
-    public Map<EntityPlayer, Pair<Object, IFlexibleGui>> lastGuis = new HashMap<>();
-    public Map<EntityPlayer, Integer> lastID = new HashMap<>();
+	public Map<EntityPlayer, Object> lastContainers = new HashMap<>();
+	public Map<EntityPlayer, Pair<Object, IFlexibleGui>> lastGuis = new HashMap<>();
+	public Map<EntityPlayer, Integer> lastID = new HashMap<>();
 
-	public static String MULTIPART = "multipart", TILEENTITY = "tile", ITEM = "item", ID = "id", UUID = "uuid";
+	public static String MULTIPART = "multipart", TILEENTITY = "tile", ITEM = "item", ID = "id", SLOT_ID = "uuid";
+
+	public static void openMultipartGui(int id, EntityPlayer player, World world, BlockPos pos) {
+		TileEntity tile = world.getTileEntity(pos);
+		if (tile instanceof TileSonarMultipart) {
+			TileSonarMultipart multipart = (TileSonarMultipart) tile;
+			multipart.sendSyncPacket(player);
+			multipart.openFlexibleGui(player, id);
+		}
+	}
 
 	public Pair<Object, IFlexibleGui> getFlexibleGui(int id, EntityPlayer player, World world, BlockPos pos, NBTTagCompound tag) {
 		Object obj = null;
-        /*if (SonarLoader.mcmultipartLoaded && tag.getBoolean(MULTIPART)) {
-			UUID uuid = tag.getUniqueId(UUID);
-			obj = SonarMultipartHelper.getPart(uuid, world, pos);
-        } else */if (tag.getBoolean(TILEENTITY)) {
+		if (SonarLoader.mcmultipartLoaded && tag.getBoolean(MULTIPART)) {
+			int uuid = tag.getInteger(SLOT_ID);
+			Optional<IMultipartTile> tile = SonarMultipartHelper.getMultipartTileFromSlotID(world, pos, uuid);
+			obj = tile.isPresent() ? tile.get() : world.getTileEntity(pos);
+		} else if (tag.getBoolean(TILEENTITY)) {
 			obj = world.getTileEntity(pos);
 		} else if (tag.getBoolean(ITEM)) {
 			obj = player.getHeldItemMainhand();
@@ -51,7 +66,7 @@ public class FlexibleGuiHandler {
 		if (obj instanceof ItemStack && ((ItemStack) obj).getItem() instanceof IFlexibleGui) {
 			return new Pair(obj, ((ItemStack) obj).getItem());
 		} else if (obj instanceof IFlexibleGui) {
-            return new Pair(obj, obj);
+			return new Pair(obj, obj);
 		}
 		return null;
 	}
@@ -65,15 +80,19 @@ public class FlexibleGuiHandler {
 		openGui(change, player, world, pos, id, tag);
 	}
 
-    /*public void openBasicMultipart(boolean change, UUID multipartUUID, EntityPlayer player, World world, BlockPos pos, int id) {
+	public void openBasicMultipart(boolean change, int slotID, EntityPlayer player, World world, BlockPos pos, int id) {
 		if (world.isRemote) {
+			return;
+		}
+		if (slotID == -1) { // if this isn't a multipart
+			openBasicTile(change, world.getTileEntity(pos), player, world, pos, id);
 			return;
 		}
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setBoolean(MULTIPART, true);
-		tag.setUniqueId(UUID, multipartUUID);
+		tag.setInteger(SLOT_ID, slotID);
 		openGui(change, player, world, pos, id, tag);
-    }*/
+	}
 
 	public void openBasicItemStack(boolean change, ItemStack stack, EntityPlayer player, World world, BlockPos pos, int id) {
 		if (world.isRemote) {
@@ -105,17 +124,19 @@ public class FlexibleGuiHandler {
 				entityPlayerMP.openContainer = container;
 				entityPlayerMP.openContainer.windowId = windowId;
 				entityPlayerMP.openContainer.addListener(entityPlayerMP);
-				// MinecraftForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, player.openContainer)); FIXME
+				// MinecraftForge.EVENT_BUS.post(new
+				// PlayerContainerEvent.Open(player, player.openContainer));
+				// FIXME
 			}
 		}
 	}
 
 	public static void changeGui(IFlexibleGui guiTile, int id, int returnID, World world, EntityPlayer player) {
-        /*if (guiTile instanceof SonarMultipart) {
-			SonarMultipart multipart = (SonarMultipart) guiTile;
-            SonarCore.network.sendToServer(new PacketFlexibleMultipartChangeGui(multipart.getUUID(), multipart.getCoords().getBlockPos(), id, returnID));
-        }*/
-		if(guiTile instanceof Item){
+		if (guiTile instanceof TileSonarMultipart) {
+			TileSonarMultipart multipart = (TileSonarMultipart) guiTile;
+			SonarCore.network.sendToServer(new PacketFlexibleMultipartChangeGui(multipart.getSlotID(), multipart.getCoords().getBlockPos(), id, returnID));
+		}
+		if (guiTile instanceof Item) {
 			SonarCore.network.sendToServer(new PacketFlexibleItemStackChangeGui(player.getPosition(), id, returnID));
 		}
 	}

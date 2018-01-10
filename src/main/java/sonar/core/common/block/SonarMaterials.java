@@ -13,6 +13,7 @@ public class SonarMaterials extends Material {
      */
     public static final Material machine = new Material(MapColor.BLACK);
     public static final Material fence = new Material(MapColor.BROWN);
+    public static final Material droppable_wood = new Material(MapColor.BROWN);
 
 	public SonarMaterials() {
 		super(MapColor.BLACK);

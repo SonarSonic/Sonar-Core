@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 public interface IFlexibleGui<T> {
 
-    void onGuiOpened(T obj, int id, World world, EntityPlayer player, NBTTagCompound tag);
+    default void onGuiOpened(T obj, int id, World world, EntityPlayer player, NBTTagCompound tag){}
 	
     /**
      * @param obj    either a TileEntity, Multipart or ItemStack

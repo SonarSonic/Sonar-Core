@@ -59,10 +59,10 @@ public class ASMLoader {
 	public static void log(ASMLog log, Class type, ASMData asm, String modid) {
 		switch (log) {
 		case ERROR:
-                SonarCore.logger.info(asm.getClassName() +" couldn't be loaded: " + type.getSimpleName());
+                SonarCore.logger.error(type.getSimpleName() + " couldn't be loaded as an error occurred - please report to mod author: " + asm.getClassName());
 			break;
 		case LOADED:
-                SonarCore.logger.info(asm.getClassName() + " loaded successfully: " + type.getSimpleName());
+                SonarCore.logger.info(type.getSimpleName() + " loaded successfully: " + asm.getClassName());
 			break;
 		case MODID:
                 SonarCore.logger.info("Couldn't load " + type.getSimpleName() + " " +asm.getClassName() + " for modid " + modid);

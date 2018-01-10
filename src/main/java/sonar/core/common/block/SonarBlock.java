@@ -31,6 +31,7 @@ import sonar.core.api.utils.BlockInteraction;
 import sonar.core.api.utils.BlockInteractionType;
 import sonar.core.common.block.properties.IBlockRotated;
 import sonar.core.common.tileentity.TileEntitySonar;
+import sonar.core.helpers.InventoryHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.inventory.IAdditionalInventory;
 import sonar.core.inventory.IDropInventory;
@@ -210,52 +211,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        List<ItemStack> drops = new ArrayList<>();
-		TileEntity entity = world.getTileEntity(pos);
-		if (entity != null) {
-			if (entity instanceof IDropInventory) {
-				IDropInventory inv = (IDropInventory) entity;
-				if (inv.canDrop() && inv.dropSlots() != null) {
-					int[] slots = inv.dropSlots();
-                    for (int slot : slots) {
-                        ItemStack itemstack = inv.getStackInSlot(slot);
-						if (!itemstack.isEmpty()) {
-							drops.add(itemstack);
-						}
-					}
-				}
-			} else if (entity instanceof IInventory) {
-				IInventory inv = (IInventory) entity;
-				for (int i = 0; i < inv.getSizeInventory(); i++) {
-					ItemStack itemstack = inv.getStackInSlot(i);
-					if (!itemstack.isEmpty()) {
-						drops.add(itemstack);
-					}
-				}
-			}
-			if (entity instanceof IAdditionalInventory) {
-				IAdditionalInventory additionalInv = (IAdditionalInventory) entity;
-				ItemStack[] additionalStacks = additionalInv.getAdditionalStacks();
-				if (additionalStacks != null) {
-					for (ItemStack stack : additionalStacks) {
-						if (!stack.isEmpty()) {
-							drops.add(stack);
-						}
-					}
-				}
-			}
-		}
-
-		for (ItemStack stack : drops) {
-			if (!stack.isEmpty()) {
-				float f = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
-				float f1 = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
-				float f2 = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
-
-				EntityItem dropStack = new EntityItem(world, pos.getX() + f, pos.getY() + f1, pos.getZ() + f2, stack);
-				world.spawnEntity(dropStack);
-			}
-		}
+		InventoryHelper.dropInventory(world.getTileEntity(pos), world, pos, state);
 		super.breakBlock(world, pos, state);
 	}
 
@@ -321,8 +277,9 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 		return false;
 	}
 
+	@Deprecated
 	@SideOnly(Side.CLIENT)
-	public IBlockState getStateForEntityRender(IBlockState state) {
+	public IBlockState getStateForEntityRender(IBlockState state) {		
 		return this.getDefaultState().withProperty(FACING, EnumFacing.SOUTH);
 	}
 

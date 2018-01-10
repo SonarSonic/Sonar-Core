@@ -1,4 +1,4 @@
-/*package sona.core.inventory;
+package sonar.core.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -9,15 +9,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.SonarCore;
 import sonar.core.helpers.InventoryHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.integration.multipart.SonarMultipart;
+import sonar.core.integration.multipart.TileSonarMultipart;
 import sonar.core.network.PacketMultipartSync;
 
 public class ContainerMultipartSync extends Container {
 
 	SyncType[] types = new SyncType[] { SyncType.DEFAULT_SYNC };
-	public SonarMultipart multipart;
+	public TileSonarMultipart multipart;
 
-	public ContainerMultipartSync(SonarMultipart multipart) {
+	public ContainerMultipartSync(TileSonarMultipart multipart) {
 		this.multipart = multipart;
 	}
 
@@ -26,15 +26,15 @@ public class ContainerMultipartSync extends Container {
 		if (syncInventory()) {
 			super.detectAndSendChanges();
 		}
-		if (multipart != null && multipart instanceof ISlottedPart && this.listeners != null) {
+		if (multipart != null && this.listeners != null) {
 			NBTTagCompound syncData = new NBTTagCompound();
 			SyncType[] types = getSyncTypes();
 			for (SyncType type : types) {
 				multipart.writeData(syncData, type);
 				if (!syncData.hasNoTags()) {
 					for (IContainerListener o : listeners) {
-						if (o != null && o instanceof EntityPlayerMP && multipart.getUUID() != null) {
-							SonarCore.network.sendTo(new PacketMultipartSync(multipart.getPos(), syncData, type, multipart.getUUID()), (EntityPlayerMP) o);
+						if (o != null && o instanceof EntityPlayerMP) {
+							SonarCore.network.sendTo(new PacketMultipartSync(multipart.getPos(), syncData, type, multipart.getSlotID()), (EntityPlayerMP) o);
 						}
 					}
 				}
@@ -42,9 +42,9 @@ public class ContainerMultipartSync extends Container {
 		}
 	}
 
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
-        return InventoryHelper.EMPTY;
-    }
+	public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
+		return ItemStack.EMPTY;
+	}
 
 	public SyncType[] getSyncTypes() {
 		return types;
@@ -64,4 +64,3 @@ public class ContainerMultipartSync extends Container {
 		return this;
 	}
 }
-*/

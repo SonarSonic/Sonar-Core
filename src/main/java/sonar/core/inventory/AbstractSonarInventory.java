@@ -1,5 +1,7 @@
 package sonar.core.inventory;
 
+import java.util.List;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ItemStackHelper;
@@ -17,46 +19,12 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.ISyncPart;
 
-public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> extends DirtyPart implements ISonarInventory, ISyncPart {
+public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> extends DirtyPart implements ISonarInventory, ISyncPart, IItemHandler {
 
 	public NonNullList<ItemStack> slots;
 	public int size;
 	public int limit = 64;
 	public EnumFacing face;
-	public IItemHandler embeddedHandler = new EmbeddedHandler(this);
-
-	public static class EmbeddedHandler implements IItemHandler {
-		AbstractSonarInventory inv;
-
-		public EmbeddedHandler(AbstractSonarInventory inv) {
-			this.inv = inv;
-		}
-
-		@Override
-		public int getSlots() {
-			return inv.getSlots();
-		}
-
-		@Override
-		public ItemStack getStackInSlot(int slot) {
-			return inv.getStackInSlot(slot);
-		}
-
-		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			return inv.insertItem(slot, stack, simulate);
-		}
-
-		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			return inv.extractItem(slot, amount, simulate);
-		}
-
-		@Override
-		public int getSlotLimit(int slot) {
-			return inv.getSlotLimit(slot);
-		}
-	}
 
 	public AbstractSonarInventory(int size) {
 		super();
@@ -64,10 +32,18 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 		this.slots = NonNullList.withSize(size, ItemStack.EMPTY);
 	}
 
+	public List<ItemStack> slots() { //FIXME - all types should return slots?
+		if (this instanceof SonarInventory) {
+			return ((SonarInventory) this).slots;
+		} else {
+			return NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+		}
+	}
+
 	@Override
 	public IItemHandler getItemHandler(EnumFacing side) {
 		face = side;
-		return embeddedHandler;
+		return this;
 	}
 
 	@Override

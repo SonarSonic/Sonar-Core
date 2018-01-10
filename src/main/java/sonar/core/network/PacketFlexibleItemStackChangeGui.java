@@ -41,7 +41,7 @@ public class PacketFlexibleItemStackChangeGui extends PacketCoords {
 
 		@Override
 		public IMessage onMessage(PacketFlexibleItemStackChangeGui message, MessageContext ctx) {
-            SonarCore.proxy.getThreadListener(ctx).addScheduledTask(() -> {
+            SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(() -> {
 					EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 					ItemStack stack = player.getHeldItemMainhand();
 					if (!(stack.getItem() instanceof IFlexibleGui)) {

@@ -7,18 +7,23 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 import sonar.core.SonarCore;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.IWailaInfo;
+import sonar.core.inventory.ISonarInventoryTile;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.IDirtyPart;
@@ -34,55 +39,72 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 	protected boolean forceSync;
 	protected BlockCoords coords = BlockCoords.EMPTY;
 	public boolean loaded = true;
-    public boolean isDirty;
-
-	public TileEntitySonar() {
-	}
+	public boolean isDirty;
 
 	public boolean isClient() {
-        return world != null && world.isRemote;
+		return getWorld() != null && getWorld().isRemote;
 	}
 
 	public boolean isServer() {
-        return world == null || !world.isRemote;
+		return getWorld() == null || !getWorld().isRemote;
 	}
 
-    @Override
-	public void onLoad() {
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability && this instanceof ISonarInventoryTile) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability && this instanceof ISonarInventoryTile) {
+			return (T) ((ISonarInventoryTile) this).inv().getItemHandler(facing);
+		}
+		return super.getCapability(capability, facing);
 	}
 
 	public void onFirstTick() {
-		this.markBlockForUpdate();
-		markDirty();
+		// this.markBlockForUpdate();
+		// markDirty();
 	}
 
-    @Override
+	@Override
 	public BlockCoords getCoords() {
+		if (coords == BlockCoords.EMPTY) {
+			coords = new BlockCoords(this);
+		}
 		return coords;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		this.readData(nbt, SyncType.SAVE);
+		readData(nbt, SyncType.SAVE);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		this.writeData(nbt, SyncType.SAVE);
+		writeData(nbt, SyncType.SAVE);
 		return nbt;
 	}
-
-    @Override
+	
+	/**things like inventories are generally only sent with SyncType.SAVE*/
+	public SyncType getUpdateTagType(){
+		return SyncType.SYNC_OVERRIDE;
+	}
+	
+	@Override
 	public NBTTagCompound getUpdateTag() {
-		return writeData(super.getUpdateTag(), SyncType.SYNC_OVERRIDE);
+		return writeData(super.getUpdateTag(), getUpdateTagType());
 	}
 
-    @Override
+	@Override
 	public void handleUpdateTag(NBTTagCompound tag) {
 		super.handleUpdateTag(tag);
-		this.readData(tag, SyncType.SYNC_OVERRIDE);
+		readData(tag, getUpdateTagType());
 	}
 
 	@Override
@@ -96,18 +118,18 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		readFromNBT(packet.getNbtCompound());
 	}
 
-    @Override
+	@Override
 	public void validate() {
 		super.validate();
 		coords = new BlockCoords(this);
 	}
 
-    @Override
+	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		NBTHelper.readSyncParts(nbt, type, syncList);
 	}
 
-    @Override
+	@Override
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		if (forceSync && type == SyncType.DEFAULT_SYNC) {
 			type = SyncType.SYNC_OVERRIDE;
@@ -117,7 +139,7 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		return nbt;
 	}
 
-    @Override
+	@Override
 	@SideOnly(Side.CLIENT)
 	public List<String> getWailaInfo(List<String> currenttip, IBlockState state) {
 		return currenttip;
@@ -128,24 +150,35 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		markDirty();
 	}
 
-	public void onSyncPacketRequested(EntityPlayer player) {
-	}
+	public void onSyncPacketRequested(EntityPlayer player) {}
 
 	public void requestSyncPacket() {
 		SonarCore.network.sendToServer(new PacketRequestSync(pos));
 	}
 
 	public void sendSyncPacket(EntityPlayer player) {
+		sendSyncPacket(player, SyncType.SYNC_OVERRIDE);
+	}
+
+	public void sendSyncPacket(EntityPlayer player, SyncType type) {
 		if (world.isRemote) {
 			return;
 		}
 		if (player != null && player instanceof EntityPlayerMP) {
 			NBTTagCompound tag = new NBTTagCompound();
-			writeData(tag, SyncType.SYNC_OVERRIDE);
+			writeData(tag, type);
 			if (!tag.hasNoTags()) {
-				SonarCore.network.sendTo(new PacketTileSync(pos, tag), (EntityPlayerMP) player);
+				SonarCore.network.sendTo(createSyncPacket(tag, type), (EntityPlayerMP) player);
 			}
 		}
+	}
+
+	public IMessage createRequestPacket() {
+		return new PacketRequestSync(pos);
+	}
+
+	public IMessage createSyncPacket(NBTTagCompound tag, SyncType type) {
+		return new PacketTileSync(pos, tag, type);
 	}
 
 	public void markBlockForUpdate() {
@@ -154,7 +187,7 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 			SonarCore.sendFullSyncAroundWithRenderUpdate(this, 128);
 		} else {
 			getWorld().markBlockRangeForRenderUpdate(pos, pos);
-            getWorld().getChunkFromBlockCoords(getPos()).setModified(true);
+			getWorld().getChunkFromBlockCoords(getPos()).setModified(true);
 		}
 		// may need some more stuff, here to make life easier
 	}
@@ -163,7 +196,7 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		return false;
 	}
 
-    @Override
+	@Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared() {
 		return maxRender() ? 65536.0D : super.getMaxRenderDistanceSquared();
@@ -183,19 +216,19 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		}
 	}
 
-    @Override
-    public void update() {
-        if (loaded) {
-            onFirstTick();
-            loaded = !loaded;
-        }
-        if (isDirty) {
-            this.markDirty();
-            isDirty = !isDirty;
-        }
-    }
+	@Override
+	public void update() {
+		if (loaded) {
+			onFirstTick();
+			loaded = !loaded;
+		}
+		if (isDirty) {
+			this.markDirty();
+			isDirty = !isDirty;
+		}
+	}
 
-    @Override
+	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}

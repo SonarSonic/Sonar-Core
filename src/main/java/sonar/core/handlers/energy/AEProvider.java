@@ -18,7 +18,7 @@ public class AEProvider implements ISonarEnergyHandler {
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
-        return !tile.isInvalid() && (tile instanceof IAEPowerStorage || tile instanceof IEnergyGrid);
+		return !tile.isInvalid() && (tile instanceof IAEPowerStorage || tile instanceof IEnergyGrid);
 	}
 
 	@Override
@@ -36,16 +36,16 @@ public class AEProvider implements ISonarEnergyHandler {
 
 	@Override
 	public StoredEnergyStack addEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
-        if (!(tile instanceof IGridProxyable) || ((IGridProxyable) tile).getProxy().getNode() != null) {
-		if (tile instanceof IEnergyGrid) {
-			IEnergyGrid grid = (IEnergyGrid) tile;
-                double max = Math.min(transfer.stored, grid.getMaxStoredPower() - grid.getStoredPower());
-                transfer.stored -= max - grid.injectPower(max, AE2Helper.getActionable(action));
-		} else if (tile instanceof IAEPowerStorage) {
-			IAEPowerStorage grid = (IAEPowerStorage) tile;
-                double max = Math.min(transfer.stored, grid.getAEMaxPower() - grid.getAECurrentPower());
-                transfer.stored -= max - grid.injectAEPower(max, AE2Helper.getActionable(action));
-            }
+		if (!(tile instanceof IGridProxyable) || ((IGridProxyable) tile).getProxy().getNode() != null) {
+			if (tile instanceof IEnergyGrid) {
+				IEnergyGrid grid = (IEnergyGrid) tile;
+				double max = Math.min(transfer.stored, grid.getMaxStoredPower() - grid.getStoredPower());
+				transfer.stored -= max - grid.injectPower(max, AE2Helper.getActionable(action));
+			} else if (tile instanceof IAEPowerStorage) {
+				IAEPowerStorage grid = (IAEPowerStorage) tile;
+				double max = Math.min(transfer.stored, grid.getAEMaxPower() - grid.getAECurrentPower());
+				transfer.stored -= max - grid.injectAEPower(max, AE2Helper.getActionable(action));
+			}
 		}
 		if (transfer.stored == 0)
 			transfer = null;
@@ -54,16 +54,16 @@ public class AEProvider implements ISonarEnergyHandler {
 
 	@Override
 	public StoredEnergyStack removeEnergy(StoredEnergyStack transfer, TileEntity tile, EnumFacing dir, ActionType action) {
-        if (!(tile instanceof IGridProxyable) || ((IGridProxyable) tile).getProxy().getNode() != null) {
-		if (tile instanceof IEnergyGrid) {
-			IEnergyGrid grid = (IEnergyGrid) tile;
-                double max = Math.min(transfer.stored, grid.getMaxStoredPower() - grid.getStoredPower());
-                transfer.stored -= grid.extractAEPower(max, AE2Helper.getActionable(action), PowerMultiplier.CONFIG);
-		} else if (tile instanceof IAEPowerStorage) {
-			IAEPowerStorage grid = (IAEPowerStorage) tile;
-                double max = Math.min(transfer.stored, grid.getAECurrentPower());
-                transfer.stored -= grid.extractAEPower(max, AE2Helper.getActionable(action), PowerMultiplier.CONFIG);
-            }
+		if (!(tile instanceof IGridProxyable) || ((IGridProxyable) tile).getProxy().getNode() != null) {
+			if (tile instanceof IEnergyGrid) {
+				IEnergyGrid grid = (IEnergyGrid) tile;
+				double max = Math.min(transfer.stored, grid.getMaxStoredPower() - grid.getStoredPower());
+				transfer.stored -= grid.extractAEPower(max, AE2Helper.getActionable(action), PowerMultiplier.CONFIG);
+			} else if (tile instanceof IAEPowerStorage) {
+				IAEPowerStorage grid = (IAEPowerStorage) tile;
+				double max = Math.min(transfer.stored, grid.getAECurrentPower());
+				transfer.stored -= grid.extractAEPower(max, AE2Helper.getActionable(action), PowerMultiplier.CONFIG);
+			}
 		}
 		if (transfer.stored == 0)
 			transfer = null;

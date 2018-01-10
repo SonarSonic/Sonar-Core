@@ -20,7 +20,7 @@ public class PacketFlexibleCloseGui extends PacketCoords {
 	public static class Handler implements IMessageHandler<PacketFlexibleCloseGui, IMessage> {
 		@Override
 		public IMessage onMessage(PacketFlexibleCloseGui message, MessageContext ctx) {
-            SonarCore.proxy.getThreadListener(ctx).addScheduledTask(() -> {
+            SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(() -> {
 					EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 					FlexibleGuiHandler.closeGui(player, ctx.side);
 			});

@@ -1,4 +1,4 @@
-/*package sonar.core.network;
+package sonar.core.network;
 
 import java.util.UUID;
 
@@ -7,28 +7,25 @@ import net.minecraft.util.math.BlockPos;
 
 public class PacketMultipart extends PacketCoords {
 
-	public UUID partUUID;
+	public int slotID;
 
 	public PacketMultipart() {
 		super();
 	}
 
-	public PacketMultipart(UUID partUUID, BlockPos pos) {
+	public PacketMultipart(int slotID, BlockPos pos) {
 		super(pos);
-		this.partUUID = partUUID;
+		this.slotID = slotID;
 	}
 
 	public void fromBytes(ByteBuf buf) {
 		super.fromBytes(buf);
-		long msb = buf.readLong();
-		long lsb = buf.readLong();
-		partUUID = new UUID(msb, lsb);
+		slotID = buf.readInt();
 	}
 
 	public void toBytes(ByteBuf buf) {
 		super.toBytes(buf);
-		buf.writeLong(partUUID.getMostSignificantBits());
-		buf.writeLong(partUUID.getLeastSignificantBits());
+		buf.writeInt(slotID);
 	}
 
-}*/
+}

@@ -3,48 +3,28 @@ package sonar.core.registries;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
-public class SonarRegistryItem implements ISonarRegistryItem {
+public class SonarRegistryItem<T extends Item> extends AbstractSonarRegistry<T> implements ISonarRegistryItem<T> {
 
-	public Item item;
-	public String name;	
-    public boolean ignoreNormalTab;
+	public boolean ignoreNormalTab;
 
 	public SonarRegistryItem(String name) {
-		this.item = new Item();
-		this.name = name;
+		super((T) new Item(), name);
 	}
 
-	public SonarRegistryItem(Item item, String name) {
-		this.item = item;
-		this.name = name;
+	public SonarRegistryItem(T item, String name) {
+		super(item, name);
 	}
-
-	@Override
-	public Item getItem() {
-		return item;
-	}
-
-	@Override
-	public SonarRegistryItem setItem(Item item) {
-		this.item = item;
-		return this;
-	}
-
-	@Override
-	public String getRegistryName() {
-		return name;
-	}
-
-	@Override
-	public SonarRegistryItem setRegistryName(String name) {
-		this.name = name;
+	
+	public SonarRegistryItem removeCreativeTab(){
+		value.setCreativeTab(null);
+		ignoreNormalTab=true;
 		return this;
 	}
 
 	@Override
 	public SonarRegistryItem setCreativeTab(CreativeTabs tab) {
-		item.setCreativeTab(tab);
-		ignoreNormalTab=true;
+		value.setCreativeTab(tab);
+		ignoreNormalTab = true;
 		return this;
 	}
 }

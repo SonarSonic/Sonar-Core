@@ -1,5 +1,12 @@
 package sonar.core;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,15 +31,12 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.energy.ISonarEnergyContainerHandler;
 import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.nbt.INBTSyncable;
-import sonar.core.common.block.SonarBlockTip;
 import sonar.core.energy.DischargeValues;
 import sonar.core.helpers.ASMLoader;
 import sonar.core.helpers.NBTHelper.SyncType;
@@ -41,16 +45,29 @@ import sonar.core.integration.SonarWailaModule;
 import sonar.core.integration.planting.FertiliserRegistry;
 import sonar.core.integration.planting.HarvesterRegistry;
 import sonar.core.integration.planting.PlanterRegistry;
-import sonar.core.network.*;
+import sonar.core.network.FlexibleGuiHandler;
+import sonar.core.network.PacketBlockInteraction;
+import sonar.core.network.PacketByteBuf;
+import sonar.core.network.PacketByteBufMultipart;
+import sonar.core.network.PacketFlexibleCloseGui;
+import sonar.core.network.PacketFlexibleContainer;
+import sonar.core.network.PacketFlexibleItemStackChangeGui;
+import sonar.core.network.PacketFlexibleMultipartChangeGui;
+import sonar.core.network.PacketFlexibleOpenGui;
+import sonar.core.network.PacketInvUpdate;
+import sonar.core.network.PacketMultipartSync;
+import sonar.core.network.PacketRequestMultipartSync;
+import sonar.core.network.PacketRequestSync;
+import sonar.core.network.PacketSonarSides;
+import sonar.core.network.PacketStackUpdate;
+import sonar.core.network.PacketTileSync;
+import sonar.core.network.PacketTileSyncUpdate;
+import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.registries.EnergyTypeRegistry;
 import sonar.core.registries.ISonarRegistryBlock;
 import sonar.core.registries.ISonarRegistryItem;
 import sonar.core.upgrades.MachineUpgradeRegistry;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 @Mod(modid = SonarCore.modid, name = SonarCore.name, version = SonarCore.version, acceptedMinecraftVersions = SonarCore.mc_versions)
 public class SonarCore {
@@ -183,43 +200,19 @@ public class SonarCore {
 			network.registerMessage(PacketInvUpdate.Handler.class, PacketInvUpdate.class, 8, Side.CLIENT);
 			network.registerMessage(PacketTileSyncUpdate.Handler.class, PacketTileSyncUpdate.class, 9, Side.CLIENT);
 
-			/* if (SonarLoader.mcmultipartLoaded) {
-			 * network.registerMessage(PacketMultipartSync.Handler.class,
-			 * PacketMultipartSync.class, 10, Side.CLIENT);
-			 * network.registerMessage(PacketByteBufMultipart.Handler.class,
-			 * PacketByteBufMultipart.class, 11, Side.CLIENT);
-			 * network.registerMessage(PacketByteBufMultipart.Handler.class,
-			 * PacketByteBufMultipart.class, 12, Side.SERVER);
-			 * network.registerMessage(PacketRequestMultipartSync.Handler.class,
-			 * PacketRequestMultipartSync.class, 13, Side.SERVER); } */
+			if (SonarLoader.mcmultipartLoaded) {
+				network.registerMessage(PacketMultipartSync.Handler.class, PacketMultipartSync.class, 10, Side.CLIENT);
+				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 11, Side.CLIENT);
+				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 12, Side.SERVER);
+				network.registerMessage(PacketRequestMultipartSync.Handler.class, PacketRequestMultipartSync.class, 13, Side.SERVER);
+			}
 			network.registerMessage(PacketFlexibleOpenGui.Handler.class, PacketFlexibleOpenGui.class, 14, Side.CLIENT);
 			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 15, Side.CLIENT);
 			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 16, Side.SERVER);
 			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 17, Side.CLIENT);
 			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 18, Side.SERVER);
-			// network.registerMessage(PacketFlexibleMultipartChangeGui.Handler.class,
-			// PacketFlexibleMultipartChangeGui.class, 19, Side.SERVER);
+			network.registerMessage(PacketFlexibleMultipartChangeGui.Handler.class, PacketFlexibleMultipartChangeGui.class, 19, Side.SERVER);
 			network.registerMessage(PacketFlexibleItemStackChangeGui.Handler.class, PacketFlexibleItemStackChangeGui.class, 20, Side.SERVER);
-		}
-	}
-
-	public static void registerItems(List<ISonarRegistryItem> items) {
-		for (ISonarRegistryItem item : items) {
-			Item toRegister = item.getItem();
-			ForgeRegistries.ITEMS.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(item.getRegistryName()) : toRegister);
-			item.setItem(toRegister);
-		}
-	}
-
-	public static void registerBlocks(List<ISonarRegistryBlock> blocks) {
-		for (ISonarRegistryBlock block : blocks) {
-			Block toRegister = block.getBlock();
-			ForgeRegistries.BLOCKS.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(block.getRegistryName()) : toRegister);
-			ForgeRegistries.ITEMS.register(new SonarBlockTip(toRegister).setRegistryName(block.getRegistryName()));
-			block.setBlock(toRegister);
-			if (block.hasTileEntity()) {
-				GameRegistry.registerTileEntity(block.getTileEntity(), block.getRegistryName());
-			}
 		}
 	}
 

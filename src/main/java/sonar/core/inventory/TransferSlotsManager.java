@@ -28,8 +28,7 @@ public class TransferSlotsManager<T extends IInventory> {
 	public int playerInvEnd;
     public boolean hasPlayerInv;
 
-    public TransferSlotsManager() {
-    }
+    public TransferSlotsManager() {}
 
 	public void addTransferSlot(TransferSlots transferSlots) {
 		transferSlots.start = current;
@@ -41,6 +40,20 @@ public class TransferSlotsManager<T extends IInventory> {
 	public void addPlayerInventory() {
 		playerInvStart = current;
 		addTransferSlot(new TransferSlots(TransferType.PLAYER_INV, 9 * 3));
+		addTransferSlot(new TransferSlots(TransferType.PLAYER_HOTBAR, 9));
+		playerInvEnd = current;
+		hasPlayerInv = true;
+	}
+	
+	public void addPlayerMainInventory() {
+		playerInvStart = current;
+		addTransferSlot(new TransferSlots(TransferType.PLAYER_INV, 9 * 3));
+		playerInvEnd = current;
+		hasPlayerInv = true;
+	}
+	
+	public void addPlayerHotbar() {
+		playerInvStart = current;
 		addTransferSlot(new TransferSlots(TransferType.PLAYER_HOTBAR, 9));
 		playerInvEnd = current;
 		hasPlayerInv = true;

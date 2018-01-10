@@ -57,16 +57,12 @@ public class PacketByteBuf extends PacketCoords<PacketByteBuf> {
 		@Override
 		public IMessage processMessage(EntityPlayer player, MessageContext ctx, PacketByteBuf message, TileEntity tile) {
 
-			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(() -> {
+			SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(() -> {
 				if (tile instanceof IByteBufTile) {
 					IByteBufTile packet = (IByteBufTile) tile;
 					packet.readPacket(message.buf, message.id);
 				}
 				message.buf.release();
-				/* else { TileHandler handler =
-				 * OLDMultipartHelper.getHandler(tile); if (handler != null &&
-				 * handler instanceof IByteBufTile) { ((IByteBufTile)
-				 * handler).readPacket(message.buf, message.id); } } */
 			});
 			return null;
 		}

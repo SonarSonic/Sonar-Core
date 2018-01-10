@@ -1,10 +1,11 @@
-/*package sonar.core.network;
+package sonar.core.network;
 
-import javax.annotation.Nullable;
+import java.util.Optional;
 
-import mcmultipart.api.container.IMultipartContainer;
-import mcmultipart.api.multipart.IMultipart;
+import mcmultipart.api.multipart.IMultipartTile;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -15,16 +16,24 @@ public abstract class PacketMultipartHandler<T extends PacketMultipart> implemen
 
 	public final IMessage onMessage(T message, MessageContext ctx) {
 		EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
-		if (player != null && player.getEntityWorld() != null) {
-			Object target = SonarMultipartHelper.getTile(player.getEntityWorld(), message.pos);
-			if (target != null && target instanceof IMultipartContainer) {
-				IMultipart part = ((IMultipartContainer) target).getPartFromID(message.partUUID);
-				return part != null ? processMessage(message, (IMultipartContainer) target, part, ctx) : null;
+		World world = player.getEntityWorld();
+		if (player != null && world != null) {
+			if (message.slotID != -1) {
+				Optional<IMultipartTile> multipartTile = SonarMultipartHelper.getMultipartTileFromSlotID(world, message.pos, message.slotID);
+				if (multipartTile.isPresent()) {
+					return processMessage(message, player, world, multipartTile.get(), ctx);
+				}
+			} else {
+				TileEntity tile = world.getTileEntity(message.pos);
+				if (tile instanceof IMultipartTile) {
+					return processMessage(message, player, world, (IMultipartTile) tile, ctx);
+				}
 			}
+
 		}
 		return null;
 	}
 
-	public abstract IMessage processMessage(T message, IMultipartContainer target, @Nullable IMultipart part, MessageContext ctx);
+	public abstract IMessage processMessage(T message, EntityPlayer player, World world, IMultipartTile part, MessageContext ctx);
 
-}*/
+}

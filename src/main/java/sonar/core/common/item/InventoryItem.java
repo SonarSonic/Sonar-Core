@@ -114,10 +114,6 @@ public class InventoryItem implements IInventory {
 		}
 	}
 
-	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		return true;
-	}
-
 	@Override
 	public void openInventory(EntityPlayer player) {}
 

@@ -1,8 +1,10 @@
 package sonar.core.inventory;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import sonar.core.helpers.SonarHelper;
@@ -18,7 +20,7 @@ public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 
     @Override
 	public String getName() {
-		return tile.getBlockType().getUnlocalizedName();
+		return tile.getBlockType().getLocalizedName();
 	}
 
     @Override
@@ -58,4 +60,10 @@ public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 	public void markDirty() {
 		markChanged();		
 	}
+
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		BlockPos pos = tile.getPos();
+		return player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
+	}
+
 }
