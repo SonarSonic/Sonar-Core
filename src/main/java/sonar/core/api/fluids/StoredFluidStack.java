@@ -12,8 +12,7 @@ public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 	public FluidStack fluid;
 	public long stored, capacity;
 
-    public StoredFluidStack() {
-    }
+    public StoredFluidStack() {}
 
 	public StoredFluidStack(FluidStack stack) {
 		this.fluid = stack.copy();
@@ -64,9 +63,13 @@ public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 		this.stored = size;
 		return this;
 	}
+    
+	public static boolean isEqualStack(FluidStack main, FluidStack stack) {
+        return main != null && stack != null && main.isFluidEqual(stack);
+	}
 
 	public boolean equalStack(FluidStack stack) {
-        return this.fluid != null && stack != null && this.fluid.isFluidEqual(stack);
+        return isEqualStack(this.fluid, stack);
 	}
 
 	@Override

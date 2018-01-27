@@ -1,5 +1,7 @@
 package sonar.core.utils;
 
+import java.util.Map.Entry;
+
 public class Pair<A, B> {
 
 	public static <P, Q> Pair<P, Q> makePair(P p, Q q) {
@@ -12,6 +14,19 @@ public class Pair<A, B> {
 	public Pair(A a, B b) {
 		this.a = a;
 		this.b = b;
+	}
+
+	public Pair(Entry<A,B> entry) {
+		this.a = entry.getKey();
+		this.b = entry.getValue();
+	}
+	
+	public A getLeft(){
+		return a;
+	}
+	
+	public B getRight(){
+		return b;
 	}
 
 	@Override
@@ -55,8 +70,7 @@ public class Pair<A, B> {
 	public boolean isInstance(Class<?> classA, Class<?> classB) {
 		return classA.isInstance(a) && classB.isInstance(b);
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	public static <P, Q> Pair<P, Q> cast(Pair<?, ?> pair, Class<P> pClass, Class<Q> qClass) {
 
 		if (pair.isInstance(pClass, qClass)) {

@@ -10,9 +10,9 @@ import java.util.Map;
 
 public abstract class RegistryHelper<T extends IRegistryObject> {
 
-    private List<T> objects = new ArrayList<>();
-    private Map<String, Integer> objectIDs = new THashMap<>();
-    private Map<Integer, String> objectNames = new THashMap<>();
+	private List<T> objects = new ArrayList<>();
+	private Map<String, Integer> objectIDs = new THashMap<>();
+	private Map<Integer, String> objectNames = new THashMap<>();
 
 	public abstract void register();
 
@@ -29,7 +29,7 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 	public T getRegisteredObject(int objectID) {
 		String helperName = objectNames.get(objectID);
 		if (helperName == null || helperName.isEmpty()) {
-			return null;
+			return getDefault();
 		}
 		for (T provider : objects) {
 			if (provider.getName().equals(helperName)) {
@@ -41,7 +41,7 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 
 	public T getRegisteredObject(String name) {
 		if (name == null || name.isEmpty()) {
-			return null;
+			return getDefault();
 		}
 		for (T provider : objects) {
 			if (provider.getName().equals(name)) {
@@ -74,11 +74,11 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 	}
 
 	public int getObjectID(String name) {
-		int id = objectIDs.get(name);
-		return id;
+		Integer id = objectIDs.get(name);
+		return id != null ? id : -1;
 	}
-	
-	public T getDefault(){
+
+	public T getDefault() {
 		return null;
 	}
 }

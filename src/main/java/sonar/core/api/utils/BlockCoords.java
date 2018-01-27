@@ -173,7 +173,7 @@ public class BlockCoords {
 
 	public World getWorld() {
         return SonarCore.proxy.getDimension(getDimension());
-		}
+	}
 
     public boolean insideChunk(ChunkPos pos) {
         return pos.x >> 4 == getX() >> 4 && pos.z >> 4 == getZ() >> 4;

@@ -5,6 +5,8 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.StorageSize;
 import sonar.core.api.asm.InventoryHandler;
@@ -14,7 +16,7 @@ import sonar.core.api.utils.ActionType;
 
 import java.util.List;
 
-@InventoryHandler(modid = "StorageDrawers", priority = 2)
+@InventoryHandler(modid = "StorageDrawers", priority = 0)
 public class DrawersInventoryHandler implements ISonarInventoryHandler {
 
 	@Override
@@ -29,7 +31,7 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
 			if (slot < drawers.getDrawerCount()) {
 				IDrawer draw = drawers.getDrawer(slot);
 				ItemStack item = draw.getStoredItemPrototype();
-				if (item != null) {
+				if (!item.isEmpty()) {
 					return new StoredItemStack(item);
 				} else {
 					return null;
@@ -73,12 +75,14 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
 	 */
 	@Override
 	public StoredItemStack addStack(StoredItemStack add, TileEntity tile, EnumFacing dir, ActionType action) {
-		return add;
+		IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir);
+        return ItemHandlerHandler.addStack(add, handler, dir, action);
 	}
 
 	@Override
 	public StoredItemStack removeStack(StoredItemStack remove, TileEntity tile, EnumFacing dir, ActionType action) {
-		return remove;
+		IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir);
+        return ItemHandlerHandler.removeStack(remove, handler, dir, action);
 	}
 
     @Override

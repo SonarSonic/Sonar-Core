@@ -18,9 +18,9 @@ public class SlotList extends Slot {
 
 	@Override
 	public ItemStack decrStackSize(int size) {
-		this.inventory.setInventorySlotContents(this.getSlotIndex(), null);
+		this.inventory.setInventorySlotContents(this.getSlotIndex(), ItemStack.EMPTY);
 		this.inventory.markDirty();
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class SlotList extends Slot {
 	@Override
 	public void putStack(ItemStack stack) {
 		ItemStack copy = ItemStack.EMPTY;
-		if (stack.isEmpty()) {
+		if (!stack.isEmpty()) {
 			copy = stack.copy();
 			copy.setCount(1);
 		}

@@ -15,7 +15,7 @@ import sonar.core.api.utils.ActionType;
 import java.util.Collection;
 import java.util.List;
 
-@InventoryHandler(modid = "refinedstorage", priority = 4)
+@InventoryHandler(modid = "refinedstorage", priority = 0)
 public class RefinedStorageHandler implements ISonarInventoryHandler {
 
 	@Override

@@ -24,7 +24,7 @@ import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.AE2Helper;
 
-@InventoryHandler(modid = "appliedenergistics2", priority = 2)
+@InventoryHandler(modid = "appliedenergistics2", priority = 0)
 public class AE2InventoryProvider implements ISonarInventoryHandler {
 
 	@Override

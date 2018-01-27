@@ -41,7 +41,7 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 public class RenderHelper {
 
 	public static final RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
-    public static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	public static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 	public static final TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 	public static int src = -1, dst = -1;
 	protected RenderManager renderManager;
@@ -66,7 +66,7 @@ public class RenderHelper {
 		} else {
 			Block block = tileentity.getBlockType();
 			i = tileentity.getBlockMetadata();
-            if (block != null && i == 0) {
+			if (block != null && i == 0) {
 				i = tileentity.getBlockMetadata();
 			}
 		}
@@ -123,7 +123,7 @@ public class RenderHelper {
 		float f1 = (float) (color >> 8 & 255) / 255.0F;
 		float f2 = (float) (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		enableBlend();
 		disableTexture2D();
 		tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
@@ -139,7 +139,7 @@ public class RenderHelper {
 	}
 	// 1.9.4 additions
 
-    public static void addVertexWithUV(BufferBuilder vertexbuffer, double x, double y, double z, double u, double v) {
+	public static void addVertexWithUV(BufferBuilder vertexbuffer, double x, double y, double z, double u, double v) {
 		vertexbuffer.pos(x, y, z).tex(u, v).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
 	}
 
@@ -172,7 +172,7 @@ public class RenderHelper {
 				if (depth)
 					disableDepth();
 
-				disableBlend();
+				// disableBlend();
 				GL11.glScaled(scaleFactor, scaleFactor, scaleFactor);
 				final int X = (int) (((float) x + 15.0f - font.getStringWidth(s1) * scaleFactor) * inverseScaleFactor);
 				final int Y = (int) (((float) y + 15.0f - 7.0f * scaleFactor) * inverseScaleFactor);
@@ -182,7 +182,7 @@ public class RenderHelper {
 				if (depth)
 					enableDepth();
 
-				enableBlend();
+				// enableBlend();
 				GL11.glPopMatrix();
 			}
 		}
@@ -190,26 +190,40 @@ public class RenderHelper {
 
 	public static FontRenderer getFontFromStack(ItemStack stack) {
 		FontRenderer rend;
-        return stack != null ? (rend = stack.getItem().getFontRenderer(stack)) == null ? fontRenderer : rend : fontRenderer;
+		return stack != null ? (rend = stack.getItem().getFontRenderer(stack)) == null ? fontRenderer : rend : fontRenderer;
+	}
+
+	/** allows every value to be a double */
+	public static void drawModalRectWithCustomSizedTexture(double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight) {
+		double f = 1.0 / textureWidth;
+		double f1 = 1.0 / textureHeight;
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuffer();
+		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+		bufferbuilder.pos(x, y + height, 0).tex(u * f, (v + height) * f1).endVertex();
+		bufferbuilder.pos(x + width, y + height, 0.0D).tex((u + width) * f, (v + height) * f1).endVertex();
+		bufferbuilder.pos(x + width, y, 0).tex((u + width) * f, v * f1).endVertex();
+		bufferbuilder.pos(x, y, 0).tex(u * f, v * f1).endVertex();
+		tessellator.draw();
 	}
 
 	public static void drawTexturedModalRect(float minX, float minY, float maxY, float width, float height) {
 		float f = 0.00390625F;
 		float f1 = 0.00390625F;
 		Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 		float x = minX;
 		float y = minY;
 		float textureX = 0;
 		float textureY = 0;
-        double widthnew = 0 + width * 2;
-        double heightnew = 0 + height * 2;
+		double widthnew = 0 + width * 2;
+		double heightnew = 0 + height * 2;
 
-        vertexbuffer.pos((double) (x + 0), (double) (y + height), (double) 0).tex((double) ((textureX + 0) * f), (double) ((textureY + height) * f1)).endVertex();
-        vertexbuffer.pos((double) (x + width), (double) (y + height), (double) 0).tex((double) ((textureX + width) * f), (double) ((textureY + height) * f1)).endVertex();
-        vertexbuffer.pos((double) (x + width), (double) (y + 0), (double) 0).tex((double) ((textureX + width) * f), (double) ((textureY + 0) * f1)).endVertex();
-        vertexbuffer.pos((double) (x + 0), (double) (y + 0), (double) 0).tex((double) ((textureX + 0) * f), (double) ((textureY + 0) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + 0), (double) (y + height), (double) 0).tex((double) ((textureX + 0) * f), (double) ((textureY + height) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) (y + height), (double) 0).tex((double) ((textureX + width) * f), (double) ((textureY + height) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) (y + 0), (double) 0).tex((double) ((textureX + width) * f), (double) ((textureY + 0) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + 0), (double) (y + 0), (double) 0).tex((double) ((textureX + 0) * f), (double) ((textureY + 0) * f1)).endVertex();
 		tessellator.draw();
 
 		/* Tessellator tessellator = Tessellator.getInstance(); BufferBuilder vertex = tessellator.getBuffer(); vertex.begin(7, DefaultVertexFormats.POSITION_TEX); double widthnew = (0 + (width * (2))); double heightnew = (0 + ((height) * (2))); addVertexWithUV(vertex, (minX + 0), maxY / 2, 0, 0, heightnew); addVertexWithUV(vertex, (minX + width), maxY / 2, 0, widthnew, heightnew); addVertexWithUV(vertex, (minX + width), (minY + 0), 0, widthnew, 0); addVertexWithUV(vertex, (minX + 0), (minY + 0), 0, 0, 0); tessellator.draw(); float f = 1.0F / textureWidth; float f1 = 1.0F / textureHeight; Tessellator tessellator = Tessellator.getInstance(); VertexBuffer vertexbuffer = tessellator.getBuffer(); vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX); vertexbuffer.pos((double)x, (double)(y + height), 0.0D).tex((double)(u * f), (double)((v + (float)height) * f1)).endVertex(); vertexbuffer.pos((double)(x + width), (double)(y + height), 0.0D).tex((double)((u + (float)width) * f), (double)((v + (float)height) * f1)).endVertex(); vertexbuffer.pos((double)(x + width), (double)y, 0.0D).tex((double)((u + (float)width) * f), (double)(v * f1)).endVertex(); vertexbuffer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex(); tessellator.draw(); */
@@ -220,7 +234,7 @@ public class RenderHelper {
 		float f = 1.0F / tileWidth;
 		float f1 = 1.0F / tileHeight;
 		Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 		vertexbuffer.pos((double) x, (double) (y + height), 0.0D).tex((double) (u * f), (double) ((v + (float) vHeight) * f1)).endVertex();
 		vertexbuffer.pos((double) (x + width), (double) (y + height), 0.0D).tex((double) ((u + (float) uWidth) * f), (double) ((v + (float) vHeight) * f1)).endVertex();
@@ -233,12 +247,12 @@ public class RenderHelper {
 		float f = 0.00390625F;
 		float f1 = 0.00390625F;
 		Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vertexbuffer.pos((double) x, (double) (y + height), (double) 0).tex((double) ((float) textureX * 0.00390625F), (double) ((float) (textureY + height) * 0.00390625F)).endVertex();
+		vertexbuffer.pos((double) x, (double) (y + height), (double) 0).tex((double) ((float) textureX * 0.00390625F), (double) ((float) (textureY + height) * 0.00390625F)).endVertex();
 		vertexbuffer.pos((double) (x + width), (double) (y + height), (double) 0).tex((double) ((float) (textureX + width) * 0.00390625F), (double) ((float) (textureY + height) * 0.00390625F)).endVertex();
-        vertexbuffer.pos((double) (x + width), (double) y, (double) 0).tex((double) ((float) (textureX + width) * 0.00390625F), (double) ((float) textureY * 0.00390625F)).endVertex();
-        vertexbuffer.pos((double) x, (double) y, (double) 0).tex((double) ((float) textureX * 0.00390625F), (double) ((float) textureY * 0.00390625F)).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) y, (double) 0).tex((double) ((float) (textureX + width) * 0.00390625F), (double) ((float) textureY * 0.00390625F)).endVertex();
+		vertexbuffer.pos((double) x, (double) y, (double) 0).tex((double) ((float) textureX * 0.00390625F), (double) ((float) textureY * 0.00390625F)).endVertex();
 		tessellator.draw();
 	}
 
@@ -304,13 +318,13 @@ public class RenderHelper {
 	}
 
 	public static void renderItemIntoGUI(ItemStack stack, int x, int y) {
-        IBakedModel model = BlockModelsCache.INSTANCE.getOrLoadModel(stack);
-        if (model != null) {
-            renderItemModelIntoGUI(stack, x, y, model);
-        }
+		IBakedModel model = BlockModelsCache.INSTANCE.getOrLoadModel(stack);
+		if (model != null) {
+			renderItemModelIntoGUI(stack, x, y, model);
+		}
 	}
 
-    public static void renderItemModelIntoGUI(ItemStack stack, int x, int y, IBakedModel bakedmodel) {
+	public static void renderItemModelIntoGUI(ItemStack stack, int x, int y, IBakedModel bakedmodel) {
 		pushMatrix();
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		textureManager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
@@ -318,34 +332,35 @@ public class RenderHelper {
 		enableAlpha();
 		alphaFunc(516, 0.1F);
 		enableBlend();
+
 		blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		color(1.0F, 1.0F, 1.0F, 1.0F);
 		setupGuiTransform(x, y, bakedmodel.isGui3d());
 		GL11.glScaled(1, 1, 0.04);
-        bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
+		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
 		itemRender.renderItem(stack, bakedmodel);
+
+		disableBlend();
 		disableAlpha();
 		disableRescaleNormal();
 		disableLighting();
-		popMatrix();
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		textureManager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+		popMatrix();
 	}
 
-    public static void setupGuiTransform(int xPosition, int yPosition, boolean isGui3d) {
+	public static void setupGuiTransform(int xPosition, int yPosition, boolean isGui3d) {
 		// GlStateManager.translate((float) xPosition, (float) yPosition, 100.0F + itemRender.zLevel);
 		translate(8.0F, 8.0F, 0.0F);
 		scale(1.0F, -1.0F, 1.0F);
 		scale(16.0F, 16.0F, 16.0F);
 
-        if (!isGui3d) {
+		if (!isGui3d) {
 			disableLighting();
-        } //else GlStateManager.enableLighting();
+		} // else GlStateManager.enableLighting();
 	}
 
-    /**
-     * all credit to InfinityRaider
-     */
+	/** all credit to InfinityRaider */
 	public static List<BakedQuad> transformQuads(List<BakedQuad> quads, TransformationMatrix matrix) {
 		List<BakedQuad> newQuads = new ArrayList<>();
 		for (BakedQuad quad : quads) {
@@ -365,9 +380,7 @@ public class RenderHelper {
 		return newQuads;
 	}
 
-    /**
-     * all credit to InfinityRaider
-     */
+	/** all credit to InfinityRaider */
 	public static float[] transformUnpackedVertexDataElement(TransformationMatrix matrix, VertexFormatElement.EnumUsage type, float[] data) {
 		switch (type) {
 		case POSITION:
@@ -405,14 +418,12 @@ public class RenderHelper {
 		}
 	}
 
-    /**
-     * compensates for the Entity View and applies the right translation. it pushes the matrix once !
-     */
+	/** compensates for the Entity View and applies the right translation. it pushes the matrix once ! */
 	public static void offsetRendering(BlockPos pos, double partialTicks) {
 		Entity view = Minecraft.getMinecraft().getRenderViewEntity();
-        double vX = view.lastTickPosX + (view.posX - view.lastTickPosX) * partialTicks;
-        double vY = view.lastTickPosY + (view.posY - view.lastTickPosY) * partialTicks;
-        double vZ = view.lastTickPosZ + (view.posZ - view.lastTickPosZ) * partialTicks;
+		double vX = view.lastTickPosX + (view.posX - view.lastTickPosX) * partialTicks;
+		double vY = view.lastTickPosY + (view.posY - view.lastTickPosY) * partialTicks;
+		double vZ = view.lastTickPosZ + (view.posZ - view.lastTickPosZ) * partialTicks;
 		pushMatrix();
 		translate(pos.getX() - vX, pos.getY() - vY, pos.getZ() - vZ);
 	}
@@ -429,8 +440,8 @@ public class RenderHelper {
 			double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) partialTicks;
 			double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) partialTicks;
 			translate(-d0 + pos.getX(), -d1 + pos.getY(), -d2 + pos.getZ());
-            double val = 0.0020000000949949026D;
-            drawBoundingBox(box.expand(val, val, val), r, g, b, alpha);
+			double val = 0.0020000000949949026D;
+			drawBoundingBox(box.expand(val, val, val), r, g, b, alpha);
 		}
 
 		depthMask(true);
@@ -444,13 +455,13 @@ public class RenderHelper {
 
 	public static void drawBoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, float r, float g, float b, float alpha) {
 		Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		vertexbuffer.begin(3, DefaultVertexFormats.POSITION_COLOR);
 		drawBoundingBox(vertexbuffer, minX, minY, minZ, maxX, maxY, maxZ, r, g, b, alpha);
 		tessellator.draw();
 	}
 
-    public static void drawBoundingBox(BufferBuilder buffer, double minX, double minY, double minZ, double maxX, double maxY, double maxZ, float r, float g, float b, float alpha) {
+	public static void drawBoundingBox(BufferBuilder buffer, double minX, double minY, double minZ, double maxX, double maxY, double maxZ, float r, float g, float b, float alpha) {
 		buffer.pos(minX, minY, minZ).color(r, g, b, 0.0F).endVertex();
 		buffer.pos(minX, minY, minZ).color(r, g, b, alpha).endVertex();
 		buffer.pos(maxX, minY, minZ).color(r, g, b, alpha).endVertex();

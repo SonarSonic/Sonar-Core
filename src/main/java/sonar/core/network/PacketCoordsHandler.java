@@ -14,7 +14,7 @@ public abstract class PacketCoordsHandler<T extends PacketCoords> implements IMe
 		EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);		
 		if (player != null) {
 			return processMessage(message, player.getEntityWorld(), player);
-        }//TODO SonarCore.proxy.getThreadListener(ctx)
+        }
 		return null;
 	}
 

@@ -296,12 +296,16 @@ public class NBTHelper {
 	}
 
 	public enum SyncType {
-		SAVE(0), DROP(2), SPECIAL(3), PACKET(4), DEFAULT_SYNC(1), SYNC_OVERRIDE(1);
+		SAVE(0), DROP(2), SPECIAL(3), PACKET(4), DEFAULT_SYNC(1), SYNC_OVERRIDE(1), NONE(5);
 
 		private int type;
 
 		SyncType(int type) {
 			this.type = type;
+		}
+		
+		public int getSubType(){
+			return type;
 		}
 
 		public boolean mustSync() {

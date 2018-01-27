@@ -14,7 +14,7 @@ import sonar.core.inventory.SonarLargeInventory;
 
 import java.util.List;
 
-@InventoryHandler(modid = "sonarcore", priority = -1)
+@InventoryHandler(modid = "sonarcore", priority = 0)
 public class ILargeInventoryHandler implements ISonarInventoryHandler {
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {

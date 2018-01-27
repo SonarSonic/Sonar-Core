@@ -292,6 +292,8 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
                         listeners.add(tally.listener);
                     }
                 }
+            }else{
+            	//FIXME combine tallies?
             }
         }));
         return listeners;
@@ -314,16 +316,12 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
         return !tally.isValid() && remove(tally);
     }
 
-    public void onListenerAdded(ListenerTally<L> tally) {
-    }
+    public void onListenerAdded(ListenerTally<L> tally) {}
 
-    public void onListenerRemoved(ListenerTally<L> tally) {
-    }
+    public void onListenerRemoved(ListenerTally<L> tally) {}
 
-    public void onSubListenableAdded(ISonarListenable<L> tally) {
-    }
+    public void onSubListenableAdded(ISonarListenable<L> tally) {}
 
-    public void onSubListenableRemoved(ISonarListenable<L> tally) {
-    }
+    public void onSubListenableRemoved(ISonarListenable<L> tally) {}
 
 }

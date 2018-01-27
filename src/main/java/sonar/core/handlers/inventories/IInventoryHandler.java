@@ -12,7 +12,7 @@ import sonar.core.inventory.GenericInventoryHandler;
 
 import java.util.List;
 
-@InventoryHandler(modid = "sonarcore", priority = 0)
+@InventoryHandler(modid = "sonarcore", priority = 20)
 public class IInventoryHandler implements ISonarInventoryHandler {
 
 	@Override

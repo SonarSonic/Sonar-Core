@@ -36,20 +36,26 @@ import sonar.core.utils.IWorldPosition;
 public abstract class GuiSonar extends GuiContainer {
 
 	protected List<SonarTextField> fieldList = new ArrayList<>();
+	public boolean shouldReset = false;
 
 	public GuiSonar(Container container) {
 		super(container);
 	}
 
-	/**override for guis which have no entity location*/
+	/** override for guis which have no entity location */
 	public void onButtonClicked(int i) {}
-	
+
 	public abstract ResourceLocation getBackground();
 
 	public void reset() {
+		shouldReset = true;
+	}
+
+	public void doReset() {
 		this.buttonList.clear();
 		this.fieldList.clear();
 		this.initGui();
+		shouldReset = false;
 	}
 
 	public void initButtons() {
@@ -125,6 +131,9 @@ public abstract class GuiSonar extends GuiContainer {
 	}
 
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		if (shouldReset) {
+			doReset();
+		}
 		this.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
@@ -194,7 +203,6 @@ public abstract class GuiSonar extends GuiContainer {
 	public int getGuiTop() {
 		return guiTop;
 	}
-	
 
 	@SideOnly(Side.CLIENT)
 	public static class PauseButton extends SonarButtons.ImageButton {
@@ -225,7 +233,7 @@ public abstract class GuiSonar extends GuiContainer {
 		@Override
 		public void onClicked() {
 			gui.onButtonClicked(id);
-		//	SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) gui.entity, gui.entity.getCoords().getBlockPos(), id));
+			// SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) gui.entity, gui.entity.getCoords().getBlockPos(), id));
 			gui.buttonList.clear();
 			gui.initGui();
 		}
@@ -258,7 +266,7 @@ public abstract class GuiSonar extends GuiContainer {
 		@Override
 		public void onClicked() {
 			gui.onButtonClicked(id);
-			//SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) entity, entity.getCoords().getBlockPos(), id));
+			// SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) entity, entity.getCoords().getBlockPos(), id));
 		}
 	}
 }

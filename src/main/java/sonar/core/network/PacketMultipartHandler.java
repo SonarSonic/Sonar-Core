@@ -16,17 +16,19 @@ public abstract class PacketMultipartHandler<T extends PacketMultipart> implemen
 
 	public final IMessage onMessage(T message, MessageContext ctx) {
 		EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
-		World world = player.getEntityWorld();
-		if (player != null && world != null) {
-			if (message.slotID != -1) {
-				Optional<IMultipartTile> multipartTile = SonarMultipartHelper.getMultipartTileFromSlotID(world, message.pos, message.slotID);
-				if (multipartTile.isPresent()) {
-					return processMessage(message, player, world, multipartTile.get(), ctx);
-				}
-			} else {
-				TileEntity tile = world.getTileEntity(message.pos);
-				if (tile instanceof IMultipartTile) {
-					return processMessage(message, player, world, (IMultipartTile) tile, ctx);
+		if (player != null) {
+			World world = player.getEntityWorld();
+			if (world != null && world.isBlockLoaded(message.pos)) { // prevents errors and arbitrary chunk generation
+				if (message.slotID != -1) {
+					Optional<IMultipartTile> multipartTile = SonarMultipartHelper.getMultipartTileFromSlotID(world, message.pos, message.slotID);
+					if (multipartTile.isPresent()) {
+						return processMessage(message, player, world, multipartTile.get(), ctx);
+					}
+				} else {
+					TileEntity tile = world.getTileEntity(message.pos);
+					if (tile instanceof IMultipartTile) {
+						return processMessage(message, player, world, (IMultipartTile) tile, ctx);
+					}
 				}
 			}
 

@@ -66,8 +66,12 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 		return this;
 	}
 
+    public static boolean isEqualStack(ItemStack main, ItemStack adding){
+        return !main.isEmpty() && !adding.isEmpty() && main.isItemEqual(adding) && ItemStack.areItemStackTagsEqual(adding, main);
+    }
+    
 	public boolean equalStack(ItemStack stack) {
-        return !item.isEmpty() && !stack.isEmpty() && this.item.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(stack, this.item);
+        return isEqualStack(item, stack);
 	}
 
 	@Override

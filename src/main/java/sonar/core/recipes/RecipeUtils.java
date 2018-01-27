@@ -12,6 +12,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import sonar.core.helpers.SonarHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,10 @@ public class RecipeUtils {
 	}
 
 	public static List<ItemStack> getListFromObject(Object obj) {
-		if (obj instanceof List) {
+		if(obj instanceof Ingredient){
+			return addStacks(Lists.newArrayList(), SonarHelper.convertArray(((Ingredient)obj).getMatchingStacks()));
+		}
+		else if (obj instanceof List) {
             return addStacks(new ArrayList<>(), (List<ItemStack>) obj);
 		} else if (obj instanceof ItemStack) {
             return addStack(new ArrayList<>(), ((ItemStack) obj).copy());

@@ -13,7 +13,7 @@ import sonar.core.api.utils.ActionType;
 
 import java.util.List;
 
-@InventoryHandler(modid = "sonarcore", priority = 3)
+@InventoryHandler(modid = "sonarcore", priority = 0)
 public class DSUInventoryHandler implements ISonarInventoryHandler {
 
 	@Override

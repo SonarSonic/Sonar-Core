@@ -5,7 +5,7 @@ package sonar.core.listener;
  */
 public class ListenableList<L extends ISonarListener> extends ListenerList<L> {
 
-    ISonarListenable<L> owner;
+    protected ISonarListenable<L> owner;
 
     public ListenableList(ISonarListenable<L> listen, int maxTypes) {
         super(maxTypes);
