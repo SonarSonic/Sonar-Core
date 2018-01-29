@@ -9,6 +9,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.utils.CustomColour;
+import sonar.core.utils.Pair;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

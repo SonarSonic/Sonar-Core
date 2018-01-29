@@ -37,8 +37,8 @@ public class SonarSeeds extends Item implements IPlantable {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag par4) {
-        super.addInformation(stack, world, list, par4);
+	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag par4) {
+		super.addInformation(stack, world, list, par4);
 		if (SonarLoader.calculatorLoaded()) {
 			switch (greenhouseTier) {
 			case 0:
@@ -78,17 +78,17 @@ public class SonarSeeds extends Item implements IPlantable {
 		return EnumActionResult.PASS;
 	}
 
-    @Override
+	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
 		return cropBlock == Blocks.NETHER_WART ? EnumPlantType.Nether : EnumPlantType.Crop;
 	}
 
-    @Override
+	@Override
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
 		return cropBlock.getDefaultState();
 	}
 
 	public boolean canTierUse(int tier) {
-        return tier >= this.greenhouseTier;
-		}
+		return tier >= this.greenhouseTier;
+	}
 }

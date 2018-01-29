@@ -4,6 +4,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -23,17 +24,9 @@ public abstract class SonarMachineBlock extends SonarBlock implements ITileEntit
 	 * param); TileEntity tileentity = world.getTileEntity(pos); return
 	 * tileentity != null ? tileentity.receiveClientEvent(id, param) : false;
 	 * } */
-	@Override
-	public void addSpecialToolTip(ItemStack stack, EntityPlayer player, List<String> list) {}
 
 	@Override
-	public void standardInfo(ItemStack stack, EntityPlayer player, List<String> list) {}
-
-	@Override
-	public void addSpecialToolTip(ItemStack itemStack, World world, List<String> list) {}
-
-	@Override
-	public void standardInfo(ItemStack itemStack, World world, List<String> list) {}
+	public void addSpecialToolTip(ItemStack itemStack, World world, List<String> list, NBTTagCompound tag) {}
 
 	@Override
 	public boolean dropStandard(IBlockAccess world, BlockPos pos) {

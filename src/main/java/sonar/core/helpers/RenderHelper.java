@@ -26,7 +26,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
-import org.lwjgl.opengl.GL11;
 import sonar.core.SonarCore;
 import sonar.core.client.BlockModelsCache;
 import sonar.core.client.gui.GuiSonar;
@@ -35,6 +34,10 @@ import sonar.core.client.renderers.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+
+//import org.lwjgl.opengl.GL11;
 
 import static net.minecraft.client.renderer.GlStateManager.*;
 
@@ -50,13 +53,13 @@ public class RenderHelper {
 	public static double[][] offsetMatrix = new double[][] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 1, 0, -1 }, { 1, 0, 0 }, { 0, 0, -1 } };
 
 	public static void saveBlendState() {
-		src = GL11.glGetInteger(GL11.GL_BLEND_SRC);
-		dst = GL11.glGetInteger(GL11.GL_BLEND_DST);
+		src = GlStateManager.glGetInteger(GL11.GL_BLEND_SRC);
+		dst = GlStateManager.glGetInteger(GL11.GL_BLEND_DST);
 	}
 
 	public static void restoreBlendState() {
 		if (src != -1 && dst != -1)
-			GL11.glBlendFunc(src, dst);
+			GlStateManager.blendFunc(src, dst);
 	}
 
 	public static int setMetaData(TileEntity tileentity) {
@@ -75,11 +78,11 @@ public class RenderHelper {
 	}
 
 	public static void beginRender(double x, double y, double z, int meta, String texture) {
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x, (float) y, (float) z);
+		pushMatrix();
+		translate((float) x, (float) y, (float) z);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(texture));
-		GL11.glPushMatrix();
-		GL11.glRotatef(180.0F, 180.0F, 0.0F, 1.0F);
+		pushMatrix();
+		rotate(180.0F, 180.0F, 0.0F, 1.0F);
 		int j = 0;
 		switch (meta) {
 		case 2:
@@ -95,48 +98,18 @@ public class RenderHelper {
 			j = 270;
 			break;
 		}
-		GL11.glRotatef(j, 0.0F, 1.0F, 0.0F);
-		GL11.glRotated(-0.625, 0, 1, 0);
+		rotate(j, 0.0F, 1.0F, 0.0F);
+		rotate(-0.625F, 0F, 1F, 0F);
 	}
 
 	public static void finishRender() {
-		GL11.glPopMatrix();
-		GL11.glPopMatrix();
+		popMatrix();
+		popMatrix();
 	}
 
 	/* public static EnumFacing getHorizontal(EnumFacing forward) { if (forward == EnumFacing.NORTH) { return EnumFacing.EAST; } if (forward == EnumFacing.EAST) { return EnumFacing.SOUTH; } if (forward == EnumFacing.SOUTH) { return EnumFacing.WEST; } if (forward == EnumFacing.WEST) { return EnumFacing.NORTH; } return null; } */
-	public static void drawRect(float left, float top, float right, float bottom, int color) {
-		if (left < right) {
-			float i = left;
-			left = right;
-			right = i;
-		}
-
-		if (top < bottom) {
-			float j = top;
-			top = bottom;
-			bottom = j;
-		}
-
-		float f3 = (float) (color >> 24 & 255) / 255.0F;
-		float f = (float) (color >> 16 & 255) / 255.0F;
-		float f1 = (float) (color >> 8 & 255) / 255.0F;
-		float f2 = (float) (color & 255) / 255.0F;
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder vertexbuffer = tessellator.getBuffer();
-		enableBlend();
-		disableTexture2D();
-		tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		color(f, f1, f2, f3);
-		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
-		vertexbuffer.pos((double) left, (double) bottom, 0.0D).endVertex();
-		vertexbuffer.pos((double) right, (double) bottom, 0.0D).endVertex();
-		vertexbuffer.pos((double) right, (double) top, 0.0D).endVertex();
-		vertexbuffer.pos((double) left, (double) top, 0.0D).endVertex();
-		tessellator.draw();
-		enableTexture2D();
-		disableBlend();
-	}
+	
+	
 	// 1.9.4 additions
 
 	public static void addVertexWithUV(BufferBuilder vertexbuffer, double x, double y, double z, double u, double v) {
@@ -167,13 +140,13 @@ public class RenderHelper {
 
 				final float scaleFactor = 0.5F;
 				final float inverseScaleFactor = 1.0f / scaleFactor;
-				GL11.glPushMatrix();
+				pushMatrix();
 				disableLighting();
 				if (depth)
 					disableDepth();
 
 				// disableBlend();
-				GL11.glScaled(scaleFactor, scaleFactor, scaleFactor);
+				scale(scaleFactor, scaleFactor, scaleFactor);
 				final int X = (int) (((float) x + 15.0f - font.getStringWidth(s1) * scaleFactor) * inverseScaleFactor);
 				final int Y = (int) (((float) y + 15.0f - 7.0f * scaleFactor) * inverseScaleFactor);
 				font.drawStringWithShadow(s1, X, Y, 16777215);
@@ -183,7 +156,7 @@ public class RenderHelper {
 					enableDepth();
 
 				// enableBlend();
-				GL11.glPopMatrix();
+				popMatrix();
 			}
 		}
 	}
@@ -193,6 +166,40 @@ public class RenderHelper {
 		return stack != null ? (rend = stack.getItem().getFontRenderer(stack)) == null ? fontRenderer : rend : fontRenderer;
 	}
 
+	
+	public static void drawRect(float left, float top, float right, float bottom) {
+		if (left < right) {
+			float i = left;
+			left = right;
+			right = i;
+		}
+
+		if (top < bottom) {
+			float j = top;
+			top = bottom;
+			bottom = j;
+		}
+		/*
+		*/
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
+		/*
+		enableBlend();
+		disableTexture2D();
+		tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		*/
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
+		vertexbuffer.pos((double) left, (double) bottom, 0.0D).endVertex();
+		vertexbuffer.pos((double) right, (double) bottom, 0.0D).endVertex();
+		vertexbuffer.pos((double) right, (double) top, 0.0D).endVertex();
+		vertexbuffer.pos((double) left, (double) top, 0.0D).endVertex();
+		tessellator.draw();
+		/*
+		enableTexture2D();
+		disableBlend();
+		*/
+	}
+	
 	/** allows every value to be a double */
 	public static void drawModalRectWithCustomSizedTexture(double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight) {
 		double f = 1.0 / textureWidth;
@@ -336,7 +343,7 @@ public class RenderHelper {
 		blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		color(1.0F, 1.0F, 1.0F, 1.0F);
 		setupGuiTransform(x, y, bakedmodel.isGui3d());
-		GL11.glScaled(1, 1, 0.04);
+		GlStateManager.scale(1, 1, 0.04);
 		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
 		itemRender.renderItem(stack, bakedmodel);
 

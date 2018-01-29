@@ -21,12 +21,13 @@ public abstract class SonarItemScreen extends SonarItem {
 		if (!player.canPlayerEdit(pos, facing, stack) || facing == EnumFacing.DOWN || facing == EnumFacing.UP || world.getBlockState(pos).getBlock().isReplaceable(world, pos)) {
 			return EnumActionResult.PASS;
 		}
-		EnumFacing orientation = player.getHorizontalFacing().getOpposite();
-		BlockPos adjPos = pos.offset(orientation.getOpposite());
-		IBlockState adjState = world.getBlockState(adjPos);
-		if (canPlaceScreenOn(world, adjState, adjPos, null)) {
+		EnumFacing orientation = facing;
+		IBlockState clickedState = world.getBlockState(pos);
+		if (canPlaceScreenOn(world, clickedState, pos, facing)) {
 			if (!world.isRemote) {
-				world.setBlockState(pos, getScreenBlock().getDefaultState(), 3);
+				BlockPos adjPos = pos.offset(facing);
+				IBlockState adjState = world.getBlockState(adjPos);
+				world.setBlockState(adjPos, getScreenBlock().getDefaultState(), 3);
 				stack.shrink(1);
 			}
 			return EnumActionResult.SUCCESS;

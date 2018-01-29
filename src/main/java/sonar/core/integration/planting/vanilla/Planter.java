@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
+import sonar.core.common.item.SonarSeeds;
 import sonar.core.integration.planting.IPlanter;
 
 public class Planter implements IPlanter {
@@ -24,6 +25,9 @@ public class Planter implements IPlanter {
 
 	@Override
 	public boolean canTierPlant(ItemStack stack, int tier) {
+		if(stack.getItem() instanceof SonarSeeds){
+			return ((SonarSeeds)stack.getItem()).canTierUse(tier);
+		}
         return stack.getItem() instanceof IPlantable;
 	}
 

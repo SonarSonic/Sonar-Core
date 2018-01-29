@@ -9,11 +9,16 @@ import sonar.core.helpers.NBTHelper.SyncType;
 public class CustomColour implements INBTSyncable {
 
 	public int red, green, blue;
-    private Integer rgb;
+	private Integer rgb;
 
-    public CustomColour() {
-    }
-	
+	public CustomColour() {}
+
+	public CustomColour(int rgb) {
+		red = (rgb >> 16) & 0x000000FF;
+		green = (rgb >> 8) & 0x000000FF;
+		blue = (rgb) & 0x000000FF;
+	}
+
 	public CustomColour(int r, int g, int b) {
 		red = r;
 		green = g;
@@ -21,7 +26,7 @@ public class CustomColour implements INBTSyncable {
 	}
 
 	public int getRGB() {
-		if(rgb==null){
+		if (rgb == null) {
 			rgb = FontHelper.getIntFromColor(red, green, blue);
 		}
 		return rgb;
