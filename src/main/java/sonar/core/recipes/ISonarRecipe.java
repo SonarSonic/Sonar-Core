@@ -1,8 +1,8 @@
 package sonar.core.recipes;
 
-import net.minecraft.entity.player.EntityPlayer;
-
 import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
 
 public interface ISonarRecipe {
     List<ISonarRecipeObject> inputs();

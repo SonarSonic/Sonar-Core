@@ -1,9 +1,10 @@
 package sonar.core.network.sync;
 
-import com.google.common.collect.Lists;
-import sonar.core.helpers.NBTHelper.SyncType;
-
 import java.util.List;
+
+import com.google.common.collect.Lists;
+
+import sonar.core.helpers.NBTHelper.SyncType;
 
 public abstract class SyncPart extends DirtyPart implements ISyncPart {
 	public byte id = -1;

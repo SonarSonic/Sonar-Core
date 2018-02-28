@@ -1,5 +1,10 @@
 package sonar.core.network;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import mcmultipart.api.multipart.IMultipartTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import sonar.core.SonarCore;
 import sonar.core.api.IFlexibleGui;
@@ -21,13 +27,6 @@ import sonar.core.integration.multipart.TileSonarMultipart;
 //import sonar.core.integration.multipart.SonarMultipart;
 //import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.utils.Pair;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
-import mcmultipart.api.multipart.IMultipartTile;
 
 public class FlexibleGuiHandler {
 
@@ -130,6 +129,19 @@ public class FlexibleGuiHandler {
 			}
 		}
 	}
+	
+	public void openGuiClient(EntityPlayer player, BlockPos pos, NBTTagCompound tag, int id, int windowID, boolean change){
+
+		Pair<Object, IFlexibleGui> gui = SonarCore.instance.guiHandler.getFlexibleGui(id, player, player.getEntityWorld(), pos, tag);
+		if (change) {
+			FlexibleGuiHandler.setLastContainer(player.openContainer, player, Side.CLIENT);
+			FlexibleGuiHandler.setLastGui(gui, player, Side.CLIENT);
+			SonarCore.instance.guiHandler.lastScreen = Minecraft.getMinecraft().currentScreen;
+		} // else player.closeScreen();
+		FMLClientHandler.instance().showGuiScreen(gui.b.getClientElement(gui.a, id, player.getEntityWorld(), player, tag));
+		player.openContainer.windowId = windowID;
+	}
+
 
 	public static void changeGui(IFlexibleGui guiTile, int id, int returnID, World world, EntityPlayer player) {
 		if (guiTile instanceof TileSonarMultipart) {
@@ -181,8 +193,6 @@ public class FlexibleGuiHandler {
 				gui.b.onGuiOpened(gui.a, SonarCore.instance.guiHandler.lastID.get(player), player.getEntityWorld(), player, new NBTTagCompound());
 				player.openContainer = (Container) container;
 				SonarCore.instance.guiHandler.lastContainers.remove(player);
-				// SonarCore.instance.guiHandler.lastOpened.remove(player);
-				// SonarCore.instance.guiHandler.lastID.remove(player);
 			}
 			return true;
 		}

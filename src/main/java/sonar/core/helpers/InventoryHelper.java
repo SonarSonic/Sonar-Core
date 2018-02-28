@@ -1,5 +1,8 @@
 package sonar.core.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
@@ -18,9 +21,6 @@ import sonar.core.api.wrappers.InventoryWrapper;
 import sonar.core.handlers.inventories.IInventoryHandler;
 import sonar.core.inventory.IAdditionalInventory;
 import sonar.core.inventory.IDropInventory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InventoryHelper extends InventoryWrapper {
 
@@ -145,15 +145,19 @@ public class InventoryHelper extends InventoryWrapper {
 		}
 		list.add(stack);
 	}
-
 	@Override
 	public void spawnStoredItemStack(StoredItemStack drop, World world, int x, int y, int z, EnumFacing side) {
+		spawnStoredItemStackDouble(drop, world, x + 0.5, y + 0.5, z + 0.5, side);
+	}
+
+	@Override
+	public void spawnStoredItemStackDouble(StoredItemStack drop, World world, double x, double y, double z, EnumFacing side) {
 		List<EntityItem> drops = new ArrayList<>();
 		while (!(drop.stored <= 0)) {
 			ItemStack dropStack = drop.getItemStack();
 			dropStack.setCount((int) Math.min(drop.stored, dropStack.getMaxStackSize()));
 			drop.stored -= dropStack.getCount();
-			drops.add(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, dropStack));
+			drops.add(new EntityItem(world, x, y, z, dropStack));
 		}
 		if (drop.stored < 0) {
 			SonarCore.logger.error("ERROR: Excess Items in Drop");

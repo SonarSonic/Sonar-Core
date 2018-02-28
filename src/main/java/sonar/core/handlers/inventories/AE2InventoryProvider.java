@@ -2,15 +2,9 @@ package sonar.core.handlers.inventories;
 
 import java.util.List;
 
-import appeng.api.AEApi;
 import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.storage.IStorageGrid;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.IStorageMonitorable;
-import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
-import appeng.core.Api;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.IGridProxyable;
 import appeng.me.helpers.MachineSource;

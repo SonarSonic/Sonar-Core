@@ -1,10 +1,10 @@
 package sonar.core.network.sync2;
 
+import java.lang.reflect.Field;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import sonar.core.network.sync.ISyncableListener;
-
-import java.lang.reflect.Field;
 
 public class EnumHandler implements ISyncHandler<Enum<?>> {
 

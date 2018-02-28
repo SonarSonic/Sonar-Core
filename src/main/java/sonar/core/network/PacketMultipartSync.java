@@ -1,8 +1,6 @@
 package sonar.core.network;
 
 import io.netty.buffer.ByteBuf;
-import mcmultipart.api.container.IMultipartContainer;
-import mcmultipart.api.multipart.IMultipart;
 import mcmultipart.api.multipart.IMultipartTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,8 +12,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import sonar.core.SonarCore;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
-
-import java.util.UUID;
 
 public class PacketMultipartSync extends PacketMultipart {
 

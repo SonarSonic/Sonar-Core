@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.function.Function;
 
 import org.lwjgl.opengl.GL11;
 
@@ -14,7 +13,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -24,14 +22,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import sonar.core.SonarCore;
 import sonar.core.api.machines.IPausable;
 import sonar.core.api.machines.IProcessMachine;
 import sonar.core.helpers.FontHelper;
-import sonar.core.network.PacketByteBuf;
-import sonar.core.network.utils.IByteBufTile;
 import sonar.core.upgrades.UpgradeInventory;
-import sonar.core.utils.IWorldPosition;
 
 public abstract class GuiSonar extends GuiContainer {
 
@@ -115,10 +109,11 @@ public abstract class GuiSonar extends GuiContainer {
 		float f2 = (float) (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexbuffer = tessellator.getBuffer();
+		sonar.core.helpers.RenderHelper.saveBlendState();
 		GlStateManager.enableBlend();
 		GlStateManager.color(f, f1, f2, f3);
 		GlStateManager.disableTexture2D();
-		OpenGlHelper.glBlendFunc(770, 1, 1, 0);
+		GlStateManager.tryBlendFuncSeparate(770, 1, 1, 0);
 		GlStateManager.color(f, f1, f2, f3);
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
 		vertexbuffer.pos((double) left, (double) bottom, 0.0D).endVertex();
@@ -128,6 +123,7 @@ public abstract class GuiSonar extends GuiContainer {
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
+		sonar.core.helpers.RenderHelper.restoreBlendState();
 	}
 
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -184,6 +180,10 @@ public abstract class GuiSonar extends GuiContainer {
 			}
 		}
 		super.keyTyped(c, i);
+	}
+
+	public boolean isCloseKey(int keyCode) {
+		return keyCode == 1 || this.mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode);
 	}
 
 	public void onTextFieldChanged(SonarTextField field) {}

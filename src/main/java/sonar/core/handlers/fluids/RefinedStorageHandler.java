@@ -1,7 +1,11 @@
 package sonar.core.handlers.fluids;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
@@ -11,9 +15,6 @@ import sonar.core.api.asm.FluidHandler;
 import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
-
-import java.util.Collection;
-import java.util.List;
 
 @FluidHandler(modid = "refinedstorage", priority = 2)
 public class RefinedStorageHandler implements ISonarFluidHandler {

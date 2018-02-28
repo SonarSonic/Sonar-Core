@@ -1,7 +1,11 @@
 package sonar.core.handlers.inventories;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -11,9 +15,6 @@ import sonar.core.api.asm.InventoryHandler;
 import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
-
-import java.util.Collection;
-import java.util.List;
 
 @InventoryHandler(modid = "refinedstorage", priority = 0)
 public class RefinedStorageHandler implements ISonarInventoryHandler {

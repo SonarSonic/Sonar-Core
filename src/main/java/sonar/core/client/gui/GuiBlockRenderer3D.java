@@ -1,19 +1,26 @@
 package sonar.core.client.gui;
 
-import mcmultipart.MCMultiPart;
-import mcmultipart.api.multipart.IMultipart;
-import mcmultipart.multipart.MultipartRegistry;
+import java.util.List;
+
+import javax.vecmath.Vector3d;
+
+import org.lwjgl.opengl.GL11;
+
+import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.multipart.Multipart;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
-import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.BlockRenderLayer;
@@ -21,22 +28,9 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.storage.ISaveHandler;
-import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.client.ForgeHooksClient;
-import org.lwjgl.opengl.GL11;
-
-import com.google.common.collect.Lists;
-
-import javax.vecmath.Vector3d;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
 
 public class GuiBlockRenderer3D implements IBlockAccess {
 
@@ -162,7 +156,6 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 			IBlockState state = cache.state;
 			BlockPos pos = cache.pos;
 			Block block = state.getBlock();
-			state = state;// .getActualState(this, pos);
 			if (block.canRenderInLayer(state, layer)) {
 				renderBlock(state, pos, this, Tessellator.getInstance().getBuffer());
 			}

@@ -1,8 +1,8 @@
 package sonar.core.integration;
 
-import net.minecraft.block.state.IBlockState;
-
 import java.util.List;
+
+import net.minecraft.block.state.IBlockState;
 
 public interface IWailaInfo {
 

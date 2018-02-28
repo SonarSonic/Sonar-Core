@@ -1,5 +1,7 @@
 package sonar.core.handlers.fluids;
 
+import java.util.List;
+
 import mcjty.deepresonance.blocks.tank.TileTank;
 import mcjty.deepresonance.tanks.TankGrid;
 import net.minecraft.tileentity.TileEntity;
@@ -10,8 +12,6 @@ import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.FluidHelper;
-
-import java.util.List;
 
 @FluidHandler(modid = "deepresonance", priority = -1)
 public class DeepResonanceTank implements ISonarFluidHandler {

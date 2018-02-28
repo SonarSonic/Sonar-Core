@@ -1,5 +1,7 @@
 package sonar.core.common.tileentity;
 
+import java.util.List;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -30,8 +32,6 @@ import sonar.core.network.sync.IDirtyPart;
 import sonar.core.network.sync.ISyncableListener;
 import sonar.core.network.sync.SyncableList;
 import sonar.core.utils.IWorldPosition;
-
-import java.util.List;
 
 public class TileEntitySonar extends TileEntity implements ISyncableListener, ITickable, INBTSyncable, IWailaInfo, IWorldPosition {
 

@@ -1,5 +1,8 @@
 package sonar.core.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
@@ -11,9 +14,6 @@ import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.api.wrappers.FluidWrapper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FluidHelper extends FluidWrapper {
 

@@ -1,10 +1,10 @@
 package sonar.core.network.sync2;
 
-import sonar.core.helpers.NBTHelper.SyncType;
+import static java.lang.annotation.ElementType.FIELD;
 
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.FIELD;
+import sonar.core.helpers.NBTHelper.SyncType;
 
 @Target(FIELD)
 public @interface SyncField {

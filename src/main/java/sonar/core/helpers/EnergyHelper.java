@@ -1,17 +1,21 @@
 package sonar.core.helpers;
 
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.SonarCore;
-import sonar.core.api.energy.*;
+import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.ISonarEnergyContainerHandler;
+import sonar.core.api.energy.ISonarEnergyHandler;
+import sonar.core.api.energy.ISonarEnergyTile;
+import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.api.wrappers.EnergyWrapper;
 import sonar.core.energy.DischargeValues;
 import sonar.core.handlers.energy.SonarHandler;
 import sonar.core.network.sync.SyncEnergyStorage;
-
-import java.util.List;
 
 public class EnergyHelper extends EnergyWrapper {
     /**

@@ -1,5 +1,10 @@
 package sonar.core.client;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -13,11 +18,6 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import sonar.core.helpers.RenderHelper;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
 
 ///AE3 Code: All credit goes to Elix_x https://github.com/AEModernMCPort/Applied-Energistics-3/blob/codename-andromeda/src/main/java/appeng/core/lib/client/render/model/ModelsCache.java
 public enum BlockModelsCache implements IResourceManagerReloadListener {

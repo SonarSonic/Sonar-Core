@@ -1,10 +1,11 @@
 package sonar.core.client.gui;
 
-import sonar.core.utils.Pair;
-
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
+
+import sonar.core.utils.Pair;
 
 public abstract class GuiGridElement<T> {
 

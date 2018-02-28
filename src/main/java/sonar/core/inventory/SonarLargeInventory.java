@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.IItemHandler;
-import sonar.core.SonarCore;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper;

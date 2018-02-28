@@ -3,8 +3,6 @@ package sonar.core.common.tileentity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
 import sonar.core.utils.IMachineSides;
 import sonar.core.utils.MachineSideConfig;
 import sonar.core.utils.MachineSides;

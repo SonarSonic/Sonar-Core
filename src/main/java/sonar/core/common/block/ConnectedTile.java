@@ -1,6 +1,9 @@
 package sonar.core.common.block;
 
+import java.util.ArrayList;
+
 import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -11,8 +14,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.api.blocks.IConnectedBlock;
-
-import java.util.ArrayList;
 
 public abstract class ConnectedTile extends SonarMachineBlock implements IConnectedBlock {
 

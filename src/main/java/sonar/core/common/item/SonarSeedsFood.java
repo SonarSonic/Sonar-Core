@@ -1,5 +1,7 @@
 package sonar.core.common.item;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -19,8 +21,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.helpers.FontHelper;
 import sonar.core.integration.SonarLoader;
-
-import java.util.List;
 
 public class SonarSeedsFood extends ItemFood implements IPlantable {
 	private Block cropBlock;

@@ -1,10 +1,11 @@
 package sonar.core.recipes;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import net.minecraft.item.ItemStack;
 import sonar.core.api.inventories.StoredItemStack;
-
-import java.util.List;
 
 /**
  * works for matching StoredItemStacks

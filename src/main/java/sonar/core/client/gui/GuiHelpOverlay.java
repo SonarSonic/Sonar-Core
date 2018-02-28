@@ -1,9 +1,9 @@
 package sonar.core.client.gui;
 
+import java.util.ArrayList;
+
 import net.minecraft.client.gui.Gui;
 import sonar.core.utils.Pair;
-
-import java.util.ArrayList;
 
 public class GuiHelpOverlay<T extends GuiSonarTile> extends Gui {
 

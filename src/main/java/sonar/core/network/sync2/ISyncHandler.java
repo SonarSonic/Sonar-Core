@@ -1,9 +1,9 @@
 package sonar.core.network.sync2;
 
+import java.lang.reflect.Field;
+
 import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.network.sync.ISyncableListener;
-
-import java.lang.reflect.Field;
 
 public interface ISyncHandler<T> {
 

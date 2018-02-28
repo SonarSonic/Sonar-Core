@@ -1,14 +1,14 @@
 package sonar.core.inventory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import sonar.core.api.SonarAPI;
 import sonar.core.energy.DischargeValues;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TransferSlotsManager<T extends IInventory> {
 	public static TransferSlotsManager<IInventory> DEFAULT = new TransferSlotsManager<IInventory>() {

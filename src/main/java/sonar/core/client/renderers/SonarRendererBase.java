@@ -1,5 +1,7 @@
 package sonar.core.client.renderers;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -7,8 +9,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-
-import java.util.ArrayList;
 
 public abstract class SonarRendererBase implements ISonarCustomRenderer {
 

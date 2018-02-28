@@ -1,5 +1,15 @@
 package sonar.core.helpers;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+
+import javax.annotation.Nonnull;
+
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
@@ -15,15 +25,6 @@ import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.utils.Pair;
 import sonar.core.utils.SortingDirection;
-
-import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
 
 public class ASMLoader {
 

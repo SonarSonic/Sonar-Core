@@ -126,7 +126,20 @@ public abstract class SyncTagType<T> extends SyncPart {
 			this.current = (double) 0;
 		}
 	}
+	/*
+	public static class Number<N extends Number> extends SyncTagType<N> {
+		public Number(int id) {
+			super(NBT.TAG_ANY_NUMERIC, id);
+			this.current = (double) 0;
+		}
 
+		public Number(String name) {
+			super(NBT.TAG_ANY_NUMERIC, name);
+			this.current = (double) 0;
+		}
+	}
+	*/
+	
 	public static class BYTE_ARRAY extends SyncTagType<Byte[]> {
 		public BYTE_ARRAY(int id, int size) {
 			super(NBT.TAG_BYTE_ARRAY, id);

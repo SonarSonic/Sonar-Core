@@ -1,14 +1,14 @@
 package sonar.core.energy;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import sonar.core.helpers.IRecipeHelper;
 import sonar.core.helpers.ItemStackHelper;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class DischargeValues implements IRecipeHelper {
 

@@ -1,5 +1,8 @@
 package sonar.core.integration.jei;
 
+import java.util.Collections;
+import java.util.List;
+
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
@@ -8,9 +11,6 @@ import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import sonar.core.helpers.FontHelper;
-
-import java.util.Collections;
-import java.util.List;
 
 public abstract class JEICategoryV2 implements IRecipeCategory, IRecipeHandler<JEIRecipeV2> {
 

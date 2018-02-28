@@ -1,5 +1,11 @@
 package sonar.core.helpers;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -7,6 +13,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -22,14 +29,9 @@ import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.SyncableList;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class NBTHelper {
 
-	/**cheats to add info to a TileEntity on place, without having a stack*/
+	/** cheats to add info to a TileEntity on place, without having a stack */
 	public static boolean setTileEntityNBT(World worldIn, @Nullable EntityPlayer player, BlockPos pos, NBTTagCompound fakeTag) {
 		ItemStack stack = new ItemStack(Blocks.AIR, 1);
 		stack.getTagCompound().setTag("BlockEntityTag", fakeTag);
@@ -295,6 +297,24 @@ public class NBTHelper {
 		return new FluidTankInfo(FluidStack.loadFluidStackFromNBT(nbt), nbt.getInteger("capacity"));
 	}
 
+	public static NBTTagCompound writeDoubleArray(NBTTagCompound tag, double[] array, String tagName) {
+		NBTTagList list = new NBTTagList();
+		for (double d : array) {
+			list.appendTag(new NBTTagDouble(d));
+		}
+		tag.setTag(tagName, list);
+		return tag;
+	}
+
+	public static double[] readDoubleArray(NBTTagCompound tag, String tagName, int size) {
+		NBTTagList list = tag.getTagList(tagName, NBT.TAG_DOUBLE);
+		double[] array = new double[size];
+		for (int i = 0; i < list.tagCount(); i++) {
+			array[i] = list.getDoubleAt(i);
+		}
+		return array;
+	}
+
 	public enum SyncType {
 		SAVE(0), DROP(2), SPECIAL(3), PACKET(4), DEFAULT_SYNC(1), SYNC_OVERRIDE(1), NONE(5);
 
@@ -303,8 +323,8 @@ public class NBTHelper {
 		SyncType(int type) {
 			this.type = type;
 		}
-		
-		public int getSubType(){
+
+		public int getSubType() {
 			return type;
 		}
 

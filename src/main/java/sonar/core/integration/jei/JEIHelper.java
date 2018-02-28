@@ -1,5 +1,11 @@
 package sonar.core.integration.jei;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
@@ -7,12 +13,6 @@ import sonar.core.recipes.IRecipeHelperV2;
 import sonar.core.recipes.ISonarRecipe;
 import sonar.core.recipes.RecipeHelperV2;
 import sonar.core.recipes.RecipeObjectType;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 //FIXME this is JEI STUFF hahah
 public class JEIHelper {

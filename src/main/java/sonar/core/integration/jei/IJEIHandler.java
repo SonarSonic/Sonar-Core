@@ -1,10 +1,10 @@
 package sonar.core.integration.jei;
 
+import java.util.List;
+
 import mezz.jei.api.IGuiHelper;
 import net.minecraft.item.ItemStack;
 import sonar.core.recipes.IRecipeHelperV2;
-
-import java.util.List;
 
 public interface IJEIHandler {
 	

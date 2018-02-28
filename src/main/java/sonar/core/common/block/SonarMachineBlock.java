@@ -1,16 +1,15 @@
 package sonar.core.common.block;
 
+import java.util.List;
+
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import sonar.core.utils.ISpecialTooltip;
-
-import java.util.List;
 
 public abstract class SonarMachineBlock extends SonarBlock implements ITileEntityProvider, ISpecialTooltip {
 

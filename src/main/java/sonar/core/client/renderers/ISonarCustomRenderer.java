@@ -1,12 +1,12 @@
 package sonar.core.client.renderers;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.ArrayList;
 
 public interface ISonarCustomRenderer extends ItemMeshDefinition {
 

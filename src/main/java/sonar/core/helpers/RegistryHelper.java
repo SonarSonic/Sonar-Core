@@ -1,12 +1,12 @@
 package sonar.core.helpers;
 
-import gnu.trove.map.hash.THashMap;
-import sonar.core.SonarCore;
-import sonar.core.api.IRegistryObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import gnu.trove.map.hash.THashMap;
+import sonar.core.SonarCore;
+import sonar.core.api.IRegistryObject;
 
 public abstract class RegistryHelper<T extends IRegistryObject> {
 

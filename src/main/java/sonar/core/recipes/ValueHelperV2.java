@@ -1,9 +1,9 @@
 package sonar.core.recipes;
 
-import net.minecraft.entity.player.EntityPlayer;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
 
 public abstract class ValueHelperV2 extends DefinedRecipeHelper<DefaultSonarRecipe.Value> {
 

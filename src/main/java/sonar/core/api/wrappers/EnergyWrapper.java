@@ -4,7 +4,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.asm.EnergyContainerHandler;
-import sonar.core.api.energy.*;
+import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.ISonarEnergyContainerHandler;
+import sonar.core.api.energy.ISonarEnergyHandler;
+import sonar.core.api.energy.ISonarEnergyTile;
+import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 
 public class EnergyWrapper {

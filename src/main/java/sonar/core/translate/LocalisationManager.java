@@ -1,12 +1,12 @@
 package sonar.core.translate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import sonar.core.SonarCore;
 import sonar.core.helpers.FontHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LocalisationManager implements IResourceManagerReloadListener {
 

@@ -1,6 +1,12 @@
 package sonar.core.common.block;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -8,9 +14,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -33,13 +37,7 @@ import sonar.core.common.block.properties.IBlockRotated;
 import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.helpers.InventoryHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.inventory.IAdditionalInventory;
-import sonar.core.inventory.IDropInventory;
 import sonar.core.network.PacketBlockInteraction;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class SonarBlock extends Block implements IWrenchable, IInteractBlock, IBlockRotated {
 

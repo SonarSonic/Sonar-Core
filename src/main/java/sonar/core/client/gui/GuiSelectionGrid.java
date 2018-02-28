@@ -10,7 +10,6 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.inventory.Container;
 import sonar.core.client.gui.widgets.SonarScroller;
-import sonar.core.helpers.RenderHelper;
 
 public abstract class GuiSelectionGrid<T> extends GuiSonar {
 

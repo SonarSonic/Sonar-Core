@@ -1,7 +1,6 @@
 package sonar.core.client.gui;
 
 import net.minecraft.inventory.Container;
-import net.minecraft.util.ResourceLocation;
 import sonar.core.SonarCore;
 import sonar.core.network.PacketByteBuf;
 import sonar.core.network.utils.IByteBufTile;

@@ -1,10 +1,10 @@
 package sonar.core.api.upgrades;
 
+import java.util.ArrayList;
+
 import gnu.trove.map.hash.THashMap;
 import net.minecraft.item.ItemStack;
 import sonar.core.api.nbt.INBTSyncable;
-
-import java.util.ArrayList;
 
 public interface IUpgradeInventory extends INBTSyncable {
 

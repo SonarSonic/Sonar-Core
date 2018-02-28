@@ -1,5 +1,10 @@
 package sonar.core.helpers;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
@@ -9,12 +14,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.utils.CustomColour;
-import sonar.core.utils.Pair;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FontHelper {
 
@@ -330,4 +329,5 @@ public class FontHelper {
 	public static boolean isFormatColor(char colorChar) {
 		return colorChar >= 48 && colorChar <= 57 || colorChar >= 97 && colorChar <= 102 || colorChar >= 65 && colorChar <= 70;
 	}
+
 }

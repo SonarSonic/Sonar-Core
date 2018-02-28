@@ -1,9 +1,9 @@
 package sonar.core.recipes;
 
-import net.minecraft.entity.player.EntityPlayer;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
 
 public class DefaultSonarRecipe implements ISonarRecipe {
 	public ArrayList<ISonarRecipeObject> recipeInputs;

@@ -1,6 +1,19 @@
 package sonar.core.client.renderers;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.vecmath.Matrix4f;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.opengl.GL11;
+
 import com.google.common.collect.ImmutableList;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -30,18 +43,8 @@ import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
 import sonar.core.common.block.properties.IBlockRotated;
 import sonar.core.helpers.RenderHelper;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.vecmath.Matrix4f;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
 @MethodsReturnNonnullByDefault

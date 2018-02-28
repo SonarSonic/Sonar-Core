@@ -1,5 +1,7 @@
 package sonar.core.handlers.fluids;
 
+import java.util.List;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -9,8 +11,6 @@ import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.FluidHelper;
-
-import java.util.List;
 
 @FluidHandler(modid = "sonarcore", priority = 0)
 public class FluidCapabilityHandler implements ISonarFluidHandler {

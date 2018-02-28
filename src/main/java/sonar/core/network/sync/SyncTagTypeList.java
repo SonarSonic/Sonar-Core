@@ -1,5 +1,7 @@
 package sonar.core.network.sync;
 
+import java.util.ArrayList;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -7,8 +9,6 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
-
-import java.util.ArrayList;
 
 /**
  * for use with objects which implement INBTSyncable and have an Empty Constructor for instances

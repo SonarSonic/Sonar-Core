@@ -1,5 +1,7 @@
 package sonar.core.inventory;
 
+import java.util.List;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -9,8 +11,6 @@ import sonar.core.api.StorageSize;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.InventoryHelper;
-
-import java.util.List;
 
 public class GenericInventoryHandler {
 

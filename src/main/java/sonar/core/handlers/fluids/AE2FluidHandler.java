@@ -1,9 +1,9 @@
 package sonar.core.handlers.fluids;
 
+import java.util.List;
+
 import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.IGridProxyable;
@@ -17,8 +17,6 @@ import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.AE2Helper;
-
-import java.util.List;
 
 @FluidHandler(modid = "appliedenergistics2", priority = 4)
 public class AE2FluidHandler implements ISonarFluidHandler {

@@ -1,5 +1,7 @@
 package sonar.core.common.item;
 
+import java.util.List;
+
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -13,8 +15,6 @@ import sonar.core.api.energy.ISonarEnergyItem;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.FontHelper;
 import sonar.core.network.sync.SyncItemEnergyStorage;
-
-import java.util.List;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = "redstoneflux")})
 public class SonarEnergyItem extends SonarItem implements ISonarEnergyItem, IEnergyContainerItem {

@@ -1,8 +1,8 @@
 package sonar.core.helpers;
 
-import sonar.core.SonarCore;
-
 import java.util.LinkedHashMap;
+
+import sonar.core.SonarCore;
 
 public abstract class LinkedRegistryHelper<S, P> {
 

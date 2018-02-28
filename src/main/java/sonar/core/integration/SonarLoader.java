@@ -1,9 +1,9 @@
 package sonar.core.integration;
 
+import java.lang.reflect.Method;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
-
-import java.lang.reflect.Method;
 
 public class SonarLoader {
 

@@ -1,7 +1,14 @@
 package sonar.core.helpers;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -21,12 +28,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.utils.IWorldPosition;
 import sonar.core.utils.SortingDirection;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * helps with getting tiles, adding energy and checking stacks
@@ -257,6 +258,7 @@ public class SonarHelper {
 	public static <T> T[] convertArray(List<T> objs) {
 		return (T[]) objs.toArray();
 	}
+
 
 	public static boolean intContains(int[] ints, int num) {
 		for (int i : ints) {

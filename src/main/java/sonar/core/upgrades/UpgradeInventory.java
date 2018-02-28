@@ -1,5 +1,8 @@
 package sonar.core.upgrades;
 
+import java.util.ArrayList;
+import java.util.Map.Entry;
+
 import gnu.trove.map.hash.THashMap;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
@@ -10,9 +13,6 @@ import sonar.core.SonarCore;
 import sonar.core.api.upgrades.IUpgradeInventory;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.SyncPart;
-
-import java.util.ArrayList;
-import java.util.Map.Entry;
 
 public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
 

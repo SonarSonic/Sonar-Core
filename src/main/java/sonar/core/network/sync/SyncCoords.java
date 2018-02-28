@@ -17,8 +17,10 @@ public class SyncCoords extends SyncPart {
 	}
 
 	public void setCoords(BlockCoords value) {
-		c = value;
-		this.markChanged();
+		if (c == null || !c.equals(value)) {
+			c = value;
+			this.markChanged();
+		}
 	}
 
 	public BlockCoords getCoords() {
@@ -30,7 +32,7 @@ public class SyncCoords extends SyncPart {
 		if (c != null) {
 			buf.writeBoolean(true);
 			BlockCoords.writeToBuf(buf, c);
-		}else{
+		} else {
 			buf.writeBoolean(false);
 		}
 	}

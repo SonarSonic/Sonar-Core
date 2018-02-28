@@ -1,5 +1,9 @@
 package sonar.core.client.renderers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -15,10 +19,6 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SonarCustomStateMapper extends StateMapperBase implements ICustomModelLoader {
 

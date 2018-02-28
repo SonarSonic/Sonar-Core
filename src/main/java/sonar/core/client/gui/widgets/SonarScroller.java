@@ -1,6 +1,7 @@
 package sonar.core.client.gui.widgets;
 
 import org.lwjgl.input.Mouse;
+
 import sonar.core.client.gui.GuiGridElement;
 
 public class SonarScroller {

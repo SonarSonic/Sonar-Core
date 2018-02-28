@@ -1,5 +1,9 @@
 package sonar.core.common.block;
 
+import java.util.Random;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -18,9 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
-import java.util.Random;
 
 public abstract class SonarSlab extends BlockSlab {
 	public static final PropertyBool SEAMLESS = PropertyBool.create("seamless");

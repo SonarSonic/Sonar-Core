@@ -1,16 +1,8 @@
 package sonar.core;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import appeng.core.CreativeTab;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import sonar.core.common.block.SonarBlockTip;
-import sonar.core.helpers.FunctionHelper;
 import sonar.core.registries.ISonarRegistryBlock;
 import sonar.core.registries.ISonarRegistryItem;
 import sonar.core.registries.SonarRegistryBlock;

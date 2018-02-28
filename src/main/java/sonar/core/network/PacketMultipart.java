@@ -1,7 +1,5 @@
 package sonar.core.network;
 
-import java.util.UUID;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
 

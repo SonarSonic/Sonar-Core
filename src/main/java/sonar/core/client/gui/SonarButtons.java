@@ -1,11 +1,12 @@
 package sonar.core.client.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 
 public final class SonarButtons {
 
@@ -89,9 +90,8 @@ public final class SonarButtons {
 
 	@SideOnly(Side.CLIENT)
 	public static abstract class AnimatedButton extends SonarButton {
-		private final ResourceLocation texture;
-		private final int sizeX, sizeY;
-		private boolean bool;
+		protected final ResourceLocation texture;
+		protected final int sizeX, sizeY;
 
 		protected AnimatedButton(int id, int x, int y, ResourceLocation texture, int sizeX, int sizeY) {
 			super(id, x, y, sizeX, sizeY, "");

@@ -1,6 +1,9 @@
 package sonar.core.integration.minetweaker;
 
+import java.util.ArrayList;
+
 import com.google.common.collect.Lists;
+
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.api.item.IItemStack;
@@ -9,9 +12,13 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.IOreDictEntry;
 import net.minecraft.item.ItemStack;
 import sonar.core.SonarCore;
-import sonar.core.recipes.*;
-
-import java.util.ArrayList;
+import sonar.core.recipes.DefinedRecipeHelper;
+import sonar.core.recipes.ISonarRecipe;
+import sonar.core.recipes.ISonarRecipeObject;
+import sonar.core.recipes.RecipeHelperV2;
+import sonar.core.recipes.RecipeItemStack;
+import sonar.core.recipes.RecipeOreStack;
+import sonar.core.recipes.ValueHelperV2;
 
 public class SonarAddRecipeV2<T extends RecipeHelperV2> implements IAction {
 	public ArrayList<ISonarRecipeObject> inputs;

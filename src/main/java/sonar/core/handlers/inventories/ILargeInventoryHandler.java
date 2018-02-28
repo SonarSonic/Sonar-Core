@@ -1,5 +1,7 @@
 package sonar.core.handlers.inventories;
 
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -11,8 +13,6 @@ import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.inventory.ILargeInventory;
 import sonar.core.inventory.SonarLargeInventory;
-
-import java.util.List;
 
 @InventoryHandler(modid = "sonarcore", priority = 0)
 public class ILargeInventoryHandler implements ISonarInventoryHandler {

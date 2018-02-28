@@ -1,11 +1,46 @@
 package sonar.core.helpers;
 
+//import org.lwjgl.opengl.GL11;
+import static net.minecraft.client.renderer.GlStateManager.alphaFunc;
+import static net.minecraft.client.renderer.GlStateManager.blendFunc;
+import static net.minecraft.client.renderer.GlStateManager.color;
+import static net.minecraft.client.renderer.GlStateManager.depthMask;
+import static net.minecraft.client.renderer.GlStateManager.disableAlpha;
+import static net.minecraft.client.renderer.GlStateManager.disableBlend;
+import static net.minecraft.client.renderer.GlStateManager.disableDepth;
+import static net.minecraft.client.renderer.GlStateManager.disableLighting;
+import static net.minecraft.client.renderer.GlStateManager.disableRescaleNormal;
+import static net.minecraft.client.renderer.GlStateManager.disableTexture2D;
+import static net.minecraft.client.renderer.GlStateManager.enableAlpha;
+import static net.minecraft.client.renderer.GlStateManager.enableBlend;
+import static net.minecraft.client.renderer.GlStateManager.enableDepth;
+import static net.minecraft.client.renderer.GlStateManager.enableLighting;
+import static net.minecraft.client.renderer.GlStateManager.enableRescaleNormal;
+import static net.minecraft.client.renderer.GlStateManager.enableTexture2D;
+import static net.minecraft.client.renderer.GlStateManager.glLineWidth;
+import static net.minecraft.client.renderer.GlStateManager.popMatrix;
+import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
+import static net.minecraft.client.renderer.GlStateManager.rotate;
+import static net.minecraft.client.renderer.GlStateManager.scale;
+import static net.minecraft.client.renderer.GlStateManager.translate;
+import static net.minecraft.client.renderer.GlStateManager.tryBlendFuncSeparate;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -22,44 +57,43 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import sonar.core.SonarCore;
 import sonar.core.client.BlockModelsCache;
 import sonar.core.client.gui.GuiSonar;
 import sonar.core.client.renderers.TransformationMatrix;
 import sonar.core.client.renderers.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
-//import org.lwjgl.opengl.GL11;
-
-import static net.minecraft.client.renderer.GlStateManager.*;
-
 public class RenderHelper {
 
 	public static final RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
 	public static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 	public static final TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-	public static int src = -1, dst = -1;
+	private static boolean blendSaved = false;
+	private static int BLEND_SRC = -1, BLEND_DST = -1, ALPHA_SRC = -1, ALPHA_DST = -1;
 	protected RenderManager renderManager;
 
 	// used with EnumFacing
 	public static double[][] offsetMatrix = new double[][] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 1, 0, -1 }, { 1, 0, 0 }, { 0, 0, -1 } };
 
 	public static void saveBlendState() {
-		src = GlStateManager.glGetInteger(GL11.GL_BLEND_SRC);
-		dst = GlStateManager.glGetInteger(GL11.GL_BLEND_DST);
+		BLEND_SRC = GlStateManager.glGetInteger(GL11.GL_BLEND_SRC);
+		BLEND_DST = GlStateManager.glGetInteger(GL11.GL_BLEND_DST);
+		// ALPHA_SRC = GlStateManager.glGetInteger(GL11.GL_SRC_ALPHA);
+		// ALPHA_DST = GlStateManager.glGetInteger(GL11.GL_DST_ALPHA);
+		blendSaved = true;
 	}
 
 	public static void restoreBlendState() {
-		if (src != -1 && dst != -1)
-			GlStateManager.blendFunc(src, dst);
+		if (blendSaved) {
+			GlStateManager.blendFunc(BLEND_SRC, BLEND_DST);
+			blendSaved = false;
+		}
 	}
 
 	public static int setMetaData(TileEntity tileentity) {
@@ -108,8 +142,7 @@ public class RenderHelper {
 	}
 
 	/* public static EnumFacing getHorizontal(EnumFacing forward) { if (forward == EnumFacing.NORTH) { return EnumFacing.EAST; } if (forward == EnumFacing.EAST) { return EnumFacing.SOUTH; } if (forward == EnumFacing.SOUTH) { return EnumFacing.WEST; } if (forward == EnumFacing.WEST) { return EnumFacing.NORTH; } return null; } */
-	
-	
+
 	// 1.9.4 additions
 
 	public static void addVertexWithUV(BufferBuilder vertexbuffer, double x, double y, double z, double u, double v) {
@@ -141,21 +174,19 @@ public class RenderHelper {
 				final float scaleFactor = 0.5F;
 				final float inverseScaleFactor = 1.0f / scaleFactor;
 				pushMatrix();
-				disableLighting();
+				// disableLighting();
 				if (depth)
 					disableDepth();
 
-				// disableBlend();
 				scale(scaleFactor, scaleFactor, scaleFactor);
 				final int X = (int) (((float) x + 15.0f - font.getStringWidth(s1) * scaleFactor) * inverseScaleFactor);
 				final int Y = (int) (((float) y + 15.0f - 7.0f * scaleFactor) * inverseScaleFactor);
 				font.drawStringWithShadow(s1, X, Y, 16777215);
-				enableLighting();
+				// enableLighting();
 
 				if (depth)
 					enableDepth();
 
-				// enableBlend();
 				popMatrix();
 			}
 		}
@@ -166,7 +197,20 @@ public class RenderHelper {
 		return stack != null ? (rend = stack.getItem().getFontRenderer(stack)) == null ? fontRenderer : rend : fontRenderer;
 	}
 
-	
+	public static int getTextFormattingColour(TextFormatting format) {
+		if (!format.isColor()) {
+			return 0;
+		}
+		return GuiUtils.colorCodes[format.getColorIndex()];
+	}
+
+	public static int getTextFormattingShadow(TextFormatting format) {
+		if (!format.isColor()) {
+			return 0;
+		}
+		return GuiUtils.colorCodes[16 + format.getColorIndex()];
+	}
+
 	public static void drawRect(float left, float top, float right, float bottom) {
 		if (left < right) {
 			float i = left;
@@ -183,23 +227,14 @@ public class RenderHelper {
 		*/
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexbuffer = tessellator.getBuffer();
-		/*
-		enableBlend();
-		disableTexture2D();
-		tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		*/
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
 		vertexbuffer.pos((double) left, (double) bottom, 0.0D).endVertex();
 		vertexbuffer.pos((double) right, (double) bottom, 0.0D).endVertex();
 		vertexbuffer.pos((double) right, (double) top, 0.0D).endVertex();
 		vertexbuffer.pos((double) left, (double) top, 0.0D).endVertex();
 		tessellator.draw();
-		/*
-		enableTexture2D();
-		disableBlend();
-		*/
 	}
-	
+
 	/** allows every value to be a double */
 	public static void drawModalRectWithCustomSizedTexture(double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight) {
 		double f = 1.0 / textureWidth;
@@ -272,8 +307,6 @@ public class RenderHelper {
 		translate(x, y, zLevel);
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
 		disableLighting();
-		enableRescaleNormal();
-		enableDepth();
 		Tessellator tessellator = Tessellator.getInstance();
 		tessellator.getBuffer().begin(7, DefaultVertexFormats.POSITION_TEX);
 		tessellator.getBuffer().pos(x, y + height, zLevel).tex(0D, 1D).endVertex();
@@ -281,12 +314,13 @@ public class RenderHelper {
 		tessellator.getBuffer().pos(x + width, y, zLevel).tex(1D, 0D).endVertex();
 		tessellator.getBuffer().pos(x, y, zLevel).tex(0D, 0D).endVertex();
 		tessellator.draw();
+		enableLighting();
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+		disableBlend();
 		popMatrix();
 	}
 
 	public static void renderItem(ItemStack stack, World world) {
-		pushAttrib();
 		pushMatrix();
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
 		translate(-6.4F, -6.5F, -0.245F);
@@ -294,7 +328,6 @@ public class RenderHelper {
 
 		renderItem(stack, ItemCameraTransforms.TransformType.NONE);
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-		popAttrib();
 		popMatrix();
 
 		/* net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting(); itemRender.renderItemAndEffectIntoGUI(stack, 0, 0); itemRender.renderItemOverlayIntoGUI(getFontFromStack(stack), stack, 0, 0, ""); net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting(); */

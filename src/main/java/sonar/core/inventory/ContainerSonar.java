@@ -1,5 +1,6 @@
 package sonar.core.inventory;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -7,7 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import sonar.core.inventory.slots.SlotLimiter;
 
-public abstract class ContainerSonar extends Container {
+public class ContainerSonar extends Container {
 	// 8 , 84
 	public void addInventory(InventoryPlayer inventory, int xPos, int yPos) {
 		for (int i = 0; i < 3; i++) {
@@ -33,5 +34,10 @@ public abstract class ContainerSonar extends Container {
 
 	public boolean mergeSonarStack(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection) {
 		return this.mergeItemStack(stack, startIndex, endIndex, reverseDirection);
+	}
+
+	@Override
+	public boolean canInteractWith(EntityPlayer playerIn) {
+		return true;
 	}
 }

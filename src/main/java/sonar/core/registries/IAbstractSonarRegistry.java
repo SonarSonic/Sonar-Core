@@ -1,8 +1,5 @@
 package sonar.core.registries;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-
 public interface IAbstractSonarRegistry<T> {
 
     /**

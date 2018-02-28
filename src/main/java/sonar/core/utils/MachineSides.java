@@ -1,6 +1,9 @@
 package sonar.core.utils;
 
+import java.util.ArrayList;
+
 import com.google.common.collect.Lists;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -13,8 +16,6 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.PacketSonarSides;
 import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.ISyncPart;
-
-import java.util.ArrayList;
 
 public class MachineSides extends DirtyPart implements ISyncPart {
 

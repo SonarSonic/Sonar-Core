@@ -27,8 +27,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.api.SonarAPI;
@@ -65,8 +63,6 @@ import sonar.core.network.PacketTileSyncUpdate;
 import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.registries.EnergyTypeRegistry;
-import sonar.core.registries.ISonarRegistryBlock;
-import sonar.core.registries.ISonarRegistryItem;
 import sonar.core.upgrades.MachineUpgradeRegistry;
 
 @Mod(modid = SonarCore.modid, name = SonarCore.name, version = SonarCore.version, acceptedMinecraftVersions = SonarCore.mc_versions)
@@ -74,7 +70,7 @@ public class SonarCore {
 
 	public static final String name = "SonarCore";
 	public static final String modid = "sonarcore";
-	public static final String version = "5.0.5";
+	public static final String version = "5.0.6";
 	public static final String mc_versions = "[1.12,1.12.2]";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")

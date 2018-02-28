@@ -1,6 +1,13 @@
 package sonar.core.integration;
 
-import mcp.mobius.waila.api.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.IWailaDataProvider;
+import mcp.mobius.waila.api.IWailaFMPAccessor;
+import mcp.mobius.waila.api.IWailaFMPProvider;
 import mcp.mobius.waila.api.impl.ModuleRegistrar;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -9,9 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import sonar.core.common.tileentity.TileEntitySonar;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Integrations with WAILA - Registers all HUDs

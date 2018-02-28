@@ -1,8 +1,8 @@
 package sonar.core.client.renderers;
 
-import net.minecraft.util.math.Vec3d;
-
 import javax.vecmath.Matrix4f;
+
+import net.minecraft.util.math.Vec3d;
 
 public class TransformationMatrix {
 

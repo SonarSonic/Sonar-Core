@@ -4,11 +4,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import sonar.core.common.block.*;
+import sonar.core.common.block.BlockBase;
+import sonar.core.common.block.ConnectedBlock;
+import sonar.core.common.block.SonarFence;
+import sonar.core.common.block.SonarGate;
+import sonar.core.common.block.SonarStairs;
+import sonar.core.common.block.StableStone;
 import sonar.core.common.block.StableStone.Variants;
-
-import java.util.ArrayList;
 
 public class SonarBlocks extends SonarCore {
 

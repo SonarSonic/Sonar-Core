@@ -1,7 +1,5 @@
 package sonar.core.registries;
 
-import mcmultipart.api.item.ItemBlockMultipart;
-import mcmultipart.api.multipart.IMultipart;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;

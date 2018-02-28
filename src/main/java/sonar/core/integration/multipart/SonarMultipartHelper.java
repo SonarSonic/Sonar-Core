@@ -1,14 +1,12 @@
 package sonar.core.integration.multipart;
 
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Function;
 
 import mcmultipart.api.container.IMultipartContainer;
 import mcmultipart.api.multipart.IMultipart;
 import mcmultipart.api.multipart.IMultipartTile;
 import mcmultipart.api.multipart.MultipartHelper;
-import mcmultipart.api.ref.MCMPCapabilities;
 import mcmultipart.api.slot.IPartSlot;
 import mcmultipart.slot.SlotRegistry;
 import mcmultipart.util.MCMPBlockAccessWrapper;
@@ -16,7 +14,6 @@ import mcmultipart.util.MCMPWorldWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;

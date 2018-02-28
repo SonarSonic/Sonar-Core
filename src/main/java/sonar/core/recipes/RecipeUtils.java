@@ -1,6 +1,10 @@
 package sonar.core.recipes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,9 +17,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import sonar.core.helpers.SonarHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RecipeUtils {
 

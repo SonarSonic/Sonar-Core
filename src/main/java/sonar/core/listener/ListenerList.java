@@ -1,13 +1,14 @@
 package sonar.core.listener;
 
-import com.google.common.collect.Lists;
-import net.minecraft.entity.player.EntityPlayer;
-import sonar.core.helpers.ListHelper;
-import sonar.core.utils.Pair;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.google.common.collect.Lists;
+
+import net.minecraft.entity.player.EntityPlayer;
+import sonar.core.helpers.ListHelper;
+import sonar.core.utils.Pair;
 
 public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTally<L>> {
 

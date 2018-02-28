@@ -1,11 +1,11 @@
 package sonar.core.network.sync;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class SyncableList {
 

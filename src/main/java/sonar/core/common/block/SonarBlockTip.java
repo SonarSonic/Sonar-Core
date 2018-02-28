@@ -1,5 +1,8 @@
 package sonar.core.common.block;
 
+import java.text.DecimalFormat;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemBlock;
@@ -8,9 +11,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.utils.ISpecialTooltip;
-
-import java.text.DecimalFormat;
-import java.util.List;
 
 public class SonarBlockTip extends ItemBlock {
 

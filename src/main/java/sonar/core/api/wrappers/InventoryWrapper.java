@@ -1,5 +1,7 @@
 package sonar.core.api.wrappers;
 
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
@@ -11,8 +13,6 @@ import sonar.core.api.asm.InventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.InventoryHelper.IInventoryFilter;
-
-import java.util.List;
 
 public class InventoryWrapper {
 
@@ -63,6 +63,8 @@ public class InventoryWrapper {
 	 * @param z the Z coordinate it will be dropped from
 	 * @param side side to drop from */
 	public void spawnStoredItemStack(StoredItemStack drop, World world, int x, int y, int z, EnumFacing side) {}
+	
+	public void spawnStoredItemStackDouble(StoredItemStack drop, World world, double x, double y, double z, EnumFacing side) {}
 
 	/** returns what was added */
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filters) {

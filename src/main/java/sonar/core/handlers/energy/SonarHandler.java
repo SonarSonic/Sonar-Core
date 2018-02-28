@@ -3,7 +3,11 @@ package sonar.core.handlers.energy;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.asm.EnergyHandler;
-import sonar.core.api.energy.*;
+import sonar.core.api.energy.EnergyMode;
+import sonar.core.api.energy.EnergyType;
+import sonar.core.api.energy.ISonarEnergyHandler;
+import sonar.core.api.energy.ISonarEnergyTile;
+import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.network.sync.SyncEnergyStorage;
 

@@ -1,9 +1,9 @@
 package sonar.core.client.gui;
 
+import java.util.List;
+
 import sonar.core.helpers.FontHelper;
 import sonar.core.helpers.SonarHelper;
-
-import java.util.List;
 
 public class HelpOverlay<G extends GuiSonarTile> {
 
