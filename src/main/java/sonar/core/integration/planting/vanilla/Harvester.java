@@ -23,10 +23,7 @@ public class Harvester implements IHarvester {
 
 	@Override
 	public boolean canHarvest(World world, BlockPos pos, IBlockState state) {
-		if (state.getBlock() instanceof BlockCrops) {
-			return true;
-		}
-		return false;
+        return state.getBlock() instanceof BlockCrops;
 	}
 
 	@Override
@@ -47,5 +44,4 @@ public class Harvester implements IHarvester {
 		}
 		world.setBlockToAir(pos);
 	}
-
 }

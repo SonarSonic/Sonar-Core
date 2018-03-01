@@ -4,17 +4,27 @@ import java.util.List;
 
 import net.minecraft.item.ItemStack;
 
-/**implemented on all Recipe Objects*/
+/**
+ * implemented on all Recipe Objects
+ */
 public interface ISonarRecipeObject {
 
-	/**the stored value of this Recipe Object*/
-	public Object getValue();
+    /**
+     * the stored value of this Recipe Object
+     */
+    Object getValue();
+    
+    boolean isNull();
 	
-	public int getStackSize();
+    int getStackSize();
 	
-	/**return either as a ItemStack or a Collection of ItemStacks*/
-	public List<ItemStack> getJEIValue();
+    /**
+     * return either as a ItemStack or a Collection of ItemStacks
+     */
+    List<ItemStack> getJEIValue();
 
-	/**if the provided is a match for the value stored*/
-	public boolean matches(Object object, RecipeObjectType type);
+    /**
+     * if the provided is a match for the value stored
+     */
+    boolean matches(Object object, RecipeObjectType type);
 }

@@ -7,25 +7,23 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.world.World;
 import sonar.core.common.item.InventoryItem;
 
-/** used by Calculators and other Hand-Held items with Inventories */
+/**
+ * used by Calculators and other Hand-Held items with Inventories
+ */
 public abstract class ContainerCraftInventory extends Container {
 
 	public final EntityPlayer player;
 	protected final InventoryItem inventory;
-	protected World worldObj;
+	protected World world;
 
 	public ContainerCraftInventory(EntityPlayer player, InventoryPlayer inv, InventoryItem inventory) {
-		this.worldObj = player.getEntityWorld();
+		this.world = player.getEntityWorld();
 		this.inventory = inventory;
 		this.player = player;
 	}
 
 	public boolean checkEmptySlot(int i) {
-		Slot slot = (Slot) this.inventorySlots.get(i);
-		if (slot != null && slot.getHasStack()) {
-			return false;
+        Slot slot = this.inventorySlots.get(i);
+        return slot == null || !slot.getHasStack();
 		}
-		return true;
-	}
-
 }

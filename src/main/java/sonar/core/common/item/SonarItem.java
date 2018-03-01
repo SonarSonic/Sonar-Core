@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -32,10 +33,9 @@ public class SonarItem extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
-		super.addInformation(stack, player, list, par4);
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean par4) {
+        super.addInformation(stack, player, list, par4);
 		if (isNew)
 			list.add(TextFormatting.YELLOW + "" + TextFormatting.ITALIC + "New Feature!");
 	}
-
 }

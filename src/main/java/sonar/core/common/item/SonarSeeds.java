@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.helpers.FontHelper;
 import sonar.core.integration.SonarLoader;
+import sonar.core.utils.SonarCompat;
 
 public class SonarSeeds extends Item implements IPlantable {
 	private Block cropBlock;
@@ -36,7 +37,7 @@ public class SonarSeeds extends Item implements IPlantable {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean par4) {
 		super.addInformation(stack, player, list, par4);
 		if (SonarLoader.calculatorLoaded()) {
 			switch (greenhouseTier) {
@@ -56,7 +57,7 @@ public class SonarSeeds extends Item implements IPlantable {
 	}
 
 	@Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (this.greenhouseTier == 0 || !SonarLoader.calculatorLoaded()) {
 			if (side != EnumFacing.UP) {
 				return EnumActionResult.PASS;
@@ -64,7 +65,7 @@ public class SonarSeeds extends Item implements IPlantable {
 				IBlockState state = world.getBlockState(pos);
 				if (state.getBlock().canSustainPlant(state, world, pos, EnumFacing.UP, this) && world.isAirBlock(pos.offset(EnumFacing.UP))) {
 					world.setBlockState(pos.offset(side), cropBlock.getDefaultState());
-					--stack.stackSize;
+					stack = SonarCompat.shrink(stack, 1);
 					return EnumActionResult.SUCCESS;
 				} else {
 					return EnumActionResult.PASS;
@@ -76,19 +77,17 @@ public class SonarSeeds extends Item implements IPlantable {
 		return EnumActionResult.PASS;
 	}
 
+	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
 		return cropBlock == Blocks.NETHER_WART ? EnumPlantType.Nether : EnumPlantType.Crop;
 	}
 
+	@Override
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
 		return cropBlock.getDefaultState();
 	}
 
 	public boolean canTierUse(int tier) {
-		if (tier >= this.greenhouseTier) {
-			return true;
-		}
-		return false;
+		return tier >= this.greenhouseTier;
 	}
-
 }

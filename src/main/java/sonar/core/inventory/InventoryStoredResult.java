@@ -1,9 +1,9 @@
 package sonar.core.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.item.ItemStack;
+import sonar.core.utils.SonarCompat;
 
 public class InventoryStoredResult extends InventoryCraftResult {
 	public IInventory module;
@@ -25,29 +25,29 @@ public class InventoryStoredResult extends InventoryCraftResult {
 
 	@Override
 	public ItemStack getStackInSlot(int par1) {
-		return module.getStackInSlot(0 + offset);
+        return module.getStackInSlot(offset);
 	}
 
 	@Override
 	public ItemStack decrStackSize(int slot, int remove) {
-		ItemStack stack = module.getStackInSlot(0 + offset);
-		if (stack != null) {
+        ItemStack stack = module.getStackInSlot(offset);
+		if (!SonarCompat.isEmpty(stack)) {
 			ItemStack itemstack = stack;
-			module.setInventorySlotContents(0, null);
+			module.setInventorySlotContents(0, SonarCompat.getEmpty());
 			return itemstack;
 		} else {
-			return null;
+			return SonarCompat.getEmpty();
 		}
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int par1) {
-		return null;
+		return SonarCompat.getEmpty();
 	}
 
 	@Override
 	public void setInventorySlotContents(int par1, ItemStack par2ItemStack) {
-		module.setInventorySlotContents(0 + offset, par2ItemStack);
+        module.setInventorySlotContents(offset, par2ItemStack);
 	}
 
 	@Override
@@ -58,11 +58,6 @@ public class InventoryStoredResult extends InventoryCraftResult {
 	@Override
 	public void markDirty() {
 		module.markDirty();
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return true;
 	}
 
 	public boolean isStackValidForSlot(int par1, ItemStack par2ItemStack) {

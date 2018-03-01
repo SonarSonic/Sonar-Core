@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 public interface IWrenchable {
 
-	public ArrayList<ItemStack> wrenchBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops);
+    ArrayList<ItemStack> wrenchBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops);
 
-	public boolean canWrench(EntityPlayer player, World world, BlockPos pos);
+    boolean canWrench(EntityPlayer player, World world, BlockPos pos);
 }

@@ -45,7 +45,7 @@ public abstract class SonarTilePart extends McMetaPart implements INBTSyncable {
 	}
 
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		List<ISyncPart> parts = Lists.newArrayList();
+		List<ISyncPart> parts = new ArrayList<>();
 		this.addSyncParts(parts);
 		for (ISyncPart part : parts) {
 			if (part.canSync(type))
@@ -54,7 +54,7 @@ public abstract class SonarTilePart extends McMetaPart implements INBTSyncable {
 	}
 
 	public void writeData(NBTTagCompound nbt, SyncType type) {
-		List<ISyncPart> parts = Lists.newArrayList();
+		List<ISyncPart> parts = new ArrayList<>();
 		this.addSyncParts(parts);
 		for (ISyncPart part : parts) {
 			if (part.canSync(type))

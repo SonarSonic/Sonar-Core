@@ -9,12 +9,11 @@ import sonar.core.helpers.NBTHelper.SyncType;
 
 public class SyncUUID extends SyncPart {
 
-	public UUID current = null;
+    public UUID current;
 
 	public SyncUUID(int id) {
 		super(id);
 	}
-
 
 	public SyncUUID(String id) {
 		super(id);
@@ -60,5 +59,4 @@ public class SyncUUID extends SyncPart {
 		}
 		*/
 	}
-
 }

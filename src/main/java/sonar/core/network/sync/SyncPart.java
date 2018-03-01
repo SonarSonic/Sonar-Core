@@ -21,6 +21,7 @@ public abstract class SyncPart extends DirtyPart implements ISyncPart {
 		this.name = name;
 	}
 
+    @Override
 	public String getTagName() {
 		if (name == null) {
 			return String.valueOf(id);
@@ -28,12 +29,11 @@ public abstract class SyncPart extends DirtyPart implements ISyncPart {
 			return name;
 		}
 	}
+
+    @Override
 	public boolean canSync(SyncType syncType) {
 		SyncType[] array = new SyncType[types.size()];
-		if (syncType.isType(types.toArray(array))) {
-			return true;
-		}
-		return false;
+        return syncType.isType(types.toArray(array));
 	}
 
 	public SyncPart addSyncType(SyncType... add) {
@@ -55,5 +55,4 @@ public abstract class SyncPart extends DirtyPart implements ISyncPart {
 		}
 		return this;
 	}
-
 }

@@ -3,8 +3,6 @@ package sonar.core.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
@@ -19,6 +17,7 @@ import sonar.core.api.wrappers.FluidWrapper;
 
 public class FluidHelper extends FluidWrapper {
 
+    @Override
 	public void addFluidToList(List<StoredFluidStack> list, StoredFluidStack stack) {
 		int pos = 0;
 		for (StoredFluidStack storedTank : list) {
@@ -29,9 +28,9 @@ public class FluidHelper extends FluidWrapper {
 			pos++;
 		}
 		list.add(stack);
-
 	}
 
+    @Override
 	public StoredFluidStack getStackToAdd(long inputSize, StoredFluidStack stack, StoredFluidStack returned) {
 		StoredFluidStack simulateStack = null;
 		if (returned == null || returned.stored == 0) {
@@ -42,6 +41,7 @@ public class FluidHelper extends FluidWrapper {
 		return simulateStack;
 	}
 
+    @Override
 	public StoredFluidStack removeFluids(StoredFluidStack remove, TileEntity tile, EnumFacing face, ActionType type, ITankFilter filter) {
 		if (filter == null || filter.allowed(remove.fluid)) {
 			for (ISonarFluidHandler provider : SonarCore.fluidHandlers) {
@@ -57,6 +57,7 @@ public class FluidHelper extends FluidWrapper {
 		return remove;
 	}
 
+    @Override
 	public StoredFluidStack addFluids(StoredFluidStack add, TileEntity tile, EnumFacing face, ActionType type, ITankFilter filter) {
 		if (filter == null || filter.allowed(add.fluid)) {
 			for (ISonarFluidHandler provider : SonarCore.fluidHandlers) {
@@ -72,9 +73,10 @@ public class FluidHelper extends FluidWrapper {
 		return add;
 	}
 
+    @Override
 	public void transferFluids(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, ITankFilter filter) {
 		if (from != null && to != null) {
-			ArrayList<StoredFluidStack> stacks = Lists.newArrayList();
+            ArrayList<StoredFluidStack> stacks = new ArrayList<>();
 			List<ISonarFluidHandler> handlers = SonarCore.fluidHandlers;
 			for (ISonarFluidHandler handler : handlers) {
 				if (handler.canHandleFluids(from, dirFrom)) {
@@ -100,35 +102,35 @@ public class FluidHelper extends FluidWrapper {
 		}
 	}
 
-	public static interface ITankFilter {
-		public boolean allowed(FluidStack stack);
-	}
+    public interface ITankFilter {
+        boolean allowed(FluidStack stack);
+    }
 
-	public static StoredFluidStack addStack(StoredFluidStack add, IFluidHandler handler, EnumFacing dir, ActionType action) {
-		add.stored -= handler.fill(add.getFullStack(), !action.shouldSimulate());
-		return add;
-	}
+    public static StoredFluidStack addStack(StoredFluidStack add, IFluidHandler handler, EnumFacing dir, ActionType action) {
+        add.stored -= handler.fill(add.getFullStack(), !action.shouldSimulate());
+        return add;
+    }
 
-	public static StoredFluidStack removeStack(StoredFluidStack remove, IFluidHandler handler, EnumFacing dir, ActionType action) {
-		FluidStack drained = null;
-		remove.stored -= (drained = handler.drain(remove.getFullStack(), !action.shouldSimulate())) != null ? drained.amount : 0;
-		return remove;
-	}
+    public static StoredFluidStack removeStack(StoredFluidStack remove, IFluidHandler handler, EnumFacing dir, ActionType action) {
+        FluidStack drained = null;
+        remove.stored -= (drained = handler.drain(remove.getFullStack(), !action.shouldSimulate())) != null ? drained.amount : 0;
+        return remove;
+    }
 
-	public static StorageSize getFluids(List<StoredFluidStack> fluids, IFluidHandler handler, EnumFacing dir) {
-		long stored = 0;
-		long maxStorage = 0;
-		IFluidTankProperties[] tankInfo = handler.getTankProperties();
-		if (tankInfo != null) {
-			for (IFluidTankProperties info : tankInfo) {
-				FluidStack contents = info.getContents();
-				if (contents != null && contents.amount != 0) {
-					stored += contents.amount;
-					fluids.add(new StoredFluidStack(contents, info.getCapacity()));
-				}
-				maxStorage += info.getCapacity();
-			}
-		}
-		return new StorageSize(stored, maxStorage);
+    public static StorageSize getFluids(List<StoredFluidStack> fluids, IFluidHandler handler, EnumFacing dir) {
+        long stored = 0;
+        long maxStorage = 0;
+        IFluidTankProperties[] tankInfo = handler.getTankProperties();
+        if (tankInfo != null) {
+            for (IFluidTankProperties info : tankInfo) {
+                FluidStack contents = info.getContents();
+                if (contents != null && contents.amount != 0) {
+                    stored += contents.amount;
+                    fluids.add(new StoredFluidStack(contents, info.getCapacity()));
+                }
+                maxStorage += info.getCapacity();
+            }
+        }
+        return new StorageSize(stored, maxStorage);
 	}
 }

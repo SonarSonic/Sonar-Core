@@ -21,29 +21,47 @@ public class Vector {
         this.z = vec.zCoord;
     }
 
-    public void setX( double x) {this.x = x;}
+    public void setX(double x) {
+        this.x = x;
+    }
 
-    public void setY(double y) {this.y = y;}
+    public void setY(double y) {
+        this.y = y;
+    }
 
-    public void setZ(double z) {this.z = z;}
+    public void setZ(double z) {
+        this.z = z;
+    }
 
-    public  double getX() {return x;}
+    public double getX() {
+        return x;
+    }
 
-    public  double getY() {return y;}
+    public double getY() {
+        return y;
+    }
 
-    public  double getZ() {return z;}
+    public double getZ() {
+        return z;
+    }
 
-    /** returns a new vector gotten by adding v to this vector (this + v) */
+    /**
+     * returns a new vector gotten by adding v to this vector (this + v)
+     */
     public Vector add(Vector v) {
         return new Vector(this.x+v.x, this.y+v.y, this.z+v.z);
     }
 
-    /** returns a new vector gotten by substracting vector v from this vector (this - v)*/
+    /**
+     * returns a new vector gotten by substracting vector v from this vector (this - v)
+     */
     public Vector substract(Vector v) {
         return new Vector(this.x-v.x, this.y-v.y, this.z-v.z);
     }
 
-    /**scales  this vector */
+    /**
+     * scales  this vector
+     */
     public Vector scale(double d) {
         if(d!=1) {
             x = x * d;
@@ -53,21 +71,27 @@ public class Vector {
         return this;
     }
 
-    /** Returns a normalised vector normal to this vector in the xz plane*/
+    /**
+     * Returns a normalised vector normal to this vector in the xz plane
+     */
     public Vector getNormal() {
         Vector normal = new Vector(1.0D/this.getX(), 0, -1.0/this.getZ());
         normal.normalize();
         return normal;
     }
 
-    /** Returns a normalised vector normal to this vector and its normal */
+    /**
+     * Returns a normalised vector normal to this vector and its normal
+     */
     public Vector getBiNormal() {
         Vector biNormal = crossProduct(this, this.getNormal());
         biNormal.normalize();
         return biNormal;
     }
 
-    /** Normalizes this vector */
+    /**
+     * Normalizes this vector
+     */
     public Vector normalize() {
         double norm = norm();
         if(norm==0) {
@@ -77,17 +101,23 @@ public class Vector {
         return this;
     }
 
-    /** Returns the norm of this vector */
+    /**
+     * Returns the norm of this vector
+     */
     public double norm() {
         return Math.sqrt(dotProduct(this, this));
     }
 
-    /** Calculates the dot product of a and b (a . b) */
+    /**
+     * Calculates the dot product of a and b (a . b)
+     */
     public static double dotProduct(Vector a, Vector b) {
         return a.getX()*b.getX() + a.getY()*b.getY() + a.getZ()*b.getZ();
     }
 
-    /** Calculates the cross product of a and b (a x b)*/
+    /**
+     * Calculates the cross product of a and b (a x b)
+     */
     public static Vector crossProduct(Vector a, Vector b) {
         double vX = a.y*b.z - a.z*b.y;
         double vY = a.z*b.x - a.x-b.z;
@@ -95,7 +125,9 @@ public class Vector {
         return new Vector(vX, vY, vZ);
     }
 
-    /** Projects this vector on the direction defined by the argument (argument is not modified) */
+    /**
+     * Projects this vector on the direction defined by the argument (argument is not modified)
+     */
     public Vector projectOn(Vector v) {
         Vector copy = v.copy();
         copy.normalize();
@@ -107,7 +139,9 @@ public class Vector {
         return copy;
     }
 
-    /** Copies this vector into a new Object */
+    /**
+     * Copies this vector into a new Object
+     */
     public Vector copy() {
         return new Vector(this.x, this.y, this.z);
     }
@@ -120,5 +154,4 @@ public class Vector {
         }
         return false;
     }
-
 }

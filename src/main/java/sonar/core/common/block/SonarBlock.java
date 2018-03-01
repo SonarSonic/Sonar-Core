@@ -9,15 +9,12 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -38,17 +35,15 @@ import sonar.core.api.utils.BlockInteraction;
 import sonar.core.api.utils.BlockInteractionType;
 import sonar.core.common.block.properties.IBlockRotated;
 import sonar.core.common.tileentity.TileEntitySonar;
+import sonar.core.helpers.InventoryHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.helpers.SonarHelper;
-import sonar.core.inventory.IAdditionalInventory;
-import sonar.core.inventory.IDropInventory;
 import sonar.core.network.PacketBlockInteraction;
 
 public abstract class SonarBlock extends Block implements IWrenchable, IInteractBlock, IBlockRotated {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public boolean orientation = true, wrenchable = true;
-	public AxisAlignedBB customBB = null;
+    public AxisAlignedBB customBB;
 
 	protected SonarBlock(Material material, boolean orientation, boolean wrenchable) {
 		super(material);
@@ -60,18 +55,18 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	}
 
 	@Override
-	public final boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if (player != null) {
+
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {	if (player != null) {
 			TileEntity target = world.getTileEntity(pos);
 			if (target != null && target instanceof TileEntitySonar) {
 				((TileEntitySonar) target).forceNextSync();
 			}
-			return operateBlock(world, pos, state, player, hand, new BlockInteraction(side.getIndex(), hitX, hitY, hitZ, player.isSneaking() ? BlockInteractionType.SHIFT_RIGHT : BlockInteractionType.RIGHT));
+            return operateBlock(world, pos, state, player, hand, new BlockInteraction(side.getIndex(), hitX, hitY, hitZ, player.isSneaking() ? BlockInteractionType.SHIFT_RIGHT : BlockInteractionType.RIGHT));
 		}
 		return false;
-
 	}
 
+    @Override
 	public boolean isClickableSide(World world, BlockPos pos, int side) {
 		return false;
 	}
@@ -91,12 +86,18 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 		return super.removedByPlayer(state, world, pos, player, willHarvest);
 	}
 
-	/** @return does the block drop as normal */
+    /**
+     * @return does the block drop as normal
+     */
 	public abstract boolean dropStandard(IBlockAccess world, BlockPos pos);
 
-	/** standard onBlockActivated for use in Calculators blocks */
+    /**
+     * standard onBlockActivated for use in Calculators blocks
+     */
+    @Override
 	public abstract boolean operateBlock(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, BlockInteraction interact);
 
+    @Override
 	public boolean allowLeftClick() {
 		return false;
 	}
@@ -105,13 +106,14 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {
 		if (world.isRemote && allowLeftClick()) {
 			RayTraceResult movingPos = Minecraft.getMinecraft().objectMouseOver;
-			float hitX = (float) (movingPos.hitVec.xCoord - movingPos.sideHit.getFrontOffsetX());
-			float hitY = (float) (movingPos.hitVec.yCoord - movingPos.sideHit.getFrontOffsetY());
-			float hitZ = (float) (movingPos.hitVec.zCoord - movingPos.sideHit.getFrontOffsetZ());
+            float hitX = (float) (movingPos.hitVec.xCoord - movingPos.sideHit.getFrontOffsetX());
+            float hitY = (float) (movingPos.hitVec.yCoord - movingPos.sideHit.getFrontOffsetY());
+            float hitZ = (float) (movingPos.hitVec.zCoord - movingPos.sideHit.getFrontOffsetZ());
 			SonarCore.network.sendToServer(new PacketBlockInteraction(pos, new BlockInteraction(movingPos.sideHit.getIndex(), hitX, hitY, hitZ, player.isSneaking() ? BlockInteractionType.SHIFT_LEFT : BlockInteractionType.LEFT)));
 		}
 	}
 
+    @Override
 	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
 		super.harvestBlock(world, player, pos, state, te, stack);
 		world.setBlockToAir(pos);
@@ -123,7 +125,6 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 		if (dropStandard(world, pos)) {
 			return super.getDrops(world, pos, state, fortune);
 		}
-
 		return Lists.newArrayList(getSpecialDrop(world, pos));
 	}
 
@@ -142,7 +143,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 	public void processDrop(IBlockAccess world, BlockPos pos, INBTSyncable te, ItemStack drop) {
 		if (te != null) {
-			INBTSyncable handler = (INBTSyncable) te;
+            INBTSyncable handler = te;
 			NBTTagCompound tag = new NBTTagCompound();
 			handler.writeData(tag, SyncType.DROP);
 			if (!tag.hasNoTags()) {
@@ -165,7 +166,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 			IBlockState block1 = worldIn.getBlockState(pos.south());
 			IBlockState block2 = worldIn.getBlockState(pos.west());
 			IBlockState block3 = worldIn.getBlockState(pos.east());
-			EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
+            EnumFacing enumfacing = state.getValue(FACING);
 
 			if (enumfacing == EnumFacing.NORTH && block.isFullBlock() && !block1.isFullBlock()) {
 				enumfacing = EnumFacing.SOUTH;
@@ -181,14 +182,16 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 		}
 	}
 
+	/*
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		
 		if (orientation)
 			return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 		else {
 			return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
 		}
 	}
-
+	*/
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemstack) {
 		if (orientation)
@@ -205,59 +208,15 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		List<ItemStack> drops = Lists.newArrayList();
-		TileEntity entity = world.getTileEntity(pos);
-		if (entity != null) {
-			if (entity instanceof IDropInventory) {
-				IDropInventory inv = (IDropInventory) entity;
-				if (inv.canDrop() && inv.dropSlots() != null) {
-					int[] slots = inv.dropSlots();
-					for (int i = 0; i < slots.length; i++) {
-						ItemStack itemstack = inv.getStackInSlot(slots[i]);
-						if (itemstack != null) {
-							drops.add(itemstack);
-						}
-					}
-				}
-			} else if (entity instanceof IInventory) {
-				IInventory inv = (IInventory) entity;
-				for (int i = 0; i < inv.getSizeInventory(); i++) {
-					ItemStack itemstack = inv.getStackInSlot(i);
-					if (itemstack != null) {
-						drops.add(itemstack);
-					}
-				}
-			}
-			if (entity instanceof IAdditionalInventory) {
-				IAdditionalInventory additionalInv = (IAdditionalInventory) entity;
-				ItemStack[] additionalStacks = additionalInv.getAdditionalStacks();
-				if (additionalStacks != null) {
-					for (ItemStack stack : additionalStacks) {
-						if (stack != null) {
-							drops.add(stack);
-						}
-					}
-				}
-			}
-		}
-
-		for (ItemStack stack : drops) {
-			if (stack != null) {
-				float f = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
-				float f1 = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
-				float f2 = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
-
-				EntityItem dropStack = new EntityItem(world, pos.getX() + f, pos.getY() + f1, pos.getZ() + f2, stack);
-				world.spawnEntityInWorld(dropStack);
-			}
-		}
+		InventoryHelper.dropInventory(world.getTileEntity(pos), world, pos, state);
 		super.breakBlock(world, pos, state);
-
 	}
 
 	@Override
 	public ArrayList<ItemStack> wrenchBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops) {
-		SonarHelper.dropTile(player, world.getBlockState(pos).getBlock(), world, pos);
+		ItemStack stack = player.getHeldItemMainhand();
+		TileEntity te = world.getTileEntity(pos);
+		world.getBlockState(pos).getBlock().harvestBlock(world, player, pos, world.getBlockState(pos), te, stack);
 		return null;
 	}
 
@@ -275,23 +234,23 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	 */
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
-		return hasSpecialRenderer() ? false : true;
+        return !hasSpecialRenderer();
 	}
 
 	@Override
 	public boolean isNormalCube(IBlockState state) {
-		return hasSpecialRenderer() ? false : true;
+        return !hasSpecialRenderer();
 	}
 
 	@Override
 	public boolean isFullCube(IBlockState state) {
-		return hasSpecialRenderer() ? false : true;
+        return !hasSpecialRenderer();
 	}
 
 	/*
 	 * public List<AxisAlignedBB> getCollisionBoxes(World world, BlockPos pos, List<AxisAlignedBB> list) { list.add(AxisAlignedBB.fromBounds(pos.getX() + this.minX, pos.getY() + this.minY, pos.getZ() + this.minZ, pos.getX() + this.maxX, pos.getY() + this.maxY, pos.getZ() + this.maxZ)); return list; }
 	 * 
-	 * public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB axis, List list, Entity entity) { if (hasSpecialCollisionBox()) { List<AxisAlignedBB> collisionList = this.getCollisionBoxes(world, pos, Lists.newArrayList()); for (AxisAlignedBB collision : collisionList) { collision.offset(pos.getX(), pos.getY(), pos.getZ()); if (collision != null && collision.intersectsWith(axis)) { list.add(collision); } } } else { super.addCollisionBoxesToList(world, pos, state, axis, list, entity); } } public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) { return AxisAlignedBB.fromBounds(pos.getX() + this.minX, pos.getY() + this.minY, pos.getZ() + this.minZ, pos.getX() + this.maxX, pos.getY() + this.maxY, pos.getZ() + this.maxZ); }
+	 * public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB axis, List list, Entity entity) { if (hasSpecialCollisionBox()) { List<AxisAlignedBB> collisionList = this.getCollisionBoxes(world, pos, new ArrayList<>()); for (AxisAlignedBB collision : collisionList) { collision.offset(pos.getX(), pos.getY(), pos.getZ()); if (collision != null && collision.intersectsWith(axis)) { list.add(collision); } } } else { super.addCollisionBoxesToList(world, pos, state, axis, list, entity); } } public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) { return AxisAlignedBB.fromBounds(pos.getX() + this.minX, pos.getY() + this.minY, pos.getZ() + this.minZ, pos.getX() + this.maxX, pos.getY() + this.maxY, pos.getZ() + this.maxZ); }
 	 */
 
 	public void setBlockBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
@@ -302,6 +261,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 		return blockState.getBoundingBox(worldIn, pos);
 	}
 
+    @Override
 	@Deprecated
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
 		if (customBB != null) {
@@ -314,29 +274,32 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 		return false;
 	}
 
+	@Deprecated
 	@SideOnly(Side.CLIENT)
-	public IBlockState getStateForEntityRender(IBlockState state) {
+	public IBlockState getStateForEntityRender(IBlockState state) {		
 		return this.getDefaultState().withProperty(FACING, EnumFacing.SOUTH);
 	}
 
+    @Override
 	public IBlockState getStateFromMeta(int meta) {
 		EnumFacing enumfacing = EnumFacing.getFront(meta);
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
 			enumfacing = EnumFacing.NORTH;
 		}
 		return this.getDefaultState().withProperty(FACING, enumfacing);
-
 	}
 
+    @Override
 	public int getMetaFromState(IBlockState state) {
-		return ((EnumFacing) state.getValue(FACING)).getIndex();
-
+        return state.getValue(FACING).getIndex();
 	}
 
+    @Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { FACING });
+        return new BlockStateContainer(this, FACING);
 	}
 
+    @Override
 	public EnumFacing getRotation(IBlockState state) {
 		if (orientation)
 			return state.getValue(FACING);

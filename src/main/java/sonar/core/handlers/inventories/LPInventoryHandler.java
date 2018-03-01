@@ -42,7 +42,7 @@ public class LPInventoryProvider extends InventoryHandler {
 		long maxStorage = 0;
 		for (ItemStack stack : items) {
 			SonarAPI.getItemHelper().addStackToList(storedStacks, new StoredItemStack(stack));
-			maxStorage +=stack.stackSize;
+			maxStorage +=SonarCompat.getCount(stack);
 		}
 		return new StorageSize(maxStorage,maxStorage);
 	}
@@ -56,7 +56,7 @@ public class LPInventoryProvider extends InventoryHandler {
 				return items;
 			}
 		}
-		return Lists.newArrayList();
+		return new ArrayList<>();
 	}
 
 	public boolean isLoadable() {
@@ -81,7 +81,7 @@ public class LPInventoryProvider extends InventoryHandler {
 					}
 					long removed = remove.stored;
 					for (ItemStack stack : missing) {
-						removed -= stack.stackSize;
+						removed -= SonarCompat.getCount(stack);
 					}
 					remove.setStackSize(removed);
 				} else {
@@ -91,7 +91,7 @@ public class LPInventoryProvider extends InventoryHandler {
 					}
 					long removed = remove.stored;
 					for (ItemStack stack : result.missing) {
-						removed -= stack.stackSize;
+						removed -= SonarCompat.getCount(stack);
 					}
 					remove.setStackSize(removed);
 				}

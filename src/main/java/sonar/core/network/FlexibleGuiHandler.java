@@ -1,9 +1,9 @@
 package sonar.core.network;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
-
-import com.google.common.collect.Maps;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -17,12 +17,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import sonar.core.SonarCore;
 import sonar.core.api.IFlexibleGui;
 import sonar.core.integration.SonarLoader;
 import sonar.core.integration.multipart.SonarMultipart;
 import sonar.core.integration.multipart.SonarMultipartHelper;
+//import sonar.core.integration.multipart.SonarMultipart;
+//import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.utils.Pair;
 
 public class FlexibleGuiHandler {
@@ -30,16 +33,27 @@ public class FlexibleGuiHandler {
 	public Object lastScreen;
 	public Object lastContainer;
 	public Pair<Object, IFlexibleGui> lastGui;
-	public Map<EntityPlayer, Object> lastContainers = Maps.newHashMap();
-	public Map<EntityPlayer, Pair<Object, IFlexibleGui>> lastGuis = Maps.newHashMap();
-	public Map<EntityPlayer, Integer> lastID = Maps.newHashMap();
+	public Map<EntityPlayer, Object> lastContainers = new HashMap<>();
+	public Map<EntityPlayer, Pair<Object, IFlexibleGui>> lastGuis = new HashMap<>();
+	public Map<EntityPlayer, Integer> lastID = new HashMap<>();
 
-	public static String MULTIPART = "multipart", TILEENTITY = "tile", ITEM = "item", ID = "id", UUID = "uuid";
+	public static String MULTIPART = "multipart", TILEENTITY = "tile", ITEM = "item", ID = "id", SLOT_ID = "uuid";
+	
+	/*
+	public static void openMultipartGui(int id, EntityPlayer player, World world, BlockPos pos) {
+		TileEntity tile = world.getTileEntity(pos);
+		if (tile instanceof TileSonarMultipart) {
+			TileSonarMultipart multipart = (TileSonarMultipart) tile;
+			multipart.sendSyncPacket(player);
+			multipart.openFlexibleGui(player, id);
+		}
+	}
+	*/
 
 	public Pair<Object, IFlexibleGui> getFlexibleGui(int id, EntityPlayer player, World world, BlockPos pos, NBTTagCompound tag) {
 		Object obj = null;
 		if (SonarLoader.mcmultipartLoaded && tag.getBoolean(MULTIPART)) {
-			UUID uuid = tag.getUniqueId(UUID);
+			UUID uuid = tag.getUniqueId(SLOT_ID);
 			obj = SonarMultipartHelper.getPart(uuid, world, pos);
 		} else if (tag.getBoolean(TILEENTITY)) {
 			obj = world.getTileEntity(pos);
@@ -52,7 +66,7 @@ public class FlexibleGuiHandler {
 		if (obj instanceof ItemStack && ((ItemStack) obj).getItem() instanceof IFlexibleGui) {
 			return new Pair(obj, ((ItemStack) obj).getItem());
 		} else if (obj instanceof IFlexibleGui) {
-			return new Pair(obj, ((IFlexibleGui) obj));
+			return new Pair(obj, obj);
 		}
 		return null;
 	}
@@ -72,7 +86,7 @@ public class FlexibleGuiHandler {
 		}
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setBoolean(MULTIPART, true);
-		tag.setUniqueId(UUID, multipartUUID);
+		tag.setUniqueId(SLOT_ID, multipartUUID);
 		openGui(change, player, world, pos, id, tag);
 	}
 
@@ -106,17 +120,32 @@ public class FlexibleGuiHandler {
 				entityPlayerMP.openContainer = container;
 				entityPlayerMP.openContainer.windowId = windowId;
 				entityPlayerMP.openContainer.addListener(entityPlayerMP);
-				// MinecraftForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, player.openContainer)); FIXME
+				// MinecraftForge.EVENT_BUS.post(new
+				// PlayerContainerEvent.Open(player, player.openContainer));
+				// FIXME
 			}
 		}
 	}
+	
+	public void openGuiClient(EntityPlayer player, BlockPos pos, NBTTagCompound tag, int id, int windowID, boolean change){
+
+		Pair<Object, IFlexibleGui> gui = SonarCore.instance.guiHandler.getFlexibleGui(id, player, player.getEntityWorld(), pos, tag);
+		if (change) {
+			FlexibleGuiHandler.setLastContainer(player.openContainer, player, Side.CLIENT);
+			FlexibleGuiHandler.setLastGui(gui, player, Side.CLIENT);
+			SonarCore.instance.guiHandler.lastScreen = Minecraft.getMinecraft().currentScreen;
+		} // else player.closeScreen();
+		FMLClientHandler.instance().showGuiScreen(gui.b.getClientElement(gui.a, id, player.getEntityWorld(), player, tag));
+		player.openContainer.windowId = windowID;
+	}
+
 
 	public static void changeGui(IFlexibleGui guiTile, int id, int returnID, World world, EntityPlayer player) {
 		if (guiTile instanceof SonarMultipart) {
 			SonarMultipart multipart = (SonarMultipart) guiTile;
 			SonarCore.network.sendToServer(new PacketFlexibleMultipartChangeGui(multipart.getUUID(), multipart.getPos(), id, returnID));
 		}
-		if(guiTile instanceof Item){
+		if (guiTile instanceof Item) {
 			SonarCore.network.sendToServer(new PacketFlexibleItemStackChangeGui(player.getPosition(), id, returnID));
 		}
 	}
@@ -124,13 +153,11 @@ public class FlexibleGuiHandler {
 	public static Object getLastContainer(EntityPlayer player, Side side) {
 
 		return side.isServer() ? SonarCore.instance.guiHandler.lastContainers.get(player) : SonarCore.instance.guiHandler.lastContainer;
-
 	}
 
 	public static Pair<Object, IFlexibleGui> getLastGui(EntityPlayer player, Side side) {
 
 		return side.isServer() ? SonarCore.instance.guiHandler.lastGuis.get(player) : SonarCore.instance.guiHandler.lastGui;
-
 	}
 
 	public static void setLastContainer(Object obj, EntityPlayer player, Side side) {
@@ -163,8 +190,6 @@ public class FlexibleGuiHandler {
 				gui.b.onGuiOpened(gui.a, SonarCore.instance.guiHandler.lastID.get(player), player.getEntityWorld(), player, new NBTTagCompound());
 				player.openContainer = (Container) container;
 				SonarCore.instance.guiHandler.lastContainers.remove(player);
-				// SonarCore.instance.guiHandler.lastOpened.remove(player);
-				// SonarCore.instance.guiHandler.lastID.remove(player);
 			}
 			return true;
 		}

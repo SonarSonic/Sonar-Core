@@ -1,10 +1,9 @@
 package sonar.core.helpers;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -22,9 +21,11 @@ public class FontHelper {
 		return text(info, x, y, colour.getRGB());
 	}
 
-	/** @param colour 0 = grey, 1 = black, 2 = white */
+    /**
+     * @param colour 0 = grey, 1 = black, 2 = white
+     */
 	public static int text(String info, int x, int y, int colour) {
-		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		switch (colour) {
 		case 0:
 			return render.drawString(info, x, y, 4210752);
@@ -54,10 +55,12 @@ public class FontHelper {
 		return textCentre(info, xSize, y, colour.getRGB());
 	}
 
-	/** @param colour 0 = grey, 1 = black, 2 = white
-	 * @return */
+    /**
+     * @param colour 0 = grey, 1 = black, 2 = white
+     * @return
+     */
 	public static int textCentre(String info, int xSize, int y, int colour) {
-		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		switch (colour) {
 		case 0:
 			return render.drawString(info, xSize / 2 - width(info) / 2, y, 4210752);
@@ -71,7 +74,7 @@ public class FontHelper {
 	}
 
 	public static int width(String info) {
-		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		return render.getStringWidth(info);
 	}
 
@@ -79,12 +82,14 @@ public class FontHelper {
 		return textOffsetCentre(info, xCentre, y, colour.getRGB());
 	}
 
-	/** @param info string information
+    /**
+     * @param info    string information
 	 * @param xCentre where you want txt to be centred
 	 * @param y y coordinate
-	 * @param colour 0 = Gray, 1= Black, 2 = White */
+     * @param colour  0 = Gray, 1= Black, 2 = White
+     */
 	public static int textOffsetCentre(String info, int xCentre, int y, int colour) {
-		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		switch (colour) {
 		case 0:
 			return render.drawString(info, xCentre - width(info) / 2, y, 4210752);
@@ -97,7 +102,9 @@ public class FontHelper {
 		}
 	}
 
-	/** sends a chat message to the Player & translates it */
+    /**
+     * sends a chat message to the Player & translates it
+     */
 	public static void sendMessage(String string, World world, EntityPlayer player) {
 		if (!world.isRemote) {
 			player.addChatComponentMessage(new TextComponentTranslation(string));
@@ -115,15 +122,14 @@ public class FontHelper {
 	}
 
 	public static String formatStorage(EnergyType type, long power) {
-		if ((power < 1000)) {
+        if (power < 1000) {
 			return power + " " + type.getStorageSuffix();
-		} else if ((power < 1000000)) {
+        } else if (power < 1000000) {
 			return roundValue(1, (float) power / 1000) + " K" + type.getStorageSuffix();
-		} else if ((power < 1000000000)) {
+        } else if (power < 1000000000) {
 			return roundValue(1, (float) power / 1000000) + " M" + type.getStorageSuffix();
 		}
 		return roundValue(2, (float) power / 1000000000) + " B" + type.getStorageSuffix();
-
 	}
 
 	public static String formatOutput(long power) {
@@ -131,44 +137,41 @@ public class FontHelper {
 	}
 
 	public static String formatOutput(EnergyType type, long power) {
-		if ((power < 1000)) {
+        if (power < 1000) {
 			return power + " " + type.getUsageSuffix();
-		} else if ((power < 1000000)) {
+        } else if (power < 1000000) {
 			return roundValue(1, (float) power / 1000) + " K" + type.getUsageSuffix();
-		} else if ((power < 1000000000)) {
+        } else if (power < 1000000000) {
 			return roundValue(1, (float) power / 1000000) + " M" + type.getUsageSuffix();
 		}
 		return roundValue(2, (float) power / 1000000000) + " B" + type.getUsageSuffix();
-
 	}
 
 	public static String formatStackSize(long stackSize) {
-		if ((stackSize < 10000)) {
+        if (stackSize < 10000) {
 			return " " + stackSize;
-		} else if ((stackSize < 1000000)) {
+        } else if (stackSize < 1000000) {
 			return roundValue(1, (float) stackSize / 1000) + " K";
-		} else if ((stackSize < 1000000000)) {
+        } else if (stackSize < 1000000000) {
 			return roundValue(1, (float) stackSize / 1000000) + " M";
 		}
 		return roundValue(2, (float) stackSize / 1000000000) + " B";
-
 	}
 
 	public static String formatFluidSize(long fluidSize) {
-		if ((fluidSize < 10000)) {
+        if (fluidSize < 10000) {
 			return " " + fluidSize + " mB";
-		} else if ((fluidSize < 1000000)) {
+        } else if (fluidSize < 1000000) {
 			return roundValue(1, (float) fluidSize / 1000) + " KmB";
-		} else if ((fluidSize < 1000000000)) {
+        } else if (fluidSize < 1000000000) {
 			return roundValue(1, (float) fluidSize / 1000000) + " MmB";
 		}
 		return roundValue(2, (float) fluidSize / 1000000000) + " BmB";
-
 	}
 
 	public static Float roundValue(int decimalPlace, Float d) {
 		BigDecimal bd = new BigDecimal(Float.toString(d));
-		bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        bd = bd.setScale(decimalPlace, RoundingMode.HALF_UP);
 		return bd.floatValue();
 	}
 
@@ -197,10 +200,7 @@ public class FontHelper {
 		case 211:
 			return box.textboxKeyTyped(c, i);
 		}
-		if (Character.isDigit(c)) {
-			return box.textboxKeyTyped(c, i);
-		}
-		return false;
+        return Character.isDigit(c) && box.textboxKeyTyped(c, i);
 	}
 
 	/* public static String translate(String string) { String local = FontHelper.translate(string); if (!local.equals(string)) { return local; } else { return StatCollector.translateToFallback(string); } } public static String fullTranslate(String s) { String ret = LanguageRegistry.instance().getStringLocalization(s); if (ret.length() == 0) ret = LanguageRegistry.instance().getStringLocalization(s, "en_US"); if (ret.length() == 0) ret = translate(s); if (ret.length() == 0) return s; return ret; } */
@@ -210,8 +210,8 @@ public class FontHelper {
 	}
 
 	public static int getIntFromColor(int red, int green, int blue) {
-		red = (red << 16) & 0x00FF0000;
-		green = (green << 8) & 0x0000FF00;
+        red = red << 16 & 0x00FF0000;
+        green = green << 8 & 0x0000FF00;
 		blue = blue & 0x000000FF;
 
 		return 0xFF000000 | red | green | blue;
@@ -221,13 +221,13 @@ public class FontHelper {
 		String list = "";
 		for (int i = 0; i < strings.size(); i++) {
 			String string = strings.get(i);
-			list = i != 0 ? (list + ", " + string) : string;
+            list = i != 0 ? list + ", " + string : string;
 		}
 		return list;
 	}
 
 	public static ArrayList<String> breakUpStringIntoLines(String multiline, int charLimit) {
-		ArrayList<String> lines = Lists.newArrayList();
+        ArrayList<String> lines = new ArrayList<>();
 		String s = multiline;
 		char[] chars = s.toCharArray();
 		boolean endOfString = false;
@@ -246,7 +246,7 @@ public class FontHelper {
 					break;
 				}
 			}
-			end = endOfString ? s.length() : (lastSpace > 0) ? lastSpace + start : charCount + start;
+            end = endOfString ? s.length() : lastSpace > 0 ? lastSpace + start : charCount + start;
 			lines.add(s.substring(start, end));
 			start = end + 1;
 		}
@@ -254,7 +254,7 @@ public class FontHelper {
 	}
 
 	public static ArrayList<String> breakLines(ArrayList<String> lines, String str, int wrapWidth) {
-		FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer render = Minecraft.getMinecraft().fontRendererObj;
 		int i = sizeStringToWidth(render, str, wrapWidth);
 		if (str.length() <= i) {
 			lines.add(str);
@@ -329,4 +329,5 @@ public class FontHelper {
 	public static boolean isFormatColor(char colorChar) {
 		return colorChar >= 48 && colorChar <= 57 || colorChar >= 97 && colorChar <= 102 || colorChar >= 65 && colorChar <= 70;
 	}
+
 }

@@ -9,14 +9,14 @@ import sonar.core.SonarCore;
 
 public abstract class PacketCoordsHandler<T extends PacketCoords> implements IMessageHandler<T, IMessage> {
 
+    @Override
 	public IMessage onMessage(T message, MessageContext ctx) {
 		EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);		
 		if (player != null) {
 			return processMessage(message, player.getEntityWorld(), player);
-		}//TODO SonarCore.proxy.getThreadListener(ctx)
+        }
 		return null;
 	}
 
 	public abstract IMessage processMessage(T message, World world, EntityPlayer player);
-
 }

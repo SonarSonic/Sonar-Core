@@ -11,13 +11,14 @@ import sonar.core.api.StorageSize;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.InventoryHelper;
+import sonar.core.utils.SonarCompat;
 
 public class GenericInventoryHandler {
 
 	public static StoredItemStack getStack(int slot, IInventory inv, EnumFacing dir) {
 		if (slot < inv.getSizeInventory()) {
 			ItemStack stack = inv.getStackInSlot(slot);
-			if (stack != null)
+			if (!SonarCompat.isEmpty(stack))
 				return new StoredItemStack(stack);
 		}
 		return null;
@@ -38,7 +39,7 @@ public class GenericInventoryHandler {
 		}
 		for (int i = 0; i < invSize; i++) {
 			final int slot = slots != null ? slots[i] : i;
-			if ((!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, add.item, dir))) {
+            if (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, add.item, dir)) {
 				if (!InventoryHelper.addStack(inv, add, slot, limit, action)) {
 					return null;
 				}
@@ -59,7 +60,7 @@ public class GenericInventoryHandler {
 		for (int i = 0; i < invSize; i++) {
 			int slot = slots != null ? slots[i] : i;
 			final ItemStack stored = inv.getStackInSlot(slot);
-			if (stored != null) {
+			if (!SonarCompat.isEmpty(stored)) {
 				if (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canExtractItem(slot, stored, dir)) {
 					if (!InventoryHelper.removeStack(inv, remove, stored, slot, action)) {
 						return null;

@@ -6,8 +6,11 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.item.ItemStack;
 import sonar.core.api.inventories.StoredItemStack;
+import sonar.core.utils.SonarCompat;
 
-/** works for matching StoredItemStacks */
+/**
+ * works for matching StoredItemStacks
+ */
 public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {
 
 	public ItemStack stack;
@@ -24,23 +27,19 @@ public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {
 	}
 
 	@Override
+	public boolean isNull() {
+		return SonarCompat.isEmpty(stack);
+	}
+
+	@Override
 	public boolean matches(Object object, RecipeObjectType type) {
 		if (object instanceof ItemStack) {
 			ItemStack stack2 = (ItemStack) object;
-			if (!stack2.isItemEqual(stack)) {
-				return false;
-			}
-			if (!ignoreNBT && !ItemStack.areItemStackTagsEqual(stack2, stack)) {
-				return false;
-			}
-			return type.checkStackSize(stack.stackSize, stack2.stackSize);
+            return stack2.isItemEqual(stack) && (ignoreNBT || ItemStack.areItemStackTagsEqual(stack2, stack) && type.checkStackSize(SonarCompat.getCount(stack), SonarCompat.getCount(stack2)));
 		}
 		if (object instanceof StoredItemStack) {
 			StoredItemStack stack2 = (StoredItemStack) object;
-			if (!stack2.equalStack(stack)) {
-				return false;
-			}
-			return type.checkStackSize(stack.stackSize, (int) stack2.stored);
+            return stack2.equalStack(stack) && type.checkStackSize(SonarCompat.getCount(stack), (int) stack2.stored);
 		}
 		return false;
 	}
@@ -57,7 +56,6 @@ public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {
 
 	@Override
 	public int getStackSize() {
-		return stack.stackSize;
+		return SonarCompat.getCount(stack);
 	}
-
 }

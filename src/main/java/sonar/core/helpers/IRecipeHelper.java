@@ -7,5 +7,4 @@ public interface IRecipeHelper {
 	String getRecipeID();
 
 	Map getRecipes();
-
 }

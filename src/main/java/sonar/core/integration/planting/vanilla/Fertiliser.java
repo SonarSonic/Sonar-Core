@@ -25,10 +25,7 @@ public class Fertiliser implements IFertiliser {
 
 	@Override
 	public boolean canFertilise(World world, BlockPos pos, IBlockState state) {
-		if (state.getBlock() instanceof IGrowable) {
-			return true;
-		}
-		return false;
+        return state.getBlock() instanceof IGrowable;
 	}
 
 	@Override
@@ -45,5 +42,4 @@ public class Fertiliser implements IFertiliser {
 	public void grow(World world, Random rand, BlockPos pos, IBlockState state) {
 		((IGrowable) state.getBlock()).grow(world, rand, pos, state);
 	}
-
 }

@@ -5,12 +5,11 @@ import sonar.core.api.utils.ActionType;
 
 public interface ISonarEnergyItem {
 	
-	public long addEnergy(ItemStack stack, long maxReceive, ActionType action);
+    long addEnergy(ItemStack stack, long maxReceive, ActionType action);
 	
-	public long removeEnergy(ItemStack stack, long maxExtract, ActionType action);
+    long removeEnergy(ItemStack stack, long maxExtract, ActionType action);
 
-	public long getEnergyLevel(ItemStack stack);
-
-	public long getFullCapacity(ItemStack stack);
+    long getEnergyLevel(ItemStack stack);
 	
+    long getFullCapacity(ItemStack stack);
 }

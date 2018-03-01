@@ -2,8 +2,6 @@ package sonar.core.recipes;
 
 import java.util.ArrayList;
 
-import com.google.common.collect.Lists;
-
 public abstract class DefinedRecipeHelper<T extends ISonarRecipe> extends RecipeHelperV2<T> {
 
 	private int inputSize, outputSize;
@@ -17,9 +15,9 @@ public abstract class DefinedRecipeHelper<T extends ISonarRecipe> extends Recipe
 	}
 
 	public void addRecipe(Object... objs) {
-		ArrayList inputs = Lists.newArrayList();
-		ArrayList outputs = Lists.newArrayList();
-		ArrayList additionals = Lists.newArrayList();
+        ArrayList inputs = new ArrayList<>();
+        ArrayList outputs = new ArrayList<>();
+        ArrayList additionals = new ArrayList<>();
 		for (int i = 0; i < objs.length; i++) {
 			Object obj = objs[i];
 			if (i < (reverseRecipes() ? getOutputSize() : getInputSize())) {
@@ -38,6 +36,7 @@ public abstract class DefinedRecipeHelper<T extends ISonarRecipe> extends Recipe
 		return false;
 	}
 
+    @Override
 	public boolean isValidRecipe(ArrayList<ISonarRecipeObject> recipeInputs, ArrayList<ISonarRecipeObject> recipeOutputs) {
 		return recipeInputs.size() == getInputSize() && recipeOutputs.size() == getOutputSize();
 	}

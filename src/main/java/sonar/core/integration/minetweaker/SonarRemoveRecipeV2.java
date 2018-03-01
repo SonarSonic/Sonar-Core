@@ -1,18 +1,14 @@
 package sonar.core.integration.minetweaker;
 
 import java.util.ArrayList;
-import java.util.function.BiFunction;
 
-import com.google.common.collect.Lists;
-
-import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
+import minetweaker.IUndoableAction;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.oredict.IOreDictEntry;
 import net.minecraft.item.ItemStack;
-import sonar.core.integration.jei.JEIHelper;
 import sonar.core.recipes.DefinedRecipeHelper;
 import sonar.core.recipes.ISonarRecipe;
 import sonar.core.recipes.RecipeHelperV2;
@@ -26,40 +22,35 @@ public class SonarRemoveRecipeV2<T extends RecipeHelperV2> implements IUndoableA
 	public ISonarRecipe recipe;
 	public boolean liquidStack, wasNull, wrongSize;
 	public T helper;
-	public BiFunction<ISonarRecipe, T, Object> createRecipe;
 
-	public SonarRemoveRecipeV2(T helper, RecipeObjectType type, ArrayList ingredients, BiFunction<ISonarRecipe, T, Object> createRecipe) {
+	public SonarRemoveRecipeV2(T helper, RecipeObjectType type, ArrayList ingredients) {
 		this.helper = helper;
-		this.createRecipe = createRecipe;
 		this.type = type;
 		if (helper instanceof DefinedRecipeHelper && (type == RecipeObjectType.OUTPUT ? ingredients.size() != ((DefinedRecipeHelper) helper).getOutputSize() : ingredients.size() != ((DefinedRecipeHelper) helper).getInputSize())) {
-			MineTweakerAPI.logError("A " + helper.getRecipeID() + " recipe was the wrong size");
+            MineTweakerAPI.logError("A " + helper.getRecipeID() + " recipe was the wrong size");
 			wrongSize = true;
 			return;
 		}
 
-		ArrayList adaptedIngredients = Lists.newArrayList();
+        ArrayList adaptedIngredients = new ArrayList<>();
 		for (Object output : ingredients) {
 			if (output == null) {
-				MineTweakerAPI.logError(String.format("An ingredient of a %s was null", helper.getRecipeID()));
+                MineTweakerAPI.logError(String.format("An ingredient of a %s was null", helper.getRecipeID()));
 				wasNull = true;
 				return;
 			}
 			if (output instanceof IItemStack) {
-				adaptedIngredients.add(MineTweakerMC.getItemStack((IItemStack) output));
-				continue;
+                adaptedIngredients.add(MineTweakerMC.getItemStack((IItemStack) output));
 			} else if (output instanceof IOreDictEntry) {
 				adaptedIngredients.add(new RecipeOreStack(((IOreDictEntry) output).getName(), 1));
-				continue;
 			} else if (output instanceof ILiquidStack) {
-				MineTweakerAPI.logError(String.format("A liquid was passed into a %s, aborting!", helper.getRecipeID()));
+                MineTweakerAPI.logError(String.format("A liquid was passed into a %s, aborting!", helper.getRecipeID()));
 				liquidStack = true;
 				return;
 			} else if (!(output instanceof ItemStack)) {
-				MineTweakerAPI.logError(String.format("%s: Invalid ingredient: %s", helper.getRecipeID(), output));
+                MineTweakerAPI.logError(String.format("%s: Invalid ingredient: %s", helper.getRecipeID(), output));
 			} else {
 				adaptedIngredients.add(output);
-				continue;
 			}
 		}
 
@@ -70,20 +61,16 @@ public class SonarRemoveRecipeV2<T extends RecipeHelperV2> implements IUndoableA
 	@Override
 	public void apply() {
 		if (recipe == null) {
-			MineTweakerAPI.logError(String.format("%s: Removing Recipe - Couldn't find matching recipe %s", helper.getRecipeID(), ingredients));
+            MineTweakerAPI.logError(String.format("%s: Removing Recipe - Couldn't find matching recipe %s", helper.getRecipeID(), ingredients));
 			return;
 		}
 		if (!wasNull && !liquidStack && !wrongSize) {
 			boolean removed = helper.removeRecipe(recipe);
 			if (!removed){
-				MineTweakerAPI.logError(String.format("%s: Removing Recipe - Failed to remove recipe %s", helper.getRecipeID(), ingredients));
-			}else{
-				MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(createRecipe.apply(recipe, helper));
+                MineTweakerAPI.logError(String.format("%s: Removing Recipe - Failed to remove recipe %s", helper.getRecipeID(), ingredients));
 			}
 		}
-	}
-
-	@Override
+	}@Override
 	public boolean canUndo() {
 		return true;
 	}
@@ -91,17 +78,9 @@ public class SonarRemoveRecipeV2<T extends RecipeHelperV2> implements IUndoableA
 	@Override
 	public void undo() {
 		if (recipe != null && !wasNull && !liquidStack && !wrongSize) {
-			helper.addRecipe(recipe);
-			MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(createRecipe.apply(recipe, helper));
+			helper.addRecipe(recipe);			
+			//MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipe);
 		}
-	}
-
-	@Override
-	public String describe() {
-		if (recipe == null) {
-			return "ERROR: RECIPE IS NULL";
-		}
-		return String.format("Removing %s recipe (%s = %s)", helper.getRecipeID(), recipe.inputs(), recipe.outputs());
 	}
 
 	@Override
@@ -114,4 +93,11 @@ public class SonarRemoveRecipeV2<T extends RecipeHelperV2> implements IUndoableA
 		return null;
 	}
 
+	@Override
+	public String describe() {
+		if (recipe == null) {
+			return "ERROR: RECIPE IS NULL";
+		}
+		return String.format("Removing %s recipe (%s = %s)", helper.getRecipeID(), recipe.inputs(), recipe.outputs());
+	}
 }

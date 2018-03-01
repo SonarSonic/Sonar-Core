@@ -23,12 +23,14 @@ public class PacketFlexibleItemStackChangeGui extends PacketCoords {
 		this.returnID = returnID;
 	}
 
+    @Override
 	public void fromBytes(ByteBuf buf) {
 		super.fromBytes(buf);
 		guiID = buf.readInt();
 		returnID = buf.readInt();
 	}
 
+    @Override
 	public void toBytes(ByteBuf buf) {
 		super.toBytes(buf);
 		buf.writeInt(guiID);
@@ -39,8 +41,7 @@ public class PacketFlexibleItemStackChangeGui extends PacketCoords {
 
 		@Override
 		public IMessage onMessage(PacketFlexibleItemStackChangeGui message, MessageContext ctx) {
-			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
-				public void run() {
+            SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(() -> {
 					EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 					ItemStack stack = player.getHeldItemMainhand();
 					if (!(stack.getItem() instanceof IFlexibleGui)) {
@@ -48,10 +49,8 @@ public class PacketFlexibleItemStackChangeGui extends PacketCoords {
 					}
 					SonarCore.instance.guiHandler.lastID.put(player, message.returnID);
 					SonarCore.instance.guiHandler.openBasicItemStack(true, stack, player, player.getEntityWorld(), message.pos, message.guiID);
-				}
 			});
 			return null;
 		}
 	}
-
 }

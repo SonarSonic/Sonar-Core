@@ -4,14 +4,14 @@ import io.netty.buffer.ByteBuf;
 
 public interface IFlexibleContainer<T> {
 
-	public void refreshState();
+    void refreshState();
 
-	public T getCurrentState();
+    T getCurrentState();
 
-	public interface Syncable extends IFlexibleContainer {
+    interface Syncable extends IFlexibleContainer {
 
-		public void readState(ByteBuf buf);
+        void readState(ByteBuf buf);
 
-		public void writeState(ByteBuf buf);
+        void writeState(ByteBuf buf);
 	}
 }

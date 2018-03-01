@@ -10,28 +10,28 @@ public class SonarScroller {
 	public float currentScroll;
 	public boolean isScrolling;
 	public boolean wasClicking;
-	public int left, top, length, width;
-	public ScrollerOrientation orientation = ScrollerOrientation.VERTICAL;
+    public int left, top, length, width;
+    public ScrollerOrientation orientation = ScrollerOrientation.VERTICAL;
 
 	public SonarScroller(int scrollerLeft, int scrollerStart, int length, int width) {
 		this.left = scrollerLeft;
-		this.top = scrollerStart;
-		this.length = length;
+        this.top = scrollerStart;
+        this.length = length;
 		this.width = width;
 	}
 
-	public SonarScroller setOrientation(ScrollerOrientation orientation) {
-		this.orientation = orientation;
-		return this;
-	}
+    public SonarScroller setOrientation(ScrollerOrientation orientation) {
+        this.orientation = orientation;
+        return this;
+    }
 
 	public float getCurrentScroll() {
 		return currentScroll;
 	}
 
-	public void handleMouse(GuiGridElement grid) {
-		handleMouse(grid.isScrollable(), grid.getGridSize());
-	}
+    public void handleMouse(GuiGridElement grid) {
+        handleMouse(grid.isScrollable(), grid.getGridSize());
+    }
 
 	public void handleMouse(boolean needsScrollBars, int listSize) {
 		float lastScroll = currentScroll;
@@ -50,12 +50,12 @@ public class SonarScroller {
 				currentScroll = 1.0F;
 		}
 	}
-
-	public void drawScreen(int x, int y, boolean needsScrollBars) {
+	
+	public void drawScreen(int x, int y, boolean needsScrollBars){
 		float lastScroll = currentScroll;
 		boolean flag = Mouse.isButtonDown(0);
 
-		if (!this.wasClicking && flag && x >= left && y >= top && x < left + width && y < (top + length)) {
+        if (!this.wasClicking && flag && x >= left && y >= top && x < left + width && y < top + length) {
 			this.isScrolling = needsScrollBars;
 		}
 		if (!flag) {
@@ -64,11 +64,7 @@ public class SonarScroller {
 		this.wasClicking = flag;
 
 		if (this.isScrolling) {
-			if (orientation.isVertical()) {
-				this.currentScroll = ((float) (y - top) - 7.5F) / ((float) length - 15.0F);
-			} else {
-				this.currentScroll = ((float) (x - left) - 7.5F) / ((float) width - 15.0F);
-			}
+            this.currentScroll = orientation.isVertical() ? ((float) (y - top) - 7.5F) / ((float) length - 15.0F) : ((float) (x - left) - 7.5F) / ((float) width - 15.0F);
 
 			if (currentScroll < 0.0F)
 				currentScroll = 0.0F;

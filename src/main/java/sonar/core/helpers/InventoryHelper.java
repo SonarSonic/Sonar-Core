@@ -3,13 +3,13 @@ package sonar.core.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import sonar.core.SonarCore;
@@ -19,22 +19,23 @@ import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.api.wrappers.InventoryWrapper;
 import sonar.core.handlers.inventories.IInventoryHandler;
+import sonar.core.inventory.IAdditionalInventory;
+import sonar.core.inventory.IDropInventory;
+import sonar.core.utils.SonarCompat;
 
 public class InventoryHelper extends InventoryWrapper {
-
-	public static ItemStack EMPTY = null; // TODO make this ItemStack.EMPTY on update.
 
 	public static ISonarInventoryHandler defHandler = new IInventoryHandler();
 
 	public static boolean addStack(IInventory inv, StoredItemStack add, int slot, int limit, ActionType action) {
 		if (inv.isItemValidForSlot(slot, add.item)) {
 			final ItemStack stored = inv.getStackInSlot(slot);
-			if (stored != null) {
+			if (!SonarCompat.isEmpty(stored)) {
 				ItemStack stack = stored.copy();
-				if (add.equalStack(stack) && stack.stackSize < limit && stack.stackSize < stack.getMaxStackSize()) {
-					long used = Math.min(add.item.getMaxStackSize() - stack.stackSize, Math.min(add.stored, limit - stack.stackSize));
+				if (add.equalStack(stack) && SonarCompat.getCount(stack) < limit && SonarCompat.getCount(stack) < stack.getMaxStackSize()) {
+					long used = Math.min(add.item.getMaxStackSize() - SonarCompat.getCount(stack), Math.min(add.stored, limit - SonarCompat.getCount(stack)));
 					if (used > 0) {
-						stack.stackSize += used;
+						stack = SonarCompat.setCount(stack, (int) (SonarCompat.getCount(stack) + used));
 						add.stored -= used;
 						if (!action.shouldSimulate()) {
 							inv.setInventorySlotContents(slot, stack.copy());
@@ -45,9 +46,10 @@ public class InventoryHelper extends InventoryWrapper {
 			} else {
 				long used = Math.min(add.item.getMaxStackSize(), Math.min(add.stored, limit));
 				if (used > 0) {
+					ItemStack stack = new StoredItemStack(add.getFullStack()).setStackSize(used).getFullStack();
 					add.stored -= used;
 					if (!action.shouldSimulate()) {
-						inv.setInventorySlotContents(slot, new StoredItemStack(add.getFullStack()).setStackSize(used).getFullStack());
+						inv.setInventorySlotContents(slot, stack);
 						inv.markDirty();
 					}
 				}
@@ -62,11 +64,11 @@ public class InventoryHelper extends InventoryWrapper {
 	public static boolean removeStack(IInventory inv, StoredItemStack remove, ItemStack stored, int slot, ActionType action) {
 		ItemStack stack = stored.copy();
 		if (remove.equalStack(stack)) {
-			long used = (long) Math.min(remove.stored, Math.min(inv.getInventoryStackLimit(), stack.stackSize));
-			stack.stackSize -= used;
+			long used = Math.min(remove.stored, Math.min(inv.getInventoryStackLimit(), SonarCompat.getCount(stack)));
+			stack = SonarCompat.setCount(stack, (int) (SonarCompat.getCount(stack) - used));
 			remove.stored -= used;
-			if (stack.stackSize == 0) {
-				stack = null;
+			if (SonarCompat.getCount(stack) == 0) {
+				stack = SonarCompat.getEmpty();
 			}
 			if (!action.shouldSimulate()) {
 				inv.setInventorySlotContents(slot, stack);
@@ -79,6 +81,7 @@ public class InventoryHelper extends InventoryWrapper {
 		return true;
 	}
 
+	@Override
 	public StoredItemStack getStackToAdd(long inputSize, StoredItemStack stack, StoredItemStack returned) {
 		StoredItemStack simulateStack = null;
 		if (returned == null || returned.stored == 0) {
@@ -89,12 +92,13 @@ public class InventoryHelper extends InventoryWrapper {
 		return simulateStack;
 	}
 
+	@Override
 	public StorageSize addInventoryToList(List<StoredItemStack> list, IInventory inv) {
 		long stored = 0;
 		for (int i = 0; i < inv.getSizeInventory(); i++) {
 			ItemStack stack = inv.getStackInSlot(i);
-			if (stack != null) {
-				stored += stack.stackSize;
+			if (!SonarCompat.isEmpty(stack)) {
+				stored += SonarCompat.getCount(stack);
 				addStackToList(list, inv.getStackInSlot(i));
 			}
 		}
@@ -102,12 +106,13 @@ public class InventoryHelper extends InventoryWrapper {
 		return new StorageSize(stored, max);
 	}
 
+	@Override
 	public StorageSize addItemHandlerToList(List<StoredItemStack> list, IItemHandler inv) {
 		long stored = 0;
 		for (int i = 0; i < inv.getSlots(); i++) {
 			ItemStack stack = inv.getStackInSlot(i);
-			if (stack != null) {
-				stored += stack.stackSize;
+			if (!SonarCompat.isEmpty(stack)) {
+				stored += SonarCompat.getCount(stack);
 				addStackToList(list, stack);
 			}
 		}
@@ -126,6 +131,7 @@ public class InventoryHelper extends InventoryWrapper {
 		list.add(new StoredItemStack(stack));
 	}
 
+	@Override
 	public void addStackToList(List<StoredItemStack> list, StoredItemStack stack) {
 		if (stack == null || list == null) {
 			return;
@@ -140,14 +146,19 @@ public class InventoryHelper extends InventoryWrapper {
 		}
 		list.add(stack);
 	}
-
+	@Override
 	public void spawnStoredItemStack(StoredItemStack drop, World world, int x, int y, int z, EnumFacing side) {
-		List<EntityItem> drops = Lists.newArrayList();
+		spawnStoredItemStackDouble(drop, world, x + 0.5, y + 0.5, z + 0.5, side);
+	}
+
+	@Override
+	public void spawnStoredItemStackDouble(StoredItemStack drop, World world, double x, double y, double z, EnumFacing side) {
+		List<EntityItem> drops = new ArrayList<>();
 		while (!(drop.stored <= 0)) {
 			ItemStack dropStack = drop.getItemStack();
-			dropStack.stackSize = (int) Math.min(drop.stored, dropStack.getMaxStackSize());
-			drop.stored -= dropStack.stackSize;
-			drops.add(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, dropStack));
+			dropStack = SonarCompat.setCount(dropStack, (int) Math.min(drop.stored, dropStack.getMaxStackSize()));
+			drop.stored -= SonarCompat.getCount(dropStack);
+			drops.add(new EntityItem(world, x, y, z, dropStack));
 		}
 		if (drop.stored < 0) {
 			SonarCore.logger.error("ERROR: Excess Items in Drop");
@@ -174,22 +185,23 @@ public class InventoryHelper extends InventoryWrapper {
 
 	public ItemStack addItems(TileEntity tile, StoredItemStack stack, ActionType type) {
 		if (stack == null || tile == null) {
-			return null;
+			return SonarCompat.getEmpty();
 		}
-		StoredItemStack returned = defHandler.addStack(stack.copy(), tile, (EnumFacing) null, type);
+		StoredItemStack returned = defHandler.addStack(stack.copy(), tile, null, type);
 		StoredItemStack add = getStackToAdd(stack.getStackSize(), stack.copy(), returned);
 		return add.getActualStack();
 	}
 
 	public ItemStack removeItems(TileEntity tile, StoredItemStack stack, ActionType type) {
 		if (stack == null || tile == null) {
-			return null;
+			return SonarCompat.getEmpty();
 		}
-		StoredItemStack returned = defHandler.removeStack(stack.copy(), tile, (EnumFacing) null, type);
+		StoredItemStack returned = defHandler.removeStack(stack.copy(), tile, null, type);
 		StoredItemStack add = getStackToAdd(stack.getStackSize(), stack.copy(), returned);
 		return add.getActualStack();
 	}
 
+	@Override
 	public StoredItemStack addItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
 		long maxAdd = maxAdd(filter, stack.getStackSize());
 		if (maxAdd == 0) {
@@ -209,6 +221,7 @@ public class InventoryHelper extends InventoryWrapper {
 		return null;
 	}
 
+	@Override
 	public StoredItemStack removeItems(TileEntity tile, StoredItemStack stack, EnumFacing dir, ActionType type, IInventoryFilter filter) {
 		long maxRemove = maxRemove(filter, stack.getStackSize());
 		if (maxRemove == 0) {
@@ -228,9 +241,10 @@ public class InventoryHelper extends InventoryWrapper {
 		return null;
 	}
 
+	@Override
 	public void transferItems(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, IInventoryFilter filter) {
 		if (from != null && to != null) {
-			ArrayList<StoredItemStack> stacks = Lists.newArrayList();
+			ArrayList<StoredItemStack> stacks = new ArrayList<>();
 			List<ISonarInventoryHandler> handlers = SonarCore.inventoryHandlers;
 			for (ISonarInventoryHandler handler : handlers) {
 				if (handler.canHandleItems(from, dirFrom)) {
@@ -296,6 +310,55 @@ public class InventoryHelper extends InventoryWrapper {
 		((ITransferOverride) filter).remove(removed);
 	}
 
+	public static void dropInventory(Object inventory, World world, BlockPos pos, IBlockState state) {
+		if (inventory == null) {
+			return;
+		}
+		List<ItemStack> drops = new ArrayList<>();
+			if (inventory instanceof IDropInventory) {
+				IDropInventory inv = (IDropInventory) inventory;
+				if (inv.canDrop() && inv.dropSlots() != null) {
+					int[] slots = inv.dropSlots();
+					for (int slot : slots) {
+						ItemStack itemstack = inv.getStackInSlot(slot);
+						if (!SonarCompat.isEmpty(itemstack)) {
+							drops.add(itemstack);
+						}
+					}
+				}
+			} else if (inventory instanceof IInventory) {
+				IInventory inv = (IInventory) inventory;
+				for (int i = 0; i < inv.getSizeInventory(); i++) {
+					ItemStack itemstack = inv.getStackInSlot(i);
+					if (!SonarCompat.isEmpty(itemstack)) {
+						drops.add(itemstack);
+					}
+				}
+			}
+			if (inventory instanceof IAdditionalInventory) {
+				IAdditionalInventory additionalInv = (IAdditionalInventory) inventory;
+				ItemStack[] additionalStacks = additionalInv.getAdditionalStacks();
+				if (additionalStacks != null) {
+					for (ItemStack stack : additionalStacks) {
+						if (!SonarCompat.isEmpty(stack)) {
+							drops.add(stack);
+						}
+					}
+				}
+			}
+
+		for (ItemStack stack : drops) {
+			if (!SonarCompat.isEmpty(stack)) {
+				float f = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
+				float f1 = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
+				float f2 = SonarCore.rand.nextFloat() * 0.8F + 0.1F;
+
+				EntityItem dropStack = new EntityItem(world, pos.getX() + f, pos.getY() + f1, pos.getZ() + f2, stack);
+				world.spawnEntityInWorld(dropStack);
+			}
+		}
+	}
+
 	public static class DefaultTransferOverride implements ITransferOverride {
 
 		public long maxAdd, maxRemove;
@@ -319,6 +382,7 @@ public class InventoryHelper extends InventoryWrapper {
 			return currentAdd != 0 || currentRemove != 0;
 		}
 
+		@Override
 		public ITransferOverride copy() {
 			return new DefaultTransferOverride(maxAdd, maxRemove);
 		}
@@ -328,6 +392,7 @@ public class InventoryHelper extends InventoryWrapper {
 			return true;
 		}
 
+		@Override
 		public void reset() {
 			currentAdd = maxAdd;
 			currentRemove = maxRemove;
@@ -355,23 +420,22 @@ public class InventoryHelper extends InventoryWrapper {
 
 	}
 
-	public static interface ITransferOverride extends IInventoryFilter {
+	public interface ITransferOverride extends IInventoryFilter {
 
-		public ITransferOverride copy();
+		ITransferOverride copy();
 
-		public void reset();
+		void reset();
 
-		public void add(long added);
+		void add(long added);
 
-		public void remove(long removed);
+		void remove(long removed);
 
-		public long getMaxRemove();
+		long getMaxRemove();
 
-		public long getMaxAdd();
+		long getMaxAdd();
 	}
 
-	public static interface IInventoryFilter {
-		public boolean allowed(ItemStack stack);
+	public interface IInventoryFilter {
+		boolean allowed(ItemStack stack);
 	}
-
 }

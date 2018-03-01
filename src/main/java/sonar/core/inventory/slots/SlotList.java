@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-
+import sonar.core.utils.SonarCompat;
 
 public class SlotList extends Slot {
 
@@ -12,32 +12,35 @@ public class SlotList extends Slot {
 		super(inv, slot, x, y);
 	}
 
-    public boolean canTakeStack(EntityPlayer player)
-    {
-        return false;
-    }
-    public ItemStack decrStackSize(int size)
-    {
-		this.inventory.setInventorySlotContents(this.getSlotIndex(), null);
-		this.inventory.markDirty();
-        return null;
-    }
+	@Override
+	public boolean canTakeStack(EntityPlayer player) {
+		return false;
+	}
 
+	@Override
+	public ItemStack decrStackSize(int size) {
+		this.inventory.setInventorySlotContents(this.getSlotIndex(), SonarCompat.getEmpty());
+		this.inventory.markDirty();
+		return SonarCompat.getEmpty();
+	}
+
+	@Override
 	public void onSlotChanged() {
 		putStack(this.getStack());
 	}
 
+	@Override
 	public void putStack(ItemStack stack) {
-		ItemStack copy = null;
-		if (stack != null) {
+		ItemStack copy = SonarCompat.getEmpty();
+		if (!SonarCompat.isEmpty(stack)) {
 			copy = stack.copy();
-			copy.stackSize = 1;
+			copy = SonarCompat.setCount(copy, 1);
 		}
 		this.inventory.setInventorySlotContents(this.getSlotIndex(), copy);
 		this.inventory.markDirty();
-
 	}
 
+	@Override
 	public int getSlotStackLimit() {
 		return 1;
 	}

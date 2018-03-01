@@ -21,8 +21,8 @@ public class PacketTileSyncUpdate extends PacketTileSync {
 
 	public PacketTileSyncUpdate(BlockPos pos, NBTTagCompound tag, SyncType type) {
 		super(pos, tag, type);
-
 	}
+
 	public static class Handler extends PacketTileEntityHandler<PacketTileSyncUpdate> {
 
 		@Override
@@ -38,8 +38,8 @@ public class PacketTileSyncUpdate extends PacketTileSync {
 				}
 				//TODO 
 				//tile.getWorld().markBlockRangeForRenderUpdate(tile.getPos(), tile.getPos());
-				tile.getWorld().getChunkFromBlockCoords(tile.getPos()).setChunkModified();
-				tile.getWorld().markBlockRangeForRenderUpdate(tile.getPos(), tile.getPos());
+               // tile.getWorld().getChunkFromBlockCoords(tile.getPos()).setModified(true);
+               tile.getWorld().markBlockRangeForRenderUpdate(tile.getPos(), tile.getPos());
 			}
 			return null;
 		}

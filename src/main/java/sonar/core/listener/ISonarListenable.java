@@ -4,13 +4,13 @@ import sonar.core.utils.IValidate;
 
 public interface ISonarListenable<L extends ISonarListener> extends IValidate {
 
-	public ListenableList<L> getListenerList();
+    ListenableList<L> getListenerList();
 
-	public void onListenerAdded(ListenerTally<L> tally);
+    void onListenerAdded(ListenerTally<L> tally);
 
-	public void onListenerRemoved(ListenerTally<L> tally);
+    void onListenerRemoved(ListenerTally<L> tally);
 
-	public void onSubListenableAdded(ISonarListenable<L> listen);
+    void onSubListenableAdded(ISonarListenable<L> listen);
 
-	public void onSubListenableRemoved(ISonarListenable<L> listen);
+    void onSubListenableRemoved(ISonarListenable<L> listen);
 }

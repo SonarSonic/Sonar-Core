@@ -12,6 +12,7 @@ import sonar.core.helpers.InventoryHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.multipart.SonarMultipart;
 import sonar.core.network.PacketMultipartSync;
+import sonar.core.utils.SonarCompat;
 
 public class ContainerMultipartSync extends Container {
 
@@ -44,7 +45,7 @@ public class ContainerMultipartSync extends Container {
 	}
 
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
-		return InventoryHelper.EMPTY;
+		return SonarCompat.getEmpty();
 	}
 
 	public SyncType[] getSyncTypes() {

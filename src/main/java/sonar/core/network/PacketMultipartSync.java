@@ -61,7 +61,7 @@ public class PacketMultipartSync extends PacketMultipart {
 		public IMessage processMessage(PacketMultipartSync message, IMultipartContainer target, IMultipart part, MessageContext ctx) {
 			if (part.getWorld().isRemote) {
 
-				SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
+				SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(new Runnable() {
 					@Override
 					public void run() {
 						if (part != null && part instanceof INBTSyncable) {

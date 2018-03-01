@@ -2,8 +2,6 @@ package sonar.core.client.renderers;
 
 import java.util.ArrayList;
 
-import com.google.common.collect.Lists;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -17,7 +15,7 @@ public abstract class SonarRendererBase implements ISonarCustomRenderer {
 	public final Block block;
 	public final ModelResourceLocation location;
 	public TextureAtlasSprite icon;
-	public ArrayList<ResourceLocation> textures = Lists.newArrayList();
+    public ArrayList<ResourceLocation> textures = new ArrayList<>();
 
 	public SonarRendererBase(Block block, ModelResourceLocation location) {
 		this.block = block;
@@ -75,5 +73,4 @@ public abstract class SonarRendererBase implements ISonarCustomRenderer {
 		else
 			return null;
 	}
-
 }

@@ -12,7 +12,7 @@ import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.inventory.GenericInventoryHandler;
 
-@InventoryHandler(modid = "sonarcore", priority = 0)
+@InventoryHandler(modid = "sonarcore", priority = 20)
 public class IInventoryHandler implements ISonarInventoryHandler {
 
 	@Override
@@ -40,8 +40,8 @@ public class IInventoryHandler implements ISonarInventoryHandler {
 		return GenericInventoryHandler.removeStack(remove, (IInventory) tile, dir, action);
 	}
 
-	@Override
-	public boolean isLargeInventory() {
-		return false;
-	}
+    @Override
+    public boolean isLargeInventory() {
+        return false;
+    }
 }

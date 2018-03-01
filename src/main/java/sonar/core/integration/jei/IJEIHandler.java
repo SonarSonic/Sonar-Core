@@ -8,19 +8,19 @@ import sonar.core.recipes.IRecipeHelperV2;
 
 public interface IJEIHandler {
 	
-	public JEICategoryV2 getCategory(IGuiHelper guiHelper);
+    JEICategoryV2 getCategory(IGuiHelper guiHelper);
 	
-	public String getTextureName();
+    String getTextureName();
 	
-	public String getTitle();
+    String getTitle();
 	
-	public Class getRecipeClass();
-
-	public String getUUID();
+    Class getRecipeClass();
+    
+    String getUUID();
 		
-	public IRecipeHelperV2 getRecipeHelper();
+    IRecipeHelperV2 getRecipeHelper();
 	
-	public List<JEIRecipeV2> getJEIRecipes();
+    List<JEIRecipeV2> getJEIRecipes();
 	
-	public ItemStack getCrafterItemStack();
+    ItemStack getCrafterItemStack();
 }

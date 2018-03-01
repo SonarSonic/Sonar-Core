@@ -6,12 +6,17 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Lists;
-
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -26,6 +31,13 @@ import sonar.core.network.sync.SyncableList;
 
 public class NBTHelper {
 
+	/** cheats to add info to a TileEntity on place, without having a stack */
+	public static boolean setTileEntityNBT(World worldIn, @Nullable EntityPlayer player, BlockPos pos, NBTTagCompound fakeTag) {
+		ItemStack stack = new ItemStack(Blocks.AIR, 1);
+		stack.getTagCompound().setTag("BlockEntityTag", fakeTag);
+		return ItemBlock.setTileEntityNBT(worldIn, player, pos, stack);
+	}
+
 	public static void readSyncParts(NBTTagCompound nbt, SyncType type, List<ISyncPart> syncableList) {
 		for (ISyncPart part : syncableList) {
 			if (part != null && part.canSync(type)) {
@@ -36,7 +48,7 @@ public class NBTHelper {
 
 	public static void readSyncParts(NBTTagCompound nbt, SyncType type, SyncableList syncableList) {
 		for (ISyncPart part : syncableList.getStandardSyncParts()) {
-			if (part != null && (part.canSync(type))) {
+			if (part != null && part.canSync(type)) {
 				part.readData(nbt, type);
 			}
 		}
@@ -44,7 +56,7 @@ public class NBTHelper {
 
 	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, List<ISyncPart> syncableList, boolean forceSync) {
 		for (ISyncPart part : syncableList) {
-			if (part != null && ((forceSync || type.mustSync()) || part.canSync(type))) {
+			if (part != null && (forceSync || type.mustSync() || part.canSync(type))) {
 				part.writeData(nbt, type);
 			}
 		}
@@ -52,8 +64,8 @@ public class NBTHelper {
 	}
 
 	public static NBTTagCompound writeSyncParts(NBTTagCompound nbt, SyncType type, SyncableList syncableList, boolean forceSync) {
-		for (ISyncPart part : (ArrayList<ISyncPart>) (syncableList.getSyncList(type).clone())) {
-			if (part != null && ((forceSync || type.mustSync()) || part.canSync(type))) {
+		for (ISyncPart part : (ArrayList<ISyncPart>) syncableList.getSyncList(type).clone()) {
+			if (part != null && (forceSync || type.mustSync() || part.canSync(type))) {
 				part.writeData(nbt, type);
 				syncableList.onPartSynced(part);
 			}
@@ -63,7 +75,7 @@ public class NBTHelper {
 	}
 
 	public static ISyncPart getSyncPartByID(ArrayList<ISyncPart> parts, int id) {
-		String tag = "" + id;
+		String tag = String.valueOf(id);
 		for (ISyncPart part : parts) {
 			if (part != null && part.getTagName().equals(tag)) {
 				return part;
@@ -87,12 +99,11 @@ public class NBTHelper {
 
 	public static void readSyncedNBTObjectList(String tagName, NBTTagCompound tag, NBTRegistryHelper<? extends INBTObject> helper, List objectList) {
 		if (tag.hasKey(tagName + "null")) {
-			objectList = Collections.EMPTY_LIST;
-			return;
+			objectList = Collections.emptyList();
 		} else if (tag.hasKey(tagName)) {
 			NBTTagList list = tag.getTagList(tagName, 10);
 			if (objectList == null) {
-				objectList = Lists.newArrayList();
+				objectList = new ArrayList<>();
 			}
 
 			for (int i = 0; i < list.tagCount(); i++) {
@@ -125,10 +136,10 @@ public class NBTHelper {
 
 	public static NBTTagCompound writeSyncedNBTObjectList(String tagName, NBTTagCompound tag, NBTRegistryHelper helper, List objectList, List lastList) {
 		if (objectList == null) {
-			objectList = Lists.newArrayList();
+			objectList = new ArrayList<>();
 		}
 		if (lastList == null) {
-			lastList = Lists.newArrayList();
+			lastList = new ArrayList<>();
 		}
 		NBTTagList list = new NBTTagList();
 		int size = Math.max(objectList.size(), lastList.size());
@@ -148,8 +159,6 @@ public class NBTHelper {
 						compound.setByte("f", (byte) 0);
 						lastList.set(i, current);
 						helper.writeToNBT(compound, (INBTObject) objectList.get(i));
-					} else {
-
 					}
 				} else {
 					compound.setByte("f", (byte) 0);
@@ -164,7 +173,6 @@ public class NBTHelper {
 				compound.setInteger("Slot", i);
 				list.appendTag(compound);
 			}
-
 		}
 		if (list.tagCount() != 0) {
 			tag.setTag(tagName, list);
@@ -173,7 +181,7 @@ public class NBTHelper {
 	}
 
 	public static List<? extends INBTObject> readNBTObjectList(String tagName, NBTTagCompound tag, RegistryHelper<? extends INBTObject> helper) {
-		List<INBTObject> objects = Lists.newArrayList();
+		List<INBTObject> objects = new ArrayList<>();
 		if (tag.hasKey(tagName)) {
 			NBTTagList list = tag.getTagList(tagName, 10);
 			for (int i = 0; i < list.tagCount(); i++) {
@@ -189,10 +197,10 @@ public class NBTHelper {
 			return tag;
 		}
 		NBTTagList list = new NBTTagList();
-		for (int i = 0; i < objects.size(); i++) {
-			if (objects.get(i) != null) {
+		for (INBTObject object : objects) {
+			if (object != null) {
 				NBTTagCompound compound = new NBTTagCompound();
-				writeNBTObject(objects.get(i), compound);
+				writeNBTObject(object, compound);
 				list.appendTag(compound);
 			}
 		}
@@ -239,7 +247,6 @@ public class NBTHelper {
 			IBufObject info = (IBufObject) helper.getRegisteredObject(type).instance();
 			info.readFromBuf(buf);
 			return info;
-
 		} else {
 			return null;
 		}
@@ -290,13 +297,35 @@ public class NBTHelper {
 		return new FluidTankInfo(FluidStack.loadFluidStackFromNBT(nbt), nbt.getInteger("capacity"));
 	}
 
-	public static enum SyncType {
-		SAVE(0), DROP(2), SPECIAL(3), PACKET(4), DEFAULT_SYNC(1), SYNC_OVERRIDE(1);
+	public static NBTTagCompound writeDoubleArray(NBTTagCompound tag, double[] array, String tagName) {
+		NBTTagList list = new NBTTagList();
+		for (double d : array) {
+			list.appendTag(new NBTTagDouble(d));
+		}
+		tag.setTag(tagName, list);
+		return tag;
+	}
+
+	public static double[] readDoubleArray(NBTTagCompound tag, String tagName, int size) {
+		NBTTagList list = tag.getTagList(tagName, NBT.TAG_DOUBLE);
+		double[] array = new double[size];
+		for (int i = 0; i < list.tagCount(); i++) {
+			array[i] = list.getDoubleAt(i);
+		}
+		return array;
+	}
+
+	public enum SyncType {
+		SAVE(0), DROP(2), SPECIAL(3), PACKET(4), DEFAULT_SYNC(1), SYNC_OVERRIDE(1), NONE(5);
 
 		private int type;
 
 		SyncType(int type) {
 			this.type = type;
+		}
+
+		public int getSubType() {
+			return type;
 		}
 
 		public boolean mustSync() {
@@ -436,8 +465,8 @@ public class NBTHelper {
 		case NBT.TAG_BYTE_ARRAY:
 			Byte[] byteArray = (Byte[]) object;
 			buf.writeInt(byteArray.length);
-			for (int i = 0; i < byteArray.length; i++) {
-				buf.writeByte(byteArray[i]);
+			for (Byte aByteArray : byteArray) {
+				buf.writeByte(aByteArray);
 			}
 			return;
 		case NBT.TAG_STRING:
@@ -452,10 +481,9 @@ public class NBTHelper {
 		case NBT.TAG_INT_ARRAY:
 			Integer[] intArray = (Integer[]) object;
 			buf.writeInt(intArray.length);
-			for (int i = 0; i < intArray.length; i++) {
-				buf.writeInt(intArray[i]);
+			for (Integer anIntArray : intArray) {
+				buf.writeInt(anIntArray);
 			}
-			return;
 		}
 	}
 

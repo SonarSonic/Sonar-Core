@@ -3,8 +3,6 @@ package sonar.core.network.sync;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -14,10 +12,12 @@ import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 
-/** for use with objects which implement INBTSyncable and have an Empty Constructor for instances */
+/**
+ * for use with objects which implement INBTSyncable and have an Empty Constructor for instances
+ */
 public class SyncNBTAbstractList<T extends INBTSyncable> extends SyncPart {
 
-	public List<T> objs = Lists.newArrayList();
+    public List<T> objs = new ArrayList<>();
 	public Class<T> type;
 
 	public SyncNBTAbstractList(Class<T> type, int id) {
@@ -28,14 +28,14 @@ public class SyncNBTAbstractList<T extends INBTSyncable> extends SyncPart {
 	public SyncNBTAbstractList(Class<T> type, int id, int capacity) {
 		super(id);
 		this.type = type;
-		objs = new ArrayList(capacity);
+        objs = new ArrayList<>(capacity);
 	}
 
-	public List<T> getObjects() {
+    public List<T> getObjects() {
 		return objs;
 	}
 
-	public void setObjects(List<T> list) {
+    public void setObjects(List<T> list) {
 		objs = list;
 		markChanged();
 	}
@@ -66,14 +66,14 @@ public class SyncNBTAbstractList<T extends INBTSyncable> extends SyncPart {
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(getTagName())) {
-			List newObjs = Lists.newArrayList();
+            List newObjs = new ArrayList<>();
 			NBTTagList tagList = nbt.getTagList(getTagName(), Constants.NBT.TAG_COMPOUND);
 			for (int i = 0; i < tagList.tagCount(); i++) {
 				newObjs.add(NBTHelper.instanceNBTSyncable(this.type, tagList.getCompoundTagAt(i)));
 			}
 			objs = newObjs;
-		} else if (nbt.getBoolean(getTagName() + "E")) {
-			objs = Lists.newArrayList();
+        } else if (nbt.getBoolean(getTagName() + 'E')) {
+            objs = new ArrayList<>();
 		}
 	}
 
@@ -87,15 +87,12 @@ public class SyncNBTAbstractList<T extends INBTSyncable> extends SyncPart {
 		if (!tagList.hasNoTags()) {
 			nbt.setTag(getTagName(), tagList);
 		} else {
-			nbt.setBoolean(getTagName() + "E", true);
+            nbt.setBoolean(getTagName() + 'E', true);
 		}
 		return nbt;
 	}
 
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof SyncNBTAbstractList) {
-			return ((SyncNBTAbstractList) obj).getObjects().equals(this.objs);
-		}
-		return false;
+        return obj != null && obj instanceof SyncNBTAbstractList && ((SyncNBTAbstractList) obj).getObjects().equals(this.objs);
 	}
 }

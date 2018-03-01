@@ -18,13 +18,12 @@ import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -68,8 +67,8 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 	}
 
 	@Override
-	public BakedBlockModel<T> bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-		return new BakedBlockModel<>(format, renderer, bakedTextureGetter, true);
+    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+        return new BakedBlockModel<T>(format, renderer, bakedTextureGetter, true);
 	}
 
 	@Override
@@ -79,10 +78,10 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 
 	@Override
 	@ParametersAreNonnullByDefault
-	public void renderTileEntityAt(T te, double x, double y, double z, float partialTicks, int destroyStage) {
-
+    public void renderTileEntityAt(T te, double x, double y, double z, float partialTicks, int destroyStage) {
+   // public void render(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float f) {
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
+        VertexBuffer vertexbuffer = tessellator.getBuffer();
 		World world = te.getWorld();
 		BlockPos pos = te.getPos();
 		IBlockState state = world.getBlockState(pos);
@@ -103,7 +102,6 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 
 		GL11.glTranslated(-x, -y, -z);
 		GL11.glPopMatrix();
-
 	}
 
 	public static class BakedBlockModel<T extends TileEntity> implements IBakedModel {
@@ -137,7 +135,6 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 				} else {
 					list = RenderHelper.transformQuads(list, new TransformationMatrix(-face.getHorizontalAngle(), 0, 1, 0, RenderHelper.getOffsetForFace(face)));
 				}
-
 			} else {
 				list = ImmutableList.of();
 			}
@@ -184,7 +181,7 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 		private final Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter;
 
 		public ItemRenderer(ISonarCustomRenderer renderer, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-			super(ImmutableList.<ItemOverride> of());
+            super(ImmutableList.of());
 			this.renderer = renderer;
 			//this.tile = renderer.getTileEntity();
 			this.tile = null;

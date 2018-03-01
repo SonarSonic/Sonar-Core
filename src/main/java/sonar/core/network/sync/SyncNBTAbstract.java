@@ -22,9 +22,10 @@ public class SyncNBTAbstract<T extends INBTSyncable> extends SyncPart {
 		return obj;
 	}
 
-	public void setObject(T object) {
+	public SyncNBTAbstract<T> setObject(T object) {
 		obj = object;
 		markChanged();
+		return this;
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class SyncNBTAbstract<T extends INBTSyncable> extends SyncPart {
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(getTagName())) {
-			if (obj != null)
+			if (isValid(obj))
 				obj.readData(nbt.getCompoundTag(this.getTagName()), type);
 			else {
 				obj = NBTHelper.instanceNBTSyncable(this.type, nbt.getCompoundTag(this.getTagName()));
@@ -50,16 +51,16 @@ public class SyncNBTAbstract<T extends INBTSyncable> extends SyncPart {
 
 	@Override
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
-		if (obj != null)
+		if (isValid(obj))
 			nbt.setTag(getTagName(), obj.writeData(new NBTTagCompound(), type));
 		return nbt;
 	}
 
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof SyncNBTAbstract) {
-			return ((SyncNBTAbstract) obj).getObject() == this.obj && this.getTagName().equals(((SyncNBTAbstract) obj).getTagName());
-		}
-		return false;
+		return obj != null && obj instanceof SyncNBTAbstract && ((SyncNBTAbstract) obj).obj == this.obj && this.getTagName().equals(((SyncNBTAbstract) obj).getTagName());
 	}
 
+	public boolean isValid(T obj) {
+		return obj != null;
+	}
 }

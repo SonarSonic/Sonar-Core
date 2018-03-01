@@ -1,10 +1,10 @@
 package sonar.core.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import sonar.core.utils.SonarCompat;
 
 public class InventoryStoredCrafting extends InventoryCrafting {
 	private int inventoryWidth, inventoryHeight, offset;
@@ -51,33 +51,27 @@ public class InventoryStoredCrafting extends InventoryCrafting {
 
 	@Override
 	public ItemStack removeStackFromSlot(int par1) {
-		return null;
+		return SonarCompat.getEmpty();
 	}
 
 	@Override
 	public ItemStack decrStackSize(int slotID, int par2) {
 		ItemStack stack = inv.getStackInSlot(slotID + 1 + offset);
-		if (stack != null) {
+		if (!SonarCompat.isEmpty(stack)) {
 			ItemStack itemstack;
-
-			if (stack.stackSize <= par2) {
+			if (SonarCompat.getCount(stack) <= par2) {
 				itemstack = stack.copy();
-				stack = null;
-				inv.setInventorySlotContents(slotID + 1 + offset, null);
+				stack =  SonarCompat.getEmpty();
+				inv.setInventorySlotContents(slotID + 1 + offset, SonarCompat.getEmpty());
 				this.eventHandler.onCraftMatrixChanged(this);
 				return itemstack;
 			} else {
 				itemstack = stack.splitStack(par2);
-
-				if (stack.stackSize == 0) {
-					stack = null;
-				}
-
 				this.eventHandler.onCraftMatrixChanged(this);
 				return itemstack;
 			}
 		} else {
-			return null;
+			return SonarCompat.getEmpty();
 		}
 	}
 
@@ -96,10 +90,4 @@ public class InventoryStoredCrafting extends InventoryCrafting {
 	public void markDirty() {
 		inv.markDirty();
 	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return true;
-	}
-
 }

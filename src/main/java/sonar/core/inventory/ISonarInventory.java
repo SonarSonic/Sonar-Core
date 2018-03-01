@@ -1,16 +1,21 @@
 package sonar.core.inventory;
 
+import java.util.List;
+
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.IItemHandler;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.network.sync.IDirtyPart;
 
-public interface ISonarInventory extends IInventory, IDirtyPart, INBTSyncable, IItemHandler {
+public interface ISonarInventory extends IInventory, IDirtyPart, INBTSyncable {
 
-	public ISonarInventory setStackLimit(int limit);
+	ISonarInventory setStackLimit(int limit);
 
-	//public ISonarInventory setHandledSide(EnumFacing side);
+	IItemHandler getItemHandler(EnumFacing side);
+
+	List<ItemStack> slots();
 	
-	public IItemHandler getItemHandler(EnumFacing side);
+	boolean isEmpty();
 }

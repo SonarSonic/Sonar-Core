@@ -7,11 +7,11 @@ import net.minecraft.world.World;
 
 public interface IBlockStateSpecial<T extends TileEntity, S extends IBlockState> extends IBlockState {
 	
-	public T getTileEntity(World world);
+    T getTileEntity(World world);
 	
-	public T getTileEntity();
+    T getTileEntity();
 
-	public BlockPos getPos();
+    BlockPos getPos();
 
-	public S getWrappedState();
+    S getWrappedState();
 }

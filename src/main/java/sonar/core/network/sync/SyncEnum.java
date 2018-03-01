@@ -6,7 +6,7 @@ import sonar.core.helpers.NBTHelper.SyncType;
 
 public class SyncEnum<E extends Enum> extends SyncPart {
 
-	public E[] values = null;
+    public E[] values;
 	public E current;
 
 	public SyncEnum(E[] values, int id) {

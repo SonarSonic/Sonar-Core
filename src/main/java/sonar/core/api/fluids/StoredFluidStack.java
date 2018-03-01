@@ -12,7 +12,7 @@ public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 	public FluidStack fluid;
 	public long stored, capacity;
 
-	public StoredFluidStack() {}
+    public StoredFluidStack() {}
 
 	public StoredFluidStack(FluidStack stack) {
 		this.fluid = stack.copy();
@@ -32,6 +32,7 @@ public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 		this.capacity = capacity;
 	}
 
+    @Override
 	public void add(StoredFluidStack stack) {
 		if (equalStack(stack.fluid)) {
 			stored += stack.stored;
@@ -39,6 +40,7 @@ public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 		}
 	}
 
+    @Override
 	public void remove(StoredFluidStack stack) {
 		if (equalStack(stack.fluid)) {
 			stored -= stack.stored;
@@ -46,25 +48,28 @@ public class StoredFluidStack implements ISonarStack<StoredFluidStack> {
 		}
 	}
 
+    @Override
 	public StoredFluidStack copy() {
 		return new StoredFluidStack(this.fluid, this.stored, this.capacity);
 	}
 
+    public StoredFluidStack setStackSize(StoredFluidStack stack) {
+        this.stored = stack == null ? 0 : stack.stored;
+        return this;
+    }
+
+    @Override
 	public StoredFluidStack setStackSize(long size) {
 		this.stored = size;
 		return this;
 	}
-
-	public StoredFluidStack setStackSize(StoredFluidStack stack) {
-		this.stored = stack == null ? 0 : stack.getStackSize();
-		return this;
+    
+	public static boolean isEqualStack(FluidStack main, FluidStack stack) {
+        return main != null && stack != null && main.isFluidEqual(stack);
 	}
 
 	public boolean equalStack(FluidStack stack) {
-		if (this.fluid == null || stack == null){ //|| stack.amount == 0) {
-			return false;
-		}
-		return this.fluid.isFluidEqual(stack);
+        return isEqualStack(this.fluid, stack);
 	}
 
 	@Override

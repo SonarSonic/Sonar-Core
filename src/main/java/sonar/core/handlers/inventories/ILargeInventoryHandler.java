@@ -13,10 +13,10 @@ import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.inventory.ILargeInventory;
 import sonar.core.inventory.SonarLargeInventory;
+import sonar.core.utils.SonarCompat;
 
-@InventoryHandler(modid = "sonarcore", priority = -1)
+@InventoryHandler(modid = "sonarcore", priority = 0)
 public class ILargeInventoryHandler implements ISonarInventoryHandler {
-
 	@Override
 	public boolean canHandleItems(TileEntity tile, EnumFacing dir) {
 		return tile instanceof ILargeInventory;
@@ -49,10 +49,10 @@ public class ILargeInventoryHandler implements ISonarInventoryHandler {
 			if (add == null || add.stored == 0)
 				return null;
 			ItemStack stack = inv.insertItem(i, add.getFullStack(), action.shouldSimulate());
-			if (stack != null && add.stored != 0) {
+			if (!SonarCompat.isEmpty(stack) && add.stored != 0) {
 				add.remove(SonarAPI.getItemHelper().getStackToAdd(add.stored, add, new StoredItemStack(stack)));
 			} else {
-				add.stored -= add.getFullStack().stackSize;
+				add.stored -= SonarCompat.getCount(add.getFullStack());
 			}
 		}
 		return add;
@@ -65,10 +65,10 @@ public class ILargeInventoryHandler implements ISonarInventoryHandler {
 			if (remove == null || remove.stored == 0)
 				return null;
 			ItemStack current = inv.getStackInSlot(i);
-			if (current != null && remove.equalStack(current)) {
-				int removeSize = (int) Math.min(current.stackSize, remove.getStackSize());
+			if (!SonarCompat.isEmpty(current) && remove.equalStack(current)) {
+				int removeSize = (int) Math.min(SonarCompat.getCount(current), remove.getStackSize());
 				ItemStack stack = inv.extractItem(i, removeSize, action.shouldSimulate());
-				if (stack != null) {
+				if (!SonarCompat.isEmpty(stack)) {
 					remove.remove(new StoredItemStack(stack));
 				}
 			}
@@ -78,6 +78,7 @@ public class ILargeInventoryHandler implements ISonarInventoryHandler {
 
 	@Override
 	public boolean isLargeInventory() {
-		return false; //the name suggest otherwise but ILargeInventories generally don't have that many slots
+		return false; // the name suggest otherwise but ILargeInventories
+						// generally don't have that many slots
 	}
 }

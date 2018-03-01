@@ -2,6 +2,7 @@ package sonar.core.helpers;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,22 +25,23 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import sonar.core.api.utils.BlockCoords;
-import sonar.core.integration.SonarLoader;
 import sonar.core.utils.IWorldPosition;
+import sonar.core.utils.SonarCompat;
 import sonar.core.utils.SortingDirection;
 
-/** helps with getting tiles, adding energy and checking stacks */
+/**
+ * helps with getting tiles, adding energy and checking stacks
+ */
 public class SonarHelper {
 
-	public static ChunkPos getChunkFromPos(int xPos, int zPos) {
-		return new ChunkPos(xPos >> 4, zPos >> 4);
-	}
+    public static ChunkPos getChunkFromPos(int xPos, int zPos) {
+        return new ChunkPos(xPos >> 4, zPos >> 4);
+    }
 
-	public static ChunkPos getChunkPos(int xChunk, int zChunk) {
-		return new ChunkPos(xChunk, zChunk);
-	}
+    public static ChunkPos getChunkPos(int xChunk, int zChunk) {
+        return new ChunkPos(xChunk, zChunk);
+    }
 
 	public static TileEntity getAdjacentTileEntity(TileEntity tile, EnumFacing side) {
 		return tile.getWorld().getTileEntity(tile.getPos().offset(side));
@@ -49,10 +51,11 @@ public class SonarHelper {
 		return world.getBlockState(pos.offset(side)).getBlock();
 	}
 
+	/*
 	public static void dropTile(EntityPlayer player, Block block, World world, BlockPos pos) {
 		ItemStack stack = player.getHeldItemMainhand();
 		TileEntity te = world.getTileEntity(pos);
-		if (SonarLoader.calculatorLoaded() && block == GameRegistry.findBlock("calculator", "ConductorMastBlock")) {
+		if (SonarLoader.calculatorLoaded() && block == Calculator.conductormastBlock) {
 			if (world.getBlockState(pos.offset(EnumFacing.DOWN, 1)).getBlock() == GameRegistry.findBlock("calculator", "ConductorMast")) {
 				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 1), world.getBlockState(pos.offset(EnumFacing.DOWN, 1)), te, stack);
 			} else if (world.getBlockState(pos.offset(EnumFacing.DOWN, 2)).getBlock() == GameRegistry.findBlock("calculator", "ConductorMast")) {
@@ -64,9 +67,8 @@ public class SonarHelper {
 		} else {
 			block.harvestBlock(world, player, pos, world.getBlockState(pos), te, stack);
 		}
-
 	}
-
+	*/
 	public static Entity getEntity(Class entityClass, IWorldPosition tile, int range, boolean nearest) {
 		BlockCoords coords = tile.getCoords();
 
@@ -75,8 +77,7 @@ public class SonarHelper {
 		List<Entity> entities = coords.getWorld().getEntitiesWithinAABB(entityClass, aabb);
 		Entity entity = null;
 		double entityDis = nearest ? Double.MAX_VALUE : 0;
-		for (int i = 0; i < entities.size(); i++) {
-			Entity target = (Entity) entities.get(i);
+        for (Entity target : entities) {
 			double d0 = coords.getX() - target.posX;
 			double d1 = coords.getY() - target.posY;
 			double d2 = coords.getZ() - target.posZ;
@@ -139,7 +140,6 @@ public class SonarHelper {
 			return 270;
 		}
 		return 0;
-
 	}
 
 	public static int invertMetadata(int meta) {
@@ -163,11 +163,11 @@ public class SonarHelper {
 
 	public static ItemStack createStackedBlock(Block block, int meta) {
 		if (block == null) {
-			return null;
+			return SonarCompat.getEmpty();
 		}
 		Item item = Item.getItemFromBlock(block);
 		if (item == null) {
-			return null;
+			return SonarCompat.getEmpty();
 		}
 		int j = 0;
 		if (item.getHasSubtypes()) {
@@ -212,11 +212,10 @@ public class SonarHelper {
 			return EnumFacing.NORTH;
 		}
 		return null;
-
 	}
 
 	public static ArrayList<BlockCoords> getConnectedBlocks(Block block, List<EnumFacing> dirs, World w, BlockPos pos, int max) {
-		ArrayList<BlockCoords> handlers = Lists.newArrayList();
+        ArrayList<BlockCoords> handlers = new ArrayList<>();
 		addCoords(block, w, pos, max, handlers, dirs);
 		return handlers;
 	}
@@ -236,7 +235,7 @@ public class SonarHelper {
 				BlockCoords coords = new BlockCoords(current);
 				if (!handlers.contains(coords)) {
 					handlers.add(coords);
-					addCoords(block, w, current, max, handlers, SonarHelper.convertArray(EnumFacing.values()));
+                    addCoords(block, w, current, max, handlers, SonarHelper.convertArray(EnumFacing.values()));
 				}
 			}
 		}
@@ -252,16 +251,15 @@ public class SonarHelper {
 	}
 
 	public static <T> List<T> convertArray(T[] objs) {
-		List<T> inputs = new ArrayList<T>();
-		for (T obj : objs) {
-			inputs.add(obj);
-		}
+        List<T> inputs = new ArrayList<>();
+        Collections.addAll(inputs, objs);
 		return inputs;
 	}
 
 	public static <T> T[] convertArray(List<T> objs) {
 		return (T[]) objs.toArray();
 	}
+
 
 	public static boolean intContains(int[] ints, int num) {
 		for (int i : ints) {
@@ -288,19 +286,18 @@ public class SonarHelper {
 		return dir == SortingDirection.DOWN ? res : -res;
 	}
 
-	public static List<EntityPlayerMP> getPlayersWatchingChunk(PlayerChunkMapEntry entry) {
-		if (entry != null && entry.isSentToPlayers()) {
-			try {
-				Field field;
-				field = PlayerChunkMapEntry.class.getDeclaredField("players");
-				field.setAccessible(true);
-				List<EntityPlayerMP> obj = (List<EntityPlayerMP>) field.get(entry);
-				return Lists.newArrayList(obj);
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-		}
-		return Lists.newArrayList();
+    public static List<EntityPlayerMP> getPlayersWatchingChunk(PlayerChunkMapEntry entry) {
+        if (entry != null && entry.isSentToPlayers()) {
+            try {
+                Field field = PlayerChunkMapEntry.class.getDeclaredField("players");
+                field.setAccessible(true);
+                List<EntityPlayerMP> obj = (List<EntityPlayerMP>) field.get(entry);
+                return Lists.newArrayList(obj);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+        return new ArrayList<>();
 
-	}
+    }
 }

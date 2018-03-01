@@ -35,5 +35,4 @@ public class TeslaItemHandler implements ISonarEnergyContainerHandler {
 	public EnergyType getProvidedType() {
 		return EnergyType.TESLA;
 	}
-
 }

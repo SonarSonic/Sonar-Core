@@ -1,9 +1,9 @@
 package sonar.core.utils;
 
 public abstract class SonarValidation {
-
+	
 	public abstract boolean isValid(Object obj);
-
+	
 	public static class CLASS<T> extends SonarValidation {
 
 		public Class<T> type;

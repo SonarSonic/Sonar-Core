@@ -16,12 +16,16 @@ import sonar.core.api.wrappers.EnergyWrapper;
 import sonar.core.energy.DischargeValues;
 import sonar.core.handlers.energy.SonarHandler;
 import sonar.core.network.sync.SyncEnergyStorage;
+import sonar.core.utils.SonarCompat;
 
 public class EnergyHelper extends EnergyWrapper {
-	/** changes = returns amount remaining */
+    /**
+     * changes = returns amount remaining
+     */
 
 	public static final SonarHandler chargingHandler = new SonarHandler();
 	
+    @Override
 	public long receiveEnergy(TileEntity tile, long maxReceive, EnumFacing dir, ActionType type) {
 		if (maxReceive != 0 && tile != null) {
 			ISonarEnergyHandler handler = this.canTransferEnergy(tile, dir);
@@ -32,7 +36,9 @@ public class EnergyHelper extends EnergyWrapper {
 		return 0;
 	}
 
-	/** allows specific selection of the Energy Handler rather than using the receiveEnergy method normally */
+    /**
+     * allows specific selection of the Energy Handler rather than using the receiveEnergy method normally
+     */
 	public long performReceive(ISonarEnergyHandler handler, TileEntity tile, long maxReceive, EnumFacing dir, ActionType type) {
 		long receive = StoredEnergyStack.convert(maxReceive, EnergyType.RF, handler.getProvidedType());
 		StoredEnergyStack stack = handler.addEnergy(new StoredEnergyStack(EnergyType.RF).setStackSize(receive), tile, dir, type);
@@ -41,6 +47,7 @@ public class EnergyHelper extends EnergyWrapper {
 		return maxReceive - remain;
 	}
 
+    @Override
 	public long extractEnergy(TileEntity tile, long maxExtract, EnumFacing dir, ActionType type) {
 		if (maxExtract != 0 && tile != null) {
 			ISonarEnergyHandler handler = this.canTransferEnergy(tile, dir);
@@ -51,7 +58,9 @@ public class EnergyHelper extends EnergyWrapper {
 		return 0;
 	}
 
-	/** allows specific selection of the Energy Handler rather than using the extractEnergy method normally */
+    /**
+     * allows specific selection of the Energy Handler rather than using the extractEnergy method normally
+     */
 	public long performExtract(ISonarEnergyHandler handler, TileEntity tile, long maxExtract, EnumFacing dir, ActionType type) {
 		long receive = StoredEnergyStack.convert(maxExtract, EnergyType.RF, handler.getProvidedType());
 		StoredEnergyStack stack = handler.removeEnergy(new StoredEnergyStack(EnergyType.RF).setStackSize(receive), tile, dir, type);
@@ -61,8 +70,9 @@ public class EnergyHelper extends EnergyWrapper {
 		return maxExtract - remain;
 	}
 
+    @Override
 	public long receiveEnergy(ItemStack stack, long maxReceive, ActionType type) {
-		if (maxReceive != 0 && stack != null) {
+		if (maxReceive != 0 && !SonarCompat.isEmpty(stack)) {
 			ISonarEnergyContainerHandler handler = this.canTransferEnergy(stack);
 			if (handler != null) {
 				long receive = StoredEnergyStack.convert(maxReceive, EnergyType.RF, handler.getProvidedType());
@@ -76,8 +86,9 @@ public class EnergyHelper extends EnergyWrapper {
 		return 0;
 	}
 
+    @Override
 	public long extractEnergy(ItemStack stack, long maxExtract, ActionType type) {
-		if (maxExtract != 0 && stack != null) {
+		if (maxExtract != 0 && !SonarCompat.isEmpty(stack)) {
 			ISonarEnergyContainerHandler handler = this.canTransferEnergy(stack);
 			if (handler != null) {
 				long receive = StoredEnergyStack.convert(maxExtract, EnergyType.RF, handler.getProvidedType());
@@ -91,6 +102,7 @@ public class EnergyHelper extends EnergyWrapper {
 		return 0;
 	}
 
+    @Override
 	public StoredEnergyStack getEnergyStored(ItemStack stack, EnergyType format) {
 		ISonarEnergyContainerHandler handler = this.canTransferEnergy(stack);
 		if (handler != null) {
@@ -101,7 +113,10 @@ public class EnergyHelper extends EnergyWrapper {
 		return new StoredEnergyStack(format);		
 	}
 	
-	/** returns amount transferred **/
+    /**
+     * returns amount transferred
+     **/
+    @Override
 	public long transferEnergy(TileEntity from, TileEntity to, EnumFacing dirFrom, EnumFacing dirTo, final long maxTransferRF) {
 		if (from != null && !from.getWorld().isRemote && to != null && maxTransferRF != 0) {
 			long maxTransfer = Math.min(extractEnergy(from, maxTransferRF, dirFrom, ActionType.SIMULATE), receiveEnergy(to, maxTransferRF, dirTo, ActionType.SIMULATE));
@@ -112,8 +127,9 @@ public class EnergyHelper extends EnergyWrapper {
 		return 0;
 	}
 
+    @Override
 	public ItemStack chargeItem(ItemStack item, TileEntity tile, final long maxTransferRF) {
-		if (tile != null && !tile.getWorld().isRemote && item != null && maxTransferRF != 0) {
+		if (tile != null && !tile.getWorld().isRemote && !SonarCompat.isEmpty(item) && maxTransferRF != 0) {
 			long maxTransfer = Math.min(performExtract(chargingHandler, tile, maxTransferRF, null, ActionType.SIMULATE), receiveEnergy(item, maxTransferRF, ActionType.SIMULATE));
 			if (maxTransfer != 0) {
 				performExtract(chargingHandler, tile, receiveEnergy(item, maxTransfer, ActionType.PERFORM), null, ActionType.PERFORM);
@@ -123,8 +139,9 @@ public class EnergyHelper extends EnergyWrapper {
 		return item;
 	}
 
+    @Override
 	public ItemStack dischargeItem(ItemStack item, TileEntity tile, final long maxTransferRF) {
-		if (item != null && !tile.getWorld().isRemote && tile != null && maxTransferRF != 0) {
+		if (!SonarCompat.isEmpty(item) && !tile.getWorld().isRemote && tile != null && maxTransferRF != 0) {
 			long maxTransfer = Math.min(extractEnergy(item, maxTransferRF, ActionType.SIMULATE), performReceive(chargingHandler, tile, maxTransferRF, null, ActionType.SIMULATE));
 
 			if (maxTransfer != 0) {
@@ -138,10 +155,7 @@ public class EnergyHelper extends EnergyWrapper {
 				if (value != 0) {
 					if (storage.getEnergyStored() + value <= storage.getMaxEnergyStored()) {
 						storage.setEnergyStored(storage.getEnergyStored() + value);
-						item.stackSize -= 1;
-						if (item.stackSize <= 0) {
-							item = null;
-						}
+						item = SonarCompat.shrink(item, 1);
 						return item;
 					}
 				}
@@ -150,6 +164,7 @@ public class EnergyHelper extends EnergyWrapper {
 		return item;
 	}
 
+    @Override
 	public ISonarEnergyHandler canTransferEnergy(TileEntity tile, EnumFacing dir) {
 		List<ISonarEnergyHandler> handlers = SonarCore.energyHandlers;
 		for (ISonarEnergyHandler handler : handlers) {
@@ -160,6 +175,7 @@ public class EnergyHelper extends EnergyWrapper {
 		return null;
 	}
 
+    @Override
 	public ISonarEnergyContainerHandler canTransferEnergy(ItemStack stack) {
 		List<ISonarEnergyContainerHandler> handlers = SonarCore.energyContainerHandlers;
 		for (ISonarEnergyContainerHandler handler : handlers) {

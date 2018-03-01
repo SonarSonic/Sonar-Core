@@ -12,7 +12,12 @@ import sonar.core.api.energy.ISonarEnergyStorage;
 import sonar.core.api.utils.ActionType;
 import sonar.core.helpers.NBTHelper.SyncType;
 
-@Optional.InterfaceList({ @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "tesla"), @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "tesla"), @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaProducer", modid = "tesla") })
+@Optional.InterfaceList({
+        @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "tesla"),
+        @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "tesla"),
+        @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaProducer", modid = "tesla"),
+        @Optional.Interface(iface = "cofh.api.energy.IEnergyStorage", modid = "redstoneflux")
+})
 public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage, net.minecraftforge.energy.IEnergyStorage, IEnergyStorage, ISyncPart, ITeslaConsumer, ITeslaProducer, ITeslaHolder, INBTSerializable<NBTTagCompound> {
 
 	private long energy;
@@ -127,20 +132,22 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 		return nbt;
 	}
 
+    @Override
 	public final NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		NBTTagCompound energyTag = new NBTTagCompound();
 		this.writeToNBT(energyTag);
 		nbt.setTag(getTagName(), energyTag);
 		return nbt;
-
 	}
 
+    @Override
 	public final void readData(NBTTagCompound nbt, SyncType type) {
 		if (nbt.hasKey(getTagName())) {
 			this.readFromNBT(nbt.getCompoundTag(getTagName()));
 		}
 	}
 
+    @Override
 	public String getTagName() {
 		return tagName;
 	}
@@ -156,6 +163,7 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 	}
 
 	///// * SONAR *//////
+    @Override
 	public long addEnergy(long maxReceive, ActionType action) {
 		long add = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
 
@@ -166,9 +174,11 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 		return add;
 	}
 
+    @Override
 	public long removeEnergy(long maxExtract, ActionType action) {
 
 		long energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
+
 		if (!action.shouldSimulate()) {
 			energy -= energyExtracted;
 			this.markChanged();
@@ -176,10 +186,12 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 		return energyExtracted;
 	}
 
+    @Override
 	public long getEnergyLevel() {
 		return energy;
 	}
 
+    @Override
 	public long getFullCapacity() {
 		return capacity;
 	}

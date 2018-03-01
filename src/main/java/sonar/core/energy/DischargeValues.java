@@ -9,10 +9,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import sonar.core.helpers.IRecipeHelper;
 import sonar.core.helpers.ItemStackHelper;
+import sonar.core.utils.SonarCompat;
 
 public class DischargeValues implements IRecipeHelper {
 
-	public static Map<ItemStack, Integer> dischargeList = new HashMap<ItemStack, Integer>();
+    public static Map<ItemStack, Integer> dischargeList = new HashMap<>();
 
 	public static void addValues() {
 		addValue(Items.REDSTONE, 1000);
@@ -28,23 +29,27 @@ public class DischargeValues implements IRecipeHelper {
 	public static void addValue(Object object, int power) {
 		if (object != null) {
 			ItemStack stack = ItemStackHelper.createStack(object);
-			if (stack != null)
+			if (!SonarCompat.isEmpty(stack))
 				dischargeList.put(stack, power);
 		}
 	}
 
 	public static int getValueOf(ItemStack stack) {
-		Iterator iterator = dischargeList.entrySet().iterator();
+        Iterator<Map.Entry<ItemStack, Integer>> iterator = dischargeList.entrySet().iterator();
 
-		Map.Entry entry;
-		do {
+        Map.Entry<ItemStack, Integer> entry;
+        if (!iterator.hasNext()) {
+            return 0;
+        }
+        entry = iterator.next();
+        while (!ItemStackHelper.equalStacksRegular(stack, entry.getKey())) {
 			if (!iterator.hasNext()) {
 				return 0;
 			}
-			entry = (Map.Entry) iterator.next();
-		} while (!ItemStackHelper.equalStacksRegular(stack, (ItemStack) entry.getKey()));
+            entry = iterator.next();
+        }
 
-		return (Integer) entry.getValue();
+        return entry.getValue();
 	}
 
 	@Override
@@ -56,5 +61,4 @@ public class DischargeValues implements IRecipeHelper {
 	public Map<ItemStack, Integer> getRecipes() {
 		return dischargeList;
 	}
-
 }

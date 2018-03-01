@@ -5,13 +5,13 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 
 public interface ISonarRecipe {
-	public List<ISonarRecipeObject> inputs();
+    List<ISonarRecipeObject> inputs();
 
-	public List<ISonarRecipeObject> outputs();
+    List<ISonarRecipeObject> outputs();
 
-	public boolean matchingInputs(Object[] inputs);
+    boolean matchingInputs(Object[] inputs);
 
-	public boolean matchingOutputs(Object[] outputs);	
+    boolean matchingOutputs(Object[] outputs);
 
-	public boolean canUseRecipe(EntityPlayer player);
+    boolean canUseRecipe(EntityPlayer player);
 }

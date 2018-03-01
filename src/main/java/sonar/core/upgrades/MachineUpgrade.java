@@ -13,18 +13,19 @@ import sonar.core.api.upgrades.IUpgradableTile;
 import sonar.core.api.upgrades.IUpgradeInventory;
 import sonar.core.common.item.SonarItem;
 import sonar.core.helpers.FontHelper;
+import sonar.core.utils.SonarCompat;
 
 public class MachineUpgrade extends SonarItem {
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tile = world.getTileEntity(pos);
 		if (!world.isRemote && tile != null && tile instanceof IUpgradableTile) {
 			IUpgradeInventory upgrades = ((IUpgradableTile) tile).getUpgradeInventory();
 			if (!player.isSneaking()) {
 				if (upgrades.addUpgrade(player.getHeldItemMainhand())) {
-					stack.stackSize -= 1;
-					FontHelper.sendMessage("" + upgrades.getInstalledUpgrades(), world, player);
+					stack = SonarCompat.shrink(stack, 1);
+                    FontHelper.sendMessage(String.valueOf(upgrades.getInstalledUpgrades()), world, player);
 				} else {
 					if (upgrades.getAllowedUpgrades().contains(SonarCore.machineUpgrades.getSecondaryObject(stack.getItem()))) {
 						FontHelper.sendMessage(FontHelper.translate("upgrade.maximum"), world, player);

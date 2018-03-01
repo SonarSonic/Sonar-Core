@@ -14,43 +14,43 @@ import sonar.core.api.utils.ActionType;
 @EnergyContainerHandler(modid = "IC2", priority = 4)
 public class EUItemHandler implements ISonarEnergyContainerHandler {
 
-	@Override
-	public boolean canHandleItem(ItemStack stack) {
-		return stack.getItem() != null && (stack.getItem() instanceof IElectricItem || stack.getItem() instanceof ISpecialElectricItem);
-	}
+    @Override
+    public boolean canHandleItem(ItemStack stack) {
+        return stack.getItem() != null && (stack.getItem() instanceof IElectricItem || stack.getItem() instanceof ISpecialElectricItem);
+    }
 
-	public static IElectricItemManager getManager(ItemStack stack) {
-		if (stack.getItem() instanceof ISpecialElectricItem) {
-			return ((ISpecialElectricItem) (stack.getItem())).getManager(stack);
-		}
-		return ElectricItem.manager;
-	}
+    public static IElectricItemManager getManager(ItemStack stack) {
+        if (stack.getItem() instanceof ISpecialElectricItem) {
+            return ((ISpecialElectricItem) stack.getItem()).getManager(stack);
+        }
+        return ElectricItem.manager;
+    }
 
-	@Override
-	public StoredEnergyStack addEnergy(StoredEnergyStack transfer, ItemStack stack, ActionType action) {
-		IElectricItemManager manager = getManager(stack);
-		double charge = Math.min(transfer.stored, manager.getMaxCharge(stack) - manager.getCharge(stack));
-		transfer.stored -= manager.charge(stack, transfer.stored, 4, false, action.shouldSimulate());
-		return transfer;
-	}
+    @Override
+    public StoredEnergyStack addEnergy(StoredEnergyStack transfer, ItemStack stack, ActionType action) {
+        IElectricItemManager manager = getManager(stack);
+        double charge = Math.min(transfer.stored, manager.getMaxCharge(stack) - manager.getCharge(stack));
+        transfer.stored -= manager.charge(stack, transfer.stored, 4, false, action.shouldSimulate());
+        return transfer;
+    }
 
-	@Override
-	public StoredEnergyStack removeEnergy(StoredEnergyStack transfer, ItemStack stack, ActionType action) {
-		IElectricItemManager manager = getManager(stack);
-		double charge = Math.min(transfer.stored, manager.getCharge(stack));
-		transfer.stored -= manager.discharge(stack, transfer.stored, 4, false, true, action.shouldSimulate());
-		return transfer;
-	}
+    @Override
+    public StoredEnergyStack removeEnergy(StoredEnergyStack transfer, ItemStack stack, ActionType action) {
+        IElectricItemManager manager = getManager(stack);
+        double charge = Math.min(transfer.stored, manager.getCharge(stack));
+        transfer.stored -= manager.discharge(stack, transfer.stored, 4, false, true, action.shouldSimulate());
+        return transfer;
+    }
 
-	@Override
-	public void getEnergy(StoredEnergyStack energyStack, ItemStack stack) {
-		IElectricItemManager manager = getManager(stack);
-		energyStack.setStorageValues((long) manager.getCharge(stack), (long) manager.getMaxCharge(stack));
-	}
+    @Override
+    public void getEnergy(StoredEnergyStack energyStack, ItemStack stack) {
+        IElectricItemManager manager = getManager(stack);
+        energyStack.setStorageValues((long) manager.getCharge(stack), (long) manager.getMaxCharge(stack));
+    }
 
-	@Override
-	public EnergyType getProvidedType() {
-		return EnergyType.EU;
-	}
+    @Override
+    public EnergyType getProvidedType() {
+        return EnergyType.EU;
+    }
 
 }

@@ -2,11 +2,8 @@ package sonar.core.handlers.inventories;
 
 import java.util.List;
 
-import appeng.api.AEApi;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
-import appeng.api.networking.storage.IStorageGrid;
-import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.me.GridAccessException;
@@ -20,9 +17,8 @@ import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.AE2Helper;
-import sonar.core.utils.SimpleProfiler;
 
-@InventoryHandler(modid = "appliedenergistics2", priority = 2)
+@InventoryHandler(modid = "appliedenergistics2", priority = 0)
 public class AE2InventoryProvider implements ISonarInventoryHandler {
 
 	@Override
@@ -34,8 +30,7 @@ public class AE2InventoryProvider implements ISonarInventoryHandler {
 	public StoredItemStack getStack(int slot, TileEntity tile, EnumFacing dir) {
 		IGridProxyable proxy = (IGridProxyable) tile;
 		try {
-			IStorageGrid storage = proxy.getProxy().getStorage();
-			IItemList<IAEItemStack> items = storage.getItemInventory().getStorageList();
+			IItemList<IAEItemStack> items = AE2Helper.getItemChannel(proxy.getProxy().getStorage()).getStorageList();
 			if (items == null) {
 				return null;
 			}
@@ -54,13 +49,11 @@ public class AE2InventoryProvider implements ISonarInventoryHandler {
 
 	@Override
 	public StorageSize getItems(List<StoredItemStack> storedStacks, TileEntity tile, EnumFacing dir) {
-		SimpleProfiler.start("ae2");
 		long maxStorage = 0;
 		IGridProxyable proxy = (IGridProxyable) tile;
 		try {
-			IStorageGrid storage = proxy.getProxy().getStorage();
-			IItemList<IAEItemStack> items = storage.getItemInventory().getStorageList();
-			if (items == null) {
+			IItemList<IAEItemStack> items = AE2Helper.getItemChannel(proxy.getProxy().getStorage()).getStorageList();
+			if (items == null || items.isEmpty()) {
 				return StorageSize.EMPTY;
 			}
 			for (IAEItemStack item : items) {
@@ -70,21 +63,14 @@ public class AE2InventoryProvider implements ISonarInventoryHandler {
 		} catch (GridAccessException e) {
 			e.printStackTrace();
 		}
-		SimpleProfiler.finishMicro("ae2");
 		return new StorageSize(maxStorage, maxStorage);
-	}
-
-	public IItemList<IAEItemStack> getItemList(TileEntity tile, EnumFacing dir) {
-		return ((IStorageMonitorable) tile).getItemInventory().getAvailableItems(AEApi.instance().storage().createItemList());
-		/* if (monitor != null) { IMEMonitor<IAEItemStack> stacks = monitor.getItemInventory(); IItemList<IAEItemStack> items = stacks.getAvailableItems(AEApi.instance().storage().createItemList()); return items; } return null; */
 	}
 
 	@Override
 	public StoredItemStack addStack(StoredItemStack add, TileEntity tile, EnumFacing dir, ActionType action) {
 		IGridProxyable proxy = (IGridProxyable) tile;
 		try {
-			IStorageGrid storage = proxy.getProxy().getStorage();
-			IAEItemStack stack = storage.getItemInventory().injectItems(AE2Helper.convertStoredItemStack(add), AE2Helper.getActionable(action), new MachineSource(((IActionHost) tile)));
+            IAEItemStack stack = AE2Helper.getItemChannel(proxy.getProxy().getStorage()).injectItems(AE2Helper.convertStoredItemStack(add), AE2Helper.getActionable(action), new MachineSource((IActionHost) tile));
 			if (stack == null || stack.getStackSize() == 0) {
 				return null;
 			}
@@ -99,8 +85,7 @@ public class AE2InventoryProvider implements ISonarInventoryHandler {
 	public StoredItemStack removeStack(StoredItemStack remove, TileEntity tile, EnumFacing dir, ActionType action) {
 		IGridProxyable proxy = (IGridProxyable) tile;
 		try {
-			IStorageGrid storage = proxy.getProxy().getStorage();
-			StoredItemStack stack = SonarAPI.getItemHelper().getStackToAdd(remove.stored, remove, AE2Helper.convertAEItemStack(storage.getItemInventory().extractItems(AE2Helper.convertStoredItemStack(remove), AE2Helper.getActionable(action), new MachineSource(((IActionHost) tile)))));
+            StoredItemStack stack = SonarAPI.getItemHelper().getStackToAdd(remove.stored, remove, AE2Helper.convertAEItemStack(AE2Helper.getItemChannel(proxy.getProxy().getStorage()).extractItems(AE2Helper.convertStoredItemStack(remove), AE2Helper.getActionable(action), new MachineSource((IActionHost) tile))));
 			if (stack == null || stack.getStackSize() == 0) {
 				return null;
 			}
@@ -111,9 +96,8 @@ public class AE2InventoryProvider implements ISonarInventoryHandler {
 		return remove;
 	}
 
-	@Override
-	public boolean isLargeInventory() {
-		return true;
-	}
-
+    @Override
+    public boolean isLargeInventory() {
+        return true;
+    }
 }

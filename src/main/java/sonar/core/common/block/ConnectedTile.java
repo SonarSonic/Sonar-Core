@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.google.common.collect.Lists;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -23,7 +22,7 @@ public abstract class ConnectedTile extends SonarMachineBlock implements IConnec
 		this.target = target;
 	}
 
-	public int target = 0;
+    public int target;
 	public static final PropertySonarFacing NORTH = PropertySonarFacing.create("north", EnumFacing.NORTH);
 	public static final PropertySonarFacing EAST = PropertySonarFacing.create("east", EnumFacing.EAST);
 	public static final PropertySonarFacing SOUTH = PropertySonarFacing.create("south", EnumFacing.SOUTH);
@@ -69,9 +68,9 @@ public abstract class ConnectedTile extends SonarMachineBlock implements IConnec
 
 				if (block2 instanceof IConnectedBlock) {
 					int[] connections2 = ((IConnectedBlock) block2).getConnections();
-					for (int i = 0; i < connections1.length; i++) {
-						for (int i2 = 0; i2 < connections2.length; i2++) {
-							if (connections1[i] == connections2[i2])
+                    for (int aConnections1 : connections1) {
+                        for (int aConnections2 : connections2) {
+                            if (aConnections1 == aConnections2)
 								return true;
 						}
 					}
@@ -79,23 +78,25 @@ public abstract class ConnectedTile extends SonarMachineBlock implements IConnec
 			}
 		}
 		return false;
-
 	}
 
+    @Override
 	public int getMetaFromState(IBlockState state) {
 		return 0;
 	}
 
+    @Override
 	@SideOnly(Side.CLIENT)
 	public IBlockState getStateForEntityRender(IBlockState state) {
 		return this.getDefaultState();
 	}
 
+    @Override
 	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState();
-
 	}
 
+    @Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess w, BlockPos pos) {
 		int x = pos.getX();
 		int y = pos.getY();
@@ -103,13 +104,13 @@ public abstract class ConnectedTile extends SonarMachineBlock implements IConnec
 		return state.withProperty(NORTH, checkBlockInDirection(w, x, y, z, EnumFacing.NORTH)).withProperty(SOUTH, checkBlockInDirection(w, x, y, z, EnumFacing.SOUTH)).withProperty(WEST, checkBlockInDirection(w, x, y, z, EnumFacing.WEST)).withProperty(EAST, checkBlockInDirection(w, x, y, z, EnumFacing.EAST)).withProperty(UP, checkBlockInDirection(w, x, y, z, EnumFacing.UP)).withProperty(DOWN, checkBlockInDirection(w, x, y, z, EnumFacing.DOWN));
 	}
 
+    @Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { NORTH, EAST, SOUTH, WEST, DOWN, UP });
+        return new BlockStateContainer(this, NORTH, EAST, SOUTH, WEST, DOWN, UP);
 	}
 
 	@Override
 	public int[] getConnections() {
 		return new int[] { target };
 	}
-
 }

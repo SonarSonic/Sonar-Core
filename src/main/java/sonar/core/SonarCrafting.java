@@ -1,91 +1,124 @@
 package sonar.core;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import sonar.core.common.block.StableStone.Variants;
 import sonar.core.integration.SonarLoader;
+import sonar.core.utils.SonarCompat;
 
 public class SonarCrafting extends SonarCore {
-
 	public static void registerCraftingRecipes() {
-		addShapeless(new ItemStack(SonarCore.reinforcedStoneBrick, 2), new Object[] { SonarCore.reinforcedStoneBlock, SonarCore.reinforcedStoneBlock });
-		addShapeless(new ItemStack(SonarCore.stableStone[0], 2), new Object[] { SonarCore.reinforcedStoneBrick, SonarCore.reinforcedStoneBrick });
+		ResourceLocation group = new ResourceLocation("SonarCore");
 
-		addShapeless(new ItemStack(SonarCore.stableGlass, 1), new Object[] { SonarCore.clearStableGlass });
-		addShapeless(new ItemStack(SonarCore.clearStableGlass, 1), new Object[] { SonarCore.stableGlass });
-		addShaped(new ItemStack(SonarCore.reinforcedStoneStairs, 4), new Object[] { "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedStoneBlock });
-		addShaped(new ItemStack(SonarCore.reinforcedStoneBrickStairs, 4), new Object[] { "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedStoneBrick });
-		addShaped(new ItemStack(SonarCore.reinforcedDirtStairs, 4), new Object[] { "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedDirtBlock });
-		addShaped(new ItemStack(SonarCore.reinforcedDirtBrickStairs, 4), new Object[] { "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedDirtBrick });
+		addShapeless(modid, group, new ItemStack(SonarCore.reinforcedStoneBrick, 2), fromBlock(SonarCore.reinforcedStoneBlock), fromBlock(SonarCore.reinforcedStoneBlock));
+		addShapeless(modid, group, new ItemStack(SonarCore.stableStone[0], 2), fromBlock(SonarCore.reinforcedStoneBrick), fromBlock(SonarCore.reinforcedStoneBrick));
 
-		addShapedOre(new ItemStack(SonarCore.reinforcedStoneFence, 6), new Object[] { "ASA", "ASA", "   ", 'A', SonarCore.reinforcedStoneBlock, 'S', "stickWood" });
-		addShapedOre(new ItemStack(SonarCore.reinforcedStoneBrickFence, 6), new Object[] { "ASA", "ASA", "   ", 'A', SonarCore.reinforcedStoneBrick, 'S', "stickWood" });
-		addShapedOre(new ItemStack(SonarCore.reinforcedDirtFence, 6), new Object[] { "ASA", "ASA", "   ", 'A', SonarCore.reinforcedDirtBlock, 'S', "stickWood" });
-		addShapedOre(new ItemStack(SonarCore.reinforcedDirtBrickFence, 6), new Object[] { "ASA", "ASA", "   ", 'A', SonarCore.reinforcedDirtBrick, 'S', "stickWood" });
+		addShapeless(modid, group, new ItemStack(SonarCore.stableGlass, 1), fromBlock(SonarCore.clearStableGlass));
+		addShapeless(modid, group, new ItemStack(SonarCore.clearStableGlass, 1), fromBlock(SonarCore.stableGlass));
+		addShaped(modid, group, new ItemStack(SonarCore.reinforcedStoneStairs, 4), "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedStoneBlock);
+		addShaped(modid, group, new ItemStack(SonarCore.reinforcedStoneBrickStairs, 4), "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedStoneBrick);
+		addShaped(modid, group, new ItemStack(SonarCore.reinforcedDirtStairs, 4), "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedDirtBlock);
+		addShaped(modid, group, new ItemStack(SonarCore.reinforcedDirtBrickStairs, 4), "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedDirtBrick);
+
+		addShapedOre(modid, new ItemStack(SonarCore.reinforcedStoneFence, 6), "ASA", "ASA", 'A', SonarCore.reinforcedStoneBlock, 'S', "stickWood");
+		addShapedOre(modid, new ItemStack(SonarCore.reinforcedStoneBrickFence, 6), "ASA", "ASA", 'A', SonarCore.reinforcedStoneBrick, 'S', "stickWood");
+		addShapedOre(modid, new ItemStack(SonarCore.reinforcedDirtFence, 6), "ASA", "ASA", 'A', SonarCore.reinforcedDirtBlock, 'S', "stickWood");
+		addShapedOre(modid, new ItemStack(SonarCore.reinforcedDirtBrickFence, 6), "ASA", "ASA", 'A', SonarCore.reinforcedDirtBrick, 'S', "stickWood");
+
+		addShapedOre(modid, new ItemStack(SonarCore.reinforcedStoneGate, 1), "SAS", "SAS", 'A', SonarCore.reinforcedStoneBlock, 'S', "stickWood");
+		addShapedOre(modid, new ItemStack(SonarCore.reinforcedStoneBrickGate, 1), "SAS", "SAS", 'A', SonarCore.reinforcedStoneBrick, 'S', "stickWood");
+		addShapedOre(modid, new ItemStack(SonarCore.reinforcedDirtGate, 1), "SAS", "SAS", 'A', SonarCore.reinforcedDirtBlock, 'S', "stickWood");
+		addShapedOre(modid, new ItemStack(SonarCore.reinforcedDirtBrickGate, 1), "SAS", "SAS", 'A', SonarCore.reinforcedDirtBrick, 'S', "stickWood");
+		// TODO add fence gates
 
 		for (int i = 0; i < 16; i++) {
-			addShaped(new ItemStack(SonarCore.stableStone[i], 8), new Object[] { "SSS", "SDS", "SSS", 'D', new ItemStack(Items.DYE, 1, Variants.values()[i].getDyeMeta()), 'S', new ItemStack(SonarCore.stableStone[0], 1) });
-			addShapeless(new ItemStack(stablestonerimmedBlock[i], 1), new Object[] { new ItemStack(stableStone[i], 1) });
-			addShapeless(new ItemStack(stablestonerimmedblackBlock[i], 1), new Object[] { new ItemStack(stablestonerimmedBlock[i], 1) });
-			addShapeless(new ItemStack(SonarCore.stableStone[i], 1), new Object[] { new ItemStack(SonarCore.stablestonerimmedblackBlock[i], 1) });
+			addShaped(modid, group, new ItemStack(SonarCore.stableStone[i], 8), "SSS", "SDS", "SSS", 'D', new ItemStack(Items.DYE, 1, Variants.values()[i].getDyeMeta()), 'S', new ItemStack(SonarCore.stableStone[0], 1));
+			addShapeless(modid, group, new ItemStack(stablestonerimmedBlock[i], 1), fromBlock(stableStone[i]));
+			addShapeless(modid, group, new ItemStack(stablestonerimmedblackBlock[i], 1), fromBlock(stablestonerimmedBlock[i]));
+			addShapeless(modid, group, new ItemStack(SonarCore.stableStone[i], 1), fromBlock(SonarCore.stablestonerimmedblackBlock[i]));
 		}
 
 		if (!SonarLoader.calculatorLoaded()) {
-			addShapelessOre(new ItemStack(SonarCore.reinforcedStoneBlock, 1), new Object[] { "cobblestone", "plankWood" });
-			addShapelessOre(new ItemStack(SonarCore.reinforcedStoneBlock, 4), new Object[] { "cobblestone", "logWood" });
-			addShapelessOre(new ItemStack(SonarCore.reinforcedDirtBlock, 1), new Object[] { Blocks.DIRT, "plankWood" });
-			addShapelessOre(new ItemStack(SonarCore.reinforcedDirtBlock, 4), new Object[] { Blocks.DIRT, "logWood" });
-			addShapeless(new ItemStack(SonarCore.reinforcedStoneBrick, 2), new Object[] { SonarCore.reinforcedStoneBlock, SonarCore.reinforcedStoneBlock });
-			addShapelessOre(new ItemStack(SonarCore.stableGlass, 2), new Object[] { "blockGlass", "blockGlass" });
-			addShapeless(new ItemStack(SonarCore.stableStone[0], 2), new Object[] { SonarCore.reinforcedStoneBrick, SonarCore.reinforcedStoneBrick });
-			addShapeless(new ItemStack(SonarCore.reinforcedDirtBrick, 2), new Object[] { SonarCore.reinforcedDirtBlock, SonarCore.reinforcedDirtBlock });
+			addShapelessOre(modid, new ItemStack(SonarCore.reinforcedStoneBlock, 1), "cobblestone", "plankWood");
+			addShapelessOre(modid, new ItemStack(SonarCore.reinforcedStoneBlock, 4), "cobblestone", "logWood");
+			addShapelessOre(modid, new ItemStack(SonarCore.reinforcedDirtBlock, 1), Blocks.DIRT, "plankWood");
+			addShapelessOre(modid, new ItemStack(SonarCore.reinforcedDirtBlock, 4), Blocks.DIRT, "logWood");
+			addShapelessOre(modid, new ItemStack(SonarCore.stableGlass, 2), "blockGlass", "blockGlass");
+			addShapeless(modid, group, new ItemStack(SonarCore.reinforcedDirtBrick, 2), fromBlock(SonarCore.reinforcedDirtBlock), fromBlock(SonarCore.reinforcedDirtBlock));
 		}
-
 	}
 
-	public static void addShaped(ItemStack result, Object... input) {
-		if (result != null && result.getItem() != null && input != null) {
+	public static ItemStack fromBlock(Block b) {
+		return new ItemStack(Item.getItemFromBlock(b), 1);
+	}
+
+	private static int recipeNumber;// TODO make a smarter recipe number?
+
+	public static void addShaped(String modid, ResourceLocation group, ItemStack result, Object... input) {
+		if (!SonarCompat.isEmpty(result) && input != null) {
 			try {
-				GameRegistry.addRecipe(result, input);
+				GameRegistry.addShapedRecipe(result, input);
 			} catch (Exception exception) {
 				logger.error("ERROR ADDING SHAPED RECIPE: " + result);
+				exception.printStackTrace();
 			}
 		}
 	}
 
-	public static void addShapedOre(ItemStack result, Object... input) {
-		if (result != null && result.getItem() != null && input != null) {
+	public static void addShapedOre(String modid, ItemStack result, Object... input) {
+		if (!SonarCompat.isEmpty(result) && input != null) {
 			try {
 				ShapedOreRecipe oreRecipe = new ShapedOreRecipe(result, input);
-				GameRegistry.addRecipe(oreRecipe);
+				GameRegistry.addShapedRecipe(result, input);
 			} catch (Exception exception) {
 				logger.error("ERROR ADDING SHAPED ORE RECIPE: " + result);
+				exception.printStackTrace();
 			}
 		}
 	}
 
-	public static void addShapeless(ItemStack result, Object... input) {
-		if (result != null && result.getItem() != null && input != null) {
+	public static void addShapeless(String modid, ResourceLocation group, ItemStack result, Object... input) {
+		if (!SonarCompat.isEmpty(result) && input != null) {
 			try {
 				GameRegistry.addShapelessRecipe(result, input);
 			} catch (Exception exception) {
 				logger.error("ERROR ADDING SHAPELESS RECIPE: " + result);
+				exception.printStackTrace();
 			}
 		}
 	}
 
-	public static void addShapelessOre(ItemStack result, Object... input) {
-		if (result != null && result.getItem() != null && input != null) {
+	public static void addShapelessOre(String modid, ItemStack result, Object... input) {
+		if (!SonarCompat.isEmpty(result) && input != null) {
 			try {
 				ShapelessOreRecipe oreRecipe = new ShapelessOreRecipe(result, input);
 				GameRegistry.addRecipe(oreRecipe);
 			} catch (Exception exception) {
 				logger.error("ERROR ADDING SHAPELESS ORE RECIPE: " + result);
+				exception.printStackTrace();
 			}
 		}
+	}
+
+	public static void registerForgeRecipe(ResourceLocation location, IRecipe recipe) {
+		try {
+			GameRegistry.addRecipe(recipe);
+		} catch (Exception exception) {
+			logger.error("ERROR ADDING ABSTRACT FORGE RECIPE: " + location);
+			exception.printStackTrace();
+		}
+	}
+
+	public static ResourceLocation getRecipeResourceLocation(String modid, ItemStack result) {
+		return new ResourceLocation(modid, result.getUnlocalizedName() + recipeNumber++);
 	}
 }

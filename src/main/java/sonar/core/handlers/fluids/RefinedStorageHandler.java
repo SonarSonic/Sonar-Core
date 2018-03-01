@@ -27,7 +27,7 @@ public class RefinedStorageHandler implements ISonarFluidHandler {
 	@Override
 	public StoredFluidStack addStack(StoredFluidStack add, TileEntity tile, EnumFacing dir, ActionType action) {
 		INetworkNode node = (INetworkNode) tile;
-		INetworkMaster network = node.getNetwork();
+        INetworkMaster network = node.getNetwork();
 		if (network != null) {
 			int toAdd = (int) Math.min(Integer.MAX_VALUE, add.stored);
 			FluidStack stack = network.insertFluid(add.getFullStack(), toAdd, action.shouldSimulate());
@@ -60,5 +60,4 @@ public class RefinedStorageHandler implements ISonarFluidHandler {
 		}
 		return new StorageSize(0, 0); // doesn't show storage yet
 	}
-
 }

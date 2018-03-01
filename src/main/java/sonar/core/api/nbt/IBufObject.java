@@ -5,8 +5,7 @@ import sonar.core.api.IRegistryObject;
 
 public interface IBufObject<T> extends IRegistryObject, INBTObject<T> {
 
-	public void readFromBuf(ByteBuf buf);
+    void readFromBuf(ByteBuf buf);
 
-	public void writeToBuf(ByteBuf buf);
-
+    void writeToBuf(ByteBuf buf);
 }

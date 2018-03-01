@@ -10,21 +10,19 @@ import net.minecraft.util.ResourceLocation;
 
 public interface ISonarCustomRenderer extends ItemMeshDefinition {
 
-	public ModelResourceLocation getBlockModelResourceLocation();
+    ModelResourceLocation getBlockModelResourceLocation();
 
-	public Block getBlock();
+    Block getBlock();
 
-	public boolean hasStaticRendering();
+    boolean hasStaticRendering();
 
-	public TextureAtlasSprite getIcon();
+    TextureAtlasSprite getIcon();
 
-	public boolean doInventoryRendering();
+    boolean doInventoryRendering();
 
 	//public TileEntity getTileEntity();
 
-	public ArrayList<ResourceLocation> getAllTextures();
-
-	
+    ArrayList<ResourceLocation> getAllTextures();
 	
 	//public void renderWorldBlock(Tessellator tessellator, World world, BlockPos pos, double x, double y, double z, IBlockState state, Block block, TileEntity tile, boolean dynamicRender, float partialTick, int destroyStage);
 

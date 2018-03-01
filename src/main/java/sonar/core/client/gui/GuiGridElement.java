@@ -1,16 +1,15 @@
 package sonar.core.client.gui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
-
-import com.google.common.collect.Lists;
 
 import sonar.core.utils.Pair;
 
 public abstract class GuiGridElement<T> {
 
-	public List<T> gridList = Lists.newArrayList();
+	public List<T> gridList = new ArrayList<>();
 	public int yPos, xPos;
 	public int eWidth, eHeight;
 	public int gWidth, gHeight;
@@ -52,9 +51,7 @@ public abstract class GuiGridElement<T> {
 	}
 
 	public boolean isScrollable() {
-		if (getGridSize() <= (gWidth * gHeight))
-			return false;
-		return true;
+		return getGridSize() > gWidth * gHeight;
 	}
 
 	public void renderGrid(GuiSonar gui, int x, int y) {
@@ -63,7 +60,7 @@ public abstract class GuiGridElement<T> {
 		}
 		int start = (int) (gridList.size() / gWidth * getCurrentScroll());
 		int i = start * gWidth;
-		int finish = Math.min(i + (gWidth * gHeight), gridList.size());
+		int finish = Math.min(i + gWidth * gHeight, gridList.size());
 		int X = (x - gui.getGuiLeft() - xPos) / eWidth;
 		int Y = (y - gui.getGuiTop() - yPos) / eHeight;
 
@@ -81,8 +78,8 @@ public abstract class GuiGridElement<T> {
 		}
 		postRender();
 
-		if (x - gui.getGuiLeft() >= xPos && x - gui.getGuiLeft() <= xPos + (gWidth * eWidth) && y - gui.getGuiTop() >= yPos && y - gui.getGuiTop() <= yPos + (gHeight * eHeight)) {
-			int pos = (start * gWidth) + X + ((Y) * gWidth);
+		if (x - gui.getGuiLeft() >= xPos && x - gui.getGuiLeft() <= xPos + gWidth * eWidth && y - gui.getGuiTop() >= yPos && y - gui.getGuiTop() <= yPos + gHeight * eHeight) {
+			int pos = start * gWidth + X + Y * gWidth;
 			if (pos < gridList.size()) {
 				renderElementToolTip(gridList.get(pos), x - gui.getGuiLeft(), y - gui.getGuiTop());
 			}
@@ -95,8 +92,8 @@ public abstract class GuiGridElement<T> {
 		int start = (int) (gridList.size() / gWidth * getCurrentScroll());
 		int X = (x - gui.getGuiLeft() - xPos) / eWidth;
 		int Y = (y - gui.getGuiTop() - yPos) / eHeight;
-		if (x - gui.getGuiLeft() >= xPos && x - gui.getGuiLeft() <= xPos + (gWidth * eWidth) && y - gui.getGuiTop() >= yPos && y - gui.getGuiTop() <= yPos + (gHeight * eHeight)) {
-			int i = (start * gWidth) + (gWidth * Y) + X;
+		if (x - gui.getGuiLeft() >= xPos && x - gui.getGuiLeft() <= xPos + gWidth * eWidth && y - gui.getGuiTop() >= yPos && y - gui.getGuiTop() <= yPos + gHeight * eHeight) {
+			int i = start * gWidth + gWidth * Y + X;
 			if (i < gridList.size()) {
 				T e = gridList.get(i);
 				if (e != null) {

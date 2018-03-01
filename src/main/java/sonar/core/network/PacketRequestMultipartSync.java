@@ -47,7 +47,7 @@ public class PacketRequestMultipartSync extends PacketCoords<PacketRequestMultip
 		@Override
 		public IMessage processMessage(EntityPlayer player, MessageContext ctx, PacketRequestMultipartSync message, TileEntity tile) {
 			if (!tile.getWorld().isRemote) {
-				SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
+				SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(new Runnable() {
 					public void run() {
 						IMultipartContainer container = MultipartHelper.getPartContainer(tile.getWorld(), tile.getPos());
 						if (container != null) {

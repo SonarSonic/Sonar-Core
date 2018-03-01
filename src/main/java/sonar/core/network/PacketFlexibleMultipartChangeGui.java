@@ -44,7 +44,7 @@ public class PacketFlexibleMultipartChangeGui extends PacketMultipart {
 			if (!(part instanceof IFlexibleGui)) {
 				return null;
 			}
-			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
+			SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(new Runnable() {
 				public void run() {
 					EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 					SonarCore.instance.guiHandler.lastID.put(player, message.returnID);

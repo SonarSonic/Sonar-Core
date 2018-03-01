@@ -3,4 +3,3 @@ package sonar.core.api.upgrades;
 
 import net.minecraftforge.fml.common.API;
 import sonar.core.api.SonarAPI;
-

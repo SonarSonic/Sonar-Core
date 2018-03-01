@@ -62,5 +62,4 @@ public class SyncGeneric<T extends IBufObject> extends SyncPart {
 	public String toString() {
 		return c.toString();
 	}
-
 }

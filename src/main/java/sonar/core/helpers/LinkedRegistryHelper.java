@@ -6,8 +6,8 @@ import sonar.core.SonarCore;
 
 public abstract class LinkedRegistryHelper<S, P> {
 
-	private LinkedHashMap<S, P> objects = new LinkedHashMap<S, P>();
-	private LinkedHashMap<P, S> objectsReversed = new LinkedHashMap<P, S>();
+    private LinkedHashMap<S, P> objects = new LinkedHashMap<>();
+    private LinkedHashMap<P, S> objectsReversed = new LinkedHashMap<>();
 
 	public abstract void register();
 
@@ -51,7 +51,6 @@ public abstract class LinkedRegistryHelper<S, P> {
 				SonarCore.logger.info("Loaded " + registeryType() + ": " + primaryToString(primary) + " = " + secondaryToString(secondary));
 			} else {
 				SonarCore.logger.warn(registeryType() + " wasn't loadable: " + primaryToString(primary) + " = " + secondaryToString(secondary));
-				return;
 			}
 		} catch (Exception exception) {
 			SonarCore.logger.warn(registeryType() + " : Exception Loading Helper: " + exception.getMessage());

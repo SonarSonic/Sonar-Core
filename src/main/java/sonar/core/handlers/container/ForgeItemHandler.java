@@ -35,5 +35,4 @@ public class ForgeItemHandler implements ISonarEnergyContainerHandler {
 	public EnergyType getProvidedType() {
 		return EnergyType.FE;
 	}
-
 }

@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface ILocalisationHandler {
 
-	public List<Localisation> getLocalisations(List<Localisation> current);
-	
+    List<Localisation> getLocalisations(List<Localisation> current);
+
 }

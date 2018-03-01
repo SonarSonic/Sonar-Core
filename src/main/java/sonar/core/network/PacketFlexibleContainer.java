@@ -14,8 +14,7 @@ public class PacketFlexibleContainer implements IMessage {
 	public Container container;
 	public ByteBuf buf;
 
-	public PacketFlexibleContainer() {
-	}
+	public PacketFlexibleContainer() {}
 
 	public PacketFlexibleContainer(EntityPlayer player) {
 		this.container = player.openContainer;
@@ -28,7 +27,7 @@ public class PacketFlexibleContainer implements IMessage {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		this.buf = buf;
+		this.buf = buf.retain();
 	}
 
 	@Override
@@ -42,22 +41,18 @@ public class PacketFlexibleContainer implements IMessage {
 
 		@Override
 		public IMessage onMessage(PacketFlexibleContainer message, MessageContext ctx) {
-			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
-				@Override
-				public void run() {
-					EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
-					Container container = player.openContainer;
-					if (container != null && container instanceof IFlexibleContainer) {
-						if (container instanceof IFlexibleContainer.Syncable) {
-							((IFlexibleContainer.Syncable) container).readState(message.buf);
-						}
-						((IFlexibleContainer) container).refreshState();
+			SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(() -> {
+				EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
+				Container container = player.openContainer;
+				if (container != null && container instanceof IFlexibleContainer) {
+					if (container instanceof IFlexibleContainer.Syncable) {
+						((IFlexibleContainer.Syncable) container).readState(message.buf);
 					}
+					((IFlexibleContainer) container).refreshState();
 				}
+				message.buf.release();
 			});
 			return null;
 		}
-
 	}
-
 }

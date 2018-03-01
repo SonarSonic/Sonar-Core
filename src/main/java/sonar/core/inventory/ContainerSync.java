@@ -1,7 +1,7 @@
 package sonar.core.inventory;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.SonarCore;
@@ -11,20 +11,20 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.PacketTileSync;
 import sonar.core.utils.IWorldPosition;
 
-public abstract class ContainerSync extends Container {
+public class ContainerSync extends ContainerSonar {
 
 	SyncType[] types = new SyncType[] { SyncType.DEFAULT_SYNC };
 	public INBTSyncable sync;
 	public IWorldPosition tile;
 
-	public ContainerSync(INBTSyncable sync, TileEntitySonar tile) {
+	public ContainerSync(INBTSyncable sync, IWorldPosition tile) {
 		this.sync = sync;
 		this.tile = tile;
 	}
 
 	public ContainerSync(TileEntitySonar tile) {
 		if (tile instanceof INBTSyncable) {
-			sync = (INBTSyncable) tile;
+            sync = tile;
 		}
 		this.tile = tile;
 	}
@@ -60,6 +60,11 @@ public abstract class ContainerSync extends Container {
 	}
 
 	public boolean syncInventory() {
+		return true;
+	}
+
+	@Override
+	public boolean canInteractWith(EntityPlayer playerIn) {
 		return true;
 	}
 }

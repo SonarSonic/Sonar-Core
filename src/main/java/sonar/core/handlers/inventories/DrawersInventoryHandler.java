@@ -8,14 +8,17 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.StorageSize;
 import sonar.core.api.asm.InventoryHandler;
 import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
+import sonar.core.utils.SonarCompat;
 
-@InventoryHandler(modid="StorageDrawers", priority = 2)
+@InventoryHandler(modid = "StorageDrawers", priority = 0)
 public class DrawersInventoryHandler implements ISonarInventoryHandler {
 
 	@Override
@@ -29,8 +32,8 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
 			IDrawerGroup drawers = (IDrawerGroup) tile;
 			if (slot < drawers.getDrawerCount()) {
 				IDrawer draw = drawers.getDrawer(slot);
-				ItemStack item = draw.getStoredItemCopy();
-				if (item != null) {
+				ItemStack item = draw.getStoredItemPrototype();
+				if (!SonarCompat.isEmpty(item)) {
 					return new StoredItemStack(item);
 				} else {
 					return null;
@@ -50,10 +53,10 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
 			for (int i = 0; i < drawers.getDrawerCount(); i++) {
 				if (drawers.getDrawer(i) != null) {
 					IDrawer draw = drawers.getDrawer(i);					
-					ItemStack item = draw.getStoredItemCopy();
+					ItemStack item = draw.getStoredItemPrototype();
 					maxStorage+=draw.getMaxCapacity();
 					stored+=draw.getStoredItemCount();
-					if (item != null){						
+					if (!SonarCompat.isEmpty(item)){						
 						SonarAPI.getItemHelper().addStackToList(storedStacks, new StoredItemStack(item, draw.getStoredItemCount()));
 					}
 				}
@@ -74,16 +77,18 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
 	 */
 	@Override
 	public StoredItemStack addStack(StoredItemStack add, TileEntity tile, EnumFacing dir, ActionType action) {
-		return add;
+		IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir);
+        return ItemHandlerHandler.addStack(add, handler, dir, action);
 	}
 
 	@Override
 	public StoredItemStack removeStack(StoredItemStack remove, TileEntity tile, EnumFacing dir, ActionType action) {
-		return remove;
+		IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir);
+        return ItemHandlerHandler.removeStack(remove, handler, dir, action);
 	}
 
-	@Override
-	public boolean isLargeInventory() {
-		return false;
-	}
+    @Override
+    public boolean isLargeInventory() {
+        return false;
+    }
 }

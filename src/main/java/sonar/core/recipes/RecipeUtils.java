@@ -1,5 +1,6 @@
 package sonar.core.recipes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -13,13 +14,15 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import sonar.core.helpers.SonarHelper;
+import sonar.core.utils.SonarCompat;
 
 public class RecipeUtils {
 
 	public static List<ItemStack> addStack(List<ItemStack> stacks, ItemStack stack) {
 		if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
 			for (int i = 0; i <= stack.getMaxDamage(); i++) {
-				stacks.add(new ItemStack(stack.getItem(), stack.stackSize, i));
+				stacks.add(new ItemStack(stack.getItem(), SonarCompat.getCount(stack), i));
 			}
 		} else {
 			stacks.add(stack);
@@ -35,33 +38,33 @@ public class RecipeUtils {
 	}
 
 	public static List<List<ItemStack>> configureStacks(IRecipe recipe) {
-		List<List<ItemStack>> stacks = Lists.newArrayList(Lists.newArrayList(), Lists.newArrayList(), Lists.newArrayList(), Lists.newArrayList(), Lists.newArrayList(), Lists.newArrayList(), Lists.newArrayList(), Lists.newArrayList(), Lists.newArrayList());
+        List<List<ItemStack>> stacks = Lists.newArrayList(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
 		if (recipe instanceof ShapedRecipes) {
-			ItemStack[] shaped = ((ShapedRecipes) recipe).recipeItems;
+           ItemStack[] shaped = ((ShapedRecipes) recipe).recipeItems;
 			int i = 0;
-			for (ItemStack stack : shaped) {
-				stacks.set(i, addStack(Lists.newArrayList(), stack.copy()));
+            for (ItemStack stack : shaped) {
+                //stacks.set(i, addStack(new ArrayList<>(), stack.copy()));
 				i++;
 			}
 		} else if (recipe instanceof ShapelessRecipes) {
-			ShapelessRecipes shaped = (ShapelessRecipes) recipe;
+			List<ItemStack> shapeless = ((ShapelessRecipes) recipe).recipeItems;
 			int i = 0;
-			for (ItemStack stack : shaped.recipeItems) {
-				stacks.set(i, addStack(Lists.newArrayList(), stack.copy()));
+            for (ItemStack stack : shapeless) {
+                //stacks.set(i, addStack(new ArrayList<>(), stack.copy()));
 				i++;
 			}
 		} else if (recipe instanceof ShapedOreRecipe) {
 			ShapedOreRecipe oreRecipe = (ShapedOreRecipe) recipe;
 			int i = 0;
-			for (Object obj : oreRecipe.getInput()) {
+            for (Object obj : oreRecipe.getInput()) {//was getInput
 				stacks.set(i, getListFromObject(obj));
 				i++;
 			}
 		} else if (recipe instanceof ShapelessOreRecipe) {
 			ShapelessOreRecipe oreRecipe = (ShapelessOreRecipe) recipe;
 			int i = 0;
-			for (Object obj : oreRecipe.getInput()) {
+            for (Object obj : oreRecipe.getInput()) {//was getInput
 				stacks.set(i, getListFromObject(obj));
 				i++;
 			}
@@ -71,16 +74,16 @@ public class RecipeUtils {
 
 	public static List<ItemStack> getListFromObject(Object obj) {
 		if (obj instanceof List) {
-			return addStacks(Lists.newArrayList(), (List<ItemStack>) obj);
+            return addStacks(new ArrayList<>(), (List<ItemStack>) obj);
 		} else if (obj instanceof ItemStack) {
-			return addStack(Lists.newArrayList(), ((ItemStack) obj).copy());
+            return addStack(new ArrayList<>(), ((ItemStack) obj).copy());
 		} else if (obj instanceof Item) {
 			return Lists.newArrayList(new ItemStack((Item) obj));
 		} else if (obj instanceof Block) {
-			return addStack(Lists.newArrayList(), new ItemStack((Block) obj, 1, OreDictionary.WILDCARD_VALUE));
+            return addStack(new ArrayList<>(), new ItemStack((Block) obj, 1, OreDictionary.WILDCARD_VALUE));
 		} else if (obj instanceof String) {
-			return addStacks(Lists.newArrayList(), OreDictionary.getOres((String) obj));
+            return addStacks(new ArrayList<>(), OreDictionary.getOres((String) obj));
 		}
-		return Lists.newArrayList();
+        return new ArrayList<>();
 	}
 }

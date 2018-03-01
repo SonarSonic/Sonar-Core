@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.utils.ISpecialTooltip;
@@ -23,16 +24,11 @@ public class SonarBlockTip extends ItemBlock {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
-		super.addInformation(stack, player, list, par4);
-		if (stack.hasTagCompound() && Block.getBlockFromItem(stack.getItem()) instanceof ISpecialTooltip) {
-			ISpecialTooltip tooltip = (ISpecialTooltip) Block.getBlockFromItem(stack.getItem());
-			tooltip.addSpecialToolTip(stack, player, list);
-		}
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
+        super.addInformation(stack, player, list, par4);
 		if (Block.getBlockFromItem(stack.getItem()) instanceof ISpecialTooltip) {
 			ISpecialTooltip tooltip = (ISpecialTooltip) Block.getBlockFromItem(stack.getItem());
-			tooltip.standardInfo(stack, player, list);
-
+            tooltip.addSpecialToolTip(stack, player.getEntityWorld(), list, stack.getTagCompound());
 		}
 	}
 }

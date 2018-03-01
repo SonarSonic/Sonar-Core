@@ -12,8 +12,9 @@ import sonar.core.api.asm.InventoryHandler;
 import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
+import sonar.core.utils.SonarCompat;
 
-@InventoryHandler(modid = "sonarcore", priority = 3)
+@InventoryHandler(modid = "sonarcore", priority = 0)
 public class DSUInventoryHandler implements ISonarInventoryHandler {
 
 	@Override
@@ -50,10 +51,10 @@ public class DSUInventoryHandler implements ISonarInventoryHandler {
 	public StoredItemStack addStack(StoredItemStack add, TileEntity tile, EnumFacing dir, ActionType action) {
 		IDeepStorageUnit inv = (IDeepStorageUnit) tile;
 		ItemStack stack = inv.getStoredItemType();
-		if (stack != null) {
+		if (!SonarCompat.isEmpty(stack)) {
 			if (add.equalStack(stack)) {
 				long max = inv.getMaxStoredCount();
-				long storedItems = stack.stackSize;
+				long storedItems = SonarCompat.getCount(stack);
 				if (max == storedItems) {
 					return add;
 				}
@@ -66,7 +67,7 @@ public class DSUInventoryHandler implements ISonarInventoryHandler {
 					return new StoredItemStack(add.getItemStack(), remove);
 				} else {
 					if (!action.shouldSimulate())
-						inv.setStoredItemCount(stack.stackSize + (int) add.getStackSize());
+						inv.setStoredItemCount(SonarCompat.getCount(stack) + (int) add.getStackSize());
 					return null;
 				}
 			}
@@ -84,24 +85,23 @@ public class DSUInventoryHandler implements ISonarInventoryHandler {
 		IDeepStorageUnit inv = (IDeepStorageUnit) tile;
 		ItemStack stack = inv.getStoredItemType();
 		if (remove.equalStack(stack)) {
-			if (remove.getStackSize() >= stack.stackSize) {
+			if (remove.getStackSize() >= SonarCompat.getCount(stack)) {
 				stack = stack.copy();
-				remove.stored -= stack.stackSize;
+				remove.stored -= SonarCompat.getCount(stack);
 				if (!action.shouldSimulate())
 					inv.setStoredItemCount(0);
 				return remove;
 			} else {
 				if (!action.shouldSimulate())
-					inv.setStoredItemCount(stack.stackSize - (int) remove.getStackSize());
+					inv.setStoredItemCount(SonarCompat.getCount(stack) - (int) remove.getStackSize());
 				return null;
 			}
 		}
 		return remove;
 	}
 
-	@Override
-	public boolean isLargeInventory() {
-		return false; //it's only one stack so not really a large inventory.
-	}
-
+    @Override
+    public boolean isLargeInventory() {
+        return false; //it's only one stack so not really a large inventory.
+    }
 }

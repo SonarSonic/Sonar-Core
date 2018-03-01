@@ -5,30 +5,28 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class PlayerListener implements ISonarListener {
 
-	public EntityPlayerMP player;
+    public EntityPlayerMP player;
+    //public ListenerList<PlayerListener> source;
 
-	public PlayerListener(EntityPlayer player) {
-		this((EntityPlayerMP)player);
-	}
-	
-	public PlayerListener(EntityPlayerMP player) {
-		this.player = player;
-	}
+    public PlayerListener(EntityPlayer player) {
+        this((EntityPlayerMP) player);
+    }
 
-	@Override
-	public boolean isValid() {
-		return !player.isDead;// TODO
-	}
+    public PlayerListener(EntityPlayerMP player) {
+        this.player = player;
+    }
 
-	public int hashCode() {
-		return player.hashCode();
-	}
+    @Override
+    public boolean isValid() {
+        return !player.isDead;// TODO
+    }
 
-	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof PlayerListener) {
-			return player.equals(((PlayerListener) obj).player);
-		}
-		return false;
-	}
+    public int hashCode() {
+        return player.hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        return obj != null && obj instanceof PlayerListener && player.equals(((PlayerListener) obj).player);
+    }
 
 }

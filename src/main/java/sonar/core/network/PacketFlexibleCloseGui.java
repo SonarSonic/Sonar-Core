@@ -10,7 +10,8 @@ import sonar.core.SonarCore;
 
 public class PacketFlexibleCloseGui extends PacketCoords {
 	
-	public PacketFlexibleCloseGui() {}
+    public PacketFlexibleCloseGui() {
+    }
 
 	public PacketFlexibleCloseGui(BlockPos pos) {
 		super(pos);
@@ -19,11 +20,9 @@ public class PacketFlexibleCloseGui extends PacketCoords {
 	public static class Handler implements IMessageHandler<PacketFlexibleCloseGui, IMessage> {
 		@Override
 		public IMessage onMessage(PacketFlexibleCloseGui message, MessageContext ctx) {
-			SonarCore.proxy.getThreadListener(ctx).addScheduledTask(new Runnable() {
-				public void run() {
+            SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(() -> {
 					EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 					FlexibleGuiHandler.closeGui(player, ctx.side);
-				}
 			});
 			if (ctx.side == Side.SERVER) {
 				return new PacketFlexibleCloseGui(message.pos);
@@ -31,5 +30,4 @@ public class PacketFlexibleCloseGui extends PacketCoords {
 			return null;
 		}
 	}
-
 }

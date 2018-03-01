@@ -26,10 +26,12 @@ public class DefaultSonarRecipe implements ISonarRecipe {
 		return recipeOutputs;
 	}
 
+    @Override
 	public boolean matchingInputs(Object[] inputs) {
 		return RecipeHelperV2.matchingIngredients(RecipeObjectType.INPUT, recipeInputs, shapeless, inputs);
 	}
 
+    @Override
 	public boolean matchingOutputs(Object[] outputs) {
 		return RecipeHelperV2.matchingIngredients(RecipeObjectType.OUTPUT, recipeOutputs, shapeless, outputs);
 	}

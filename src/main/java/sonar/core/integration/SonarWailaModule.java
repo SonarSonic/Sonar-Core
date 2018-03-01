@@ -1,8 +1,7 @@
 package sonar.core.integration;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -18,10 +17,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import sonar.core.common.tileentity.TileEntitySonar;
 
-/** Integrations with WAILA - Registers all HUDs */
+/**
+ * Integrations with WAILA - Registers all HUDs
+ */
 public class SonarWailaModule {
 
-	public static List<String> FMPProviders = Lists.newArrayList();
+    public static List<String> FMPProviders = new ArrayList<>();
 
 	public static void register() {
 		ModuleRegistrar.instance().registerBodyProvider(new HUDSonar(), TileEntitySonar.class);
@@ -78,12 +79,11 @@ public class SonarWailaModule {
 		public List<String> getWailaTail(ItemStack arg0, List<String> currenttip, IWailaDataAccessor arg2, IWailaConfigHandler config) {
 			return currenttip;
 		}
-
-
 	}
 
 	public static class HUDSonarFMP implements IWailaFMPProvider {
 
+        @Override
 		public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaFMPAccessor accessor, IWailaConfigHandler config) {
 			Object handler = accessor.getTileEntity();
 			/*
@@ -99,14 +99,14 @@ public class SonarWailaModule {
 			return currenttip;
 		}
 
+        @Override
 		public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaFMPAccessor accessor, IWailaConfigHandler config) {
 			return currenttip;
 		}
 
+        @Override
 		public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaFMPAccessor accessor, IWailaConfigHandler config) {
 			return currenttip;
 		}
-
-
 	}
 }

@@ -17,18 +17,21 @@ public class SonarMetaItem extends SonarItem {
 		this.hasSubtypes = true;
 	}
 
+	@Override
 	public int getMaxDamage() {
 		return 0;
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, List list) {
+	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
 		for (int i = 0; i < numSubItems; i++) {
-			list.add(new ItemStack(this, 1, i));
+			list.add(new ItemStack(item, 1, i));
 		}
 	}
 
+	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		return getUnlocalizedName() + "." + stack.getItemDamage();
+		return getUnlocalizedName() + '.' + stack.getItemDamage();
 	}
 }

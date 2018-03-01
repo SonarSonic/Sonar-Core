@@ -5,6 +5,6 @@ import sonar.core.common.item.InventoryItem;
 
 public interface IItemInventory {
 	
-	public InventoryItem getInventory(ItemStack stack);		
+    InventoryItem getInventory(ItemStack stack);
 }
 

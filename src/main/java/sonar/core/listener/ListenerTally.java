@@ -4,9 +4,9 @@ import sonar.core.helpers.ListHelper;
 
 public class ListenerTally<T extends ISonarListener> {
 
-	public ListenerList<T> source;
 	public T listener;
 	public int[] tallies;
+	public ListenerList<T> source;
 
 	public ListenerTally(ListenerList<T> source, T listener, int types) {
 		this.source = source;
@@ -17,27 +17,17 @@ public class ListenerTally<T extends ISonarListener> {
 	public int getTally(int type) {
 		return tallies[type];
 	}
-	
-	/**make sure you update the lists state!*/
-	public void addTallies(int amount, Enum...enums) {
-		addTallies(amount, ListHelper.getOrdinals(enums));
+
+	public int getTally(Enum type) {
+		return getTally(type.ordinal());
 	}
 
-	/**make sure you update the lists state!*/
-	public void addTallies(int amount, int...types) {
-		for (int type : types)
-			tallies[type] += amount;
+	public boolean hasTally(Enum type) {
+		return getTally(type) > 0;
 	}
 
-	/**make sure you update the lists state!*/
-	public void removeTallies(int amount, Enum...enums) {
-		removeTallies(amount, ListHelper.getOrdinals(enums));		
-	}
-
-	/**make sure you update the lists state!*/
-	public void removeTallies(int amount, int...types) {
-		for (int type : types)
-			tallies[type] -= amount;
+	public boolean hasTally(int type) {
+		return getTally(type) > 0;
 	}
 
 	public boolean isValid() {
@@ -58,9 +48,28 @@ public class ListenerTally<T extends ISonarListener> {
 	}
 
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof ListenerTally) {
-			return listener.equals(((ListenerTally) obj).listener);
-		}
-		return false;
+		return obj != null && obj instanceof ListenerTally && listener.equals(((ListenerTally) obj).listener);
+	}
+
+	/** make sure you update the lists state! */
+	public void addTallies(int amount, Enum... enums) {
+		addTallies(amount, ListHelper.getOrdinals(enums));
+	}
+
+	/** make sure you update the lists state! */
+	public void addTallies(int amount, int... types) {
+		for (int type : types)
+			tallies[type] += amount;
+	}
+
+	/** make sure you update the lists state! */
+	public void removeTallies(int amount, Enum... enums) {
+		removeTallies(amount, ListHelper.getOrdinals(enums));
+	}
+
+	/** make sure you update the lists state! */
+	public void removeTallies(int amount, int... types) {
+		for (int type : types)
+			tallies[type] -= amount;
 	}
 }

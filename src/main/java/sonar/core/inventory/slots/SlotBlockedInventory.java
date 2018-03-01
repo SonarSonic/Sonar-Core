@@ -4,8 +4,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import sonar.core.utils.SonarCompat;
 
-/** a slot which doesn't allow Item Stacks to be placed in it */
+/**
+ * a slot which doesn't allow Item Stacks to be placed in it
+ */
 public class SlotBlockedInventory extends Slot {
 	private int stackSize;
 
@@ -21,9 +24,8 @@ public class SlotBlockedInventory extends Slot {
 	@Override
 	public ItemStack decrStackSize(int size) {
 		if (getHasStack()) {
-			this.stackSize += Math.min(size, getStack().stackSize);
+			this.stackSize += Math.min(size, SonarCompat.getCount(getStack()));
 		}
-
 		return super.decrStackSize(size);
 	}
 

@@ -24,11 +24,9 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.api.SonarAPI;
@@ -37,7 +35,6 @@ import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.nbt.INBTSyncable;
-import sonar.core.common.block.SonarBlockTip;
 import sonar.core.energy.DischargeValues;
 import sonar.core.helpers.ASMLoader;
 import sonar.core.helpers.NBTHelper.SyncType;
@@ -66,15 +63,15 @@ import sonar.core.network.PacketTileSyncUpdate;
 import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.registries.EnergyTypeRegistry;
-import sonar.core.registries.ISonarRegistryBlock;
-import sonar.core.registries.ISonarRegistryItem;
 import sonar.core.upgrades.MachineUpgradeRegistry;
 
-@Mod(modid = SonarCore.modid, name = "SonarCore", version = SonarCore.version)
+@Mod(modid = SonarCore.modid, name = SonarCore.name, version = SonarCore.version, acceptedMinecraftVersions = SonarCore.mc_versions)
 public class SonarCore {
 
+	public static final String name = "SonarCore";
 	public static final String modid = "sonarcore";
-	public static final String version = "3.3.0";
+	public static final String version = "5.0.6";
+	public static final String mc_versions = "[1.12,1.12.2]";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
@@ -109,7 +106,7 @@ public class SonarCore {
 	public static Block reinforcedStoneSlab_double, reinforcedStoneBrickSlab_double, reinforcedDirtSlab_double, reinforcedDirtBrickSlab_double;
 
 	public static Block black_dev_block, white_dev_block;
-	
+
 	public static final Random rand = new Random();
 
 	public static CreativeTabs tab = new CreativeTabs("SonarCore") {
@@ -121,9 +118,9 @@ public class SonarCore {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		logger.info("Initilising API");
+		logger.info("Initialising API");
 		SonarAPI.init();
-		logger.info("Initilised API");
+		logger.info("Initialised API");
 
 		logger.info("Registering Blocks");
 		SonarBlocks.registerBlocks();
@@ -186,11 +183,6 @@ public class SonarCore {
 		proxy.postLoad(event);
 	}
 
-	@EventHandler
-	public void serverClose(FMLServerStoppingEvent event) {
-		proxy.serverClose(event);
-	}
-
 	private void registerPackets() {
 		if (network == null) {
 			network = NetworkRegistry.INSTANCE.newSimpleChannel("Sonar-Packets");
@@ -203,14 +195,13 @@ public class SonarCore {
 			network.registerMessage(PacketStackUpdate.Handler.class, PacketStackUpdate.class, 7, Side.CLIENT);
 			network.registerMessage(PacketInvUpdate.Handler.class, PacketInvUpdate.class, 8, Side.CLIENT);
 			network.registerMessage(PacketTileSyncUpdate.Handler.class, PacketTileSyncUpdate.class, 9, Side.CLIENT);
-			
+
 			if (SonarLoader.mcmultipartLoaded) {
 				network.registerMessage(PacketMultipartSync.Handler.class, PacketMultipartSync.class, 10, Side.CLIENT);
 				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 11, Side.CLIENT);
 				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 12, Side.SERVER);
 				network.registerMessage(PacketRequestMultipartSync.Handler.class, PacketRequestMultipartSync.class, 13, Side.SERVER);
 			}
-			
 			network.registerMessage(PacketFlexibleOpenGui.Handler.class, PacketFlexibleOpenGui.class, 14, Side.CLIENT);
 			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 15, Side.CLIENT);
 			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 16, Side.SERVER);
@@ -218,26 +209,6 @@ public class SonarCore {
 			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 18, Side.SERVER);
 			network.registerMessage(PacketFlexibleMultipartChangeGui.Handler.class, PacketFlexibleMultipartChangeGui.class, 19, Side.SERVER);
 			network.registerMessage(PacketFlexibleItemStackChangeGui.Handler.class, PacketFlexibleItemStackChangeGui.class, 20, Side.SERVER);
-		}
-	}
-
-	public static void registerItems(List<ISonarRegistryItem> items) {
-		for (ISonarRegistryItem item : items) {
-			Item toRegister = item.getItem();
-			GameRegistry.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(item.getRegistryName()) : toRegister);
-			item.setItem(toRegister);
-		}
-	}
-
-	public static void registerBlocks(List<ISonarRegistryBlock> registeredBlocks) {
-		for (ISonarRegistryBlock block : registeredBlocks) {
-			Block toRegister = block.getBlock();
-			GameRegistry.register(toRegister.getRegistryName() == null ? toRegister.setRegistryName(block.getRegistryName()) : toRegister);
-			GameRegistry.register(new SonarBlockTip(toRegister).setRegistryName(block.getRegistryName()));
-			block.setBlock(toRegister);
-			if (block.hasTileEntity()) {
-				GameRegistry.registerTileEntity(block.getTileEntity(), block.getRegistryName());
-			}
 		}
 	}
 
@@ -261,7 +232,7 @@ public class SonarCore {
 	}
 
 	public static void sendFullSyncAroundWithRenderUpdate(TileEntity tile, int spread) {
-		if (tile!=null && tile.getWorld()!=null && !tile.getWorld().isRemote && tile instanceof INBTSyncable) {
+		if (tile != null && tile.getWorld() != null && !tile.getWorld().isRemote && tile instanceof INBTSyncable) {
 			NBTTagCompound tag = ((INBTSyncable) tile).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendToAllAround(new PacketTileSyncUpdate(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
@@ -283,6 +254,6 @@ public class SonarCore {
 	}
 
 	public static int randInt(int min, int max) {
-		return rand.nextInt((max - min) + 1) + min;
+		return rand.nextInt(max - min + 1) + min;
 	}
 }

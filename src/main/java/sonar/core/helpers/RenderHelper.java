@@ -1,5 +1,6 @@
 package sonar.core.helpers;
 
+//import org.lwjgl.opengl.GL11;
 import static net.minecraft.client.renderer.GlStateManager.alphaFunc;
 import static net.minecraft.client.renderer.GlStateManager.blendFunc;
 import static net.minecraft.client.renderer.GlStateManager.color;
@@ -17,9 +18,7 @@ import static net.minecraft.client.renderer.GlStateManager.enableLighting;
 import static net.minecraft.client.renderer.GlStateManager.enableRescaleNormal;
 import static net.minecraft.client.renderer.GlStateManager.enableTexture2D;
 import static net.minecraft.client.renderer.GlStateManager.glLineWidth;
-import static net.minecraft.client.renderer.GlStateManager.popAttrib;
 import static net.minecraft.client.renderer.GlStateManager.popMatrix;
-import static net.minecraft.client.renderer.GlStateManager.pushAttrib;
 import static net.minecraft.client.renderer.GlStateManager.pushMatrix;
 import static net.minecraft.client.renderer.GlStateManager.rotate;
 import static net.minecraft.client.renderer.GlStateManager.scale;
@@ -38,10 +37,10 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -58,35 +57,44 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import sonar.core.SonarCore;
 import sonar.core.client.BlockModelsCache;
 import sonar.core.client.gui.GuiSonar;
 import sonar.core.client.renderers.TransformationMatrix;
 import sonar.core.client.renderers.Vector;
+import sonar.core.utils.SonarCompat;
 
 public class RenderHelper {
 
 	public static final RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
 	public static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 	public static final TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-	public static int src = -1, dst = -1;
+	private static boolean blendSaved = false;
+	private static int BLEND_SRC = -1, BLEND_DST = -1, ALPHA_SRC = -1, ALPHA_DST = -1;
 	protected RenderManager renderManager;
 
 	// used with EnumFacing
 	public static double[][] offsetMatrix = new double[][] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 1, 0, -1 }, { 1, 0, 0 }, { 0, 0, -1 } };
 
 	public static void saveBlendState() {
-		src = GL11.glGetInteger(GL11.GL_BLEND_SRC);
-		dst = GL11.glGetInteger(GL11.GL_BLEND_DST);
+		BLEND_SRC = GlStateManager.glGetInteger(GL11.GL_BLEND_SRC);
+		BLEND_DST = GlStateManager.glGetInteger(GL11.GL_BLEND_DST);
+		// ALPHA_SRC = GlStateManager.glGetInteger(GL11.GL_SRC_ALPHA);
+		// ALPHA_DST = GlStateManager.glGetInteger(GL11.GL_DST_ALPHA);
+		blendSaved = true;
 	}
 
 	public static void restoreBlendState() {
-		if (src != -1 && dst != -1)
-			GL11.glBlendFunc(src, dst);
+		if (blendSaved) {
+			GlStateManager.blendFunc(BLEND_SRC, BLEND_DST);
+			blendSaved = false;
+		}
 	}
 
 	public static int setMetaData(TileEntity tileentity) {
@@ -96,7 +104,7 @@ public class RenderHelper {
 		} else {
 			Block block = tileentity.getBlockType();
 			i = tileentity.getBlockMetadata();
-			if ((block != null) && (i == 0)) {
+			if (block != null && i == 0) {
 				i = tileentity.getBlockMetadata();
 			}
 		}
@@ -105,11 +113,11 @@ public class RenderHelper {
 	}
 
 	public static void beginRender(double x, double y, double z, int meta, String texture) {
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x, (float) y, (float) z);
+		pushMatrix();
+		translate((float) x, (float) y, (float) z);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(texture));
-		GL11.glPushMatrix();
-		GL11.glRotatef(180.0F, 180.0F, 0.0F, 1.0F);
+		pushMatrix();
+		rotate(180.0F, 180.0F, 0.0F, 1.0F);
 		int j = 0;
 		switch (meta) {
 		case 2:
@@ -125,48 +133,17 @@ public class RenderHelper {
 			j = 270;
 			break;
 		}
-		GL11.glRotatef(j, 0.0F, 1.0F, 0.0F);
-		GL11.glRotated(-0.625, 0, 1, 0);
+		rotate(j, 0.0F, 1.0F, 0.0F);
+		rotate(-0.625F, 0F, 1F, 0F);
 	}
 
 	public static void finishRender() {
-		GL11.glPopMatrix();
-		GL11.glPopMatrix();
+		popMatrix();
+		popMatrix();
 	}
 
 	/* public static EnumFacing getHorizontal(EnumFacing forward) { if (forward == EnumFacing.NORTH) { return EnumFacing.EAST; } if (forward == EnumFacing.EAST) { return EnumFacing.SOUTH; } if (forward == EnumFacing.SOUTH) { return EnumFacing.WEST; } if (forward == EnumFacing.WEST) { return EnumFacing.NORTH; } return null; } */
-	public static void drawRect(float left, float top, float right, float bottom, int color) {
-		if (left < right) {
-			float i = left;
-			left = right;
-			right = i;
-		}
 
-		if (top < bottom) {
-			float j = top;
-			top = bottom;
-			bottom = j;
-		}
-
-		float f3 = (float) (color >> 24 & 255) / 255.0F;
-		float f = (float) (color >> 16 & 255) / 255.0F;
-		float f1 = (float) (color >> 8 & 255) / 255.0F;
-		float f2 = (float) (color & 255) / 255.0F;
-		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
-		enableBlend();
-		disableTexture2D();
-		tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		color(f, f1, f2, f3);
-		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
-		vertexbuffer.pos((double) left, (double) bottom, 0.0D).endVertex();
-		vertexbuffer.pos((double) right, (double) bottom, 0.0D).endVertex();
-		vertexbuffer.pos((double) right, (double) top, 0.0D).endVertex();
-		vertexbuffer.pos((double) left, (double) top, 0.0D).endVertex();
-		tessellator.draw();
-		enableTexture2D();
-		disableBlend();
-	}
 	// 1.9.4 additions
 
 	public static void addVertexWithUV(VertexBuffer vertexbuffer, double x, double y, double z, double u, double v) {
@@ -191,36 +168,86 @@ public class RenderHelper {
 	public static void renderStoredItemStackOverlay(ItemStack stack, long stored, int x, int y, String string, boolean depth) {
 		if (stack != null) {
 			FontRenderer font = getFontFromStack(stack);
-			stack.stackSize = 1;
+			stack = SonarCompat.setCount(stack, 1);
 			if (stored > 0 || string != null) {
 				String s1 = string == null ? FontHelper.formatStackSize(stored) : string;
 
 				final float scaleFactor = 0.5F;
 				final float inverseScaleFactor = 1.0f / scaleFactor;
-				GL11.glPushMatrix();
-				disableLighting();
+				pushMatrix();
+				// disableLighting();
 				if (depth)
 					disableDepth();
 
-				disableBlend();
-				GL11.glScaled(scaleFactor, scaleFactor, scaleFactor);
+				scale(scaleFactor, scaleFactor, scaleFactor);
 				final int X = (int) (((float) x + 15.0f - font.getStringWidth(s1) * scaleFactor) * inverseScaleFactor);
 				final int Y = (int) (((float) y + 15.0f - 7.0f * scaleFactor) * inverseScaleFactor);
 				font.drawStringWithShadow(s1, X, Y, 16777215);
-				enableLighting();
+				// enableLighting();
 
 				if (depth)
 					enableDepth();
 
-				enableBlend();
-				GL11.glPopMatrix();
+				popMatrix();
 			}
 		}
 	}
 
 	public static FontRenderer getFontFromStack(ItemStack stack) {
 		FontRenderer rend;
-		return stack != null ? ((rend = stack.getItem().getFontRenderer(stack)) == null ? fontRenderer : rend) : fontRenderer;
+		return stack != null ? (rend = stack.getItem().getFontRenderer(stack)) == null ? fontRenderer : rend : fontRenderer;
+	}
+
+	public static int getTextFormattingColour(TextFormatting format) {
+		if (!format.isColor()) {
+			return 0;
+		}
+		return GuiUtils.colorCodes[format.getColorIndex()];
+	}
+
+	public static int getTextFormattingShadow(TextFormatting format) {
+		if (!format.isColor()) {
+			return 0;
+		}
+		return GuiUtils.colorCodes[16 + format.getColorIndex()];
+	}
+
+	public static void drawRect(float left, float top, float right, float bottom) {
+		if (left < right) {
+			float i = left;
+			left = right;
+			right = i;
+		}
+
+		if (top < bottom) {
+			float j = top;
+			top = bottom;
+			bottom = j;
+		}
+		/*
+		*/
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
+		vertexbuffer.pos((double) left, (double) bottom, 0.0D).endVertex();
+		vertexbuffer.pos((double) right, (double) bottom, 0.0D).endVertex();
+		vertexbuffer.pos((double) right, (double) top, 0.0D).endVertex();
+		vertexbuffer.pos((double) left, (double) top, 0.0D).endVertex();
+		tessellator.draw();
+	}
+
+	/** allows every value to be a double */
+	public static void drawModalRectWithCustomSizedTexture(double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight) {
+		double f = 1.0 / textureWidth;
+		double f1 = 1.0 / textureHeight;
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer VertexBuffer = tessellator.getBuffer();
+		VertexBuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		VertexBuffer.pos(x, y + height, 0).tex(u * f, (v + height) * f1).endVertex();
+		VertexBuffer.pos(x + width, y + height, 0.0D).tex((u + width) * f, (v + height) * f1).endVertex();
+		VertexBuffer.pos(x + width, y, 0).tex((u + width) * f, v * f1).endVertex();
+		VertexBuffer.pos(x, y, 0).tex(u * f, v * f1).endVertex();
+		tessellator.draw();
 	}
 
 	public static void drawTexturedModalRect(float minX, float minY, float maxY, float width, float height) {
@@ -233,13 +260,13 @@ public class RenderHelper {
 		float y = minY;
 		float textureX = 0;
 		float textureY = 0;
-		double widthnew = (0 + (width * (2)));
-		double heightnew = (0 + ((height) * (2)));
+		double widthnew = 0 + width * 2;
+		double heightnew = 0 + height * 2;
 
-		vertexbuffer.pos((double) (x + 0), (double) (y + height), (double) 0).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + height) * f1)).endVertex();
-		vertexbuffer.pos((double) (x + width), (double) (y + height), (double) 0).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + height) * f1)).endVertex();
-		vertexbuffer.pos((double) (x + width), (double) (y + 0), (double) 0).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + 0) * f1)).endVertex();
-		vertexbuffer.pos((double) (x + 0), (double) (y + 0), (double) 0).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + 0) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + 0), (double) (y + height), (double) 0).tex((double) ((textureX + 0) * f), (double) ((textureY + height) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) (y + height), (double) 0).tex((double) ((textureX + width) * f), (double) ((textureY + height) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) (y + 0), (double) 0).tex((double) ((textureX + width) * f), (double) ((textureY + 0) * f1)).endVertex();
+		vertexbuffer.pos((double) (x + 0), (double) (y + 0), (double) 0).tex((double) ((textureX + 0) * f), (double) ((textureY + 0) * f1)).endVertex();
 		tessellator.draw();
 
 		/* Tessellator tessellator = Tessellator.getInstance(); VertexBuffer vertex = tessellator.getBuffer(); vertex.begin(7, DefaultVertexFormats.POSITION_TEX); double widthnew = (0 + (width * (2))); double heightnew = (0 + ((height) * (2))); addVertexWithUV(vertex, (minX + 0), maxY / 2, 0, 0, heightnew); addVertexWithUV(vertex, (minX + width), maxY / 2, 0, widthnew, heightnew); addVertexWithUV(vertex, (minX + width), (minY + 0), 0, widthnew, 0); addVertexWithUV(vertex, (minX + 0), (minY + 0), 0, 0, 0); tessellator.draw(); float f = 1.0F / textureWidth; float f1 = 1.0F / textureHeight; Tessellator tessellator = Tessellator.getInstance(); VertexBuffer vertexbuffer = tessellator.getBuffer(); vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX); vertexbuffer.pos((double)x, (double)(y + height), 0.0D).tex((double)(u * f), (double)((v + (float)height) * f1)).endVertex(); vertexbuffer.pos((double)(x + width), (double)(y + height), 0.0D).tex((double)((u + (float)width) * f), (double)((v + (float)height) * f1)).endVertex(); vertexbuffer.pos((double)(x + width), (double)y, 0.0D).tex((double)((u + (float)width) * f), (double)(v * f1)).endVertex(); vertexbuffer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex(); tessellator.draw(); */
@@ -265,10 +292,10 @@ public class RenderHelper {
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer vertexbuffer = tessellator.getBuffer();
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		vertexbuffer.pos((double) (x + 0), (double) (y + height), (double) 0).tex((double) ((float) (textureX + 0) * 0.00390625F), (double) ((float) (textureY + height) * 0.00390625F)).endVertex();
+		vertexbuffer.pos((double) x, (double) (y + height), (double) 0).tex((double) ((float) textureX * 0.00390625F), (double) ((float) (textureY + height) * 0.00390625F)).endVertex();
 		vertexbuffer.pos((double) (x + width), (double) (y + height), (double) 0).tex((double) ((float) (textureX + width) * 0.00390625F), (double) ((float) (textureY + height) * 0.00390625F)).endVertex();
-		vertexbuffer.pos((double) (x + width), (double) (y + 0), (double) 0).tex((double) ((float) (textureX + width) * 0.00390625F), (double) ((float) (textureY + 0) * 0.00390625F)).endVertex();
-		vertexbuffer.pos((double) (x + 0), (double) (y + 0), (double) 0).tex((double) ((float) (textureX + 0) * 0.00390625F), (double) ((float) (textureY + 0) * 0.00390625F)).endVertex();
+		vertexbuffer.pos((double) (x + width), (double) y, (double) 0).tex((double) ((float) (textureX + width) * 0.00390625F), (double) ((float) textureY * 0.00390625F)).endVertex();
+		vertexbuffer.pos((double) x, (double) y, (double) 0).tex((double) ((float) textureX * 0.00390625F), (double) ((float) textureY * 0.00390625F)).endVertex();
 		tessellator.draw();
 	}
 
@@ -281,8 +308,6 @@ public class RenderHelper {
 		translate(x, y, zLevel);
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
 		disableLighting();
-		enableRescaleNormal();
-		enableDepth();
 		Tessellator tessellator = Tessellator.getInstance();
 		tessellator.getBuffer().begin(7, DefaultVertexFormats.POSITION_TEX);
 		tessellator.getBuffer().pos(x, y + height, zLevel).tex(0D, 1D).endVertex();
@@ -290,12 +315,13 @@ public class RenderHelper {
 		tessellator.getBuffer().pos(x + width, y, zLevel).tex(1D, 0D).endVertex();
 		tessellator.getBuffer().pos(x, y, zLevel).tex(0D, 0D).endVertex();
 		tessellator.draw();
+		enableLighting();
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+		disableBlend();
 		popMatrix();
 	}
 
 	public static void renderItem(ItemStack stack, World world) {
-		pushAttrib();
 		pushMatrix();
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
 		translate(-6.4F, -6.5F, -0.245F);
@@ -303,7 +329,6 @@ public class RenderHelper {
 
 		renderItem(stack, ItemCameraTransforms.TransformType.NONE);
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-		popAttrib();
 		popMatrix();
 
 		/* net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting(); itemRender.renderItemAndEffectIntoGUI(stack, 0, 0); itemRender.renderItemOverlayIntoGUI(getFontFromStack(stack), stack, 0, 0, ""); net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting(); */
@@ -348,18 +373,21 @@ public class RenderHelper {
 		enableAlpha();
 		alphaFunc(516, 0.1F);
 		enableBlend();
+
 		blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		color(1.0F, 1.0F, 1.0F, 1.0F);
 		setupGuiTransform(x, y, bakedmodel.isGui3d());
-		GL11.glScaled(1, 1, 0.04);
+		GlStateManager.scale(1, 1, 0.04);
 		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
 		itemRender.renderItem(stack, bakedmodel);
+
+		disableBlend();
 		disableAlpha();
 		disableRescaleNormal();
 		disableLighting();
-		popMatrix();
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		textureManager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+		popMatrix();
 	}
 
 	public static void setupGuiTransform(int xPosition, int yPosition, boolean isGui3d) {
@@ -368,11 +396,9 @@ public class RenderHelper {
 		scale(1.0F, -1.0F, 1.0F);
 		scale(16.0F, 16.0F, 16.0F);
 
-		if (isGui3d) {
-			// GlStateManager.enableLighting();
-		} else {
+		if (!isGui3d) {
 			disableLighting();
-		}
+		} // else GlStateManager.enableLighting();
 	}
 
 	/** all credit to InfinityRaider */
@@ -430,17 +456,15 @@ public class RenderHelper {
 			return new Vector(1, 0, 0);
 		default:
 			return new Vector(0, 0, 0);
-
 		}
-
 	}
 
 	/** compensates for the Entity View and applies the right translation. it pushes the matrix once ! */
 	public static void offsetRendering(BlockPos pos, double partialTicks) {
 		Entity view = Minecraft.getMinecraft().getRenderViewEntity();
-		double vX = view.lastTickPosX + (view.posX - view.lastTickPosX) * (double) partialTicks;
-		double vY = view.lastTickPosY + (view.posY - view.lastTickPosY) * (double) partialTicks;
-		double vZ = view.lastTickPosZ + (view.posZ - view.lastTickPosZ) * (double) partialTicks;
+		double vX = view.lastTickPosX + (view.posX - view.lastTickPosX) * partialTicks;
+		double vY = view.lastTickPosY + (view.posY - view.lastTickPosY) * partialTicks;
+		double vZ = view.lastTickPosZ + (view.posZ - view.lastTickPosZ) * partialTicks;
 		pushMatrix();
 		translate(pos.getX() - vX, pos.getY() - vY, pos.getZ() - vZ);
 	}
@@ -457,7 +481,8 @@ public class RenderHelper {
 			double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) partialTicks;
 			double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) partialTicks;
 			translate(-d0 + pos.getX(), -d1 + pos.getY(), -d2 + pos.getZ());
-			drawBoundingBox(box.expandXyz(0.0020000000949949026D), r, g, b, alpha);
+			double val = 0.0020000000949949026D;
+			drawBoundingBox(box.expand(val, val, val), r, g, b, alpha);
 		}
 
 		depthMask(true);
@@ -503,5 +528,4 @@ public class RenderHelper {
 		Minecraft.getMinecraft().getLanguageManager().onResourceManagerReload(Minecraft.getMinecraft().getResourceManager());
 		SonarCore.logger.info("Reset Language");
 	}
-
 }

@@ -2,6 +2,8 @@ package sonar.core.integration.jei;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
@@ -29,33 +31,9 @@ public abstract class JEIRecipeV2<T extends JEIRecipeV2> implements IRecipeWrapp
 		ingredients.setInputLists(ItemStack.class, inputs);
 		ingredients.setOutputs(ItemStack.class, outputs);
 	}
-	
-	@Override
-	public List getInputs() {
-		return inputs;
-	}
-
-	@Override
-	public List getOutputs() {
-		return outputs;
-	}
-
-	@Override
-	public List<FluidStack> getFluidInputs() {
-		return null;
-	}
-
-	@Override
-	public List<FluidStack> getFluidOutputs() {
-		return null;
-	}
 
 	@Override
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-	}
-
-	@Override
-	public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight) {
 	}
 
 	@Override
@@ -68,4 +46,26 @@ public abstract class JEIRecipeV2<T extends JEIRecipeV2> implements IRecipeWrapp
 		return false;
 	}
 
+	@Override
+	public List getInputs() {
+		return inputs;
+	}
+
+	@Override
+	public List getOutputs() {
+		return outputs;
+	}
+
+	@Override
+	public List<FluidStack> getFluidInputs() {
+		return Lists.newArrayList();
+	}
+
+	@Override
+	public List<FluidStack> getFluidOutputs() {
+		return Lists.newArrayList();
+	}
+
+	@Override
+	public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight) {}
 }

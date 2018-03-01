@@ -1,16 +1,10 @@
 package sonar.core.common.block;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -23,7 +17,7 @@ import sonar.core.api.blocks.IStableBlock;
 
 public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlock {
 
-	public int target = 0;
+    public int target;
 	public static final PropertyBool NORTH = PropertyBool.create("north");
 	public static final PropertyBool EAST = PropertyBool.create("east");
 	public static final PropertyBool SOUTH = PropertyBool.create("south");
@@ -60,9 +54,9 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 
 				if (block2 instanceof IConnectedBlock) {
 					int[] connections2 = ((IConnectedBlock) block2).getConnections();
-					for (int i = 0; i < connections1.length; i++) {
-						for (int i2 = 0; i2 < connections2.length; i2++) {
-							if (connections1[i] == connections2[i2])
+                    for (int aConnections1 : connections1) {
+                        for (int aConnections2 : connections2) {
+                            if (aConnections1 == aConnections2)
 								return true;
 						}
 					}
@@ -70,18 +64,14 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 			}
 		}
 		return false;
-
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
-		super.getSubBlocks(item, tab, list);
-	}
-
+    @Override
 	public int getMetaFromState(IBlockState state) {
 		return 0;
 	}
 
+    @Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess w, BlockPos pos) {
 		int x = pos.getX();
 		int y = pos.getY();
@@ -89,8 +79,9 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 		return state.withProperty(NORTH, checkBlockInDirection(w, x, y, z, EnumFacing.NORTH)).withProperty(SOUTH, checkBlockInDirection(w, x, y, z, EnumFacing.SOUTH)).withProperty(WEST, checkBlockInDirection(w, x, y, z, EnumFacing.WEST)).withProperty(EAST, checkBlockInDirection(w, x, y, z, EnumFacing.EAST)).withProperty(UP, checkBlockInDirection(w, x, y, z, EnumFacing.UP)).withProperty(DOWN, checkBlockInDirection(w, x, y, z, EnumFacing.DOWN));
 	}
 
+    @Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { NORTH, EAST, SOUTH, WEST, DOWN, UP });
+        return new BlockStateContainer(this, NORTH, EAST, SOUTH, WEST, DOWN, UP);
 	}
 
 	@Override
@@ -104,6 +95,7 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 			super(material, target);
 		}
 
+        @Override
 		public BlockRenderLayer getBlockLayer() {
 			return BlockRenderLayer.TRANSLUCENT;
 		}
@@ -113,6 +105,7 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 			return EnumBlockRenderType.MODEL;
 		}
 
+        @Override
 		public boolean isFullCube(IBlockState state) {
 			return false;
 		}
@@ -122,12 +115,12 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 			return false;
 		}
 
+        @Override
 		@SideOnly(Side.CLIENT)
 		public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 			IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
 			Block block = iblockstate.getBlock();
-			return block == this ? false : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+            return block != this && super.shouldSideBeRendered(blockState, blockAccess, pos, side);
 		}
 	}
-
 }

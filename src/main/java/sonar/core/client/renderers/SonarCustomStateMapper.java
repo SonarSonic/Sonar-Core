@@ -26,8 +26,8 @@ public class SonarCustomStateMapper extends StateMapperBase implements ICustomMo
 	public final Map<ResourceLocation, BlockRenderer<? extends TileEntity>> customModels;
 
 	public SonarCustomStateMapper() {
-		this.renderers = new ArrayList<ISonarCustomRenderer>();
-		this.customModels = new HashMap<ResourceLocation, BlockRenderer<? extends TileEntity>>();
+        this.renderers = new ArrayList<>();
+        this.customModels = new HashMap<>();
 		ModelLoaderRegistry.registerLoader(this);
 	}
 
@@ -47,7 +47,7 @@ public class SonarCustomStateMapper extends StateMapperBase implements ICustomMo
 			ClientRegistry.bindTileEntitySpecialRenderer(((ISonarTileRenderer) renderer).getTileEntity(), instance);
 		}
 		if (renderer.doInventoryRendering()) {
-			ModelResourceLocation itemModel = new ModelResourceLocation(blockModel.getResourceDomain() + ":" + blockModel.getResourcePath(), "inventory");
+            ModelResourceLocation itemModel = new ModelResourceLocation(blockModel.getResourceDomain() + ':' + blockModel.getResourcePath(), "inventory");
 			//customModels.put(itemModel, instance);
 			ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(block), renderer);
 		}

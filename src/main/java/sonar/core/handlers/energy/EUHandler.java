@@ -53,7 +53,7 @@ public class EUHandler implements ISonarEnergyHandler {
 
 			if (!action.shouldSimulate()) {
 				int maxAdd = (int) transfer.stored;
-				transfer.stored -= (maxAdd - sink.injectEnergy(dir, maxAdd, EUHelper.getVoltage(sink.getSinkTier())));
+                transfer.stored -= maxAdd - sink.injectEnergy(dir, maxAdd, EUHelper.getVoltage(sink.getSinkTier()));
 			} else {
 				transfer.stored -= Math.min(sink.getDemandedEnergy(), EUHelper.getVoltage(sink.getSinkTier()));
 			}
@@ -92,5 +92,4 @@ public class EUHandler implements ISonarEnergyHandler {
 	public EnergyType getProvidedType() {
 		return EnergyType.EU;
 	}
-
 }

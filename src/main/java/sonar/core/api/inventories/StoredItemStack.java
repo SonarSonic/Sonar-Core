@@ -6,17 +6,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.api.ISonarStack;
 import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.utils.SonarCompat;
 
 public class StoredItemStack implements ISonarStack<StoredItemStack> {
 
-	public ItemStack item;
+	public ItemStack item = SonarCompat.getEmpty();
 	public long stored;
 
 	public StoredItemStack() {}
 
 	public StoredItemStack(ItemStack stack) {
 		this.item = stack.copy();
-		this.stored = stack.stackSize;
+		this.stored = SonarCompat.getCount(stack);
 	}
 
 	public StoredItemStack(ItemStack stack, long stored) {
@@ -26,58 +27,57 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 
 	public void add(ItemStack stack) {
 		if (equalStack(stack)) {
-			stored += stack.stackSize;
+			stored += SonarCompat.getCount(stack);
 		}
 	}
 
 	public void remove(ItemStack stack) {
 		if (equalStack(stack)) {
-			stored -= stack.stackSize;
+			stored -= SonarCompat.getCount(stack);
 		}
 	}
 
+    @Override
 	public void add(StoredItemStack stack) {
 		if (equalStack(stack.item)) {
 			stored += stack.stored;
 		}
 	}
 
+    @Override
 	public void remove(StoredItemStack stack) {
 		if (equalStack(stack.item)) {
 			stored -= stack.stored;
 		}
 	}
 
+    @Override
 	public StoredItemStack copy() {
 		return new StoredItemStack(this.item, this.stored);
 	}
 
+    public StoredItemStack setStackSize(StoredItemStack stack) {
+        this.stored = stack == null ? 0 : stack.getStackSize();
+        return this;
+    }
+
+    @Override
 	public StoredItemStack setStackSize(long size) {
 		this.stored = size;
 		return this;
 	}
 
-	public StoredItemStack setStackSize(StoredItemStack stack) {
-		this.stored = stack == null ? 0 : stack.getStackSize();
-		return this;
-	}
-
+    public static boolean isEqualStack(ItemStack main, ItemStack adding){
+        return !SonarCompat.isEmpty(main) && !SonarCompat.isEmpty(adding) && main.isItemEqual(adding) && ItemStack.areItemStackTagsEqual(adding, main);
+    }
+    
 	public boolean equalStack(ItemStack stack) {
-		if (this.item == null || stack == null) { // || stack.stackSize == 0) {
-			return false;
-		}
-		if (!this.item.isItemEqual(stack)) {
-			return false;
-		}
-		if (!ItemStack.areItemStackTagsEqual(stack, this.item)) {
-			return false;
-		}
-		return true;
+        return isEqualStack(item, stack);
 	}
 
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		item = ItemStack.loadItemStackFromNBT(nbt);
+		item = SonarCompat.getItem(nbt);
 		stored = nbt.getLong("stored");
 	}
 
@@ -111,6 +111,7 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 		return item;
 	}
 
+    @Override
 	public long getStackSize() {
 		return stored;
 	}
@@ -130,21 +131,21 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 	public ItemStack getFullStack() {
 		int min = getValidStackSize();
 		ItemStack stack = item.copy();
-		stack.stackSize = min;
+		stack = SonarCompat.setCount(stack, min);
 		return stack;
 	}
 
 	public ItemStack getActualStack() {
 		ItemStack fullStack = getFullStack();
-		if (fullStack.stackSize <= 0) {
-			return null;
+		if (SonarCompat.getCount(fullStack) <= 0) {
+			return SonarCompat.getEmpty();
 		}
 		return fullStack;
 	}
 
 	public static ItemStack getActualStack(StoredItemStack stack) {
 		if (stack == null) {
-			return null;
+			return SonarCompat.getEmpty();
 		}
 		return stack.getActualStack();
 	}
@@ -155,10 +156,10 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 	}
 
 	public String toString() {
-		if (item != null) {
-			return this.stored + "x" + this.item.getUnlocalizedName() + "@" + item.getItemDamage();
+		if (!SonarCompat.isEmpty(item)) {
+            return this.stored + "x" + this.item.getUnlocalizedName() + '@' + item.getItemDamage();
 		} else {
-			return super.toString() + " : NULL";
+			return super.toString() + " : EMPTY";
 		}
 	}
 }
