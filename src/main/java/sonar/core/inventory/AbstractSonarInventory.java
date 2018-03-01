@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.IItemHandler;
 import sonar.core.api.SonarAPI;
@@ -19,31 +20,63 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.ISyncPart;
 
-public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> extends DirtyPart implements ISonarInventory, ISyncPart, IItemHandler {
+public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> extends DirtyPart implements ISonarInventory, ISyncPart {
 
+	public final SubItemHandler sub_handler;
 	public NonNullList<ItemStack> slots;
 	public int size;
 	public int limit = 64;
-	public EnumFacing face;
+	public EnumFacing face;	
 
 	public AbstractSonarInventory(int size) {
 		super();
 		this.size = size;
 		this.slots = NonNullList.withSize(size, ItemStack.EMPTY);
+		this.sub_handler = new SubItemHandler(this);
+	}
+	
+	public static class SubItemHandler implements IItemHandler{
+		
+		public AbstractSonarInventory inv;
+		
+		public SubItemHandler(AbstractSonarInventory inv){
+			this.inv = inv;
+		}
+
+		@Override
+		public int getSlots() {
+			return inv.getSizeInventory();
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot) {
+			return inv.getStackInSlot(slot);
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+			return inv.insertItem(slot, stack, simulate);
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			return inv.extractItem(slot, amount, simulate);
+		}
+
+		@Override
+		public int getSlotLimit(int slot) {
+			return inv.getInventoryStackLimit();
+		}
 	}
 
-	public List<ItemStack> slots() { //FIXME - all types should return slots?
-		if (this instanceof SonarInventory) {
-			return ((SonarInventory) this).slots;
-		} else {
-			return NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-		}
+	public List<ItemStack> slots() {
+		return this.slots;
 	}
 
 	@Override
 	public IItemHandler getItemHandler(EnumFacing side) {
 		face = side;
-		return this;
+		return sub_handler;
 	}
 
 	@Override
@@ -163,20 +196,12 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	public String getTagName() {
 		return "Items";
 	}
-
-	@Override
-	public int getSlots() {
-		return getSizeInventory();
-	}
-
-	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		StoredItemStack add = new StoredItemStack(stack);
 		boolean bool = InventoryHelper.addStack(this, add, slot, this.getInventoryStackLimit(), ActionType.getTypeForAction(simulate));
 		return bool ? add.getActualStack() : ItemStack.EMPTY;
 	}
 
-	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		final ItemStack stored = getStackInSlot(slot);
 		if (stored.isEmpty()) {
@@ -201,10 +226,5 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
-	}
-
-	@Override
-	public int getSlotLimit(int slot) {
-		return this.getInventoryStackLimit();
 	}
 }

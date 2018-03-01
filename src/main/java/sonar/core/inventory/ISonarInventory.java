@@ -9,9 +9,11 @@ import net.minecraftforge.items.IItemHandler;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.network.sync.IDirtyPart;
 
-public interface ISonarInventory extends IInventory, IDirtyPart, INBTSyncable, IItemHandler {
+public interface ISonarInventory extends IInventory, IDirtyPart, INBTSyncable {
 
-    ISonarInventory setStackLimit(int limit);
-    IItemHandler getItemHandler(EnumFacing side);
+	ISonarInventory setStackLimit(int limit);
+
+	IItemHandler getItemHandler(EnumFacing side);
+
 	List<ItemStack> slots();
 }
