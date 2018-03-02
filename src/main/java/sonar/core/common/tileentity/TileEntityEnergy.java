@@ -28,10 +28,7 @@ import sonar.core.integration.SonarLoader;
 import sonar.core.network.sync.SyncEnergyStorage;
 import sonar.core.network.sync.SyncSidedEnergyStorage;
 
-@Optional.InterfaceList({
-        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyProvider", modid = "redstoneflux"),
-        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyReceiver", modid = "redstoneflux")
-})
+@Optional.InterfaceList({ @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyProvider", modid = "redstoneflux"), @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyReceiver", modid = "redstoneflux"), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "IC2"), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2") })
 public abstract class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver, IEnergyProvider, ISonarEnergyTile, IEnergyTile, IEnergySink, IEnergySource {
 
 	public TileEntityEnergy() {
@@ -46,7 +43,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 		energyMode = mode;
 	}
 
-    @Override
+	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		super.readData(nbt, type);
 		if (type == SyncType.DROP) {
@@ -54,7 +51,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 		}
 	}
 
-    @Override
+	@Override
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
 		if (type == SyncType.DROP) {
@@ -70,27 +67,27 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 		}
 	}
 
-    @Override
+	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		EnergyMode mode = getModeForSide(facing);
 		if (CapabilityEnergy.ENERGY == capability) {
 			return true;
 		}
 		if (SonarLoader.teslaLoaded && mode.canConnect()) {
-            if (capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve() || capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend() || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+			if (capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve() || capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend() || capability == TeslaCapabilities.CAPABILITY_HOLDER)
 				return true;
 		}
 		return super.hasCapability(capability, facing);
 	}
 
-    @Override
+	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		EnergyMode mode = getModeForSide(facing);
 		if (CapabilityEnergy.ENERGY == capability) {
 			return (T) storage.setCurrentFace(facing);
 		}
 		if (mode != null && SonarLoader.teslaLoaded && mode.canConnect()) {
-            if (capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve() || capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend() || capability == TeslaCapabilities.CAPABILITY_HOLDER)
+			if (capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve() || capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend() || capability == TeslaCapabilities.CAPABILITY_HOLDER)
 				return (T) storage.setCurrentFace(facing);
 		}
 		return super.getCapability(capability, facing);
@@ -116,25 +113,25 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 
 	///// * CoFH *//////
 	@Override
-    @Optional.Method(modid = "redstoneflux")
+	@Optional.Method(modid = "redstoneflux")
 	public boolean canConnectEnergy(EnumFacing from) {
 		return getModeForSide(from).canConnect();
 	}
 
 	@Override
-    @Optional.Method(modid = "redstoneflux")
+	@Optional.Method(modid = "redstoneflux")
 	public int getEnergyStored(EnumFacing from) {
 		return storage.getEnergyStored();
 	}
 
 	@Override
-    @Optional.Method(modid = "redstoneflux")
+	@Optional.Method(modid = "redstoneflux")
 	public int getMaxEnergyStored(EnumFacing from) {
 		return storage.getMaxEnergyStored();
 	}
 
 	@Override
-    @Optional.Method(modid = "redstoneflux")
+	@Optional.Method(modid = "redstoneflux")
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
 		if (energyMode.canSend())
 			return storage.extractEnergy(maxExtract, simulate);
@@ -142,28 +139,41 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	}
 
 	@Override
-    @Optional.Method(modid = "redstoneflux")
+	@Optional.Method(modid = "redstoneflux")
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-        if (energyMode.canRecieve())
+		if (energyMode.canRecieve())
 			return storage.receiveEnergy(maxReceive, simulate);
 		return 0;
 	}
 
 	///// * IC2 *//////
-    @Override
-	public void onFirstTick() {
-		super.onFirstTick();
-		if (!this.world.isRemote && SonarLoader.ic2Loaded()) {
+	boolean IC2Connected = false;
+	
+	@Override
+	@Optional.Method(modid = "IC2")
+	public void onLoad() {
+		super.onLoad();
+		if (!this.getWorld().isRemote && !IC2Connected) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+			IC2Connected = true;
 		}
 	}
 
 	@Override
+	@Optional.Method(modid = "IC2")
 	public void invalidate() {
 		super.invalidate();
-        if (!this.world.isRemote && SonarLoader.ic2Loaded()) {
-				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-			}
+		onChunkUnload();
+	}
+
+	@Override
+	@Optional.Method(modid = "IC2")
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		if (!this.getWorld().isRemote && IC2Connected) {
+			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+			IC2Connected = false;
+		}
 	}
 
 	@Override
@@ -184,8 +194,8 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	@Override
 	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
 		int addRF = this.storage.receiveEnergy((int) amount * 4, true);
-        this.storage.addEnergy(addRF, ActionType.getTypeForAction(false));
-        return amount - addRF / 4;
+		this.storage.addEnergy(addRF, ActionType.getTypeForAction(false));
+		return amount - addRF / 4;
 	}
 
 	@Override
