@@ -14,7 +14,7 @@ import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.utils.SonarCompat;
 
-@InventoryHandler(modid = "sonarcore", priority = 0)
+@InventoryHandler(modid = "minefactoryreloaded", priority = 0)
 public class DSUInventoryHandler implements ISonarInventoryHandler {
 
 	@Override

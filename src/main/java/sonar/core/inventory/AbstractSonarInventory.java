@@ -6,12 +6,10 @@ import com.google.common.collect.Lists;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.IItemHandler;
 import sonar.core.api.SonarAPI;
@@ -34,7 +32,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	public AbstractSonarInventory(int size) {
 		super();
 		this.size = size;
-		this.slots = Lists.newArrayListWithCapacity(size);
+		this.slots = SonarCompat.buildItemList(size);
 		this.sub_handler = new SubItemHandler(this);
 	}
 	
@@ -87,7 +85,7 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		if (canSync(type)) {
 			NBTTagList list = nbt.getTagList(getTagName(), 10);
-			this.slots = Lists.newArrayListWithCapacity(this.getSizeInventory());
+			this.slots = SonarCompat.buildItemList(size);		
 			for (int i = 0; i < list.tagCount(); i++) {
 				NBTTagCompound compound = list.getCompoundTagAt(i);
 				byte b = compound.getByte("Slot");

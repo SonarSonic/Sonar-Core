@@ -17,7 +17,7 @@ import sonar.core.helpers.FontHelper;
 import sonar.core.network.sync.SyncItemEnergyStorage;
 import sonar.core.utils.SonarCompat;
 
-@Optional.InterfaceList({@Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "redstoneflux")})
+@Optional.InterfaceList({@Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "cofhcore")})
 public class SonarEnergyItem extends SonarItem implements ISonarEnergyItem, IEnergyContainerItem {
 
 	public SyncItemEnergyStorage storage;
@@ -67,28 +67,28 @@ public class SonarEnergyItem extends SonarItem implements ISonarEnergyItem, IEne
 
 	/////* CoFH *//////
 	@Override
-    @Optional.Method(modid = "redstoneflux")
+    @Optional.Method(modid = "cofhcore")
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
 		storage.setItemStack(container);
 		return storage.receiveEnergy(maxReceive, simulate);
 	}
 
 	@Override
-    @Optional.Method(modid = "redstoneflux")
+    @Optional.Method(modid = "cofhcore")
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
 		storage.setItemStack(container);
 		return storage.extractEnergy(maxExtract, simulate);
 	}
 
 	@Override
-    @Optional.Method(modid = "redstoneflux")
+    @Optional.Method(modid = "cofhcore")
 	public int getEnergyStored(ItemStack container) {
 		storage.setItemStack(container);
 		return storage.getEnergyStored();
 	}
 
 	@Override
-    @Optional.Method(modid = "redstoneflux")
+    @Optional.Method(modid = "cofhcore")
 	public int getMaxEnergyStored(ItemStack container) {
 		storage.setItemStack(container);
 		return storage.getMaxEnergyStored();

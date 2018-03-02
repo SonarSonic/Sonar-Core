@@ -15,16 +15,17 @@ public abstract class SonarTERender extends TileEntitySpecialRenderer {
 		this.texture = texture;
 	}
 
-	public void render(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	@Override
+	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
 		RenderHelper.beginRender(x + 0.5F, y + 1.5F, z + 0.5F, RenderHelper.setMetaData(te), texture);
 		model.render((Entity) null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		RenderHelper.finishRender();
-		renderExtras(te, x, y, z, alpha);
+		renderExtras(te, x, y, z);
 	}
 
 	/** for extra rotations and translations to be added, or rendering
 	 * effects */
-	public void renderExtras(TileEntity entity, double x, double y, double z, float f) {
+	public void renderExtras(TileEntity entity, double x, double y, double z) {
 
 	}
 }

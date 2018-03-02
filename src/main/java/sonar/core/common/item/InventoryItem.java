@@ -24,7 +24,7 @@ public class InventoryItem implements IInventory {
 	public int size;
 
 	public InventoryItem(ItemStack stack, int size, String tag, boolean useStackTag) {
-		inventory = Lists.newArrayListWithCapacity(size);
+		inventory = SonarCompat.buildItemList(size);
 		invItem = stack;
 		this.tag = tag;
 		this.useStackTag = useStackTag;

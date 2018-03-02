@@ -5,7 +5,7 @@ import java.util.List;
 import sonar.core.helpers.FontHelper;
 import sonar.core.helpers.SonarHelper;
 
-public class HelpOverlay<G extends GuiSonarTile> {
+public class HelpOverlay<G extends GuiSonar> {
 
 	public List<String> description;
 	public boolean completed;

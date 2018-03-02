@@ -1,13 +1,20 @@
 package sonar.core.client.gui;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.vecmath.Vector3d;
 
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
+import mcmultipart.MCMultiPartMod;
+import mcmultipart.multipart.IMultipart;
+import mcmultipart.multipart.Multipart;
+import mcmultipart.multipart.MultipartRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -35,33 +42,18 @@ import net.minecraftforge.client.ForgeHooksClient;
 public class GuiBlockRenderer3D implements IBlockAccess {
 
 	protected static final Minecraft mc = Minecraft.getMinecraft();
-	// protected static IBlockState multipartState = MCMultiPart.multipart.getDefaultState();
+	protected static IBlockState multipartState = MCMultiPartMod.multipart.getDefaultState();
 
 	public final Vector3d origin = new Vector3d();
 	public final Vector3d eye = new Vector3d();
-	public List<GuiBlockRenderCache> blocks = Lists.newArrayList();
-
+	// public HashMap<IBlockState, BlockCoords> blocks = Maps.newHashMap();
+	public HashMap<BlockPos, IBlockState> blocks = Maps.newHashMap();
+	public HashMap<BlockPos, TileEntity> entities = Maps.newHashMap();
+	public HashMap<BlockPos, List<MultipartStateOverride>> multiparts = Maps.newHashMap();
 	public int cubeSize;
 
 	public GuiBlockRenderer3D(int cubeSize) {
 		this.cubeSize = cubeSize;
-	}
-
-	public static class GuiBlockRenderCache {
-		public BlockPos pos;
-		public IBlockState state;
-		public TileEntity tile;
-
-		public GuiBlockRenderCache(BlockPos pos, IBlockState state) {
-			this.pos = pos;
-			this.state = state;
-		}
-
-		public GuiBlockRenderCache(BlockPos pos, IBlockState state, TileEntity tile) {
-			this.pos = pos;
-			this.state = state;
-			this.tile = tile;
-		}
 	}
 
 	public boolean validPos(BlockPos pos) {
@@ -69,15 +61,29 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 		return pos.getX() < size && pos.getX() > -size && pos.getY() < size && pos.getY() > -size && pos.getZ() < size && pos.getZ() > -size;
 	}
 
-	public void addBlock(BlockPos pos, IBlockState state) {
+	public void addBlock(IBlockState state, BlockPos pos) {
 		if (validPos(pos)) {
-			blocks.add(new GuiBlockRenderCache(pos, state));
+			blocks.put(pos, state);
 		}
 	}
 
-	public void addBlock(BlockPos pos, IBlockState state, TileEntity tile) {
+	public void addTileEntity(TileEntity state, BlockPos pos) {
 		if (validPos(pos)) {
-			blocks.add(new GuiBlockRenderCache(pos, state, tile));
+			entities.put(pos, state);
+		}
+	}
+
+	public void addMultiparts(List<Object> parts, BlockPos pos) {
+		if (validPos(pos)) {
+			List<MultipartStateOverride> newParts = Lists.newArrayList();
+			for (Object part : parts) {
+				if (part instanceof MultipartStateOverride) {
+					newParts.add((MultipartStateOverride) part);
+				} else if (part instanceof IMultipart) {
+					newParts.add(new MultipartStateOverride((Multipart) part));
+				}
+			}
+			multiparts.put(pos, newParts);
 		}
 	}
 
@@ -93,9 +99,13 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableAlpha();
 
-		Vector3d trans = new Vector3d(-origin.x + eye.x - 8 * 0.0625, -origin.y + eye.y, -origin.z + eye.z - 8 * 0.0625);
+		Vector3d trans = new Vector3d((-origin.x) + eye.x - 8 * 0.0625, (-origin.y) + eye.y, (-origin.z) + eye.z - 8 * 0.0625);
 
+		// GlStateManager.translate(-0.16, -0.16, -0.16);
 		for (BlockRenderLayer layer : BlockRenderLayer.values()) {
+			if (layer != BlockRenderLayer.TRANSLUCENT) {
+				doMultipartRenderPass(trans);
+			}
 			ForgeHooksClient.setRenderLayer(layer);
 			setGlStateForPass(layer);
 			doWorldRenderPass(trans, layer);
@@ -114,35 +124,33 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 			doTileEntityRenderPass(pass);
 		}
 		setGlStateForPass(0);
+
 	}
 
 	private void doTileEntityRenderPass(int pass) {
 		ForgeHooksClient.setRenderPass(pass);
-		for (GuiBlockRenderCache cache : blocks) {
-			if (cache.tile != null) {
-				if (cache.tile.shouldRenderInPass(pass)) {
+		for (Entry<BlockPos, TileEntity> entry : entities.entrySet()) {
+			TileEntity tile = this.getTileEntity(entry.getKey());
+			if (tile != null) {
+				if (tile.shouldRenderInPass(pass)) {
 					Vector3d at = new Vector3d(eye.x, eye.y, eye.z);
-					BlockPos pos = cache.pos;
+					BlockPos pos = entry.getKey();
 					at.x += pos.getX() - origin.x;
 					at.y += pos.getY() - origin.y;
 					at.z += pos.getZ() - origin.z;
-					if (cache.tile.getClass() == TileEntityChest.class) {
-						TileEntityChest chest = (TileEntityChest) cache.tile;
+					if (tile.getClass() == TileEntityChest.class) {
+						TileEntityChest chest = (TileEntityChest) tile;
 						at.x -= 0.5;
 						at.z -= 0.5;
 						GL11.glRotated(180, 0, 1, 0);
 					}
-					doSpecialRender(cache, at);
-					if (cache.tile.getClass() == TileEntityChest.class) {
-						GL11.glRotated(-180, 0, 1, 0);
+					TileEntityRendererDispatcher.instance.renderTileEntityAt(tile, at.x, at.y, at.z, 0);
+					if (tile.getClass() == TileEntityChest.class) {
+						GL11.glRotated(-180, 0, 1, 0);						
 					}
 				}
 			}
 		}
-	}
-
-	public void doSpecialRender(GuiBlockRenderCache cache, Vector3d at) {
-		TileEntityRendererDispatcher.instance.renderTileEntityAt(cache.tile, at.x, at.y, at.z, 0);
 	}
 
 	private void doWorldRenderPass(Vector3d trans, BlockRenderLayer layer) {
@@ -152,18 +160,39 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 
 		Tessellator.getInstance().getBuffer().setTranslation(trans.x, trans.y, trans.z);
 
-		for (GuiBlockRenderCache cache : blocks) {
-			IBlockState state = cache.state;
-			BlockPos pos = cache.pos;
+		for (Entry<BlockPos, IBlockState> entry : blocks.entrySet()) {
+			IBlockState state = entry.getValue();
+			BlockPos pos = entry.getKey();
 			Block block = state.getBlock();
+			state = state.getActualState(this, pos);
 			if (block.canRenderInLayer(state, layer)) {
-				renderBlock(state, pos, this, Tessellator.getInstance().getBuffer());
+				renderBlock(state, entry.getKey(), this, Tessellator.getInstance().getBuffer());
 			}
 		}
 
 		Tessellator.getInstance().draw();
 		Tessellator.getInstance().getBuffer().setTranslation(0, 0, 0);
 	}
+
+	public void doMultipartRenderPass(Vector3d trans) {
+
+		VertexBuffer wr = Tessellator.getInstance().getBuffer();
+		wr.begin(7, DefaultVertexFormats.BLOCK);
+
+		Tessellator.getInstance().getBuffer().setTranslation(trans.x, trans.y, trans.z);
+
+		for (Entry<BlockPos, List<MultipartStateOverride>> entry : multiparts.entrySet()) {
+			for (MultipartStateOverride part : entry.getValue()) {
+				IBlockState state = part.getActualState(MultipartRegistry.getDefaultState(part.part).getBaseState(), this, entry.getKey());
+				renderMultipart(state, entry.getKey(), this, Tessellator.getInstance().getBuffer());
+			}
+		}
+
+		Tessellator.getInstance().draw();
+		Tessellator.getInstance().getBuffer().setTranslation(0, 0, 0);
+	}
+
+	/* public void renderMultipartAt(List<Multipart> parts, BlockPos pos, float partialTicks, int destroyStage) { RenderHelper.disableStandardItemLighting(); GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA); GlStateManager.enableBlend(); GlStateManager.disableCull(); if (Minecraft.isAmbientOcclusionEnabled()) { GlStateManager.shadeModel(GL11.GL_SMOOTH); } else { GlStateManager.shadeModel(GL11.GL_FLAT); } for (Multipart part : parts) { try { } catch (Throwable e) { e.printStackTrace(); } } RenderHelper.enableStandardItemLighting(); } */
 
 	public void renderBlock(IBlockState state, BlockPos pos, IBlockAccess blockAccess, VertexBuffer worldRendererIn) {
 
@@ -179,6 +208,7 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 			IBakedModel ibakedmodel = blockrendererdispatcher.getModelForState(state);
 			state = state.getBlock().getExtendedState(state, this, pos);
 			blockrendererdispatcher.getBlockModelRenderer().renderModel(blockAccess, ibakedmodel, state, pos, worldRendererIn, false);
+
 		} catch (Throwable throwable) {
 			throwable.printStackTrace();
 			// Just bury a render issue here, it is only the IO screen
@@ -199,6 +229,7 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 			IBakedModel ibakedmodel = blockrendererdispatcher.getModelForState(state);
 			// state = state.getBlock().getExtendedState(state, this, pos);
 			blockrendererdispatcher.getBlockModelRenderer().renderModel(blockAccess, ibakedmodel, state, pos, worldRendererIn, false);
+
 		} catch (Throwable throwable) {
 			throwable.printStackTrace();
 			// Just bury a render issue here, it is only the IO screen
@@ -220,19 +251,16 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GlStateManager.depthMask(false);
+
 		}
+
 	}
 
 	/* public void renderInGui() { BlockRendererDispatcher renderer = Minecraft.getMinecraft().getBlockRendererDispatcher(); GlStateManager.pushMatrix(); GlStateManager.rotate(33, 0,0, 1); GlStateManager.scale(64, 64, 64); Tessellator tessellator = Tessellator.getInstance(); VertexBuffer vertex = tessellator.getBuffer(); vertex.begin(7, DefaultVertexFormats.BLOCK); for (Entry<BlockPos, IBlockState> ren : blocks.entrySet()) { try { renderer.renderBlock(ren.getValue(), ren.getKey(), this, vertex); } catch (Exception e) { e.printStackTrace(); } } //tessellator.draw(); vertex.finishDrawing(); GlStateManager.popMatrix(); } */
 
 	@Override
 	public TileEntity getTileEntity(BlockPos pos) {
-		for (GuiBlockRenderCache cache : blocks) {
-			if (cache.pos == pos && cache.tile != null) {
-				return cache.tile;
-			}
-		}
-		return null;
+		return entities.get(pos);
 	}
 
 	@Override
@@ -242,18 +270,13 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 
 	@Override
 	public IBlockState getBlockState(BlockPos pos) {
-		for (GuiBlockRenderCache cache : blocks) {
-			if (cache.pos == pos && cache.tile != null) {
-				return cache.state;
-			}
-		}
-		return Blocks.AIR.getDefaultState();
+		IBlockState state = blocks.get(pos);
+		return state == null ? Blocks.AIR.getDefaultState() : state;
 	}
 
 	@Override
 	public boolean isAirBlock(BlockPos pos) {
-		IBlockState state = getBlockState(pos);
-		return state == null || state.getBlock() == Blocks.AIR;
+		return blocks.get(pos) == null;
 	}
 
 	@Override
@@ -275,4 +298,5 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 	public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default) {
 		return false;
 	}
+
 }

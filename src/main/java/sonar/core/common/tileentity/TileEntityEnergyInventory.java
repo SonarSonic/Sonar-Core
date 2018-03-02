@@ -13,10 +13,12 @@ public class TileEntityEnergyInventory extends TileEntityEnergy implements ISona
 	}
 	
 	public void discharge(int id) {		
-		SonarAPI.getEnergyHelper().dischargeItem(slots().get(id), this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
+		long transfer = maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract();
+		slots().set(id, SonarAPI.getEnergyHelper().dischargeItem(slots().get(id), this, transfer));
 	}
 
 	public void charge(int id) {
-		SonarAPI.getEnergyHelper().chargeItem(slots().get(id), this, maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract());
+		long transfer = maxTransfer != 0 ? Math.min(maxTransfer, getStorage().getMaxExtract()) : getStorage().getMaxExtract();
+		slots().set(id, SonarAPI.getEnergyHelper().chargeItem(slots().get(id), this, transfer));
 	}
 }

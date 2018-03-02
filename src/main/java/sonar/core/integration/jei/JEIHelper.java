@@ -1,6 +1,7 @@
 package sonar.core.integration.jei;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,10 +67,13 @@ public class JEIHelper {
 					RecipeMapping recipe = mapping.getValue();
 					stacks.init(recipe.slotPos, entry.getKey() == RecipeObjectType.INPUT, recipe.xPos, recipe.yPos);
 					Object obj = objects.get(mapping.getKey());
-                    if (obj != null) {
-						stacks.set(recipe.slotPos, (List) obj);
-					} else {
-						stacks.set(recipe.slotPos, (ItemStack) obj);
+					if(obj==null){
+						continue;
+					}
+					if(obj instanceof List){
+						stacks.set(recipe.slotPos, (List<ItemStack>)obj);
+					}else if (obj instanceof ItemStack){
+						stacks.set(recipe.slotPos, (ItemStack)obj);
 					}
 				}
 			}

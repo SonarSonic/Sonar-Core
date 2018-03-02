@@ -73,7 +73,7 @@ artifacts {
 
 dependencies {
     compileOnly "tesla:Tesla:${tesla_version}"
-    compileOnly "cofhcore:CoFHCore:${cofh_version}"
+    //compileOnly "cofhcore:CoFHCore:${cofh_version}"
     // compile against the JEI API but do not include it at runtime
     deobfProvided "mezz.jei:jei_${jei_version}:api"
     // at runtime, use the full JEI jar
@@ -84,10 +84,10 @@ dependencies {
     compileOnly "appeng:appliedenergistics2:${ae2_version}"
     compileOnly "eleccore-rendering-library:ElecCore:${elec_core_version}"
     compileOnly "mekanism:Mekanism:${mekanism_version}"
-    compileOnly "refinedstorage:refinedstorage:${refinedstorage_version}"
+    //compileOnly "refinedstorage:refinedstorage:${refinedstorage_version}"
     deobfCompile "mcp.mobius.waila:Hwyla:${waila_version}"
     compileOnly "mcjtylib:mcjtylib:${mcjtylib_version}"
-    compileOnly "MCMultiPart:MCMultiPart:${mcmp_version}"
+    //compileOnly "MCMultiPart:MCMultiPart:${mcmp_version}"
 }
 
 processResources

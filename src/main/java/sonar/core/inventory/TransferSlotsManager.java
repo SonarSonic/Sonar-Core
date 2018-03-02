@@ -83,6 +83,7 @@ public class TransferSlotsManager<T extends IInventory> {
 						if (!c.mergeSonarStack(itemstack1, tileSlots.start, tileSlots.end, false)) {
 							return SonarCompat.getEmpty();
 						}
+						break;
 					}
 				}
                 slot.onSlotChange(itemstack1, itemstack);
@@ -94,11 +95,11 @@ public class TransferSlotsManager<T extends IInventory> {
 			} else {
 				slot.onSlotChanged();
 			}
-			if (SonarCompat.getCount(itemstack1) == SonarCompat.getCount(itemstack1)) {
+			if (SonarCompat.getCount(itemstack1) == SonarCompat.getCount(itemstack)) {
 				return SonarCompat.getEmpty();
 			}
 			slot.onPickupFromSlot(player, itemstack1);
-		}
+        }
 		return itemstack;
 	}
 

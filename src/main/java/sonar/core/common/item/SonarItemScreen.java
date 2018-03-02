@@ -29,7 +29,7 @@ public abstract class SonarItemScreen extends SonarItem {
 				BlockPos adjPos = pos.offset(facing);
 				IBlockState adjState = world.getBlockState(adjPos);
 				world.setBlockState(adjPos, getScreenBlock().getDefaultState(), 3);
-				stack = SonarCompat.shrink(stack, 1);
+				player.setHeldItem(hand, SonarCompat.shrink(stack, 1));
 			}
 			return EnumActionResult.SUCCESS;
 		}

@@ -130,9 +130,7 @@ public abstract class GuiSonar extends GuiContainer {
 		if (shouldReset) {
 			doReset();
 		}
-		this.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		//this.renderHoveredToolTip(mouseX, mouseY);
 	}
 
 	@Override
@@ -162,7 +160,7 @@ public abstract class GuiSonar extends GuiContainer {
 	}
 
 	public void drawSonarCreativeTabHoveringText(String tabName, int mouseX, int mouseY) {
-		drawCreativeTabHoveringText(tabName, mouseX, mouseY);
+		super.drawCreativeTabHoveringText(tabName, mouseX, mouseY);
 	}
 
 	@Override

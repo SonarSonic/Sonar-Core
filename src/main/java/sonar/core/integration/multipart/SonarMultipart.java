@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -248,5 +249,10 @@ public abstract class SonarMultipart extends Multipart implements ISyncableListe
 
 	public final void changeFlexibleGui(EntityPlayer player, int id) {
 		SonarCore.instance.guiHandler.openBasicMultipart(true, getUUID(), player, getWorld(), getPos(), id);
+	}
+	
+	public ResourceLocation getModelPath(){
+		ResourceLocation loc = getType();
+		return new ResourceLocation(loc.getResourceDomain(), loc.getResourcePath().toLowerCase());
 	}
 }

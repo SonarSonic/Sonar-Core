@@ -78,7 +78,7 @@ public abstract class JEICategoryV2 implements IRecipeCategory, IRecipeHandler<J
 		
 	}
 
-    @Override
+    //@Override
     public List<String> getTooltipStrings(int mouseX, int mouseY) {
         return Collections.emptyList();
     }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.client.gui.Gui;
 import sonar.core.utils.Pair;
 
-public class GuiHelpOverlay<T extends GuiSonarTile> extends Gui {
+public class GuiHelpOverlay<T extends GuiSonar> extends Gui {
 
 	public static boolean enableHelp;
 

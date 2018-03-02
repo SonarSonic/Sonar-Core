@@ -1,12 +1,17 @@
 package sonar.core.network;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.IStateMapper;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,13 +37,24 @@ import sonar.core.translate.LocalisationManager;
 public class SonarClient extends SonarCommon {
 
 	private IThreadListener clientListener;
+	public static final LowerCaseMapper lowercase_mapper = new LowerCaseMapper();
 	public static final SonarCustomStateMapper mapper = new SonarCustomStateMapper();
 	public static final LocalisationManager translator = new LocalisationManager();
 
-	public <T extends Block> T registerBlock(String modid, ISonarRegistryBlock<T> block){
+	public <T extends Block> T registerBlock(String modid, ISonarRegistryBlock<T> block) {
 		T theBlock = super.registerBlock(modid, block);
 		registerBlockRenderer(modid, block.getValue());
 		return theBlock;
+	}
+
+	public static class LowerCaseMapper extends StateMapperBase implements IStateMapper {
+
+		protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+			ResourceLocation stateLoc = Block.REGISTRY.getNameForObject(state.getBlock());
+			ResourceLocation lowerCase = new ResourceLocation(stateLoc.getResourceDomain(), stateLoc.getResourcePath().toLowerCase());			
+			return new ModelResourceLocation(lowerCase,	this.getPropertyString(state.getProperties()));
+		}
+
 	}
 
 	public void registerBlockRenderer(String modid, Block block) {
@@ -52,14 +68,15 @@ public class SonarClient extends SonarCommon {
 					IMetaRenderer meta = (IMetaRenderer) block;
 					variant = "variant=" + meta.getVariant(stack.getItemDamage()).getName();
 				}
-				ModelLoader.setCustomModelResourceLocation(item, stack.getItemDamage(), new ModelResourceLocation(modid + ':' + item.getUnlocalizedName().substring(5), variant));
+				ModelLoader.setCustomModelResourceLocation(item, stack.getItemDamage(), new ModelResourceLocation(modid + ':' + item.getUnlocalizedName().substring(5).toLowerCase(), variant));
 			}
 		} else {
-			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(modid + ':' + item.getUnlocalizedName().substring(5), "inventory"));
+			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(modid + ':' + item.getUnlocalizedName().substring(5).toLowerCase(), "inventory"));
 		}
+		ModelLoader.setCustomStateMapper(block, lowercase_mapper);
 	}
 
-	public <T extends Item> T registerItem(String modid, ISonarRegistryItem<T> item){
+	public <T extends Item> T registerItem(String modid, ISonarRegistryItem<T> item) {
 		T theItem = super.registerItem(modid, item);
 		registerItemRenderer(modid, item.getValue());
 		return theItem;
@@ -75,10 +92,12 @@ public class SonarClient extends SonarCommon {
 					IMetaRenderer meta = (IMetaRenderer) item;
 					variant = "variant=" + meta.getVariant(stack.getItemDamage()).getName();
 				}
-				ModelLoader.setCustomModelResourceLocation(item, stack.getItemDamage(), new ModelResourceLocation(modid + ":" + "items/" + item.getUnlocalizedName().substring(5), variant));
+				ModelLoader.setCustomModelResourceLocation(item, stack.getItemDamage(), new ModelResourceLocation(
+						modid + ":" + "items/" + item.getUnlocalizedName().substring(5).toLowerCase(), variant));
 			}
 		} else {
-			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(new ResourceLocation(modid, item.getUnlocalizedName().substring(5)), "inventory"));
+			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(
+					new ResourceLocation(modid, item.getUnlocalizedName().substring(5).toLowerCase()), "inventory"));
 
 		}
 	}
@@ -114,7 +133,8 @@ public class SonarClient extends SonarCommon {
 
 	@Override
 	public World getDimension(int dimensionID) {
-		return FMLCommonHandler.instance().getEffectiveSide().isClient() ? Minecraft.getMinecraft().theWorld : super.getDimension(dimensionID);
+		return FMLCommonHandler.instance().getEffectiveSide().isClient() ? Minecraft.getMinecraft().theWorld
+				: super.getDimension(dimensionID);
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class SlotLarge extends Slot {
 		StoredItemStack stored = largeInv.getLargeStack(getSlotIndex());
 		if (stored != null && stored.getStackSize()!=0) {
 			ItemStack item = stored.getFullStack();
-			item = SonarCompat.setCount(item, (int) stored.stored);
+			item.stackSize = (int) stored.stored;
 			return item;
 		}
 		return SonarCompat.getEmpty();
