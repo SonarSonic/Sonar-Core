@@ -1,0 +1,93 @@
+//**SONAR CORE**//
+
+//machine upgrades
+upgrade.maximum=Максимум установлено
+upgrade.incompatible=Несовместимое обновление
+upgrade.accepted=Принятые обновления
+
+
+//blocks
+tile.ReinforcedStoneBlock.name=Укрепленный камень
+tile.ReinforcedDirtBlock.name=Укрепленная грязь
+tile.StableStone.name=Прочный камень
+
+tile.ReinforcedStoneStairs.name=Укрепленные каменные ступеньки
+tile.ReinforcedStoneFence.name=Укрепленный каменный забор
+tile.ReinforcedStoneSlab.name=Укрепленная каменная плита
+
+tile.ReinforcedStoneBrick.name=Укрепленный каменный кирпич
+tile.ReinforcedDirtBrick.name=Укрепленный грязевой кирпич
+
+tile.ReinforcedStoneBrickStairs.name=Укрепленные каменные кирпичные ступеньки
+tile.ReinforcedStoneBrickFence.name=Укрепленный каменный кирпичный забор
+tile.ReinforcedStoneBrickSlab.name=Укрепленная каменная кирпичная плита
+
+tile.ReinforcedDirtStairs.name=Укрепленные грязевые ступеньки
+tile.ReinforcedDirtFence.name=Укрепленный грязевой забор
+tile.ReinforcedDirtSlab.name=Укрепленная грязевая плита
+
+tile.ReinforcedDirtBrickStairs.name=Укрепленные грязевые кирпичные ступеньки
+tile.ReinforcedDirtBrickFence.name=Укрепленный грязевой кирпичный забор
+tile.ReinforcedDirtBrickSlab.name=Укрепленная грязевая кирпичная плита
+
+tile.ReinforcedStoneGate.name=Укрепленная каменная калитка
+tile.ReinforcedDirtGate.name=Укрепленная грязевая калитка
+tile.ReinforcedStoneBrickGate.name=Укрепленная каменная кирпичная калитка
+tile.ReinforcedDirtBrickGate.name=Укрепленная грязевая кирпичная калитка
+
+//stable stone
+tile.StableStone_Normal.name=Прочный камень
+tile.StableStone_Orange.name=Оранжевый прочный камень
+tile.StableStone_Magenta.name=Пурпурный прочный камень
+tile.StableStone_LightBlue.name=Светло-синий прочный камень
+tile.StableStone_Yellow.name=Желтый прочный камень
+tile.StableStone_Lime.name=Лаймовый прочный камень
+tile.StableStone_Pink.name=Розовый прочный камень
+tile.StableStone_Plain.name=Гладкий прочный камень
+tile.StableStone_LightGrey.name=Светло-серый прочный камень
+tile.StableStone_Cyan.name=Голубой прочный камень
+tile.StableStone_Purple.name=Фиолетовый прочный камень
+tile.StableStone_Blue.name=Синий прочный камень
+tile.StableStone_Brown.name=Коричневый прочный камень
+tile.StableStone_Green.name=Зеленый прочный камень
+tile.StableStone_Red.name=Красный прочный камень
+tile.StableStone_Black.name=Черный прочный камень
+
+tile.StableStoneRimmed_Normal.name=Обрамленный прочный камень
+tile.StableStoneRimmed_Orange.name=Оранжевый обрамленный прочный камень
+tile.StableStoneRimmed_Magenta.name=Пурпурный обрамленный прочный камень
+tile.StableStoneRimmed_LightBlue.name=Светло-синий обрамленный прочный камень
+tile.StableStoneRimmed_Yellow.name=Желтый обрамленный прочный камень
+tile.StableStoneRimmed_Lime.name=Лаймовый обрамленный прочный камень
+tile.StableStoneRimmed_Pink.name=Розовый обрамленный прочный камень
+tile.StableStoneRimmed_Plain.name=Гладкий обрамленный прочный камень
+tile.StableStoneRimmed_LightGrey.name=Светло-серый обрамленный прочный камень
+tile.StableStoneRimmed_Cyan.name=Голубой обрамленный прочный камень
+tile.StableStoneRimmed_Purple.name=Фиолетовый обрамленный прочный камень
+tile.StableStoneRimmed_Blue.name=Синий обрамленный прочный камень
+tile.StableStoneRimmed_Brown.name=Коричневый обрамленный прочный камень
+tile.StableStoneRimmed_Green.name=Зеленый обрамленный прочный камень
+tile.StableStoneRimmed_Red.name=Красный обрамленный прочный камень
+tile.StableStoneRimmed_Black.name=Черный обрамленный прочный камень
+
+tile.StableStoneBlackRimmed_Normal.name=Обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Orange.name=Оранжевый обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Magenta.name=Пурпурный обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_LightBlue.name=Светло-синий обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Yellow.name=Желтый обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Lime.name=Лаймовый обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Pink.name=Розовый обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Plain.name=Гладкий обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_LightGrey.name=Светло-серый обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Cyan.name=Голубой обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Purple.name=Фиолетовый обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Blue.name=Синий обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Brown.name=Коричневый обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Green.name=Зеленый обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Red.name=Красный обрамленный черный прочный камень
+tile.StableStoneBlackRimmed_Black.name=Черный обрамленный черный прочный камень
+
+tile.StableGlass.name=Прочное стекло
+tile.ClearStableGlass.name=Прозрачное прочное стекло
+
+itemGroup.SonarCore=Sonar Core
