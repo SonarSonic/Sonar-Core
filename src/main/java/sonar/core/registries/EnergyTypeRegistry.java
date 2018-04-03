@@ -7,12 +7,12 @@ public class EnergyTypeRegistry extends RegistryHelper<EnergyType> {
 
 	@Override
 	public void register() {
-		registerObject(EnergyType.AE);
-		registerObject(EnergyType.MJ);
-		registerObject(EnergyType.EU);
+		registerObject(EnergyType.FE);
 		registerObject(EnergyType.TESLA);
 		registerObject(EnergyType.RF);
-		registerObject(EnergyType.FE);
+		registerObject(EnergyType.EU);
+		registerObject(EnergyType.MJ);
+		registerObject(EnergyType.AE);
 	}
 
 	@Override
@@ -26,6 +26,10 @@ public class EnergyTypeRegistry extends RegistryHelper<EnergyType> {
 				return type;
 			}
 		}
-		return null;
+		return getDefault();
+	}
+	
+	public EnergyType getDefault() {
+		return EnergyType.FE;
 	}
 }

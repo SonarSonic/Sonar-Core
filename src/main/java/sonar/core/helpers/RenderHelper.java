@@ -163,8 +163,11 @@ public class RenderHelper {
 	// public static void renderItem(GuiSonar screen, int x, int y, ItemStack stack) {
 
 	// }
-
 	public static void renderStoredItemStackOverlay(ItemStack stack, long stored, int x, int y, String string, boolean depth) {
+		renderStoredItemStackOverlay(stack, stored, x, y, 16777215, string, depth);
+	}
+
+	public static void renderStoredItemStackOverlay(ItemStack stack, long stored, int x, int y, int colour, String string, boolean depth) {
 		if (stack != null) {
 			FontRenderer font = getFontFromStack(stack);
 			stack.setCount(1);
@@ -181,7 +184,7 @@ public class RenderHelper {
 				scale(scaleFactor, scaleFactor, scaleFactor);
 				final int X = (int) (((float) x + 15.0f - font.getStringWidth(s1) * scaleFactor) * inverseScaleFactor);
 				final int Y = (int) (((float) y + 15.0f - 7.0f * scaleFactor) * inverseScaleFactor);
-				font.drawStringWithShadow(s1, X, Y, 16777215);
+				font.drawStringWithShadow(s1, X, Y, colour);
 				// enableLighting();
 
 				if (depth)

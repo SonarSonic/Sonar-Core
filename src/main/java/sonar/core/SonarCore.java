@@ -70,7 +70,7 @@ public class SonarCore {
 
 	public static final String name = "SonarCore";
 	public static final String modid = "sonarcore";
-	public static final String version = "5.0.6";
+	public static final String version = "5.0.7";
 	public static final String mc_versions = "[1.12,1.12.2]";
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
@@ -135,9 +135,7 @@ public class SonarCore {
 			OreDictionary.registerOre("sonarStableStone", SonarCore.stablestonerimmedBlock[i]);
 			OreDictionary.registerOre("sonarStableStone", SonarCore.stablestonerimmedblackBlock[i]);
 		}
-
-		ASMDataTable asmDataTable = event.getAsmData();
-		ASMLoader.load(asmDataTable);
+		ASMLoader.load(event.getAsmData());
 		proxy.preInit(event);
 	}
 

@@ -48,7 +48,7 @@ public abstract class RegistryHelper<T extends IRegistryObject> {
 				return provider;
 			}
 		}
-		return getDefault();
+		return null;
 	}
 
 	public void registerObject(T object) {

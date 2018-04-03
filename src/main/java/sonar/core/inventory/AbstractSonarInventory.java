@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.IItemHandler;
 import sonar.core.api.SonarAPI;
@@ -169,8 +168,9 @@ public abstract class AbstractSonarInventory<T extends AbstractSonarInventory> e
 
 	@Override
 	public void clear() {
-		for (int i = 0; i < this.getSizeInventory(); i++)
+		for (int i = 0; i < this.getSizeInventory(); i++){
 			this.setInventorySlotContents(i, ItemStack.EMPTY);
+		}
 	}
 
 	@Override

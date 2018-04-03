@@ -75,7 +75,7 @@ public class RecipeUtils {
 
 	public static List<ItemStack> getListFromObject(Object obj) {
 		if(obj instanceof Ingredient){
-			return addStacks(Lists.newArrayList(), SonarHelper.convertArray(((Ingredient)obj).getMatchingStacks()));
+			return addStacks(new ArrayList<>(), SonarHelper.convertArray(((Ingredient)obj).getMatchingStacks()));
 		}
 		else if (obj instanceof List) {
             return addStacks(new ArrayList<>(), (List<ItemStack>) obj);

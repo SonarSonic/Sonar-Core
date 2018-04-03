@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.utils.CustomColour;
@@ -215,6 +216,14 @@ public class FontHelper {
 		blue = blue & 0x000000FF;
 
 		return 0xFF000000 | red | green | blue;
+	}
+
+	public static int getColourFromFormatting(TextFormatting colour) {
+		int formattingColour = RenderHelper.getTextFormattingColour(colour);
+		int r = (int) (formattingColour >> 16 & 255);
+		int g = (int) (formattingColour >> 8 & 255);
+		int b = (int) (formattingColour & 255);
+		return FontHelper.getIntFromColor(r, g, b);
 	}
 
 	public static String getStringListToText(List<String> strings) {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.renderer.GlStateManager;
 import sonar.core.utils.Pair;
 
 public abstract class GuiGridElement<T> {
@@ -27,7 +28,7 @@ public abstract class GuiGridElement<T> {
 
 	public abstract float getCurrentScroll();
 
-	public abstract void onGridClicked(T selection, int pos, int button, boolean empty);
+	public abstract void onGridClicked(T selection, int x, int y, int pos, int button, boolean empty);
 
 	public abstract void renderGridElement(T selection, int x, int y, int slot);
 
@@ -63,21 +64,22 @@ public abstract class GuiGridElement<T> {
 		int finish = Math.min(i + gWidth * gHeight, gridList.size());
 		int X = (x - gui.getGuiLeft() - xPos) / eWidth;
 		int Y = (y - gui.getGuiTop() - yPos) / eHeight;
-
 		preRender();
 		for (int yPos = 0; yPos < gHeight; yPos++) {
 			for (int xPos = 0; xPos < gWidth; xPos++) {
 				if (i < finish) {
 					T selection = gridList.get(i);
 					if (selection != null) {
-						renderGridElement(selection, xPos, yPos, i);
+						GlStateManager.pushMatrix();
+						GlStateManager.translate(this.xPos + (xPos * eWidth), this.yPos + (yPos * eHeight), 0);
+						renderGridElement(selection, 0, 0, i);
+						GlStateManager.popMatrix();
 					}
 				}
 				i++;
 			}
 		}
 		postRender();
-
 		if (x - gui.getGuiLeft() >= xPos && x - gui.getGuiLeft() <= xPos + gWidth * eWidth && y - gui.getGuiTop() >= yPos && y - gui.getGuiTop() <= yPos + gHeight * eHeight) {
 			int pos = start * gWidth + X + Y * gWidth;
 			if (pos < gridList.size()) {
@@ -108,6 +110,6 @@ public abstract class GuiGridElement<T> {
 	public void mouseClicked(GuiSonar gui, int x, int y, int button) {
 		Pair<T, Integer> e = getElementHovered(gui, x, y);
 		if (e.b != -2)
-			onGridClicked(e.a, e.b, button, e.a == null);
+			onGridClicked(e.a, x, y, e.b, button, e.a == null);
 	}
 }

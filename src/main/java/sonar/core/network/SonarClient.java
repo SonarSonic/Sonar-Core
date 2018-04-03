@@ -11,9 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -108,12 +106,12 @@ public class SonarClient extends SonarCommon {
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
 		return ctx.side.isClient() ? Minecraft.getMinecraft().player : super.getPlayerEntity(ctx);
 	}
-
+	/*
 	@Override
 	public World getDimension(int dimensionID) {
-		return FMLCommonHandler.instance().getEffectiveSide().isClient() ? Minecraft.getMinecraft().world : super.getDimension(dimensionID);
+		return FMLCommonHandler.instance().getSide().isClient() ? Minecraft.getMinecraft().world : super.getDimension(dimensionID);
 	}
-
+	*/
 	@Override
 	public IThreadListener getThreadListener(Side side) {
 		if (side.isClient()) {

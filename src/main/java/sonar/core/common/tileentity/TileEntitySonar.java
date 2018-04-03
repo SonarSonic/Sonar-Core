@@ -196,6 +196,14 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		return false;
 	}
 
+	public void openFlexibleGui(EntityPlayer player, int id) {
+		SonarCore.instance.guiHandler.openBasicTile(false, this, player, world, pos, id);
+	}
+
+	public void changeFlexibleGui(EntityPlayer player, int id) {
+		SonarCore.instance.guiHandler.openBasicTile(true, this, player, world, pos, id);
+	}
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared() {

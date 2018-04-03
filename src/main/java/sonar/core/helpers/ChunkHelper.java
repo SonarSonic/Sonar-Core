@@ -4,8 +4,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.management.PlayerChunkMap;
 import net.minecraft.server.management.PlayerChunkMapEntry;
@@ -30,11 +28,11 @@ public class ChunkHelper {
 				return getChunkPlayers(entry);
 			}
 		}
-		return Lists.newArrayList();
+		return new ArrayList<>();
 	}
 
 	public static List<EntityPlayerMP> getChunkPlayers(World world, List<ChunkPos> chunks) {
-		List<EntityPlayerMP> allPlayers = Lists.newArrayList();
+		List<EntityPlayerMP> allPlayers = new ArrayList<>();
 		if (world instanceof WorldServer) {
 			WorldServer server = (WorldServer) world;
 			PlayerChunkMap map = server.getPlayerChunkMap();
@@ -79,6 +77,6 @@ public class ChunkHelper {
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			// e.printStackTrace();
 		}
-		return Lists.newArrayList();
+		return new ArrayList<>();
 	}
 }

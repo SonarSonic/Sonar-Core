@@ -28,7 +28,7 @@ import sonar.core.integration.SonarLoader;
 import sonar.core.network.sync.SyncEnergyStorage;
 import sonar.core.network.sync.SyncSidedEnergyStorage;
 
-@Optional.InterfaceList({ @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyProvider", modid = "redstoneflux"), @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyReceiver", modid = "redstoneflux"), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "IC2"), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2") })
+@Optional.InterfaceList({ @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyProvider", modid = "redstoneflux"), @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyReceiver", modid = "redstoneflux"), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "ic2"), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "ic2"), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "ic2") })
 public abstract class TileEntityEnergy extends TileEntitySonar implements IEnergyReceiver, IEnergyProvider, ISonarEnergyTile, IEnergyTile, IEnergySink, IEnergySource {
 
 	public TileEntityEnergy() {
@@ -150,7 +150,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	boolean IC2Connected = false;
 	
 	@Override
-	@Optional.Method(modid = "IC2")
+	@Optional.Method(modid = "ic2")
 	public void onLoad() {
 		super.onLoad();
 		if (!this.getWorld().isRemote && !IC2Connected) {
@@ -160,14 +160,17 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	}
 
 	@Override
-	@Optional.Method(modid = "IC2")
+	@Optional.Method(modid = "ic2")
 	public void invalidate() {
 		super.invalidate();
-		onChunkUnload();
+		if (!this.getWorld().isRemote && IC2Connected) {
+			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+			IC2Connected = false;
+		}
 	}
 
 	@Override
-	@Optional.Method(modid = "IC2")
+	@Optional.Method(modid = "ic2")
 	public void onChunkUnload() {
 		super.onChunkUnload();
 		if (!this.getWorld().isRemote && IC2Connected) {
@@ -177,21 +180,25 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	}
 
 	@Override
+	@Optional.Method(modid = "ic2")
 	public double getDemandedEnergy() {
 		return Math.min(EUHelper.getVoltage(this.getSinkTier()), this.storage.addEnergy(this.storage.getMaxReceive(), ActionType.getTypeForAction(true)) / 4);
 	}
 
 	@Override
+	@Optional.Method(modid = "ic2")
 	public int getSinkTier() {
 		return 4;
 	}
 
 	@Override
+	@Optional.Method(modid = "ic2")
 	public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
 		return this.getModeForSide(side).canRecieve();
 	}
 
 	@Override
+	@Optional.Method(modid = "ic2")
 	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
 		int addRF = this.storage.receiveEnergy((int) amount * 4, true);
 		this.storage.addEnergy(addRF, ActionType.getTypeForAction(false));
@@ -199,21 +206,25 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	}
 
 	@Override
+	@Optional.Method(modid = "ic2")
 	public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing side) {
 		return getModeForSide(side).canSend();
 	}
 
 	@Override
+	@Optional.Method(modid = "ic2")
 	public double getOfferedEnergy() {
 		return Math.min(EUHelper.getVoltage(this.getSourceTier()), this.storage.removeEnergy(maxTransfer, ActionType.getTypeForAction(true)) / 4);
 	}
 
 	@Override
+	@Optional.Method(modid = "ic2")
 	public void drawEnergy(double amount) {
 		this.storage.removeEnergy((long) (amount * 4), ActionType.getTypeForAction(false));
 	}
 
 	@Override
+	@Optional.Method(modid = "ic2")
 	public int getSourceTier() {
 		return 4;
 	}

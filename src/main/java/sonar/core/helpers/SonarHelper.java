@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 
@@ -298,5 +300,15 @@ public class SonarHelper {
         }
         return new ArrayList<>();
 
+    }
+    
+    @Nullable
+    public static EnumFacing getBlockDirection(BlockPos main, BlockPos dirPos){
+    	for(EnumFacing face : EnumFacing.VALUES){
+    		if(main.offset(face).equals(dirPos)){
+    			return face;
+    		}
+    	}
+    	return null;
     }
 }

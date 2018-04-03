@@ -1,12 +1,11 @@
 package sonar.core.client.gui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Vector3d;
 
 import org.lwjgl.opengl.GL11;
-
-import com.google.common.collect.Lists;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -39,7 +38,7 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 
 	public final Vector3d origin = new Vector3d();
 	public final Vector3d eye = new Vector3d();
-	public List<GuiBlockRenderCache> blocks = Lists.newArrayList();
+	public List<GuiBlockRenderCache> blocks = new ArrayList<>();
 
 	public int cubeSize;
 

@@ -2,6 +2,7 @@ package sonar.core.handlers.energy;
 
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
+import ic2.api.energy.tile.IEnergyTile;
 import ic2.api.tile.IEnergyStorage;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -12,12 +13,12 @@ import sonar.core.api.energy.StoredEnergyStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.EUHelper;
 
-@EnergyHandler(modid = "IC2", priority = 4)
+@EnergyHandler(modid = "ic2", priority = 4)
 public class EUHandler implements ISonarEnergyHandler {
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
-		return tile instanceof IEnergySink || tile instanceof IEnergySource || tile instanceof IEnergyStorage;
+		return tile instanceof IEnergyTile || tile instanceof IEnergySink || tile instanceof IEnergySource || tile instanceof IEnergyStorage;
 	}
 
 	@Override

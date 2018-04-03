@@ -1,8 +1,11 @@
 package sonar.core.helpers;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.api.utils.ICalculatorCircuit;
 
@@ -110,5 +113,14 @@ public class ItemStackHelper {
 			}
 		}
 		return false;
+	}
+
+	public static ItemStack getBlockItem(World world, BlockPos pos) {
+		IBlockState state = world.getBlockState(pos);
+		ItemStack stack = state.getBlock().getItem(world, pos, state);
+		if (stack == null || stack.isEmpty()) {
+			stack = new ItemStack(Item.getItemFromBlock(state.getBlock()));
+		}
+		return stack;
 	}
 }

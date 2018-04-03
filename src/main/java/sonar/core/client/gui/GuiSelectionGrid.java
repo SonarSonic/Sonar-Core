@@ -86,7 +86,7 @@ public abstract class GuiSelectionGrid<T> extends GuiSonar {
 		//RenderHelper.restoreBlendState();
 	}
 
-	public abstract void onGridClicked(T element, int pos, int button, boolean empty);
+	public abstract void onGridClicked(T element, int x, int y, int pos, int button, boolean empty);
 
 	public abstract void renderGridElement(T element, int x, int y, int slot);
 
@@ -114,8 +114,8 @@ public abstract class GuiSelectionGrid<T> extends GuiSonar {
 		}
 
 		@Override
-		public void onGridClicked(T selection, int pos, int button, boolean empty) {
-			selectGrid.onGridClicked(selection, pos, button, empty);
+		public void onGridClicked(T selection, int x, int y, int pos, int button, boolean empty) {
+			selectGrid.onGridClicked(selection, x, y, pos, button, empty);
 		}
 
 		@Override

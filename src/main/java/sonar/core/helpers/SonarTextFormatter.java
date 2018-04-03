@@ -7,8 +7,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.google.common.collect.Lists;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
@@ -212,7 +210,7 @@ public class SonarTextFormatter {
 	}
 
 	public static List<TextFormatting> readFormattingFromNBT(NBTTagCompound nbt) {
-		List<TextFormatting> formatting = Lists.newArrayList();
+		List<TextFormatting> formatting = new ArrayList<>();
 		int[] ordinals = nbt.getIntArray("tf");
 		for (int i : ordinals) {
 			formatting.add(TextFormatting.values()[i]);

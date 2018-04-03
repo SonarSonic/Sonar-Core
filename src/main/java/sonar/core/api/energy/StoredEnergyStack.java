@@ -23,6 +23,11 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 		this.energyType = type;
 	}
 
+	public StoredEnergyStack(EnergyType type, long stored) {
+		this.energyType = type;
+		this.stored = stored;
+	}
+
 	public void setStorageValues(long stored, long capacity) {
 		if (!hasStorage) {
 			this.stored = stored;
@@ -245,10 +250,5 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 			energyType = newFormat;
 		}
 		return this;
-	}
-
-	public static long convert(long val, EnergyType current, EnergyType type) {
-        double inRF = val / current.toRFConversion();
-		return (long) (inRF * type.toRFConversion());
 	}
 }

@@ -8,16 +8,26 @@ import sonar.core.helpers.NBTHelper.SyncType;
 
 public class SyncEnergyType extends SyncPart {
 
-    public EnergyType type = EnergyType.RF;
+    public EnergyType type = EnergyType.FE;
 
     public SyncEnergyType(int id) {
         super(id);
+    }
+
+    public SyncEnergyType(int id, EnergyType def) {
+        super(id);
+        type = def;
     }
 
     public EnergyType getEnergyType() {
         return type;
     }
 
+    public void setEnergyType(EnergyType type){
+    	this.type = type;
+    	this.markChanged();
+    }
+    
     public void incrementType() {
         int ordinal = SonarCore.energyTypes.getObjectID(type.getName()) + 1;
         EnergyType type = SonarCore.energyTypes.getRegisteredObject(ordinal);

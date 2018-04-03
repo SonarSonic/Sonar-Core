@@ -54,7 +54,6 @@ public class SonarScroller {
 	public void drawScreen(int x, int y, boolean needsScrollBars){
 		float lastScroll = currentScroll;
 		boolean flag = Mouse.isButtonDown(0);
-
         if (!this.wasClicking && flag && x >= left && y >= top && x < left + width && y < top + length) {
 			this.isScrolling = needsScrollBars;
 		}

@@ -3,9 +3,9 @@ package sonar.core.network;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -45,8 +45,7 @@ public class SonarCommon {
 	}
 
 	public World getDimension(int dimensionID) {
-		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-		return server.getWorld(dimensionID);
+		return DimensionManager.getWorld(dimensionID);
 	}
 
 	public IThreadListener getThreadListener(Side side) {

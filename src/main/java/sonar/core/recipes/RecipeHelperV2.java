@@ -22,7 +22,6 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
     /**
      * the list of recipes
      */
-
     public ArrayList<T> recipes = new ArrayList<>();
 	public ArrayList<Class<?>> validInputs = Lists.newArrayList(ISonarRecipeObject.class, ItemStack.class, Item.class, Block.class, ItemStack[].class, List.class, String.class, Integer.class);
 	public ArrayList<Class<?>> validOutputs = Lists.newArrayList(ISonarRecipeObject.class, ItemStack.class, Item.class, Block.class, String.class, Integer.class);

@@ -6,11 +6,11 @@ public interface ISonarListenable<L extends ISonarListener> extends IValidate {
 
     ListenableList<L> getListenerList();
 
-    void onListenerAdded(ListenerTally<L> tally);
+    default void onListenerAdded(ListenerTally<L> tally){}
 
-    void onListenerRemoved(ListenerTally<L> tally);
+    default void onListenerRemoved(ListenerTally<L> tally){}
 
-    void onSubListenableAdded(ISonarListenable<L> listen);
+    default void onSubListenableAdded(ISonarListenable<L> listen){}
 
-    void onSubListenableRemoved(ISonarListenable<L> listen);
+    default void onSubListenableRemoved(ISonarListenable<L> listen){}
 }

@@ -39,10 +39,10 @@ public class EnergyHelper extends EnergyWrapper {
      * allows specific selection of the Energy Handler rather than using the receiveEnergy method normally
      */
 	public long performReceive(ISonarEnergyHandler handler, TileEntity tile, long maxReceive, EnumFacing dir, ActionType type) {
-		long receive = StoredEnergyStack.convert(maxReceive, EnergyType.RF, handler.getProvidedType());
+		long receive = EnergyType.convert(maxReceive, EnergyType.RF, handler.getProvidedType());
 		StoredEnergyStack stack = handler.addEnergy(new StoredEnergyStack(EnergyType.RF).setStackSize(receive), tile, dir, type);
 		long remain = stack == null ? 0 : stack.getStackSize();
-		remain = StoredEnergyStack.convert(remain, handler.getProvidedType(), EnergyType.RF);
+		remain = EnergyType.convert(remain, handler.getProvidedType(), EnergyType.RF);
 		return maxReceive - remain;
 	}
 
@@ -61,11 +61,11 @@ public class EnergyHelper extends EnergyWrapper {
      * allows specific selection of the Energy Handler rather than using the extractEnergy method normally
      */
 	public long performExtract(ISonarEnergyHandler handler, TileEntity tile, long maxExtract, EnumFacing dir, ActionType type) {
-		long receive = StoredEnergyStack.convert(maxExtract, EnergyType.RF, handler.getProvidedType());
+		long receive = EnergyType.convert(maxExtract, EnergyType.RF, handler.getProvidedType());
 		StoredEnergyStack stack = handler.removeEnergy(new StoredEnergyStack(EnergyType.RF).setStackSize(receive), tile, dir, type);
 
 		long remain = stack == null ? 0 : stack.getStackSize();
-		remain = StoredEnergyStack.convert(remain, handler.getProvidedType(), EnergyType.RF);
+		remain = EnergyType.convert(remain, handler.getProvidedType(), EnergyType.RF);
 		return maxExtract - remain;
 	}
 
@@ -74,11 +74,11 @@ public class EnergyHelper extends EnergyWrapper {
 		if (maxReceive != 0 && !stack.isEmpty()) {
 			ISonarEnergyContainerHandler handler = this.canTransferEnergy(stack);
 			if (handler != null) {
-				long receive = StoredEnergyStack.convert(maxReceive, EnergyType.RF, handler.getProvidedType());
+				long receive = EnergyType.convert(maxReceive, EnergyType.RF, handler.getProvidedType());
 				StoredEnergyStack energystack = handler.addEnergy(new StoredEnergyStack(EnergyType.RF).setStackSize(receive), stack, type);
 
 				long remain = energystack == null ? 0 : energystack.getStackSize();
-				remain = StoredEnergyStack.convert(remain, handler.getProvidedType(), EnergyType.RF);
+				remain = EnergyType.convert(remain, handler.getProvidedType(), EnergyType.RF);
 				return maxReceive - remain;
 			}
 		}
@@ -90,11 +90,11 @@ public class EnergyHelper extends EnergyWrapper {
 		if (maxExtract != 0 && !stack.isEmpty()) {
 			ISonarEnergyContainerHandler handler = this.canTransferEnergy(stack);
 			if (handler != null) {
-				long receive = StoredEnergyStack.convert(maxExtract, EnergyType.RF, handler.getProvidedType());
+				long receive = EnergyType.convert(maxExtract, EnergyType.RF, handler.getProvidedType());
 				StoredEnergyStack energystack = handler.removeEnergy(new StoredEnergyStack(EnergyType.RF).setStackSize(receive), stack, type);
 
 				long remain = energystack == null ? 0 : energystack.getStackSize();
-				remain = StoredEnergyStack.convert(remain, handler.getProvidedType(), EnergyType.RF);
+				remain = EnergyType.convert(remain, handler.getProvidedType(), EnergyType.RF);
 				return maxExtract - remain;
 			}
 		}

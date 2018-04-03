@@ -72,6 +72,34 @@ public abstract class GuiSonar extends GuiContainer {
 
 	}
 
+	public void startNormalItemStackRender() {
+		GlStateManager.enableDepth();
+		RenderHelper.enableGUIStandardItemLighting();
+		sonar.core.helpers.RenderHelper.saveBlendState();
+		GlStateManager.translate(0.0F, 0.0F, 32.0F);
+		this.zLevel = 200.0F;
+		this.itemRender.zLevel = 200.0F;
+	}
+
+	public void drawNormalItemStack(ItemStack stack, int x, int y) {
+		startNormalItemStackRender();
+		net.minecraft.client.gui.FontRenderer font = stack.getItem().getFontRenderer(stack);
+		if (font == null)
+			font = fontRenderer;
+		this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
+		this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y, "");
+		finishNormalItemStackRender();
+	}
+
+	public void finishNormalItemStackRender() {
+		this.zLevel = 0.0F;
+		this.itemRender.zLevel = 0.0F;
+
+		sonar.core.helpers.RenderHelper.restoreBlendState();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableDepth();
+	}
+
 	public void drawNormalToolTip(ItemStack stack, int x, int y) {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -139,20 +167,21 @@ public abstract class GuiSonar extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
 		super.drawGuiContainerForegroundLayer(x, y);
 		fieldList.forEach(SonarTextField::drawTextBox);
-		RenderHelper.disableStandardItemLighting();
+	}
 
+	protected void renderHoveredToolTip(int x, int y) {
+		super.renderHoveredToolTip(x, y);
 		for (GuiButton guibutton : this.buttonList) {
 			if (guibutton.isMouseOver()) {
-				guibutton.drawButtonForegroundLayer(x - this.guiLeft, y - this.guiTop);
+				guibutton.drawButtonForegroundLayer(x, y);
 				break;
 			}
 		}
-		RenderHelper.enableGUIStandardItemLighting();
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float v, int i, int i1) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(this.getBackground());
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 	}
