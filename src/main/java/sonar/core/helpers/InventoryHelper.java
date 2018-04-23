@@ -9,6 +9,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
@@ -22,6 +23,7 @@ import sonar.core.handlers.inventories.IInventoryHandler;
 import sonar.core.inventory.IAdditionalInventory;
 import sonar.core.inventory.IDropInventory;
 
+@Deprecated
 public class InventoryHelper extends InventoryWrapper {
 
 	public static ISonarInventoryHandler defHandler = new IInventoryHandler();
@@ -152,33 +154,17 @@ public class InventoryHelper extends InventoryWrapper {
 
 	@Override
 	public void spawnStoredItemStackDouble(StoredItemStack drop, World world, double x, double y, double z, EnumFacing side) {
-		List<EntityItem> drops = new ArrayList<>();
 		while (!(drop.stored <= 0)) {
-			ItemStack dropStack = drop.getItemStack();
+			ItemStack dropStack = drop.getItemStack().copy();
 			dropStack.setCount((int) Math.min(drop.stored, dropStack.getMaxStackSize()));
-			drop.stored -= dropStack.getCount();
-			drops.add(new EntityItem(world, x, y, z, dropStack));
-		}
-		if (drop.stored < 0) {
-			SonarCore.logger.error("ERROR: Excess Items in Drop");
-		}
-		for (EntityItem item : drops) {
-			item.motionX = 0;
-			item.motionY = 0;
-			item.motionZ = 0;
-			if (side == EnumFacing.NORTH) {
-				item.motionZ = -0.1;
-			}
-			if (side == EnumFacing.SOUTH) {
-				item.motionZ = 0.1;
-			}
-			if (side == EnumFacing.WEST) {
-				item.motionX = -0.1;
-			}
-			if (side == EnumFacing.EAST) {
-				item.motionX = 0.1;
-			}
-			world.spawnEntity(item);
+			drop.stored -= dropStack.getCount();		
+			
+			EntityItem entity = new EntityItem(world, x, y, z, dropStack);
+			entity.setPickupDelay(40);
+			entity.motionX = side.getFrontOffsetX()/16;
+			entity.motionY = side.getFrontOffsetY()/16;
+			entity.motionZ = side.getFrontOffsetZ()/16;
+			world.spawnEntity(entity);
 		}
 	}
 

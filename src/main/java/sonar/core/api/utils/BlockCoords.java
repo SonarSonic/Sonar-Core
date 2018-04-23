@@ -143,6 +143,7 @@ public class BlockCoords {
 		return world.getTileEntity(pos);
 	}
 
+	
 	public Block getBlock() {
 		if (this.hasDimension()) {
 			return getWorld().getBlockState(pos).getBlock();
@@ -150,11 +151,12 @@ public class BlockCoords {
 			return null;
 		}
 	}
-
+	
 	public IBlockState getBlockState(World world) {
 		return world.getBlockState(pos);
 	}
 
+	
 	public IBlockState getBlockState() {
 		if (this.hasDimension()) {
 			return getWorld().getBlockState(pos);
@@ -170,11 +172,13 @@ public class BlockCoords {
 			return null;
 		}
 	}
-
+	
+	/**do not use on client side!*/	
+	
 	public World getWorld() {
         return SonarCore.proxy.getDimension(getDimension());
 	}
-
+	
     public boolean insideChunk(ChunkPos pos) {
         return pos.x >> 4 == getX() >> 4 && pos.z >> 4 == getZ() >> 4;
     }
@@ -182,11 +186,15 @@ public class BlockCoords {
     public boolean insideChunk(int chunkX, int chunkZ) {
         return chunkX == getX() >> 4 && chunkZ == getZ() >> 4;
 	}
+
+	public boolean isChunkLoaded(World world){
+		return world.isBlockLoaded(pos, false);
+	}
 	
 	public boolean isChunkLoaded(){
 		return getWorld().isBlockLoaded(pos, false);
 	}
-
+	
 	public static void writeToBuf(ByteBuf tag, BlockCoords coords) {
 		tag.writeInt(coords.pos.getX());
 		tag.writeInt(coords.pos.getY());

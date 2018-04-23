@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import sonar.core.SonarCore;
@@ -19,15 +20,16 @@ import sonar.core.api.IFlexibleGui;
 import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.PacketRequestMultipartSync;
+import sonar.core.utils.IWorldTile;
 
-public class TileSonarMultipart extends TileEntitySonar implements IMultipartTile, ITickable {
+public class TileSonarMultipart extends TileEntitySonar implements IMultipartTile, ITickable, IWorldTile {
 
 	public IPartInfo info;
 
 	public Optional<IPartInfo> getInfo() {
 		return Optional.ofNullable(info);
 	}
-	
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
@@ -114,5 +116,15 @@ public class TileSonarMultipart extends TileEntitySonar implements IMultipartTil
 			return (T) this;
 		}
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public World getActualWorld() {
+		return (info == null || info.getContainer() == null) ? getWorld() : info.getActualWorld();
+	}
+
+	@Override
+	public World getPartWorld() {
+		return (info == null || info.getContainer() == null) ? getWorld() : info.getPartWorld();
 	}
 }

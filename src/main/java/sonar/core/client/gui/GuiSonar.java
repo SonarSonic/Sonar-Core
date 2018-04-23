@@ -20,6 +20,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.api.machines.IPausable;
@@ -27,7 +28,7 @@ import sonar.core.api.machines.IProcessMachine;
 import sonar.core.helpers.FontHelper;
 import sonar.core.upgrades.UpgradeInventory;
 
-public abstract class GuiSonar extends GuiContainer {
+public abstract class GuiSonar extends GuiContainer implements IGuiOrigin {
 
 	protected List<SonarTextField> fieldList = new ArrayList<>();
 	public boolean shouldReset = false;
@@ -151,6 +152,7 @@ public abstract class GuiSonar extends GuiContainer {
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
+		GlStateManager.color(1, 1, 1, 1);
 		sonar.core.helpers.RenderHelper.restoreBlendState();
 	}
 
@@ -195,6 +197,12 @@ public abstract class GuiSonar extends GuiContainer {
 		// drawCreativeTabHoveringText(tabName, mouseX, mouseY);
 	}
 
+	public Object origin;
+
+	public void setOrigin(Object origin) {
+		this.origin = origin;
+	}
+
 	@Override
 	protected void keyTyped(char c, int i) throws IOException {
 		for (SonarTextField field : fieldList) {
@@ -208,6 +216,12 @@ public abstract class GuiSonar extends GuiContainer {
 				return;
 			}
 		}
+		if (isCloseKey(i)) {
+			if (origin != null) {
+				FMLCommonHandler.instance().showGuiScreen(origin);
+				return;
+			}
+		}
 		super.keyTyped(c, i);
 	}
 
@@ -217,10 +231,17 @@ public abstract class GuiSonar extends GuiContainer {
 
 	public void onTextFieldChanged(SonarTextField field) {}
 
+	public void onTextFieldFocused(SonarTextField field) {}
+
 	@Override
 	public void mouseClicked(int i, int j, int k) throws IOException {
 		super.mouseClicked(i, j, k);
-		fieldList.forEach(field -> field.mouseClicked(i - guiLeft, j - guiTop, k));
+		for (SonarTextField field : fieldList) {
+			boolean focused = field.mouseClicked(i - guiLeft, j - guiTop, k);
+			if (focused) {
+				onTextFieldFocused(field);
+			}
+		}
 	}
 
 	@Override

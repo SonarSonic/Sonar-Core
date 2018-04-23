@@ -8,6 +8,8 @@ import mcmultipart.api.multipart.IMultipart;
 import mcmultipart.api.multipart.IMultipartTile;
 import mcmultipart.api.multipart.MultipartHelper;
 import mcmultipart.api.slot.IPartSlot;
+import mcmultipart.api.world.IMultipartBlockAccess;
+import mcmultipart.api.world.IMultipartWorld;
 import mcmultipart.slot.SlotRegistry;
 import mcmultipart.util.MCMPBlockAccessWrapper;
 import mcmultipart.util.MCMPWorldWrapper;
@@ -45,49 +47,21 @@ public class SonarMultipartHelper {
 	public static Optional<IMultipartTile> getMultipartTileFromSlotID(IBlockAccess world, BlockPos pos, int id) {
 		return getMultipartTile(world, pos, SlotRegistry.INSTANCE.getSlotFromID(id), part -> true);
 	}
-	
-	
-	public static World unwrapWorld(World world){
-		if(world instanceof MCMPWorldWrapper){
-			return SonarCore.proxy.getDimension(world.provider.getDimension());
-		}		
-		return world;
-	}
-	
-	
-	public static IBlockAccess unwrapBlockAccess(IBlockAccess world){
-		if(world instanceof World){
-			return unwrapWorld((World)world);
-		}
-		if(world instanceof MCMPBlockAccessWrapper){
-			return Minecraft.getMinecraft().world;
-		}		
-		return world;
-	}
-	/*
-	public static IBlockAccess unwrapBlockAccess(IBlockAccess world){
-		if(world instanceof World){
-			return unwrapWorld((World)world);
-		}
-		if(world instanceof MCMPBlockAccessWrapper){
-			return ((MCMPBlockAccessWrapper)world).getActualWorld();
+
+	public static World unwrapWorld(World world) {
+		if (world instanceof IMultipartWorld) {
+			return ((IMultipartWorld) world).getActualWorld();
 		}
 		return world;
 	}
 
-	/** if this TileEntity is within a MCMultipartContainer it will return the
-	 * IMultipartContainer TileEntity otherwise it will return the tileentity
-	public static TileEntity unwrapTile(TileEntity tile) {
-		if (SonarLoader.mcmultipartLoaded && !(tile instanceof IMultipartContainer) && tile instanceof IMultipartTile) {
-			World actualWorld = unwrapWorld(tile.getWorld());
-			Optional<IMultipartContainer> container = MultipartHelper.getContainer(actualWorld, tile.getPos());
-			if(container.isPresent() && container.get() instanceof TileEntity){
-				return (TileEntity) container.get();
-			}
-		}		
-		return tile;
-	} */
-
+	public static IBlockAccess unwrapBlockAccess(IBlockAccess world) {
+		if (world instanceof IMultipartBlockAccess) {
+			return ((IMultipartBlockAccess) world).getActualWorld();
+		}
+		return world;
+	}
+	
 	public static Object getTile(World world, BlockPos pos) {
 		if (SonarLoader.mcmultipartLoaded) {
 			Optional<IMultipartContainer> container = MultipartHelper.getContainer(world, pos);
@@ -98,37 +72,7 @@ public class SonarMultipartHelper {
 		return world.getTileEntity(pos);
 	}
 
-	/*
-	public static IMultipart getPartFromHash(int hashCode, World world, BlockPos pos) {
-		Object object = getTile(world, pos);
-		if (SonarLoader.mcmultipartLoaded && object instanceof IMultipartContainer) {
-			return getPartFromHash(hashCode, (IMultipartContainer) object);
-		}
-		return null;
-	}
-	
-
-	public static IMultipart getPartFromHash(int hashCode, IMultipartContainer container) {
-		for (IMultipart part : container.getParts()) {
-			if (part != null && container.getPartID(part).hashCode() == hashCode) {
-				return part;
-			}
-		}
-		return null;
-	}
-
-	public static IMultipart getPart(UUID partUUID, World world, BlockPos pos) {
-		Object object = getTile(world, pos);
-		if (SonarLoader.mcmultipartLoaded && object instanceof IMultipartContainer) {
-			IMultipartContainer container = (IMultipartContainer) object;
-			IMultipart part = container.getPartFromID(partUUID);
-			if (part != null) {
-				return (IMultipart) part;
-			}
-		}
-		return (IMultipart) null;
-	}
-	*/
+	/* public static IMultipart getPartFromHash(int hashCode, World world, BlockPos pos) { Object object = getTile(world, pos); if (SonarLoader.mcmultipartLoaded && object instanceof IMultipartContainer) { return getPartFromHash(hashCode, (IMultipartContainer) object); } return null; } public static IMultipart getPartFromHash(int hashCode, IMultipartContainer container) { for (IMultipart part : container.getParts()) { if (part != null && container.getPartID(part).hashCode() == hashCode) { return part; } } return null; } public static IMultipart getPart(UUID partUUID, World world, BlockPos pos) { Object object = getTile(world, pos); if (SonarLoader.mcmultipartLoaded && object instanceof IMultipartContainer) { IMultipartContainer container = (IMultipartContainer) object; IMultipart part = container.getPartFromID(partUUID); if (part != null) { return (IMultipart) part; } } return (IMultipart) null; } */
 	public static boolean sendMultipartSyncToPlayer(TileSonarMultipart part, EntityPlayerMP player) {
 		if (part != null && part.getWorld() != null && !part.getWorld().isRemote && part instanceof INBTSyncable) {
 			NBTTagCompound tag = ((INBTSyncable) part).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
@@ -188,9 +132,10 @@ public class SonarMultipartHelper {
 		}
 		return false;
 	}
+
 	public static IMessage buildRequestSyncPacket(TileSonarMultipart part, NBTTagCompound tag, SyncType type) {
 		int slotID = part.getSlotID();
-		if (slotID == -1) { //if slotID == -1 we assume the Multipart is still a single TileEntity
+		if (slotID == -1) { // if slotID == -1 we assume the Multipart is still a single TileEntity
 			return new PacketTileSync(part.getPos(), tag, type);
 		}
 		return new PacketMultipartSync(part.getPos(), tag, type, slotID);
@@ -198,7 +143,7 @@ public class SonarMultipartHelper {
 
 	public static IMessage buildSyncPacketUpdate(TileSonarMultipart part, NBTTagCompound tag, SyncType type) {
 		int slotID = part.getSlotID();
-		if (slotID == -1) { //if slotID == -1 we assume the Multipart is still a single TileEntity
+		if (slotID == -1) { // if slotID == -1 we assume the Multipart is still a single TileEntity
 			return new PacketTileSyncUpdate(part.getPos(), tag, type);
 		}
 		return new PacketMultipartSync(part.getPos(), tag, type, slotID);
@@ -206,15 +151,15 @@ public class SonarMultipartHelper {
 
 	public static IMessage buildSyncPacket(TileSonarMultipart part, NBTTagCompound tag, SyncType type) {
 		int slotID = part.getSlotID();
-		if (slotID == -1) { //if slotID == -1 we assume the Multipart is still a single TileEntity
+		if (slotID == -1) { // if slotID == -1 we assume the Multipart is still a single TileEntity
 			return new PacketTileSync(part.getPos(), tag, type);
 		}
 		return new PacketMultipartSync(part.getPos(), tag, type, slotID);
 	}
-	
+
 	public static IMessage buildBufPacket(TileSonarMultipart part, int id) {
 		int slotID = part.getSlotID();
-		if (slotID == -1) { //if slotID == -1 we assume the Multipart is still a single TileEntity
+		if (slotID == -1) { // if slotID == -1 we assume the Multipart is still a single TileEntity
 			return new PacketByteBuf((IByteBufTile) part, part.getPos(), id);
 		}
 		return new PacketByteBufMultipart(slotID, (IByteBufTile) part, part.getPos(), id);

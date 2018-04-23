@@ -24,6 +24,10 @@ public class Localisation {
         return original;
     }
 
+    public String toString() {
+        return t();
+    }
+
     public class Tile extends Localisation {
 
         public Tile(String original) {

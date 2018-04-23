@@ -56,8 +56,6 @@ public class PacketTileSync extends PacketCoords<PacketTileSync> {
 		@Override
 		public IMessage processMessage(EntityPlayer player, MessageContext ctx, PacketTileSync message, TileEntity tile) {
 			if (tile != null && tile.getWorld().isRemote && message.tag != null) {
-				/* Object te = OLDMultipartHelper.checkObject(tile); if (te ==
-				 * null) { return null; } */
 				SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(() -> {
 					SyncType type = SyncType.DEFAULT_SYNC;
 					if (message.type != null) {

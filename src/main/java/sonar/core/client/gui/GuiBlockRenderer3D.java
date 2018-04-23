@@ -62,6 +62,10 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 			this.tile = tile;
 		}
 	}
+	
+	public IBlockAccess world(){
+		return this;
+	}
 
 	public boolean validPos(BlockPos pos) {
 		int size = cubeSize / 2;

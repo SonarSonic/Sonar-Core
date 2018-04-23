@@ -1,5 +1,5 @@
 package sonar.core.handlers.inventories;
-
+/*
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -104,3 +104,4 @@ public class DSUInventoryHandler implements ISonarInventoryHandler {
         return false; //it's only one stack so not really a large inventory.
     }
 }
+*/
