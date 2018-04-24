@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.vecmath.Matrix4f;
 
@@ -66,7 +67,7 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 	}
 
 	@Override
-    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+    public IBakedModel bake(@Nonnull IModelState state, @Nonnull VertexFormat format, @Nonnull Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
         return new BakedBlockModel<T>(format, renderer, bakedTextureGetter, true);
 	}
 
@@ -283,7 +284,7 @@ public class BlockRenderer<T extends TileEntity> extends TileEntitySpecialRender
 		}
 
 		@Override
-		public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
+		public Pair<? extends IBakedModel, Matrix4f> handlePerspective(@Nonnull ItemCameraTransforms.TransformType cameraTransformType) {
 			return new ImmutablePair<>(this.setTransformType(cameraTransformType), null);
 		}
 	}

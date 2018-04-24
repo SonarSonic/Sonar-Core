@@ -95,6 +95,6 @@ public class SyncTagTypeList<T> extends SyncPart {
 	}
 
 	public boolean equals(Object obj) {
-        return obj != null && obj instanceof SyncTagTypeList && ((SyncTagTypeList) obj).getObjects().equals(this.objs);
+        return obj instanceof SyncTagTypeList && ((SyncTagTypeList) obj).getObjects().equals(this.objs);
 	}
 }

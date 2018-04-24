@@ -9,6 +9,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import sonar.core.helpers.SonarHelper;
 
+import javax.annotation.Nonnull;
+
 public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 
 	public final TileEntity tile;
@@ -18,6 +20,7 @@ public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 		this.tile = tile;
 	}
 
+    @Nonnull
     @Override
 	public String getName() {
 		return tile.getBlockType().getLocalizedName();
@@ -28,6 +31,7 @@ public class SonarInventory extends AbstractSonarInventory<SonarInventory> {
 		return false;
 	}
 
+    @Nonnull
     @Override
 	public ITextComponent getDisplayName() {
 		return new TextComponentTranslation(tile.getBlockType().getUnlocalizedName());

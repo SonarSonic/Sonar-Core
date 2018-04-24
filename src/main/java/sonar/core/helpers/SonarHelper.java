@@ -167,10 +167,7 @@ public class SonarHelper {
 			return ItemStack.EMPTY;
 		}
 		Item item = Item.getItemFromBlock(block);
-		if (item == null) {
-			return ItemStack.EMPTY;
-		}
-		int j = 0;
+        int j = 0;
 		if (item.getHasSubtypes()) {
 			j = meta;
 		}
@@ -182,7 +179,7 @@ public class SonarHelper {
 		if (facing.getAxis().getPlane() == EnumFacing.Plane.VERTICAL || front.getAxis().getPlane() == EnumFacing.Plane.VERTICAL) {
 			return facing;
 		} else {
-			return facing.fromAngle(getRenderRotation(front) + getRenderRotation(facing)).getOpposite();
+			return EnumFacing.fromAngle(getRenderRotation(front) + getRenderRotation(facing)).getOpposite();
 		}
 	}
 
@@ -228,10 +225,7 @@ public class SonarHelper {
 			}
 			BlockPos current = pos.offset(side);
 			IBlockState state = w.getBlockState(current);
-			if (state == null) {
-				continue;
-			}
-			Block tile = w.getBlockState(current).getBlock();
+            Block tile = w.getBlockState(current).getBlock();
 			if (tile == block) {
 				BlockCoords coords = new BlockCoords(current);
 				if (!handlers.contains(coords)) {

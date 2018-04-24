@@ -21,7 +21,7 @@ public class SyncUnidentifiedObject extends SyncPart {
 	}
 
 	public void set(Object obj, ObjectType objectType) {
-		if (obj != null && (this.obj == null || !obj.equals(this.obj))) {
+		if (obj != null && (!obj.equals(this.obj))) {
 			this.obj = obj;
 			this.objType = objectType;
 			this.markChanged();

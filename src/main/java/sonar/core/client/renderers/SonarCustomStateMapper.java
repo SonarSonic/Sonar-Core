@@ -20,6 +20,8 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class SonarCustomStateMapper extends StateMapperBase implements ICustomModelLoader {
 
 	public final ArrayList<ISonarCustomRenderer> renderers;
@@ -54,8 +56,9 @@ public class SonarCustomStateMapper extends StateMapperBase implements ICustomMo
 		renderers.add(renderer);
 	}
 
-	@Override
-	protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+	@Nonnull
+    @Override
+	protected ModelResourceLocation getModelResourceLocation(@Nonnull IBlockState state) {
 		Block block = state.getBlock();
 		if (block instanceof ISonarRendererProvider) {
 			return ((ISonarRendererProvider) block).getRenderer().getBlockModelResourceLocation();
@@ -64,17 +67,18 @@ public class SonarCustomStateMapper extends StateMapperBase implements ICustomMo
 	}
 
 	@Override
-	public boolean accepts(ResourceLocation loc) {
+	public boolean accepts(@Nonnull ResourceLocation loc) {
 		return customModels.containsKey(loc);
 	}
 
-	@Override
-	public IModel loadModel(ResourceLocation loc) throws Exception {
+	@Nonnull
+    @Override
+	public IModel loadModel(@Nonnull ResourceLocation loc) {
 		return customModels.get(loc);
 	}
 
 	@Override
-	public void onResourceManagerReload(IResourceManager resourceManager) {
+	public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
 
 	}
 }

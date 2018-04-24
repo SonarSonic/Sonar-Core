@@ -10,6 +10,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nonnull;
+
 public class InventoryItem implements IInventory {
 	private String name = "Inventory Item";
 	private final ItemStack invItem;
@@ -39,12 +41,14 @@ public class InventoryItem implements IInventory {
 		return inventory.size();
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ItemStack getStackInSlot(int slot) {
 		return inventory.get(slot);
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ItemStack decrStackSize(int slot, int amount) {
 		ItemStack stack = getStackInSlot(slot);
 		if (!stack.isEmpty()) {
@@ -58,7 +62,8 @@ public class InventoryItem implements IInventory {
 		return stack;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ItemStack removeStackFromSlot(int slot) {
 		ItemStack stack = getStackInSlot(slot);
 		setInventorySlotContents(slot, ItemStack.EMPTY);
@@ -66,7 +71,7 @@ public class InventoryItem implements IInventory {
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		setInventorySlotContents(slot, stack, false);
 	}
 
@@ -81,7 +86,8 @@ public class InventoryItem implements IInventory {
 		}
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public String getName() {
 		return name;
 	}
@@ -91,7 +97,8 @@ public class InventoryItem implements IInventory {
 		return name.length() > 0;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ITextComponent getDisplayName() {
 		return new TextComponentTranslation(name);
 	}
@@ -115,13 +122,13 @@ public class InventoryItem implements IInventory {
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {}
+	public void openInventory(@Nonnull EntityPlayer player) {}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {}
+	public void closeInventory(@Nonnull EntityPlayer player) {}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack itemstack) {
 		return !(itemstack.getItem() instanceof InventoryContainerItem);
 	}
 
@@ -200,7 +207,7 @@ public class InventoryItem implements IInventory {
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
 		return true;
 	}
 }

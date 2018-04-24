@@ -7,6 +7,8 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 
+import javax.annotation.Nonnull;
+
 public abstract class JEIRecipe<T extends JEIRecipe> implements IRecipeWrapper {
 
 	public String recipeID;
@@ -26,7 +28,7 @@ public abstract class JEIRecipe<T extends JEIRecipe> implements IRecipeWrapper {
 	}
 
 	@Override
-	public void getIngredients(IIngredients ingredients) {
+	public void getIngredients(@Nonnull IIngredients ingredients) {
 		ingredients.setInputs(Object.class, inputs);
 		ingredients.setOutputs(Object.class, outputs);
 	}
@@ -35,7 +37,8 @@ public abstract class JEIRecipe<T extends JEIRecipe> implements IRecipeWrapper {
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public List<String> getTooltipStrings(int mouseX, int mouseY) {
 		return null;
 	}

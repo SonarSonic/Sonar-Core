@@ -40,7 +40,7 @@ public class PacketBlockInteraction extends PacketCoords {
 			if (!world.isRemote) {
 				IBlockState state = world.getBlockState(message.pos);
 				Block target = state.getBlock();
-				if (target != null && target instanceof IInteractBlock) {
+				if (target instanceof IInteractBlock) {
 					IInteractBlock interact = (IInteractBlock) target;
 					interact.operateBlock(world, message.pos, state, player, player.getActiveHand(), message.interact);
 				}

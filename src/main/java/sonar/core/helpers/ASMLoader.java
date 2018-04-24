@@ -80,8 +80,7 @@ public class ASMLoader {
 
 		String annotationClassName = annotation.getCanonicalName();
 		Set<ASMDataTable.ASMData> asmDatas = asmDataTable.getAll(annotationClassName);
-        ArrayList<ASMDataTable.ASMData> data = new ArrayList<>();
-        data.addAll(asmDatas);
+		ArrayList<ASMData> data = new ArrayList<>(asmDatas);
 
         if (sortPriority)
             data.sort(SORT_PRIORITY);

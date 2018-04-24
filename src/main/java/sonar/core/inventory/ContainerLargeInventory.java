@@ -8,6 +8,8 @@ import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.common.tileentity.TileEntitySonar;
 import sonar.core.inventory.slots.SlotLarge;
 
+import javax.annotation.Nonnull;
+
 public abstract class ContainerLargeInventory extends ContainerSync {
 
 	ILargeInventory entity;
@@ -123,6 +125,7 @@ public abstract class ContainerLargeInventory extends ContainerSync {
      * special implementation which accommodates for a
      * {@link ILargeInventory}
      */
+    @Nonnull
     @Override
 	public ItemStack slotClick(int slotID, int dragType, ClickType button, EntityPlayer player) {
 		if (!(slotID < entity.getTileInv().size) || button == ClickType.QUICK_MOVE) {
@@ -155,7 +158,7 @@ public abstract class ContainerLargeInventory extends ContainerSync {
 							player.inventory.setItemStack(ItemStack.EMPTY);
 							return ItemStack.EMPTY;
 						}
-					} else if (clicked != null && !clicked.getItemStack().isEmpty()) {
+					} else if (!clicked.getItemStack().isEmpty()) {
 						if (clicked.equalStack(held)) {
                             int maxAdd = (int) Math.min(held.getMaxStackSize() * entity.getTileInv().numStacks - clicked.getStackSize(), held.getCount());
 							if (maxAdd > 0) {

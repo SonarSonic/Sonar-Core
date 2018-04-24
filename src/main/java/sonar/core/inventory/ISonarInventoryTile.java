@@ -7,6 +7,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
+import javax.annotation.Nonnull;
+
 /**make sure you still add the inventory to the synclist!*/
 public interface ISonarInventoryTile extends IInventory {
 
@@ -23,19 +25,22 @@ public interface ISonarInventoryTile extends IInventory {
 		return inv().isEmpty();
 	}
 
-	default ItemStack getStackInSlot(int index) {
+	@Nonnull
+    default ItemStack getStackInSlot(int index) {
 		return inv().getStackInSlot(index);
 	}
 
-	default ItemStack decrStackSize(int index, int count) {
+	@Nonnull
+    default ItemStack decrStackSize(int index, int count) {
 		return inv().decrStackSize(index, count);
 	}
 
-	default ItemStack removeStackFromSlot(int index) {
+	@Nonnull
+    default ItemStack removeStackFromSlot(int index) {
 		return inv().removeStackFromSlot(index);
 	}
 
-	default void setInventorySlotContents(int index, ItemStack stack) {
+	default void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
 		inv().setInventorySlotContents(index, stack);
 	}
 
@@ -47,19 +52,19 @@ public interface ISonarInventoryTile extends IInventory {
 		inv().markDirty();
 	}
 
-	default boolean isUsableByPlayer(EntityPlayer player) {
+	default boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
 		return inv().isUsableByPlayer(player);
 	}
 
-	default void openInventory(EntityPlayer player) {
+	default void openInventory(@Nonnull EntityPlayer player) {
 		inv().openInventory(player);
 	}
 
-	default void closeInventory(EntityPlayer player) {
+	default void closeInventory(@Nonnull EntityPlayer player) {
 		inv().closeInventory(player);
 	}
 
-	default boolean isItemValidForSlot(int index, ItemStack stack) {
+	default boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
 		return inv().isItemValidForSlot(index, stack);
 	}
 
@@ -79,6 +84,7 @@ public interface ISonarInventoryTile extends IInventory {
 		inv().clear();
 	}
 	
+    @Nonnull
     default String getName(){
     	return inv().getName();
     }
@@ -87,6 +93,7 @@ public interface ISonarInventoryTile extends IInventory {
     	return inv().hasCustomName();
     }
 
+    @Nonnull
     default ITextComponent getDisplayName(){
     	return inv().getDisplayName();
     }

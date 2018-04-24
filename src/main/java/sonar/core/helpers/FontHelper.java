@@ -212,9 +212,9 @@ public class FontHelper {
 
 	public static int getColourFromFormatting(TextFormatting colour) {
 		int formattingColour = RenderHelper.getTextFormattingColour(colour);
-		int r = (int) (formattingColour >> 16 & 255);
-		int g = (int) (formattingColour >> 8 & 255);
-		int b = (int) (formattingColour & 255);
+		int r = formattingColour >> 16 & 255;
+		int g = formattingColour >> 8 & 255;
+		int b = formattingColour & 255;
 		return FontHelper.getIntFromColor(r, g, b);
 	}
 
@@ -229,8 +229,7 @@ public class FontHelper {
 
 	public static ArrayList<String> breakUpStringIntoLines(String multiline, int charLimit) {
 		ArrayList<String> lines = new ArrayList<>();
-		String s = multiline;
-		char[] chars = s.toCharArray();
+		char[] chars = multiline.toCharArray();
 		boolean endOfString = false;
 		int start = 0;
 		int end = start;
@@ -242,13 +241,13 @@ public class FontHelper {
 					lastSpace = charCount;
 				}
 				charCount++;
-				if (charCount + start == s.length()) {
+				if (charCount + start == multiline.length()) {
 					endOfString = true;
 					break;
 				}
 			}
-			end = endOfString ? s.length() : lastSpace > 0 ? lastSpace + start : charCount + start;
-			lines.add(s.substring(start, end));
+			end = endOfString ? multiline.length() : lastSpace > 0 ? lastSpace + start : charCount + start;
+			lines.add(multiline.substring(start, end));
 			start = end + 1;
 		}
 		return lines;
@@ -264,7 +263,7 @@ public class FontHelper {
 			String s = str.substring(0, i);
 			char c0 = str.charAt(i);
 			boolean flag = c0 == 32 || c0 == 10;
-			String s1 = render.getFormatFromString(s) + str.substring(i + (flag ? 1 : 0));
+			String s1 = FontRenderer.getFormatFromString(s) + str.substring(i + (flag ? 1 : 0));
 			lines.add(s);
 			return breakLines(lines, s1, wrapWidth);
 		}

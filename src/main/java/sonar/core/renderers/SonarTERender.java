@@ -2,7 +2,6 @@ package sonar.core.renderers;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import sonar.core.helpers.RenderHelper;
 
@@ -17,7 +16,7 @@ public abstract class SonarTERender extends TileEntitySpecialRenderer {
 
 	public void render(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		RenderHelper.beginRender(x + 0.5F, y + 1.5F, z + 0.5F, RenderHelper.setMetaData(te), texture);
-		model.render((Entity) null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		RenderHelper.finishRender();
 		renderExtras(te, x, y, z, alpha);
 	}

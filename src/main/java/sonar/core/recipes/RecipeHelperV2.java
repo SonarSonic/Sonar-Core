@@ -3,6 +3,7 @@ package sonar.core.recipes;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
@@ -280,7 +281,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 	 * @param pos the itemstack's position in the list
      * @return the itemstack, can be null
      */
-	@Nullable
+	@Nonnull
 	public static ItemStack getItemStackFromList(List<ISonarRecipeObject> list, int pos) {
 		if (!list.isEmpty() && pos < list.size()) {
 			ISonarRecipeObject obj = list.get(pos);

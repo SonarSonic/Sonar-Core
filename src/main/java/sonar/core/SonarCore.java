@@ -20,7 +20,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -211,7 +210,7 @@ public class SonarCore {
 	}
 
 	public static void sendPacketAround(TileEntity tile, int spread, int id) {
-		if (tile != null && tile instanceof IByteBufTile) {
+		if (tile instanceof IByteBufTile) {
 			if (!tile.getWorld().isRemote) {
 				SonarCore.network.sendToAllAround(new PacketByteBuf((IByteBufTile) tile, tile.getPos(), id), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));
 			} else {
@@ -230,7 +229,7 @@ public class SonarCore {
 	}
 
 	public static void sendFullSyncAroundWithRenderUpdate(TileEntity tile, int spread) {
-		if (tile != null && tile.getWorld() != null && !tile.getWorld().isRemote && tile instanceof INBTSyncable) {
+		if (tile != null && !tile.getWorld().isRemote && tile instanceof INBTSyncable) {
 			NBTTagCompound tag = ((INBTSyncable) tile).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendToAllAround(new PacketTileSyncUpdate(tile.getPos(), tag), new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), spread));

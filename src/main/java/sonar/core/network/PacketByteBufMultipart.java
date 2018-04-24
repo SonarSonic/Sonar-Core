@@ -43,7 +43,7 @@ public class PacketByteBufMultipart extends PacketMultipart {
 		@Override
 		public IMessage processMessage(PacketByteBufMultipart message, EntityPlayer player, World world, IMultipartTile part, MessageContext ctx) {
 			SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(() -> {
-				if (part != null && part instanceof IByteBufTile) {
+				if (part instanceof IByteBufTile) {
 					((IByteBufTile) part).readPacket(message.buf, message.packetID);
 				}
 				message.buf.release();

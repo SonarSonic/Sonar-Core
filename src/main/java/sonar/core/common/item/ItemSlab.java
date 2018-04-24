@@ -19,6 +19,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.common.block.SonarSlab;
 
+import javax.annotation.Nonnull;
+
 public class ItemSlab extends ItemBlock {
 	private final SonarSlab singleSlab;
 	private final SonarSlab doubleSlab;
@@ -42,6 +44,7 @@ public class ItemSlab extends ItemBlock {
     /**
      * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have different names based on their damage or NBT.
      */
+    @Nonnull
     @Override
 	public String getUnlocalizedName(ItemStack stack) {
 		return this.singleSlab.getUnlocalizedName(stack.getMetadata());
@@ -82,7 +85,7 @@ public class ItemSlab extends ItemBlock {
 
     @Override
 	@SideOnly(Side.CLIENT)
-	public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side, EntityPlayer player, ItemStack stack) {
+	public boolean canPlaceBlockOnSide(World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing side, EntityPlayer player, ItemStack stack) {
 		BlockPos blockpos = pos;
 		IProperty<?> iproperty = this.singleSlab.getVariantProperty();
 		Comparable<?> comparable = this.singleSlab.getTypeForItem(stack);

@@ -13,13 +13,13 @@ public class NullHandler implements ISyncHandler {
     }
 
     @Override
-    public void writeToNBT(ISyncableListener syncable, Field field, Object obj, String tagName, NBTTagCompound nbt) throws IllegalArgumentException, IllegalAccessException {
+    public void writeToNBT(ISyncableListener syncable, Field field, Object obj, String tagName, NBTTagCompound nbt) throws IllegalArgumentException {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void readFromNBT(ISyncableListener syncable, Field field, Object obj, String tagName, NBTTagCompound nbt) throws IllegalArgumentException, IllegalAccessException {
+    public void readFromNBT(ISyncableListener syncable, Field field, Object obj, String tagName, NBTTagCompound nbt) throws IllegalArgumentException {
         // TODO Auto-generated method stub
 
     }

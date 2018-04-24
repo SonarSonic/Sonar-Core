@@ -58,14 +58,9 @@ public class Pair<A, B> {
 			return false;
 		}
 		if (b == null) {
-			if (other.b != null) {
-				return false;
-			}
-		} else if (!b.equals(other.b)) {
-			return false;
-		}
-		return true;
-	}
+            return other.b == null;
+		} else return b.equals(other.b);
+    }
 
 	public boolean isInstance(Class<?> classA, Class<?> classB) {
 		return classA.isInstance(a) && classB.isInstance(b);

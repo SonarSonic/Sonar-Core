@@ -3,6 +3,7 @@ package sonar.core.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.vecmath.Vector3d;
 
 import org.lwjgl.opengl.GL11;
@@ -229,7 +230,7 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 	/* public void renderInGui() { BlockRendererDispatcher renderer = Minecraft.getMinecraft().getBlockRendererDispatcher(); GlStateManager.pushMatrix(); GlStateManager.rotate(33, 0,0, 1); GlStateManager.scale(64, 64, 64); Tessellator tessellator = Tessellator.getInstance(); BufferBuilder vertex = tessellator.getBuffer(); vertex.begin(7, DefaultVertexFormats.BLOCK); for (Entry<BlockPos, IBlockState> ren : blocks.entrySet()) { try { renderer.renderBlock(ren.getValue(), ren.getKey(), this, vertex); } catch (Exception e) { e.printStackTrace(); } } //tessellator.draw(); vertex.finishDrawing(); GlStateManager.popMatrix(); } */
 
 	@Override
-	public TileEntity getTileEntity(BlockPos pos) {
+	public TileEntity getTileEntity(@Nonnull BlockPos pos) {
 		for (GuiBlockRenderCache cache : blocks) {
 			if (cache.pos == pos && cache.tile != null) {
 				return cache.tile;
@@ -239,12 +240,13 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 	}
 
 	@Override
-	public int getCombinedLight(BlockPos pos, int lightValue) {
+	public int getCombinedLight(@Nonnull BlockPos pos, int lightValue) {
 		return 0;
 	}
 
-	@Override
-	public IBlockState getBlockState(BlockPos pos) {
+	@Nonnull
+    @Override
+	public IBlockState getBlockState(@Nonnull BlockPos pos) {
 		for (GuiBlockRenderCache cache : blocks) {
 			if (cache.pos == pos && cache.tile != null) {
 				return cache.state;
@@ -254,28 +256,30 @@ public class GuiBlockRenderer3D implements IBlockAccess {
 	}
 
 	@Override
-	public boolean isAirBlock(BlockPos pos) {
+	public boolean isAirBlock(@Nonnull BlockPos pos) {
 		IBlockState state = getBlockState(pos);
 		return state == null || state.getBlock() == Blocks.AIR;
 	}
 
-	@Override
-	public Biome getBiome(BlockPos pos) {
+	@Nonnull
+    @Override
+	public Biome getBiome(@Nonnull BlockPos pos) {
 		return Biome.getBiome(0);
 	}
 
 	@Override
-	public int getStrongPower(BlockPos pos, EnumFacing direction) {
+	public int getStrongPower(@Nonnull BlockPos pos, @Nonnull EnumFacing direction) {
 		return 0;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public WorldType getWorldType() {
 		return WorldType.DEFAULT;
 	}
 
 	@Override
-	public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default) {
+	public boolean isSideSolid(@Nonnull BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
 		return false;
 	}
 }

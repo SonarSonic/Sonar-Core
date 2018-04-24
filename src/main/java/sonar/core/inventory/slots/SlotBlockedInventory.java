@@ -5,6 +5,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 /**
  * a slot which doesn't allow Item Stacks to be placed in it
  */
@@ -20,7 +22,8 @@ public class SlotBlockedInventory extends Slot {
 		return false;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ItemStack decrStackSize(int size) {
 		if (getHasStack()) {
 			this.stackSize += Math.min(size, getStack().getCount());
@@ -28,8 +31,9 @@ public class SlotBlockedInventory extends Slot {
 		return super.decrStackSize(size);
 	}
 
-	@Override
-	public ItemStack onTake(EntityPlayer player, ItemStack stack) {
+	@Nonnull
+    @Override
+	public ItemStack onTake(EntityPlayer player, @Nonnull ItemStack stack) {
 		onCrafting(stack);
 		return super.onTake(player, stack);
 	}

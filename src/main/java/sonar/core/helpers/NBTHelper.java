@@ -193,7 +193,7 @@ public class NBTHelper {
 	}
 
 	public static NBTTagCompound writeNBTObjectList(String tagName, NBTTagCompound tag, List<? extends INBTObject> objects) {
-		if (objects == null || objects.isEmpty() || objects.size() == 0) {
+		if (objects == null || objects.isEmpty()) {
 			return tag;
 		}
 		NBTTagList list = new NBTTagList();

@@ -48,7 +48,7 @@ public class ListenerTally<T extends ISonarListener> {
 	}
 
 	public boolean equals(Object obj) {
-		return obj != null && obj instanceof ListenerTally && listener.equals(((ListenerTally) obj).listener);
+		return obj instanceof ListenerTally && listener.equals(((ListenerTally) obj).listener);
 	}
 
 	/** make sure you update the lists state! */

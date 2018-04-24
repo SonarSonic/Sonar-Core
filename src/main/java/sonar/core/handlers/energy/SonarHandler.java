@@ -16,7 +16,7 @@ public class SonarHandler implements ISonarEnergyHandler {
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
-        return tile != null && tile instanceof ISonarEnergyTile && (dir == null || ((ISonarEnergyTile) tile).getModeForSide(dir).canConnect());
+        return tile instanceof ISonarEnergyTile && (dir == null || ((ISonarEnergyTile) tile).getModeForSide(dir).canConnect());
 	}
 
 	@Override

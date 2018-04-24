@@ -8,6 +8,8 @@ import net.minecraft.client.resources.IResourceManagerReloadListener;
 import sonar.core.SonarCore;
 import sonar.core.helpers.FontHelper;
 
+import javax.annotation.Nonnull;
+
 public class LocalisationManager implements IResourceManagerReloadListener {
 
     public List<ILocalisationHandler> handlers = new ArrayList<>();
@@ -26,7 +28,7 @@ public class LocalisationManager implements IResourceManagerReloadListener {
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
         handlers.forEach(this::loadHandler);
     }
 

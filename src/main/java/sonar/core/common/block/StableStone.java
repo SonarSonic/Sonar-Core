@@ -7,6 +7,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.IStringSerializable;
 import sonar.core.common.block.properties.IMetaVariant;
 
+import javax.annotation.Nonnull;
+
 public class StableStone extends ConnectedBlock {
     public static final PropertyEnum<Variants> VARIANT = PropertyEnum.create("variant", Variants.class);
 
@@ -48,6 +50,7 @@ public class StableStone extends ConnectedBlock {
 		return 0;
 	}
 
+    @Nonnull
     @Override
 	public IBlockState getStateFromMeta(int meta) {
 		return super.getStateFromMeta(meta);

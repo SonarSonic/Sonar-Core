@@ -43,7 +43,7 @@ public class Planter implements IPlanter {
 		BlockPos blockPos = pos.offset(EnumFacing.DOWN);
 		IBlockState state = world.getBlockState(blockPos);
 		Block base = state.getBlock();
-		if (base != null && !base.isAir(state, world, blockPos) && base.canSustainPlant(state, world, blockPos, EnumFacing.UP, plant)) {
+		if (!base.isAir(state, world, blockPos) && base.canSustainPlant(state, world, blockPos, EnumFacing.UP, plant)) {
 			return plant.getPlant(world, pos);
 		}else{
 			return null;

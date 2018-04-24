@@ -26,19 +26,13 @@ public class SlotAllowed extends Slot {
 			}
 		} else if (items instanceof ItemStack) {
 			ItemStack itemstack = (ItemStack) items;
-			if (!itemstack.isEmpty() && itemstack.getItem() == stack.getItem()) {
-				return true;
-			}
+            return !itemstack.isEmpty() && itemstack.getItem() == stack.getItem();
 		} else if (items instanceof Item) {
 			Item item = (Item) items;
-			if (item != null && item == stack.getItem()) {
-				return true;
-			}
+            return item == stack.getItem();
 		} else if (items instanceof Block) {
 			Block block = (Block) items;
-			if (block != null && Item.getItemFromBlock(block) == stack.getItem()) {
-				return true;
-			}
+            return Item.getItemFromBlock(block) == stack.getItem();
 		}
 		return false;
 	}

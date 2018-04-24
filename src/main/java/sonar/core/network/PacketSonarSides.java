@@ -28,8 +28,8 @@ public class PacketSonarSides extends PacketCoords<PacketSonarSides> {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		super.fromBytes(buf);
-		side = side.VALUES[buf.readInt()];
-		config = config.values()[buf.readInt()];
+		side = EnumFacing.VALUES[buf.readInt()];
+		config = MachineSideConfig.values()[buf.readInt()];
 	}
 
 	@Override

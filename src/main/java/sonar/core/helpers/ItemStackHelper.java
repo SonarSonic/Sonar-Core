@@ -99,7 +99,7 @@ public class ItemStackHelper {
 	public static boolean matchingModid(ItemStack target, ItemStack stack) {
 		String targetID = target.getItem().getRegistryName().getResourceDomain();
 		String stackID = stack.getItem().getRegistryName().getResourceDomain();
-        return targetID != null && stackID != null && !targetID.isEmpty() && !stackID.isEmpty() && targetID.equals(stackID);
+        return targetID != null && !targetID.isEmpty() && !stackID.isEmpty() && targetID.equals(stackID);
 	}
 
 	public static boolean matchingOreDictID(ItemStack target, ItemStack stack) {
@@ -118,7 +118,7 @@ public class ItemStackHelper {
 	public static ItemStack getBlockItem(World world, BlockPos pos) {
 		IBlockState state = world.getBlockState(pos);
 		ItemStack stack = state.getBlock().getItem(world, pos, state);
-		if (stack == null || stack.isEmpty()) {
+		if (stack.isEmpty()) {
 			stack = new ItemStack(Item.getItemFromBlock(state.getBlock()));
 		}
 		return stack;

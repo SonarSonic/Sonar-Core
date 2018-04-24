@@ -20,7 +20,7 @@ public class SonarRegister {
 	}
 
 	public static <T extends Block> T addBlock(String modid, String name, T block) {
-		return addBlock(modid, new SonarRegistryBlock<T>(block, name));
+		return addBlock(modid, new SonarRegistryBlock<>(block, name));
 	}
 
 	public static <T extends Block> T addBlock(String modid, CreativeTabs tab, ISonarRegistryBlock<T> block) {
@@ -40,7 +40,7 @@ public class SonarRegister {
 	}
 
 	public static <T extends Item> T addItem(String modid, String name, T item) {
-		return addItem(modid, new SonarRegistryItem<T>(item, name));
+		return addItem(modid, new SonarRegistryItem<>(item, name));
 	}
 
 	public static <T extends Item> T addItem(String modid, CreativeTabs tab,ISonarRegistryItem<T> item) {

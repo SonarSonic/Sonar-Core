@@ -98,17 +98,14 @@ public class RenderHelper {
 
 	public static int setMetaData(TileEntity tileentity) {
 		int i;
-		if (tileentity.getWorld() == null) {
-			i = 0;
-		} else {
-			Block block = tileentity.getBlockType();
-			i = tileentity.getBlockMetadata();
-			if (block != null && i == 0) {
-				i = tileentity.getBlockMetadata();
-			}
-		}
+        tileentity.getWorld();
+        Block block = tileentity.getBlockType();
+        i = tileentity.getBlockMetadata();
+        if (i == 0) {
+            i = tileentity.getBlockMetadata();
+        }
 
-		return i;
+        return i;
 	}
 
 	public static void beginRender(double x, double y, double z, int meta, String texture) {

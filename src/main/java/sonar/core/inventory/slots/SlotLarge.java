@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.inventory.SonarLargeInventory;
 
+import javax.annotation.Nonnull;
+
 public class SlotLarge extends Slot {
 	public SonarLargeInventory largeInv;
 
@@ -27,6 +29,7 @@ public class SlotLarge extends Slot {
         return stored == null ? largeInv.isItemValidForSlot(getSlotIndex(), stack) : stored.equalStack(stack);
 	}
 
+    @Nonnull
     @Override
 	public ItemStack getStack() {
 		StoredItemStack stored = largeInv.getLargeStack(getSlotIndex());
@@ -39,11 +42,12 @@ public class SlotLarge extends Slot {
 	}
 
     @Override
-	public void putStack(ItemStack stack) {
-		largeInv.slots[getSlotIndex()] = stack != null && stack.getCount() != 0 ? new StoredItemStack(stack) : null;
+	public void putStack(@Nonnull ItemStack stack) {
+		largeInv.slots[getSlotIndex()] = stack.getCount() != 0 ? new StoredItemStack(stack) : null;
 		onSlotChanged();
 	}
 
+    @Nonnull
     @Override
 	public ItemStack decrStackSize(int amount) {
 		return this.inventory.decrStackSize(getSlotIndex() * largeInv.numStacks, amount);

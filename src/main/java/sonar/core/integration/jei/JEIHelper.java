@@ -88,7 +88,7 @@ public class JEIHelper {
 
 	public static ArrayList<JEIRecipeV2> getJEIRecipes(IRecipeHelperV2 recipeHelper, Class<? extends JEIRecipeV2> recipeClass) {
         ArrayList<JEIRecipeV2> recipesV2 = new ArrayList<>();
-		if (recipeHelper != null && recipeHelper instanceof RecipeHelperV2) {
+		if (recipeHelper instanceof RecipeHelperV2) {
 			RecipeHelperV2 helper = (RecipeHelperV2) recipeHelper;
 			for (ISonarRecipe recipe : (ArrayList<ISonarRecipe>) helper.getRecipes()) {
 				try {

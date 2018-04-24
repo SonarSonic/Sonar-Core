@@ -2,6 +2,7 @@ package sonar.core.common.block;
 
 import java.util.Random;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockSlab;
@@ -50,26 +51,30 @@ public abstract class SonarSlab extends BlockSlab {
 		return Item.getItemFromBlock(Blocks.STONE_SLAB);
 	}
 
+    @Nonnull
     @Override
-	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+	public ItemStack getItem(World worldIn, BlockPos pos, @Nonnull IBlockState state) {
         return new ItemStack(Blocks.STONE_SLAB, 1, state.getValue(VARIANT).getMetadata());
 	}
 
     /**
      * Returns the slab block name with the type associated with it
      */
+    @Nonnull
     @Override
 	public String getUnlocalizedName(int meta) {
         return super.getUnlocalizedName() + '.' + SonarSlab.EnumType.byMetadata(meta).getUnlocalizedName();
 	}
 
+    @Nonnull
     @Override
 	public IProperty<?> getVariantProperty() {
 		return VARIANT;
 	}
 
+    @Nonnull
     @Override
-	public Comparable<?> getTypeForItem(ItemStack stack) {
+	public Comparable<?> getTypeForItem(@Nonnull ItemStack stack) {
 		return SonarSlab.EnumType.byMetadata(stack.getMetadata() & 7);
 	}
 
@@ -91,6 +96,7 @@ public abstract class SonarSlab extends BlockSlab {
     /**
      * Convert the given metadata into a BlockState for this Block
      */
+    @Nonnull
     @Override
 	public IBlockState getStateFromMeta(int meta) {
 		IBlockState iblockstate = this.getDefaultState().withProperty(VARIANT, SonarSlab.EnumType.byMetadata(meta & 7));
@@ -123,6 +129,7 @@ public abstract class SonarSlab extends BlockSlab {
 		return i;
 	}
 
+    @Nonnull
     @Override
 	protected BlockStateContainer createBlockState() {
         return this.isDouble() ? new BlockStateContainer(this, SEAMLESS, VARIANT) : new BlockStateContainer(this, HALF, VARIANT);
@@ -177,6 +184,7 @@ public abstract class SonarSlab extends BlockSlab {
 			return META_LOOKUP[meta];
 		}
 
+        @Nonnull
         @Override
 		public String getName() {
 			return this.name;

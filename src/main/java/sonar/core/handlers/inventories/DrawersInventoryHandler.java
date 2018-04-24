@@ -50,16 +50,15 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
 			long maxStorage = 0;
 			long stored=0;
 			for (int i = 0; i < drawers.getDrawerCount(); i++) {
-				if (drawers.getDrawer(i) != null) {
-					IDrawer draw = drawers.getDrawer(i);					
-					ItemStack item = draw.getStoredItemPrototype();
-					maxStorage+=draw.getMaxCapacity();
-					stored+=draw.getStoredItemCount();
-					if (!item.isEmpty()){						
-						SonarAPI.getItemHelper().addStackToList(storedStacks, new StoredItemStack(item, draw.getStoredItemCount()));
-					}
-				}
-			}
+                drawers.getDrawer(i);
+                IDrawer draw = drawers.getDrawer(i);
+                ItemStack item = draw.getStoredItemPrototype();
+                maxStorage+=draw.getMaxCapacity();
+                stored+=draw.getStoredItemCount();
+                if (!item.isEmpty()){
+                    SonarAPI.getItemHelper().addStackToList(storedStacks, new StoredItemStack(item, draw.getStoredItemCount()));
+                }
+            }
 			return new StorageSize(stored,maxStorage);
 		}
 		return StorageSize.EMPTY;

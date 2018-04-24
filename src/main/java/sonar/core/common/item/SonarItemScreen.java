@@ -10,13 +10,16 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public abstract class SonarItemScreen extends SonarItem {
 
 	public abstract Block getScreenBlock();
 
 	public abstract boolean canPlaceScreenOn(World world, IBlockState state, BlockPos pos, EnumFacing screenFacing);
 
-	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	@Nonnull
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		ItemStack stack = player.getHeldItem(hand);
 		if (!player.canPlayerEdit(pos, facing, stack) || facing == EnumFacing.DOWN || facing == EnumFacing.UP || world.getBlockState(pos).getBlock().isReplaceable(world, pos)) {
 			return EnumActionResult.PASS;

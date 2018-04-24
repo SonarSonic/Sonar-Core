@@ -5,6 +5,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import sonar.core.common.tileentity.TileEntitySonar;
 
+import javax.annotation.Nonnull;
+
 public class ContainerEmpty extends ContainerSync {
 
 	public ContainerEmpty(InventoryPlayer player, TileEntitySonar tile) {
@@ -17,6 +19,7 @@ public class ContainerEmpty extends ContainerSync {
 		return true;
 	}
 
+    @Nonnull
     @Override
 	public final ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
 		return TransferSlotsManager.DEFAULT.transferStackInSlot(this, null, player, slotID);

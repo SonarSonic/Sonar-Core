@@ -44,7 +44,7 @@ public class PacketFlexibleContainer implements IMessage {
 			SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(() -> {
 				EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 				Container container = player.openContainer;
-				if (container != null && container instanceof IFlexibleContainer) {
+				if (container instanceof IFlexibleContainer) {
 					if (container instanceof IFlexibleContainer.Syncable) {
 						((IFlexibleContainer.Syncable) container).readState(message.buf);
 					}

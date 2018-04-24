@@ -14,7 +14,7 @@ public class EnumHandler implements ISyncHandler<Enum<?>> {
     }
 
     @Override
-    public void writeToNBT(ISyncableListener syncable, Field field, Enum<?> obj, String tagName, NBTTagCompound nbt) throws IllegalArgumentException, IllegalAccessException {
+    public void writeToNBT(ISyncableListener syncable, Field field, Enum<?> obj, String tagName, NBTTagCompound nbt) throws IllegalArgumentException {
         nbt.setInteger(tagName, obj.ordinal());
     }
 
@@ -23,8 +23,7 @@ public class EnumHandler implements ISyncHandler<Enum<?>> {
         Enum<?> toSet = obj;
         if (nbt.hasKey(tagName) && (obj != null || field != null)) {
             Enum<?>[] values = (Enum<?>[]) (obj != null ? obj.getClass().getEnumConstants() : field.getType().getEnumConstants());
-            Enum<?> res = values[MathHelper.clamp(nbt.getInteger(tagName), 0, values.length - 1)];
-            toSet = res;
+            toSet = values[MathHelper.clamp(nbt.getInteger(tagName), 0, values.length - 1)];
         }
         field.set(obj, toSet);
     }

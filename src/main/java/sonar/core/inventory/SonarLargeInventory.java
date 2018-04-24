@@ -13,6 +13,8 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.ISyncPart;
 
+import javax.annotation.Nonnull;
+
 public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBTSyncable, ISyncPart {
 
 	public StoredItemStack[] slots;
@@ -68,7 +70,8 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 		return nbt;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ItemStack getStackInSlot(int slot) {
 		StoredItemStack largeStack = getLargeStack(slot);
 		if(largeStack!=null){
@@ -100,8 +103,9 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 		slots[slot] = stack;
 	}
 
-	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+	@Nonnull
+    @Override
+	public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
 		if (!stack.isEmpty() && isItemValidForSlot(slot, stack)) {
 			StoredItemStack stored = slots[slot];			
 			if (stored == null || stored.getStackSize() == 0 || stored.equalStack(stack) && stored.getStackSize() < numStacks * stack.getMaxStackSize()) {
@@ -121,7 +125,8 @@ public class SonarLargeInventory extends DirtyPart implements IItemHandler, INBT
 		return stack;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		StoredItemStack largeStack = slots[slot];
 		if (largeStack != null && largeStack.getStackSize() > 0) {

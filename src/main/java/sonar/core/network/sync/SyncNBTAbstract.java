@@ -57,7 +57,7 @@ public class SyncNBTAbstract<T extends INBTSyncable> extends SyncPart {
 	}
 
 	public boolean equals(Object obj) {
-		return obj != null && obj instanceof SyncNBTAbstract && ((SyncNBTAbstract) obj).obj == this.obj && this.getTagName().equals(((SyncNBTAbstract) obj).getTagName());
+		return obj instanceof SyncNBTAbstract && ((SyncNBTAbstract) obj).obj == this.obj && this.getTagName().equals(((SyncNBTAbstract) obj).getTagName());
 	}
 
 	public boolean isValid(T obj) {

@@ -41,7 +41,7 @@ public class ContainerSync extends ContainerSonar {
 				sync.writeData(syncData, type);
 				if (!syncData.hasNoTags()) {
 					for (IContainerListener o : listeners) {
-						if (o != null && o instanceof EntityPlayerMP) {
+						if (o instanceof EntityPlayerMP) {
 							SonarCore.network.sendTo(new PacketTileSync(tile.getCoords().getBlockPos(), syncData, type), (EntityPlayerMP) o);
 						}
 					}

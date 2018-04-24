@@ -8,6 +8,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public final class SonarButtons {
 
 	@SideOnly(Side.CLIENT)
@@ -66,7 +68,7 @@ public final class SonarButtons {
          * Draws this button to the screen.
          */
         @Override
-        public void drawButton(Minecraft mc, int x, int y, float partialTicks) {
+        public void drawButton(@Nonnull Minecraft mc, int x, int y, float partialTicks) {
 			if (this.visible) {
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 this.hovered = x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
@@ -105,7 +107,7 @@ public final class SonarButtons {
 		public abstract int getTextureY();
 
         @Override
-        public void drawButton(Minecraft mc, int x, int y, float partialTicks) {
+        public void drawButton(@Nonnull Minecraft mc, int x, int y, float partialTicks) {
 			if (this.visible) {
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 this.hovered = x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;

@@ -8,6 +8,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import sonar.core.integration.SonarLoader;
 
+import javax.annotation.Nonnull;
+
 public class SyncItemEnergyStorage extends SyncEnergyStorage implements ICapabilityProvider {
 
 	public ItemStack stack = ItemStack.EMPTY;
@@ -49,16 +51,15 @@ public class SyncItemEnergyStorage extends SyncEnergyStorage implements ICapabil
 	}
 
     @Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
 		if (SonarLoader.teslaLoaded) {
-            if (capability == TeslaCapabilities.CAPABILITY_CONSUMER || capability == TeslaCapabilities.CAPABILITY_PRODUCER || capability == TeslaCapabilities.CAPABILITY_HOLDER)
-				return true;
+            return capability == TeslaCapabilities.CAPABILITY_CONSUMER || capability == TeslaCapabilities.CAPABILITY_PRODUCER || capability == TeslaCapabilities.CAPABILITY_HOLDER;
 		}
 		return false;
 	}
 
     @Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
 		if (SonarLoader.teslaLoaded) {
             if (capability == TeslaCapabilities.CAPABILITY_CONSUMER || capability == TeslaCapabilities.CAPABILITY_PRODUCER || capability == TeslaCapabilities.CAPABILITY_HOLDER)
 				return (T) this;

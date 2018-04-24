@@ -10,6 +10,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public abstract class BlockSonarMultipart extends BlockContainer implements IMultipart {
 
 	protected BlockSonarMultipart(Material materialIn) {
@@ -24,7 +26,8 @@ public abstract class BlockSonarMultipart extends BlockContainer implements IMul
 		return false;
 	}
 
-	public EnumBlockRenderType getRenderType(IBlockState state) {
+	@Nonnull
+    public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.MODEL;
 	}
 

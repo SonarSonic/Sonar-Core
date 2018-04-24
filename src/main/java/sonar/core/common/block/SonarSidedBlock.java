@@ -13,6 +13,8 @@ import sonar.core.utils.IMachineSides;
 import sonar.core.utils.MachineSideConfig;
 import sonar.core.utils.MachineSides;
 
+import javax.annotation.Nonnull;
+
 public abstract class SonarSidedBlock extends SonarMachineBlock {
 
     public static final PropertyEnum<MachineSideConfig> NORTH = PropertyEnum.create("north", MachineSideConfig.class, MachineSideConfig.INPUT, MachineSideConfig.INPUT_ANIMATE, MachineSideConfig.OUTPUT, MachineSideConfig.OUTPUT_ANIMATE);
@@ -28,8 +30,9 @@ public abstract class SonarSidedBlock extends SonarMachineBlock {
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(hasAnimatedFront() ? NORTH : NORTH_NO_ANIMATE, MachineSideConfig.INPUT).withProperty(EAST, MachineSideConfig.INPUT).withProperty(SOUTH, MachineSideConfig.INPUT).withProperty(WEST, MachineSideConfig.INPUT).withProperty(UP, MachineSideConfig.INPUT).withProperty(DOWN, MachineSideConfig.INPUT));
 	}
 	
+    @Nonnull
     @Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess w, BlockPos pos) {
+	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess w, BlockPos pos) {
 		TileEntity target = w.getTileEntity(pos);
 		if (target != null) {
 			if (target instanceof IMachineSides) {

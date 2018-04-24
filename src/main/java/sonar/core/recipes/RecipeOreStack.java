@@ -36,17 +36,14 @@ public class RecipeOreStack implements ISonarRecipeObject, ISonarRecipeItem {
 
 	@Override
 	public ItemStack getOutputStack() {
-		ItemStack stack = cachedRegister.get(0).copy();
-		return stack;
+		return cachedRegister.get(0).copy();
 	}
 
 	@Override
 	public boolean matches(Object object, RecipeObjectType type) {
 		if (object instanceof RecipeOreStack) {
 			RecipeOreStack oreStack = (RecipeOreStack) object;
-			if (oreStack.oreType.equals(oreType) && oreStack.stackSize >= stackSize) {
-				return true;
-			}
+            return oreStack.oreType.equals(oreType) && oreStack.stackSize >= stackSize;
 		} else if (object instanceof String) {
 			return oreType.equals(object);
 		} else if (object instanceof ItemStack && type.checkStackSize(stackSize, ((ItemStack) object).getCount())) {

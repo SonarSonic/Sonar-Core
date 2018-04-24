@@ -10,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 
+import javax.annotation.Nonnull;
+
 public abstract class SonarRendererBase implements ISonarCustomRenderer {
 
 	public final Block block;
@@ -32,8 +34,9 @@ public abstract class SonarRendererBase implements ISonarCustomRenderer {
 		return this;
 	}
 
-	@Override
-	public ModelResourceLocation getModelLocation(ItemStack stack) {
+	@Nonnull
+    @Override
+	public ModelResourceLocation getModelLocation(@Nonnull ItemStack stack) {
 		return getBlockModelResourceLocation();
 	}
 

@@ -37,7 +37,7 @@ public abstract class SyncPart extends DirtyPart implements ISyncPart {
 	}
 
 	public SyncPart addSyncType(SyncType... add) {
-		SyncType[] array = types.toArray(new SyncType[types.size()]);
+		SyncType[] array = types.toArray(new SyncType[0]);
 		for (SyncType type : add) {
 			if (!type.isType(array)) {
 				types.add(type);
@@ -47,7 +47,7 @@ public abstract class SyncPart extends DirtyPart implements ISyncPart {
 	}
 
 	public SyncPart removeSyncType(SyncType... remove) {
-		SyncType[] array = types.toArray(new SyncType[types.size()]);
+		SyncType[] array = types.toArray(new SyncType[0]);
 		for (SyncType type : remove) {
 			if (type.isType(array)) {
 				types.remove(type);

@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import sonar.core.recipes.ISonarRecipe;
 import sonar.core.recipes.RecipeHelperV2;
 
+import javax.annotation.Nonnull;
+
 public abstract class JEIRecipeV2<T extends JEIRecipeV2> implements IRecipeWrapper {
 
 	public RecipeHelperV2 helper;
@@ -19,12 +21,12 @@ public abstract class JEIRecipeV2<T extends JEIRecipeV2> implements IRecipeWrapp
 	public JEIRecipeV2(RecipeHelperV2 helper, ISonarRecipe recipe) {
 		this.helper = helper;
 		this.recipe = recipe;
-		this.inputs = helper.getJEIInputsFromList(recipe.inputs());
-		this.outputs = helper.getJEIOutputsFromList(recipe.outputs());
+		this.inputs = RecipeHelperV2.getJEIInputsFromList(recipe.inputs());
+		this.outputs = RecipeHelperV2.getJEIOutputsFromList(recipe.outputs());
 	}
 
 	@Override
-	public void getIngredients(IIngredients ingredients) {
+	public void getIngredients(@Nonnull IIngredients ingredients) {
 		ingredients.setInputLists(ItemStack.class, inputs);
 		ingredients.setOutputs(ItemStack.class, outputs);
 	}
@@ -33,7 +35,8 @@ public abstract class JEIRecipeV2<T extends JEIRecipeV2> implements IRecipeWrapp
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public List<String> getTooltipStrings(int mouseX, int mouseY) {
 		return null;
 	}

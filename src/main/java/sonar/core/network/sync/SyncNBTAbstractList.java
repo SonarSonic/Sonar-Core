@@ -93,6 +93,6 @@ public class SyncNBTAbstractList<T extends INBTSyncable> extends SyncPart {
 	}
 
 	public boolean equals(Object obj) {
-        return obj != null && obj instanceof SyncNBTAbstractList && ((SyncNBTAbstractList) obj).getObjects().equals(this.objs);
+        return obj instanceof SyncNBTAbstractList && ((SyncNBTAbstractList) obj).getObjects().equals(this.objs);
 	}
 }

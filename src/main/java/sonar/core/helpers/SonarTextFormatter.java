@@ -71,7 +71,7 @@ public class SonarTextFormatter {
 
 	public static String formatBetweenPlaceHolders(String str, final String open, final String close, Function<String, String> format) {
 		str = removeAllOldResets(str);
-		if (str == null || StringUtils.isEmpty(open) || StringUtils.isEmpty(close)) {
+		if (StringUtils.isEmpty(open) || StringUtils.isEmpty(close)) {
 			return str;
 		}
 		final int strLen = str.length();
@@ -80,7 +80,7 @@ public class SonarTextFormatter {
 		}
 		final int closeLen = close.length();
 		final int openLen = open.length();
-		final List<String> list = new ArrayList<String>();
+		final List<String> list = new ArrayList<>();
 		int pos = 0;
 		while (pos < strLen) {
 			if (!(pos < strLen + closeLen)) {
@@ -112,7 +112,7 @@ public class SonarTextFormatter {
 			return str;
 		}
 		StringBuilder build = new StringBuilder();
-		list.forEach(s -> build.append(s));
+		list.forEach(build::append);
 		return build.toString();
 	}
 
@@ -176,37 +176,37 @@ public class SonarTextFormatter {
 
 	/** removes all resets which have no formatting before them you will still need to add back the start and end reset */
 	public static String removeAllOldResets(String s) {
-		String newS = "";
+		StringBuilder newS = new StringBuilder();
 		String[] resetStrings = RESET.split(s);
 		for (String subS : resetStrings) {
-			newS = newS + subS;
-			if (subS.indexOf(CODE_STRING) != -1) { // if there is some formatting add a reset after
-				newS = newS + TextFormatting.RESET.toString();
+			newS.append(subS);
+			if (subS.contains(CODE_STRING)) { // if there is some formatting add a reset after
+				newS.append(TextFormatting.RESET.toString());
 			}
 		}
-		return newS;
+		return newS.toString();
 	}
 
 	public static Pattern createFormattingPattern(List<TextFormatting> format) {
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		for (TextFormatting text : format) {
 			String format_code = text.toString().replace(CODE_STRING, "");
-			if (!s.contains(format_code)) {
-				s = s + format_code;
+			if (!s.toString().contains(format_code)) {
+				s.append(format_code);
 			}
 		}
 		return Pattern.compile("(?i)" + CODE_STRING + "[" + s + "]");
 	}
 
 	public static String createFormattingString(List<TextFormatting> format) {
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		for (TextFormatting text : format) {
 			String format_code = text.toString();
-			if (!s.contains(format_code)) {
-				s = s + format_code;
+			if (!s.toString().contains(format_code)) {
+				s.append(format_code);
 			}
 		}
-		return s;
+		return s.toString();
 	}
 
 	public static List<TextFormatting> readFormattingFromNBT(NBTTagCompound nbt) {

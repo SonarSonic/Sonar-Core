@@ -5,6 +5,8 @@ import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import sonar.core.helpers.FontHelper;
 
+import javax.annotation.Nonnull;
+
 public abstract class JEICategory implements IRecipeCategory, IRecipeHandler<JEIRecipe> {
 
 	private final IJEIHandler handler;
@@ -13,33 +15,38 @@ public abstract class JEICategory implements IRecipeCategory, IRecipeHandler<JEI
 		this.handler = handler;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public String getUid() {
 		return handler.getUUID();
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public String getTitle() {
 		return FontHelper.translate(handler.getTitle());
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public Class getRecipeClass() {
 		return handler.getRecipeClass();
 	}
 
-	@Override
-	public IRecipeWrapper getRecipeWrapper(JEIRecipe recipe) {
+	@Nonnull
+    @Override
+	public IRecipeWrapper getRecipeWrapper(@Nonnull JEIRecipe recipe) {
 		return recipe;
 	}
 
 	@Override
-	public boolean isRecipeValid(JEIRecipe recipe) {
+	public boolean isRecipeValid(@Nonnull JEIRecipe recipe) {
 		return recipe.recipeID.equals(getUid());
 	}
 
-	@Override
-	public String getRecipeCategoryUid(JEIRecipe id) {
+	@Nonnull
+    @Override
+	public String getRecipeCategoryUid(@Nonnull JEIRecipe id) {
 		return getUid();
 	}
 }

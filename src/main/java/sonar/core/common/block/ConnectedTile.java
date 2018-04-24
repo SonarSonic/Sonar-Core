@@ -15,6 +15,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.api.blocks.IConnectedBlock;
 
+import javax.annotation.Nonnull;
+
 public abstract class ConnectedTile extends SonarMachineBlock implements IConnectedBlock {
 
 	protected ConnectedTile(int target) {
@@ -46,17 +48,11 @@ public abstract class ConnectedTile extends SonarMachineBlock implements IConnec
 	}
 
 	public boolean checkBlockInDirection(IBlockAccess world, int x, int y, int z, EnumFacing side) {
-		EnumFacing dir = side;
 		IBlockState state = world.getBlockState(new BlockPos(x, y, z));
-		IBlockState block = world.getBlockState(new BlockPos(x + dir.getFrontOffsetX(), y + dir.getFrontOffsetY(), z + dir.getFrontOffsetZ()));
+		IBlockState block = world.getBlockState(new BlockPos(x + side.getFrontOffsetX(), y + side.getFrontOffsetY(), z + side.getFrontOffsetZ()));
 		int meta = state.getBlock().getMetaFromState(state);
-		if (block != null) {
-			if (type(state, block, meta, block.getBlock().getMetaFromState(block))) {
-				return true;
-			}
-		}
-		return false;
-	}
+        return type(state, block, meta, block.getBlock().getMetaFromState(block));
+    }
 
 	public static boolean type(IBlockState state1, IBlockState state2, int m1, int m2) {
 		Block block1 = state1.getBlock();
@@ -96,8 +92,9 @@ public abstract class ConnectedTile extends SonarMachineBlock implements IConnec
 		return this.getDefaultState();
 	}
 
+    @Nonnull
     @Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess w, BlockPos pos) {
+	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess w, BlockPos pos) {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();

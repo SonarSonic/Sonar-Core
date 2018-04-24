@@ -70,13 +70,10 @@ public class BlockCoords {
 
 	public BlockCoords(TileEntity tile) {
 		this.pos = tile.getPos();
-		if (tile.getWorld() == null) {
-			this.hasDimension = false;
-		} else {
-			this.hasDimension = true;
-			this.dimension = tile.getWorld().provider.getDimension();
-		}
-	}
+        tile.getWorld();
+        this.hasDimension = true;
+        this.dimension = tile.getWorld().provider.getDimension();
+    }
 
 	public BlockCoords(TileEntity tile, int dimension) {
 		this.pos = tile.getPos();
@@ -283,7 +280,7 @@ public class BlockCoords {
 	}
 
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof BlockCoords)) {
+		if (!(obj instanceof BlockCoords)) {
 			return false;
 		}
 		BlockCoords coords = (BlockCoords) obj;
@@ -301,7 +298,7 @@ public class BlockCoords {
 	}
 
 	public static boolean equalCoords(BlockCoords coords1, BlockCoords coords2) {
-        return coords1 == null && coords2 == null || coords1 == null || coords2 != null && (coords2 == null || coords1 != null && coords1.pos.getX() == coords2.pos.getX() && coords1.pos.getY() == coords2.pos.getY() && coords1.pos.getZ() == coords2.pos.getZ() && coords1.dimension == coords2.dimension);
+        return coords1 == null && coords2 == null || coords1 == null || coords2 != null && (coords2 == null || coords1.pos.getX() == coords2.pos.getX() && coords1.pos.getY() == coords2.pos.getY() && coords1.pos.getZ() == coords2.pos.getZ() && coords1.dimension == coords2.dimension);
 	}
 
 	public static boolean equalCoordArrays(BlockCoords[] coords1, BlockCoords[] coords2) {

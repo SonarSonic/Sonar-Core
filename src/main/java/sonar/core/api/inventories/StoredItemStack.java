@@ -99,9 +99,7 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 	public boolean equals(Object obj) {
 		if (obj instanceof StoredItemStack) {
 			StoredItemStack target = (StoredItemStack) obj;
-			if (equalStack(target.item) && this.stored == target.stored) {
-				return true;
-			}
+            return equalStack(target.item) && this.stored == target.stored;
 		}
 		return false;
 	}

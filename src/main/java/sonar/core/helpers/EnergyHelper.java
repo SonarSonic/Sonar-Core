@@ -140,7 +140,7 @@ public class EnergyHelper extends EnergyWrapper {
 
     @Override
 	public ItemStack dischargeItem(ItemStack item, TileEntity tile, final long maxTransferRF) {
-		if (!item.isEmpty() && !tile.getWorld().isRemote && tile != null && maxTransferRF != 0) {
+		if (!item.isEmpty() && !tile.getWorld().isRemote && maxTransferRF != 0) {
 			long maxTransfer = Math.min(extractEnergy(item, maxTransferRF, ActionType.SIMULATE), performReceive(chargingHandler, tile, maxTransferRF, null, ActionType.SIMULATE));
 
 			if (maxTransfer != 0) {

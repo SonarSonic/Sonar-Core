@@ -11,6 +11,8 @@ import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.multipart.TileSonarMultipart;
 import sonar.core.network.PacketMultipartSync;
 
+import javax.annotation.Nonnull;
+
 public class ContainerMultipartSync extends Container {
 
 	SyncType[] types = new SyncType[] { SyncType.DEFAULT_SYNC };
@@ -32,7 +34,7 @@ public class ContainerMultipartSync extends Container {
 				multipart.writeData(syncData, type);
 				if (!syncData.hasNoTags()) {
 					for (IContainerListener o : listeners) {
-						if (o != null && o instanceof EntityPlayerMP) {
+						if (o instanceof EntityPlayerMP) {
 							SonarCore.network.sendTo(new PacketMultipartSync(multipart.getPos(), syncData, type, multipart.getSlotID()), (EntityPlayerMP) o);
 						}
 					}
@@ -41,7 +43,8 @@ public class ContainerMultipartSync extends Container {
 		}
 	}
 
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
+	@Nonnull
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
 		return ItemStack.EMPTY;
 	}
 
@@ -54,7 +57,7 @@ public class ContainerMultipartSync extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer playerIn) {
+	public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
 		return true;
 	}
 

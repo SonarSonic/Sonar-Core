@@ -75,7 +75,7 @@ public class SonarAddRecipeV2<T extends RecipeHelperV2> implements IAction {
 
 	@Override
 	public String describe() {
-		return String.format("Adding %s recipe (%s = %s)", helper.getRecipeID(), helper.getValuesFromList(inputs), helper.getValuesFromList(outputs));
+		return String.format("Adding %s recipe (%s = %s)", helper.getRecipeID(), RecipeHelperV2.getValuesFromList(inputs), RecipeHelperV2.getValuesFromList(outputs));
 	}
 
 	public static class Value extends SonarAddRecipeV2<ValueHelperV2> {

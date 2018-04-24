@@ -18,7 +18,7 @@ public abstract class PacketMultipartHandler<T extends PacketMultipart> implemen
 		EntityPlayer player = SonarCore.proxy.getPlayerEntity(ctx);
 		if (player != null) {
 			World world = player.getEntityWorld();
-			if (world != null && world.isBlockLoaded(message.pos)) { // prevents errors and arbitrary chunk generation
+			if (world.isBlockLoaded(message.pos)) { // prevents errors and arbitrary chunk generation
 				if (message.slotID != -1) {
 					Optional<IMultipartTile> multipartTile = SonarMultipartHelper.getMultipartTileFromSlotID(world, message.pos, message.slotID);
 					if (multipartTile.isPresent()) {

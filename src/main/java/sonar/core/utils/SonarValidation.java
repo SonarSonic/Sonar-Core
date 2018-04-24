@@ -14,7 +14,7 @@ public abstract class SonarValidation {
 
 		@Override
 		public boolean isValid(Object obj) {
-			return obj != null && type.isInstance(obj);
+			return type.isInstance(obj);
 		}
 	}
 

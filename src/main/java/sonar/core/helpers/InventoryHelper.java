@@ -9,7 +9,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
@@ -55,9 +54,7 @@ public class InventoryHelper extends InventoryWrapper {
 					}
 				}
 			}
-			if (add.stored == 0) {
-				return false;
-			}
+            return add.stored != 0;
 		}
 		return true;
 	}
@@ -75,9 +72,7 @@ public class InventoryHelper extends InventoryWrapper {
 				inv.setInventorySlotContents(slot, stack);
 				inv.markDirty();
 			}
-			if (remove.stored == 0) {
-				return false;
-			}
+            return remove.stored != 0;
 		}
 		return true;
 	}
@@ -254,42 +249,42 @@ public class InventoryHelper extends InventoryWrapper {
 	}
 
 	public static IInventoryFilter copy(IInventoryFilter filter) {
-		if (filter == null || !(filter instanceof ITransferOverride)) {
+		if (!(filter instanceof ITransferOverride)) {
 			return null;
 		}
 		return ((ITransferOverride) filter).copy();
 	}
 
 	public static void reset(IInventoryFilter filter) {
-		if (filter == null || !(filter instanceof ITransferOverride)) {
+		if (!(filter instanceof ITransferOverride)) {
 			return;
 		}
 		((ITransferOverride) filter).reset();
 	}
 
 	public static long maxAdd(IInventoryFilter filter, long l) {
-		if (filter == null || !(filter instanceof ITransferOverride)) {
+		if (!(filter instanceof ITransferOverride)) {
 			return l;
 		}
 		return Math.min(((ITransferOverride) filter).getMaxAdd(), l);
 	}
 
 	public static void onAdd(IInventoryFilter filter, long added) {
-		if (filter == null || !(filter instanceof ITransferOverride)) {
+		if (!(filter instanceof ITransferOverride)) {
 			return;
 		}
 		((ITransferOverride) filter).add(added);
 	}
 
 	public static long maxRemove(IInventoryFilter filter, long maxRemove) {
-		if (filter == null || !(filter instanceof ITransferOverride)) {
+		if (!(filter instanceof ITransferOverride)) {
 			return maxRemove;
 		}
 		return Math.min(((ITransferOverride) filter).getMaxRemove(), maxRemove);
 	}
 
 	public static void onRemove(IInventoryFilter filter, long removed) {
-		if (filter == null || !(filter instanceof ITransferOverride)) {
+		if (!(filter instanceof ITransferOverride)) {
 			return;
 		}
 		((ITransferOverride) filter).remove(removed);

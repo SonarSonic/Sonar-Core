@@ -17,6 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import sonar.core.common.tileentity.TileEntitySonar;
 
+import javax.annotation.Nonnull;
+
 /**
  * Integrations with WAILA - Registers all HUDs
  */
@@ -40,7 +42,8 @@ public class SonarWailaModule {
 
 	public static class HUDSonar implements IWailaDataProvider {
 
-		@Override
+		@Nonnull
+        @Override
 		public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 			TileEntity te = accessor.getTileEntity();
 			if (te == null)
@@ -65,17 +68,20 @@ public class SonarWailaModule {
 			return accessor.getStack();
 		}
 
-		@Override
+		@Nonnull
+        @Override
 		public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
 			return tag;
 		}
 
-		@Override
+		@Nonnull
+        @Override
 		public List<String> getWailaHead(ItemStack arg0, List<String> currenttip, IWailaDataAccessor arg2, IWailaConfigHandler config) {
 			return currenttip;
 		}
 
-		@Override
+		@Nonnull
+        @Override
 		public List<String> getWailaTail(ItemStack arg0, List<String> currenttip, IWailaDataAccessor arg2, IWailaConfigHandler config) {
 			return currenttip;
 		}

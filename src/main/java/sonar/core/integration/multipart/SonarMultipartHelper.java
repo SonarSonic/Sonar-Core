@@ -11,9 +11,6 @@ import mcmultipart.api.slot.IPartSlot;
 import mcmultipart.api.world.IMultipartBlockAccess;
 import mcmultipart.api.world.IMultipartWorld;
 import mcmultipart.slot.SlotRegistry;
-import mcmultipart.util.MCMPBlockAccessWrapper;
-import mcmultipart.util.MCMPWorldWrapper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -74,8 +71,8 @@ public class SonarMultipartHelper {
 
 	/* public static IMultipart getPartFromHash(int hashCode, World world, BlockPos pos) { Object object = getTile(world, pos); if (SonarLoader.mcmultipartLoaded && object instanceof IMultipartContainer) { return getPartFromHash(hashCode, (IMultipartContainer) object); } return null; } public static IMultipart getPartFromHash(int hashCode, IMultipartContainer container) { for (IMultipart part : container.getParts()) { if (part != null && container.getPartID(part).hashCode() == hashCode) { return part; } } return null; } public static IMultipart getPart(UUID partUUID, World world, BlockPos pos) { Object object = getTile(world, pos); if (SonarLoader.mcmultipartLoaded && object instanceof IMultipartContainer) { IMultipartContainer container = (IMultipartContainer) object; IMultipart part = container.getPartFromID(partUUID); if (part != null) { return (IMultipart) part; } } return (IMultipart) null; } */
 	public static boolean sendMultipartSyncToPlayer(TileSonarMultipart part, EntityPlayerMP player) {
-		if (part != null && part.getWorld() != null && !part.getWorld().isRemote && part instanceof INBTSyncable) {
-			NBTTagCompound tag = ((INBTSyncable) part).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
+		if (part != null && part.getWorld() != null && !part.getWorld().isRemote) {
+			NBTTagCompound tag = part.writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendTo(buildSyncPacket(part, tag, SyncType.SYNC_OVERRIDE), player);
 				return true;
@@ -85,8 +82,8 @@ public class SonarMultipartHelper {
 	}
 
 	public static boolean sendMultipartSyncAround(TileSonarMultipart part, int spread) {
-		if (part != null && part.getWorld() != null && !part.getWorld().isRemote && part instanceof INBTSyncable) {
-			NBTTagCompound tag = ((INBTSyncable) part).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
+		if (part != null && part.getWorld() != null && !part.getWorld().isRemote) {
+			NBTTagCompound tag = part.writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendToAllAround(buildSyncPacket(part, tag, SyncType.SYNC_OVERRIDE), new TargetPoint(part.getWorld().provider.getDimension(), part.getPos().getX(), part.getPos().getY(), part.getPos().getZ(), spread));
 				return true;
@@ -96,8 +93,8 @@ public class SonarMultipartHelper {
 	}
 
 	public static boolean sendMultipartUpdateSyncAround(TileSonarMultipart part, int spread) {
-		if (part != null && part.getWorld() != null && !part.getWorld().isRemote && part instanceof INBTSyncable) {
-			NBTTagCompound tag = ((INBTSyncable) part).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
+		if (part != null && part.getWorld() != null && !part.getWorld().isRemote) {
+			NBTTagCompound tag = part.writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendToAllAround(buildSyncPacketUpdate(part, tag, SyncType.SYNC_OVERRIDE), new TargetPoint(part.getWorld().provider.getDimension(), part.getPos().getX(), part.getPos().getY(), part.getPos().getZ(), spread));
 				return true;
@@ -107,8 +104,8 @@ public class SonarMultipartHelper {
 	}
 
 	public static boolean sendMultipartSyncToServer(TileSonarMultipart part) {
-		if (part != null && part.getWorld() != null && part.getWorld().isRemote && part instanceof INBTSyncable) {
-			NBTTagCompound tag = ((INBTSyncable) part).writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
+		if (part != null && part.getWorld() != null && part.getWorld().isRemote) {
+			NBTTagCompound tag = part.writeData(new NBTTagCompound(), SyncType.SYNC_OVERRIDE);
 			if (!tag.hasNoTags()) {
 				SonarCore.network.sendToServer(buildSyncPacket(part, tag, SyncType.SYNC_OVERRIDE));
 				return true;

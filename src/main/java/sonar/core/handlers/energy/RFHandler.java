@@ -15,7 +15,7 @@ public class RFHandler implements ISonarEnergyHandler {
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
-		return tile != null && (tile instanceof IEnergyReceiver || tile instanceof IEnergyProvider);
+		return (tile instanceof IEnergyReceiver || tile instanceof IEnergyProvider);
 	}
 
 	@Override

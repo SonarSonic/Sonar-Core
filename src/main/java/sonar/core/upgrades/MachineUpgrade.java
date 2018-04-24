@@ -14,12 +14,15 @@ import sonar.core.api.upgrades.IUpgradeInventory;
 import sonar.core.common.item.SonarItem;
 import sonar.core.helpers.FontHelper;
 
+import javax.annotation.Nonnull;
+
 public class MachineUpgrade extends SonarItem {
 
-	@Override
+	@Nonnull
+    @Override
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tile = world.getTileEntity(pos);
-		if (!world.isRemote && tile != null && tile instanceof IUpgradableTile) {
+		if (!world.isRemote && tile instanceof IUpgradableTile) {
 			ItemStack stack = player.getHeldItem(hand);
 			IUpgradeInventory upgrades = ((IUpgradableTile) tile).getUpgradeInventory();
 			if (!player.isSneaking()) {

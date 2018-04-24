@@ -19,6 +19,8 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import sonar.core.helpers.RenderHelper;
 
+import javax.annotation.Nonnull;
+
 ///AE3 Code: All credit goes to Elix_x https://github.com/AEModernMCPort/Applied-Energistics-3/blob/codename-andromeda/src/main/java/appeng/core/lib/client/render/model/ModelsCache.java
 public enum BlockModelsCache implements IResourceManagerReloadListener {
     INSTANCE;
@@ -103,7 +105,7 @@ public enum BlockModelsCache implements IResourceManagerReloadListener {
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
         cache.clear();
         bakedCache.clear();
     }

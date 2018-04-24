@@ -60,7 +60,7 @@ public class PacketMultipartSync extends PacketMultipart {
 		public IMessage processMessage(PacketMultipartSync message, EntityPlayer player, World world, IMultipartTile part, MessageContext ctx) {
 			if (world.isRemote) {
 				SonarCore.proxy.getThreadListener(ctx.side).addScheduledTask(() -> {
-					if (part != null && part instanceof INBTSyncable) {
+					if (part instanceof INBTSyncable) {
 						INBTSyncable sync = (INBTSyncable) part;
 						sync.readData(message.tag, message.type != null ? message.type : SyncType.DEFAULT_SYNC);
 					}

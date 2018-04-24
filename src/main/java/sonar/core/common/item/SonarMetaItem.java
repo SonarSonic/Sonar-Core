@@ -6,6 +6,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class SonarMetaItem extends SonarItem {
 
 	public int numSubItems = 1;
@@ -22,7 +24,7 @@ public class SonarMetaItem extends SonarItem {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> list) {
 		if (this.isInCreativeTab(tab)) {
 			for (int i = 0; i < numSubItems; i++) {
 				list.add(new ItemStack(this, 1, i));
@@ -30,7 +32,8 @@ public class SonarMetaItem extends SonarItem {
 		}
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public String getUnlocalizedName(ItemStack stack) {
 		return getUnlocalizedName() + '.' + stack.getItemDamage();
 	}

@@ -33,6 +33,8 @@ import sonar.core.network.sync.ISyncableListener;
 import sonar.core.network.sync.SyncableList;
 import sonar.core.utils.IWorldPosition;
 
+import javax.annotation.Nonnull;
+
 public class TileEntitySonar extends TileEntity implements ISyncableListener, ITickable, INBTSyncable, IWailaInfo, IWorldPosition {
 
 	public SyncableList syncList = new SyncableList(this);
@@ -42,15 +44,17 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 	public boolean isDirty;
 
 	public boolean isClient() {
-		return getWorld() != null && getWorld().isRemote;
+        getWorld();
+        return getWorld().isRemote;
 	}
 
 	public boolean isServer() {
-		return getWorld() == null || !getWorld().isRemote;
+        getWorld();
+        return !getWorld().isRemote;
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
 		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability && this instanceof ISonarInventoryTile) {
 			return true;
 		}
@@ -58,7 +62,7 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
 		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability && this instanceof ISonarInventoryTile) {
 			return (T) ((ISonarInventoryTile) this).inv().getItemHandler(facing);
 		}
@@ -84,7 +88,8 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		readData(nbt, SyncType.SAVE);
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		writeData(nbt, SyncType.SAVE);
@@ -96,13 +101,14 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		return SyncType.SYNC_OVERRIDE;
 	}
 	
-	@Override
+	@Nonnull
+    @Override
 	public NBTTagCompound getUpdateTag() {
 		return writeData(super.getUpdateTag(), getUpdateTagType());
 	}
 
 	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
+	public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
 		super.handleUpdateTag(tag);
 		readData(tag, getUpdateTagType());
 	}
@@ -164,7 +170,7 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		if (world.isRemote) {
 			return;
 		}
-		if (player != null && player instanceof EntityPlayerMP) {
+		if (player instanceof EntityPlayerMP) {
 			NBTTagCompound tag = new NBTTagCompound();
 			writeData(tag, type);
 			if (!tag.hasNoTags()) {
@@ -210,7 +216,8 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 		return maxRender() ? 65536.0D : super.getMaxRenderDistanceSquared();
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		return maxRender() ? INFINITE_EXTENT_AABB : super.getRenderBoundingBox();
@@ -237,7 +244,7 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+	public boolean shouldRefresh(World world, BlockPos pos, @Nonnull IBlockState oldState, @Nonnull IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
 }

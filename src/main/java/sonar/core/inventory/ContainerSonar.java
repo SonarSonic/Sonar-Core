@@ -8,6 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import sonar.core.inventory.slots.SlotLimiter;
 
+import javax.annotation.Nonnull;
+
 public class ContainerSonar extends Container {
 	// 8 , 84
 	public void addInventory(InventoryPlayer inventory, int xPos, int yPos) {
@@ -37,7 +39,7 @@ public class ContainerSonar extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer playerIn) {
+	public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
 		return true;
 	}
 }

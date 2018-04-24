@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -98,7 +96,9 @@ public class InventoryHandler {
 
 	public static boolean containsMatchingStack(List<ItemStack> list, ItemStack stack) {
 		for (ItemStack s : list) {
-			return ItemStack.areItemsEqual(s, stack) && ItemStack.areItemStackTagsEqual(s, stack);
+			if(ItemStack.areItemsEqual(s, stack) && ItemStack.areItemStackTagsEqual(s, stack)){
+				return true;
+			}
 		}
 		return false;
 	}

@@ -48,7 +48,6 @@ public class GenericInventoryHandler {
 	}
 
 	public static StoredItemStack removeStack(StoredItemStack remove, IInventory inv, EnumFacing dir, ActionType action) {
-		IInventory adjust = inv;
 		int invSize = inv.getSizeInventory();
 		int[] slots = null;
 		if (inv instanceof ISidedInventory) {

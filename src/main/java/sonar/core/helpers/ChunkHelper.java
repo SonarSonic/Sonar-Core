@@ -54,7 +54,7 @@ public class ChunkHelper {
 	}
 
 	public static List<ChunkPos> getChunksInRadius(BlockPos pos, double radius) {
-		List<ChunkPos> entities = new ArrayList<ChunkPos>();
+		List<ChunkPos> entities = new ArrayList<>();
 
 		int smallX = MathHelper.floor((pos.getX() - radius) / 16.0D);
 		int bigX = MathHelper.floor((pos.getX() + radius) / 16.0D);

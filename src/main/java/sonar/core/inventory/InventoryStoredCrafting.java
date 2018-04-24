@@ -5,6 +5,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class InventoryStoredCrafting extends InventoryCrafting {
 	private int inventoryWidth, inventoryHeight, offset;
 	private Container eventHandler;
@@ -33,12 +35,14 @@ public class InventoryStoredCrafting extends InventoryCrafting {
 		return inventoryWidth * inventoryHeight;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ItemStack getStackInSlot(int slot) {
 		return slot >= this.getSizeInventory() ? null : inv.getStackInSlot(slot + 1 + offset);
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ItemStack getStackInRowAndColumn(int row, int column) {
 		if (row >= 0 && row < this.inventoryWidth) {
 			int k = row + column * this.inventoryWidth;
@@ -48,12 +52,14 @@ public class InventoryStoredCrafting extends InventoryCrafting {
 		}
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ItemStack removeStackFromSlot(int par1) {
 		return ItemStack.EMPTY;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ItemStack decrStackSize(int slotID, int par2) {
 		ItemStack stack = inv.getStackInSlot(slotID + 1 + offset);
 		if (!stack.isEmpty()) {
@@ -75,7 +81,7 @@ public class InventoryStoredCrafting extends InventoryCrafting {
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack itemstack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack itemstack) {
 		inv.setInventorySlotContents(slot + 1 + offset, itemstack);
 		eventHandler.onCraftMatrixChanged(this);
 	}

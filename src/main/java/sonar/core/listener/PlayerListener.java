@@ -26,7 +26,7 @@ public class PlayerListener implements ISonarListener {
     }
 
     public boolean equals(Object obj) {
-        return obj != null && obj instanceof PlayerListener && player.equals(((PlayerListener) obj).player);
+        return obj instanceof PlayerListener && player.equals(((PlayerListener) obj).player);
     }
 
 }

@@ -2,6 +2,7 @@ package sonar.core.helpers;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
@@ -18,8 +19,8 @@ import sonar.core.utils.Pair;
 
 public class RayTraceHelper {
 
-	@Nullable
-	public static Pair<RayTraceResult, AxisAlignedBB> rayTraceBoxes(BlockPos pos, Vec3d start, Vec3d end, List<AxisAlignedBB> boxes) {
+	@Nonnull
+    public static Pair<RayTraceResult, AxisAlignedBB> rayTraceBoxes(BlockPos pos, Vec3d start, Vec3d end, List<AxisAlignedBB> boxes) {
 		Vec3d vec3d = start.subtract((double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
 		Vec3d vec3d1 = end.subtract((double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
 		RayTraceResult raytraceresult = null;

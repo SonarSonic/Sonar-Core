@@ -12,6 +12,8 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import sonar.core.helpers.FontHelper;
 
+import javax.annotation.Nonnull;
+
 public abstract class JEICategoryV2 implements IRecipeCategory, IRecipeHandler<JEIRecipeV2> {
 
 	private final IJEIHandler handler;
@@ -20,40 +22,45 @@ public abstract class JEICategoryV2 implements IRecipeCategory, IRecipeHandler<J
 		this.handler = handler;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public String getUid() {
 		return handler.getUUID();
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public String getTitle() {
 		return FontHelper.translate(handler.getTitle());
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public Class getRecipeClass() {
 		return handler.getRecipeClass();
 	}
 
-	@Override
-	public IRecipeWrapper getRecipeWrapper(JEIRecipeV2 recipe) {
+	@Nonnull
+    @Override
+	public IRecipeWrapper getRecipeWrapper(@Nonnull JEIRecipeV2 recipe) {
 		return recipe;
 	}
 
 	@Override
-	public boolean isRecipeValid(JEIRecipeV2 recipe) {
+	public boolean isRecipeValid(@Nonnull JEIRecipeV2 recipe) {
 		return recipe.helper.getRecipeID().equals(getUid());
 	}
 
-	@Override
-	public String getRecipeCategoryUid(JEIRecipeV2 id) {
+	@Nonnull
+    @Override
+	public String getRecipeCategoryUid(@Nonnull JEIRecipeV2 id) {
 		return getUid();
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
+	public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull IRecipeWrapper recipeWrapper, @Nonnull IIngredients ingredients) {
 		recipeWrapper.getIngredients(ingredients);
-		setRecipe(recipeLayout, recipeWrapper, ingredients);
+		//setRecipe(recipeLayout, recipeWrapper, ingredients);
 	}
 
     @Override
@@ -66,6 +73,7 @@ public abstract class JEICategoryV2 implements IRecipeCategory, IRecipeHandler<J
 
     }
 
+    @Nonnull
     @Override
     public List<String> getTooltipStrings(int mouseX, int mouseY) {
         return Collections.emptyList();

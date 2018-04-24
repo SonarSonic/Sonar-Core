@@ -22,6 +22,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.helpers.FontHelper;
 import sonar.core.integration.SonarLoader;
 
+import javax.annotation.Nonnull;
+
 public class SonarSeedsFood extends ItemFood implements IPlantable {
 	private Block cropBlock;
 	private Block soilId;
@@ -57,7 +59,8 @@ public class SonarSeedsFood extends ItemFood implements IPlantable {
 		}
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		ItemStack stack = player.getHeldItem(hand);
 		if (this.greenhouseTier == 0 || !SonarLoader.calculatorLoaded()) {

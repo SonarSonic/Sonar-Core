@@ -15,6 +15,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.api.blocks.IConnectedBlock;
 import sonar.core.api.blocks.IStableBlock;
 
+import javax.annotation.Nonnull;
+
 public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlock {
 
     public int target;
@@ -32,17 +34,11 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 	}
 
 	public boolean checkBlockInDirection(IBlockAccess world, int x, int y, int z, EnumFacing side) {
-		EnumFacing dir = side;
 		IBlockState state = world.getBlockState(new BlockPos(x, y, z));
-		IBlockState block = world.getBlockState(new BlockPos(x + dir.getFrontOffsetX(), y + dir.getFrontOffsetY(), z + dir.getFrontOffsetZ()));
+		IBlockState block = world.getBlockState(new BlockPos(x + side.getFrontOffsetX(), y + side.getFrontOffsetY(), z + side.getFrontOffsetZ()));
 		int meta = state.getBlock().getMetaFromState(state);
-		if (block != null) {
-			if (type(state, block, meta, block.getBlock().getMetaFromState(block))) {
-				return true;
-			}
-		}
-		return false;
-	}
+        return type(state, block, meta, block.getBlock().getMetaFromState(block));
+    }
 
 	public static boolean type(IBlockState state1, IBlockState state2, int m1, int m2) {
 		Block block1 = state1.getBlock();
@@ -71,14 +67,16 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 		return 0;
 	}
 
+    @Nonnull
     @Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess w, BlockPos pos) {
+	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess w, BlockPos pos) {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
 		return state.withProperty(NORTH, checkBlockInDirection(w, x, y, z, EnumFacing.NORTH)).withProperty(SOUTH, checkBlockInDirection(w, x, y, z, EnumFacing.SOUTH)).withProperty(WEST, checkBlockInDirection(w, x, y, z, EnumFacing.WEST)).withProperty(EAST, checkBlockInDirection(w, x, y, z, EnumFacing.EAST)).withProperty(UP, checkBlockInDirection(w, x, y, z, EnumFacing.UP)).withProperty(DOWN, checkBlockInDirection(w, x, y, z, EnumFacing.DOWN));
 	}
 
+    @Nonnull
     @Override
 	protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, NORTH, EAST, SOUTH, WEST, DOWN, UP);
@@ -95,12 +93,14 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 			super(material, target);
 		}
 
+        @Nonnull
         @Override
 		public BlockRenderLayer getBlockLayer() {
 			return BlockRenderLayer.TRANSLUCENT;
 		}
 
-		@Override
+		@Nonnull
+        @Override
 		public EnumBlockRenderType getRenderType(IBlockState state) {
 			return EnumBlockRenderType.MODEL;
 		}
@@ -117,7 +117,7 @@ public class ConnectedBlock extends Block implements IConnectedBlock, IStableBlo
 
         @Override
 		@SideOnly(Side.CLIENT)
-		public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+		public boolean shouldSideBeRendered(IBlockState blockState, @Nonnull IBlockAccess blockAccess, @Nonnull BlockPos pos, EnumFacing side) {
 			IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
 			Block block = iblockstate.getBlock();
             return block != this && super.shouldSideBeRendered(blockState, blockAccess, pos, side);

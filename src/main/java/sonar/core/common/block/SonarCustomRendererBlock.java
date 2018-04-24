@@ -8,6 +8,8 @@ import net.minecraft.world.IBlockAccess;
 import sonar.core.common.block.properties.BlockStateSpecial;
 import sonar.core.common.block.properties.IBlockStateSpecial;
 
+import javax.annotation.Nonnull;
+
 public abstract class SonarCustomRendererBlock<T extends TileEntity> extends SonarMachineBlock {
 
 	protected SonarCustomRendererBlock(Material material, boolean orientation, boolean wrenchable) {
@@ -15,7 +17,7 @@ public abstract class SonarCustomRendererBlock<T extends TileEntity> extends Son
 	}
 
     @Override
-	public final IBlockStateSpecial<T, ? extends IBlockState> getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+	public final IBlockStateSpecial<T, ? extends IBlockState> getExtendedState(@Nonnull IBlockState state, IBlockAccess world, BlockPos pos) {
 		return new BlockStateSpecial<>(state, pos, (T) world.getTileEntity(pos));
 	}
 }

@@ -167,9 +167,7 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 	public boolean equals(Object obj) {
 		if (obj instanceof StoredEnergyStack) {
 			StoredEnergyStack target = (StoredEnergyStack) obj;
-			if (this.stored == target.stored && this.capacity == target.capacity && this.input == target.input && this.output == target.output && this.usage == target.usage && this.energyType.getName().equals(target.energyType.getName())) {
-				return true;
-			}
+            return this.stored == target.stored && this.capacity == target.capacity && this.input == target.input && this.output == target.output && this.usage == target.usage && this.energyType.getName().equals(target.energyType.getName());
 		}
 		return false;
 	}

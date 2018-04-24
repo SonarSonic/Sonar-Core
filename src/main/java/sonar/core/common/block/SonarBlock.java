@@ -3,6 +3,7 @@ package sonar.core.common.block;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
@@ -59,7 +60,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if (player != null) {
 			TileEntity target = world.getTileEntity(pos);
-			if (target != null && target instanceof TileEntitySonar) {
+			if (target instanceof TileEntitySonar) {
 				((TileEntitySonar) target).forceNextSync();
 			}
             return operateBlock(world, pos, state, player, hand, new BlockInteraction(side.getIndex(), hitX, hitY, hitZ, player.isSneaking() ? BlockInteractionType.SHIFT_RIGHT : BlockInteractionType.RIGHT));
@@ -73,7 +74,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	}
 
 	@Override
-	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+	public boolean removedByPlayer(@Nonnull IBlockState state, World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer player, boolean willHarvest) {
 		if (willHarvest) {
 			if (world.isRemote && allowLeftClick()) {
 				RayTraceResult posn = Minecraft.getMinecraft().objectMouseOver;
@@ -115,13 +116,14 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	}
 
     @Override
-	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
+	public void harvestBlock(@Nonnull World world, EntityPlayer player, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
 		super.harvestBlock(world, player, pos, state, te, stack);
 		world.setBlockToAir(pos);
 	}
 
-	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+	@Nonnull
+    @Override
+	public List<ItemStack> getDrops(@Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull IBlockState state, int fortune) {
 		super.getDrops(world, pos, state, fortune);
 		if (dropStandard(world, pos)) {
 			return super.getDrops(world, pos, state, fortune);
@@ -131,7 +133,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 	public final ItemStack getSpecialDrop(IBlockAccess world, BlockPos pos) {
 		TileEntity target = world.getTileEntity(pos);
-		if (target != null && target instanceof INBTSyncable) {
+		if (target instanceof INBTSyncable) {
 			ItemStack itemStack = new ItemStack(this, 1);
 			processDrop(world, pos, (INBTSyncable) target, itemStack);
 			return itemStack;
@@ -144,9 +146,8 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 	public void processDrop(IBlockAccess world, BlockPos pos, INBTSyncable te, ItemStack drop) {
 		if (te != null) {
-            INBTSyncable handler = te;
 			NBTTagCompound tag = new NBTTagCompound();
-			handler.writeData(tag, SyncType.DROP);
+			te.writeData(tag, SyncType.DROP);
 			if (!tag.hasNoTags()) {
 				tag.setBoolean("dropped", true);
 				drop.setTagCompound(tag);
@@ -200,7 +201,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 		if (itemstack.hasTagCompound()) {
 			TileEntity entity = world.getTileEntity(pos);
-			if (entity != null && entity instanceof INBTSyncable) {
+			if (entity instanceof INBTSyncable) {
 				INBTSyncable handler = (INBTSyncable) entity;
 				handler.readData(itemstack.getTagCompound(), SyncType.DROP);
 			}
@@ -208,7 +209,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	}
 
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+	public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
 		InventoryHelper.dropInventory(world.getTileEntity(pos), world, pos, state);
 		super.breakBlock(world, pos, state);
 	}
@@ -262,6 +263,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 		return blockState.getBoundingBox(worldIn, pos);
 	}
 
+    @Nonnull
     @Override
 	@Deprecated
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
@@ -281,6 +283,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 		return this.getDefaultState().withProperty(FACING, EnumFacing.SOUTH);
 	}
 
+    @Nonnull
     @Override
 	public IBlockState getStateFromMeta(int meta) {
 		EnumFacing enumfacing = EnumFacing.getFront(meta);
@@ -295,6 +298,7 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
         return state.getValue(FACING).getIndex();
 	}
 
+    @Nonnull
     @Override
 	protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING);

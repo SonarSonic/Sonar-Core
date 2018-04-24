@@ -12,6 +12,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import sonar.core.common.block.properties.SonarProperties;
 
+import javax.annotation.Nonnull;
+
 /**for multiparts that can face 6 different directions*/
 public abstract class BlockSidedMultipart extends BlockSonarMultipart {
 
@@ -19,7 +21,8 @@ public abstract class BlockSidedMultipart extends BlockSonarMultipart {
 		super(material);
 	}
 	
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+	@Nonnull
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		return getStateFromMeta(facing.getOpposite().ordinal());
 	}
 
@@ -37,7 +40,8 @@ public abstract class BlockSidedMultipart extends BlockSonarMultipart {
 		return state.getValue(SonarProperties.ORIENTATION);
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(SonarProperties.ORIENTATION, EnumFacing.VALUES[meta]);
 	}
@@ -47,7 +51,8 @@ public abstract class BlockSidedMultipart extends BlockSonarMultipart {
 		return getFaceFromState(state).ordinal();
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, SonarProperties.ORIENTATION);
 	}

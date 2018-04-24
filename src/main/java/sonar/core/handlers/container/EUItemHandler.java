@@ -16,7 +16,8 @@ public class EUItemHandler implements ISonarEnergyContainerHandler {
 
     @Override
     public boolean canHandleItem(ItemStack stack) {
-        return stack.getItem() != null && (stack.getItem() instanceof IElectricItem || stack.getItem() instanceof ISpecialElectricItem);
+        stack.getItem();
+        return stack.getItem() instanceof IElectricItem || stack.getItem() instanceof ISpecialElectricItem;
     }
 
     public static IElectricItemManager getManager(ItemStack stack) {

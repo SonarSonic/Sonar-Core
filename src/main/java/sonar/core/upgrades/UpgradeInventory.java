@@ -32,7 +32,7 @@ public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
 	public UpgradeInventory setAllowed(int max, Object... allowed){
 		this.allowed.clear();
 		for (Object object : allowed) {
-			if (object != null && object instanceof String) {
+			if (object instanceof String) {
 				this.allowed.add((String) object);
 			}
 		}
@@ -119,7 +119,7 @@ public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
 	public void readData(NBTTagCompound tag, SyncType type) {
 		if (type.isType(SyncType.DEFAULT_SYNC, SyncType.SAVE)) {
 			NBTTagCompound upgradeTag = tag.getCompoundTag("Upgrades");
-			if (upgradeTag != null && !upgradeTag.hasNoTags()) {
+			if (!upgradeTag.hasNoTags()) {
 				for (String key : upgradeTag.getKeySet()) {
 					upgrades.put(key, upgradeTag.getInteger(key));
 				}
