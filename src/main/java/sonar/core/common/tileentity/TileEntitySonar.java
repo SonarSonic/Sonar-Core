@@ -44,13 +44,11 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 	public boolean isDirty;
 
 	public boolean isClient() {
-        getWorld();
-        return getWorld().isRemote;
+        return getWorld() == null ? false : getWorld().isRemote;
 	}
 
 	public boolean isServer() {
-        getWorld();
-        return !getWorld().isRemote;
+        return getWorld() == null ? true : !getWorld().isRemote;
 	}
 
 	@Override
