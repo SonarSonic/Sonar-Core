@@ -24,18 +24,23 @@ public abstract class PacketMultipartHandler<T extends PacketMultipart> implemen
 					if (multipartTile.isPresent()) {
 						return processMessage(message, player, world, multipartTile.get(), ctx);
 					}
+					return onFailure(message, player, world, ctx);
 				} else {
 					TileEntity tile = world.getTileEntity(message.pos);
 					if (tile instanceof IMultipartTile) {
 						return processMessage(message, player, world, (IMultipartTile) tile, ctx);
 					}
+					return onFailure(message, player, world, ctx);
 				}
 			}
-
+			return onFailure(message, player, world, ctx);
 		}
 		return null;
 	}
 
 	public abstract IMessage processMessage(T message, EntityPlayer player, World world, IMultipartTile part, MessageContext ctx);
 
+	public IMessage onFailure(T message, EntityPlayer player, World world, MessageContext ctx){
+		return null;
+	}
 }

@@ -10,13 +10,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import sonar.core.helpers.ListHelper;
 import sonar.core.utils.Pair;
 
-public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTally<L>> {
+public class ListenerList<L extends ISonarListener> {
 
     public final int maxTypes;
     public boolean isValid;
     public boolean hasListeners;
     public ArrayList<ISonarListenable<L>> subLists = new ArrayList<>();
     public ArrayList<ISonarListenable<L>> masterLists = new ArrayList<>();
+    public ArrayList<ListenerTally<L>> listener_tallies = new ArrayList<>();
     public boolean[] hasTypes;
 
     public ListenerList(int maxTypes) {
@@ -27,9 +28,8 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
 
     public void updateState() {
         boolean[] states = new boolean[maxTypes];
-        lists:
-        for (ListenerList<L> list : this.getValidLists(false)) {
-            for (ListenerTally<L> tally : list) {
+        lists: for (ListenerList<L> list : this.getValidLists(false)) {
+            for (ListenerTally<L> tally : list.listener_tallies) {
                 boolean hasAll = true;
                 for (int i = 0; i < states.length; i++) {
                     if (!states[i]) {
@@ -112,7 +112,7 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
 
     public void clearSubLists(boolean notify) {
         if (notify) {
-            for (ListenerTally<L> tally : this) {
+            for (ListenerTally<L> tally : listener_tallies) {
                 onListenerRemoved(tally);
             }
             clearSubLists(false);
@@ -129,7 +129,7 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
 
     public void invalidateList() {
         clearSubLists(true);
-        clear();
+        listener_tallies.clear();
         subLists.clear();
         masterLists.clear();
         isValid = false;
@@ -216,7 +216,7 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
 
     public void clearListener(L listener) {
         Pair<ListenerTally<L>, Boolean> tally = getTally(listener, false);
-        if (tally.a != null && remove(tally.a)) {
+        if (tally.a != null && listener_tallies.remove(tally.a)) {
             onListenerRemoved(tally.a);
             updateState();
         }
@@ -224,7 +224,7 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
 
     public PlayerListener findListener(EntityPlayer player) {
         for (ListenerList<L> list : getValidLists(false)) {
-            for (ListenerTally<L> tally : list) {
+            for (ListenerTally<L> tally : list.listener_tallies) {
                 if (tally.listener instanceof PlayerListener && ((PlayerListener) tally.listener).player.isEntityEqual(player)) {
                     return (PlayerListener) tally.listener;
                 }
@@ -234,7 +234,7 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
     }
 
     private Pair<ListenerTally<L>, Boolean> getTally(L listener, boolean create) {
-        Iterator<ListenerTally<L>> i = this.iterator();
+        Iterator<ListenerTally<L>> i = listener_tallies.iterator();
         while (i.hasNext()) {
             ListenerTally tally = i.next();
             if (!tally.isValid()) {
@@ -245,7 +245,7 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
         }
         if (create) {
             ListenerTally<L> created = new ListenerTally<>(this, listener, maxTypes);
-            add(created);
+            listener_tallies.add(created);
             return new Pair(created, true);
         }
         return new Pair(null, false);
@@ -261,7 +261,7 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
         if (valid.isEmpty() || !hasListeners(valid)) {
             return tallies;
         }
-        getValidLists(false).forEach(list -> list.forEach(tally -> {
+        getValidLists(false).forEach(list -> list.listener_tallies.forEach(tally -> {
             if (!tallies.contains(tally)) {
                 for (int type : valid) {
                     if (tally.getTally(type) > 0) {
@@ -286,7 +286,7 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
         if (valid.isEmpty() || !hasListeners(valid)) {
             return listeners;
         }
-        getValidLists(false).forEach(list -> list.forEach(tally -> {
+        getValidLists(false).forEach(list -> list.listener_tallies.forEach(tally -> {
             if (!listeners.contains(tally.listener)) {
                 for (int type : valid) {
                     if (tally.getTally(type) > 0) {
@@ -314,7 +314,7 @@ public class ListenerList<L extends ISonarListener> extends ArrayList<ListenerTa
      * returns true is the tally was removed
      */
     private boolean wasRemoved(ListenerTally<L> tally) {
-        return !tally.isValid() && remove(tally);
+        return !tally.isValid() && listener_tallies.remove(tally);
     }
 
     public void onListenerAdded(ListenerTally<L> tally) {}
