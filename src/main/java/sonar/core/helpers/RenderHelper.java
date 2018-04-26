@@ -98,13 +98,15 @@ public class RenderHelper {
 
 	public static int setMetaData(TileEntity tileentity) {
 		int i;
-        tileentity.getWorld();
-        Block block = tileentity.getBlockType();
-        i = tileentity.getBlockMetadata();
-        if (i == 0) {
-            i = tileentity.getBlockMetadata();
-        }
-
+		if (tileentity.getWorld() == null) {
+			i = 0;
+		} else {
+			Block block = tileentity.getBlockType();
+			i = tileentity.getBlockMetadata();
+			if (block != null && i == 0) {
+				i = tileentity.getBlockMetadata();
+			}
+		}
         return i;
 	}
 

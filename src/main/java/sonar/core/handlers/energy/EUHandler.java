@@ -18,7 +18,7 @@ public class EUHandler implements ISonarEnergyHandler {
 
 	@Override
 	public boolean canProvideEnergy(TileEntity tile, EnumFacing dir) {
-		return tile instanceof IEnergyTile || tile instanceof IEnergySink || tile instanceof IEnergyStorage;
+		return tile instanceof IEnergyTile || tile instanceof IEnergySink || tile instanceof IEnergySource || tile instanceof IEnergyStorage;
 	}
 
 	@Override

@@ -70,9 +70,12 @@ public class BlockCoords {
 
 	public BlockCoords(TileEntity tile) {
 		this.pos = tile.getPos();
-        tile.getWorld();
-        this.hasDimension = true;
-        this.dimension = tile.getWorld().provider.getDimension();
+		if (tile.getWorld() == null) {
+			this.hasDimension = false;
+		} else {
+			this.hasDimension = true;
+			this.dimension = tile.getWorld().provider.getDimension();
+		}
     }
 
 	public BlockCoords(TileEntity tile, int dimension) {
