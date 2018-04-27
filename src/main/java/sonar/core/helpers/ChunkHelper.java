@@ -70,13 +70,6 @@ public class ChunkHelper {
 	}
 
 	public static List<EntityPlayerMP> getChunkPlayers(PlayerChunkMapEntry entry) {
-		try {
-			Field f = entry.getClass().getDeclaredField("players");
-			f.setAccessible(true);
-			return (List<EntityPlayerMP>) f.get(entry);
-		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			// e.printStackTrace();
-		}
-		return new ArrayList<>();
+		return entry.getWatchingPlayers();
 	}
 }
