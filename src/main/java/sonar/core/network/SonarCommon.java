@@ -26,7 +26,7 @@ public class SonarCommon {
         ForgeRegistries.BLOCKS.register(block.getValue());
         ForgeRegistries.ITEMS.register(block.getItemBlock().setUnlocalizedName(block.getRegistryName()).setRegistryName(modid, block.getRegistryName()));
 		if (block.hasTileEntity()) {
-			GameRegistry.registerTileEntity(block.getTileEntity(), block.getRegistryName());
+			GameRegistry.registerTileEntity(block.getTileEntity(), block.getTileEntityRegistryName());
 		}
 		return block.getValue();
 	}

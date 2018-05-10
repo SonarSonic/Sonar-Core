@@ -19,6 +19,10 @@ public interface ISonarRegistryBlock<T extends Block> extends IAbstractSonarRegi
 	
     Class<? extends TileEntity> getTileEntity();
 
+    default String getTileEntityRegistryName(){
+        return getRegistryName();
+    };
+
     ISonarRegistryBlock addTileEntity(Class<? extends TileEntity> tile);
     
     boolean shouldRegisterRenderer();
