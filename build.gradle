@@ -62,8 +62,8 @@ compileJava {
 minecraft {
     version = "${forge_version}"
     runDir = "run"
-    replace "@VERSION@", project.version
-    replace "@MC_VERSION@", version
+    replace "@VERSION@", "${mod_version}"
+    replace "@MC_VERSION@", "${minecraft_version}"
     mappings = "snapshot_20171002"
     makeObfSourceJar = false
 }
