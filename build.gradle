@@ -53,7 +53,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "${minecraft_version}-${mod_version}"
 group= "sonar.core"
-archivesBaseName = "sonarcore"
+archivesBaseName = "core"
 sourceCompatibility = targetCompatibility = "1.8"
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
@@ -62,6 +62,8 @@ compileJava {
 minecraft {
     version = "${forge_version}"
     runDir = "run"
+    replace "@VERSION@", project.version
+    replace "@MC_VERSION@", version
     mappings = "snapshot_20171002"
     makeObfSourceJar = false
 }
@@ -69,11 +71,17 @@ minecraft {
 task deobfJar(type: Jar) { // Generate deobfuscated
     from sourceSets.main.output
     classifier = 'deobf'
+    archiveName = "sonarcore-${minecraft_version}-${mod_version}-deobf.jar"
+
 }
 tasks.build.dependsOn('deobfJar')
 artifacts {
     archives deobfJar
     archives jar
+}
+
+jar {
+    archiveName = "sonarcore-${minecraft_version}-${mod_version}.jar"
 }
 
 dependencies {

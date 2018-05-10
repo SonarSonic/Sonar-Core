@@ -3,15 +3,12 @@
 "modid": "sonarcore",
 "name": "SonarCore",
 "description": "Sonar's Modding Framework",
-"version": "${version}",
-"mcversion": "${mcversion}",
+"version": "@VERSION@",
+"mcversion": "@MC_VERSION@",
 "updateUrl": "",
 "authors": ["Ollie Lansdell"],
 "credits": "Created by Ollie Lansdell",
 "logoFile": "",
-"screenshots": [],
-"dependencies": ["redstoneflux","wailaapi","mekanism", "ic2", "mcmultipart"],
-"dependants": ["calculator","practicallogistics2","fluxnetworks","bagelsmore"],
-"useDependencyInformation": true
+"screenshots": []
 }
 ]
