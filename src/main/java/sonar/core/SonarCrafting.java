@@ -19,41 +19,41 @@ public class SonarCrafting extends SonarCore {
 	public static void registerCraftingRecipes() {
 		ResourceLocation group = new ResourceLocation("SonarCore");
 
-		addShapeless(SonarConstants.modid, group, new ItemStack(SonarCore.reinforcedStoneBrick, 2), fromBlock(SonarCore.reinforcedStoneBlock), fromBlock(SonarCore.reinforcedStoneBlock));
-		addShapeless(SonarConstants.modid, group, new ItemStack(SonarCore.stableStone[0], 2), fromBlock(SonarCore.reinforcedStoneBrick), fromBlock(SonarCore.reinforcedStoneBrick));
+		addShapeless(SonarConstants.MODID, group, new ItemStack(SonarCore.reinforcedStoneBrick, 2), fromBlock(SonarCore.reinforcedStoneBlock), fromBlock(SonarCore.reinforcedStoneBlock));
+		addShapeless(SonarConstants.MODID, group, new ItemStack(SonarCore.stableStone[0], 2), fromBlock(SonarCore.reinforcedStoneBrick), fromBlock(SonarCore.reinforcedStoneBrick));
 
-		addShapeless(SonarConstants.modid, group, new ItemStack(SonarCore.stableGlass, 1), fromBlock(SonarCore.clearStableGlass));
-		addShapeless(SonarConstants.modid, group, new ItemStack(SonarCore.clearStableGlass, 1), fromBlock(SonarCore.stableGlass));
-		addShaped(SonarConstants.modid, group, new ItemStack(SonarCore.reinforcedStoneStairs, 4), "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedStoneBlock);
-		addShaped(SonarConstants.modid, group, new ItemStack(SonarCore.reinforcedStoneBrickStairs, 4), "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedStoneBrick);
-		addShaped(SonarConstants.modid, group, new ItemStack(SonarCore.reinforcedDirtStairs, 4), "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedDirtBlock);
-		addShaped(SonarConstants.modid, group, new ItemStack(SonarCore.reinforcedDirtBrickStairs, 4), "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedDirtBrick);
+		addShapeless(SonarConstants.MODID, group, new ItemStack(SonarCore.stableGlass, 1), fromBlock(SonarCore.clearStableGlass));
+		addShapeless(SonarConstants.MODID, group, new ItemStack(SonarCore.clearStableGlass, 1), fromBlock(SonarCore.stableGlass));
+		addShaped(SonarConstants.MODID, group, new ItemStack(SonarCore.reinforcedStoneStairs, 4), "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedStoneBlock);
+		addShaped(SonarConstants.MODID, group, new ItemStack(SonarCore.reinforcedStoneBrickStairs, 4), "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedStoneBrick);
+		addShaped(SonarConstants.MODID, group, new ItemStack(SonarCore.reinforcedDirtStairs, 4), "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedDirtBlock);
+		addShaped(SonarConstants.MODID, group, new ItemStack(SonarCore.reinforcedDirtBrickStairs, 4), "A  ", "AA ", "AAA", 'A', SonarCore.reinforcedDirtBrick);
 
-		addShapedOre(SonarConstants.modid, new ItemStack(SonarCore.reinforcedStoneFence, 6), "ASA", "ASA", 'A', SonarCore.reinforcedStoneBlock, 'S', "stickWood");
-		addShapedOre(SonarConstants.modid, new ItemStack(SonarCore.reinforcedStoneBrickFence, 6), "ASA", "ASA", 'A', SonarCore.reinforcedStoneBrick, 'S', "stickWood");
-		addShapedOre(SonarConstants.modid, new ItemStack(SonarCore.reinforcedDirtFence, 6), "ASA", "ASA", 'A', SonarCore.reinforcedDirtBlock, 'S', "stickWood");
-		addShapedOre(SonarConstants.modid, new ItemStack(SonarCore.reinforcedDirtBrickFence, 6), "ASA", "ASA", 'A', SonarCore.reinforcedDirtBrick, 'S', "stickWood");
+		addShapedOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedStoneFence, 6), "ASA", "ASA", 'A', SonarCore.reinforcedStoneBlock, 'S', "stickWood");
+		addShapedOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedStoneBrickFence, 6), "ASA", "ASA", 'A', SonarCore.reinforcedStoneBrick, 'S', "stickWood");
+		addShapedOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedDirtFence, 6), "ASA", "ASA", 'A', SonarCore.reinforcedDirtBlock, 'S', "stickWood");
+		addShapedOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedDirtBrickFence, 6), "ASA", "ASA", 'A', SonarCore.reinforcedDirtBrick, 'S', "stickWood");
 
-		addShapedOre(SonarConstants.modid, new ItemStack(SonarCore.reinforcedStoneGate, 1), "SAS", "SAS", 'A', SonarCore.reinforcedStoneBlock, 'S', "stickWood");
-		addShapedOre(SonarConstants.modid, new ItemStack(SonarCore.reinforcedStoneBrickGate, 1), "SAS", "SAS", 'A', SonarCore.reinforcedStoneBrick, 'S', "stickWood");
-		addShapedOre(SonarConstants.modid, new ItemStack(SonarCore.reinforcedDirtGate, 1), "SAS", "SAS", 'A', SonarCore.reinforcedDirtBlock, 'S', "stickWood");
-		addShapedOre(SonarConstants.modid, new ItemStack(SonarCore.reinforcedDirtBrickGate, 1), "SAS", "SAS", 'A', SonarCore.reinforcedDirtBrick, 'S', "stickWood");
+		addShapedOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedStoneGate, 1), "SAS", "SAS", 'A', SonarCore.reinforcedStoneBlock, 'S', "stickWood");
+		addShapedOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedStoneBrickGate, 1), "SAS", "SAS", 'A', SonarCore.reinforcedStoneBrick, 'S', "stickWood");
+		addShapedOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedDirtGate, 1), "SAS", "SAS", 'A', SonarCore.reinforcedDirtBlock, 'S', "stickWood");
+		addShapedOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedDirtBrickGate, 1), "SAS", "SAS", 'A', SonarCore.reinforcedDirtBrick, 'S', "stickWood");
 		// TODO add fence gates
 
 		for (int i = 0; i < 16; i++) {
-			addShaped(SonarConstants.modid, group, new ItemStack(SonarCore.stableStone[i], 8), "SSS", "SDS", "SSS", 'D', new ItemStack(Items.DYE, 1, Variants.values()[i].getDyeMeta()), 'S', new ItemStack(SonarCore.stableStone[0], 1));
-			addShapeless(SonarConstants.modid, group, new ItemStack(stablestonerimmedBlock[i], 1), fromBlock(stableStone[i]));
-			addShapeless(SonarConstants.modid, group, new ItemStack(stablestonerimmedblackBlock[i], 1), fromBlock(stablestonerimmedBlock[i]));
-			addShapeless(SonarConstants.modid, group, new ItemStack(SonarCore.stableStone[i], 1), fromBlock(SonarCore.stablestonerimmedblackBlock[i]));
+			addShaped(SonarConstants.MODID, group, new ItemStack(SonarCore.stableStone[i], 8), "SSS", "SDS", "SSS", 'D', new ItemStack(Items.DYE, 1, Variants.values()[i].getDyeMeta()), 'S', new ItemStack(SonarCore.stableStone[0], 1));
+			addShapeless(SonarConstants.MODID, group, new ItemStack(stablestonerimmedBlock[i], 1), fromBlock(stableStone[i]));
+			addShapeless(SonarConstants.MODID, group, new ItemStack(stablestonerimmedblackBlock[i], 1), fromBlock(stablestonerimmedBlock[i]));
+			addShapeless(SonarConstants.MODID, group, new ItemStack(SonarCore.stableStone[i], 1), fromBlock(SonarCore.stablestonerimmedblackBlock[i]));
 		}
 
 		if (!SonarLoader.calculatorLoaded()) {
-			addShapelessOre(SonarConstants.modid, new ItemStack(SonarCore.reinforcedStoneBlock, 1), "cobblestone", "plankWood");
-			addShapelessOre(SonarConstants.modid, new ItemStack(SonarCore.reinforcedStoneBlock, 4), "cobblestone", "logWood");
-			addShapelessOre(SonarConstants.modid, new ItemStack(SonarCore.reinforcedDirtBlock, 1), Blocks.DIRT, "plankWood");
-			addShapelessOre(SonarConstants.modid, new ItemStack(SonarCore.reinforcedDirtBlock, 4), Blocks.DIRT, "logWood");
-			addShapelessOre(SonarConstants.modid, new ItemStack(SonarCore.stableGlass, 2), "blockGlass", "blockGlass");
-			addShapeless(SonarConstants.modid, group, new ItemStack(SonarCore.reinforcedDirtBrick, 2), fromBlock(SonarCore.reinforcedDirtBlock), fromBlock(SonarCore.reinforcedDirtBlock));
+			addShapelessOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedStoneBlock, 1), "cobblestone", "plankWood");
+			addShapelessOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedStoneBlock, 4), "cobblestone", "logWood");
+			addShapelessOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedDirtBlock, 1), Blocks.DIRT, "plankWood");
+			addShapelessOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedDirtBlock, 4), Blocks.DIRT, "logWood");
+			addShapelessOre(SonarConstants.MODID, new ItemStack(SonarCore.stableGlass, 2), "blockGlass", "blockGlass");
+			addShapeless(SonarConstants.MODID, group, new ItemStack(SonarCore.reinforcedDirtBrick, 2), fromBlock(SonarCore.reinforcedDirtBlock), fromBlock(SonarCore.reinforcedDirtBlock));
 		}
 	}
 

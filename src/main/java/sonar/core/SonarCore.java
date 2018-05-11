@@ -64,13 +64,13 @@ import sonar.core.network.utils.IByteBufTile;
 import sonar.core.registries.EnergyTypeRegistry;
 import sonar.core.upgrades.MachineUpgradeRegistry;
 
-@Mod(modid = SonarConstants.modid, name = SonarConstants.name, version = SonarConstants.version, acceptedMinecraftVersions = SonarConstants.mc_versions, dependencies = "after:mcmultipart;" + "after:ic2;" + "after:mekanism;" + "after:redstoneflux;" +  "before:calculator;" + "before:practicallogistics2;" + "before:fluxnetworks;" + "before:bagelsmore;")
+@Mod(modid = SonarConstants.MODID, name = SonarConstants.NAME, version = SonarConstants.VERSION, acceptedMinecraftVersions = SonarConstants.ACCEPTED_MC_VERSION, dependencies = SonarConstants.DEPENDENCIES)
 public class SonarCore {
 
 	@SidedProxy(clientSide = "sonar.core.network.SonarClient", serverSide = "sonar.core.network.SonarCommon")
 	public static SonarCommon proxy;
 
-	@Instance(SonarConstants.modid)
+	@Instance(SonarConstants.MODID)
 	public static SonarCore instance;
 
 	public static List<ISonarInventoryHandler> inventoryHandlers;
@@ -86,7 +86,7 @@ public class SonarCore {
 	public static HarvesterRegistry harvesters = new HarvesterRegistry();
 	public static FertiliserRegistry fertilisers = new FertiliserRegistry();
 
-	public static Logger logger = (Logger) LogManager.getLogger(SonarConstants.modid);
+	public static Logger logger = (Logger) LogManager.getLogger(SonarConstants.MODID);
 
 	// base blocks
 	public static Block reinforcedStoneBlock, reinforcedStoneBrick, reinforcedDirtBlock, reinforcedDirtBrick, stableGlass, clearStableGlass;
