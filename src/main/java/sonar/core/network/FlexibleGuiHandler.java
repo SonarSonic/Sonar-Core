@@ -39,6 +39,10 @@ public class FlexibleGuiHandler {
 
 	public static String MULTIPART = "multipart", TILEENTITY = "tile", ITEM = "item", ID = "id", SLOT_ID = "uuid";
 
+	public static FlexibleGuiHandler instance(){
+		return SonarCore.instance.guiHandler;
+	}
+
 	public static void openMultipartGui(int id, EntityPlayer player, World world, BlockPos pos) {
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileSonarMultipart) {
@@ -70,7 +74,11 @@ public class FlexibleGuiHandler {
 		return null;
 	}
 
-	public void openBasicTile(boolean change, TileEntity tile, EntityPlayer player, World world, BlockPos pos, int id) {
+	public void openBasicTile(EntityPlayer player, World world, BlockPos pos, int id) {
+		openBasicTile(false, player, world, pos, id);
+	}
+
+	public void openBasicTile(boolean change, EntityPlayer player, World world, BlockPos pos, int id) {
 		if (world.isRemote) {
 			return;
 		}
@@ -84,7 +92,7 @@ public class FlexibleGuiHandler {
 			return;
 		}
 		if (slotID == -1) { // if this isn't a multipart
-			openBasicTile(change, world.getTileEntity(pos), player, world, pos, id);
+			openBasicTile(change, player, world, pos, id);
 			return;
 		}
 		NBTTagCompound tag = new NBTTagCompound();

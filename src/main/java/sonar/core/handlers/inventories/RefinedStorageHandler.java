@@ -1,5 +1,5 @@
 package sonar.core.handlers.inventories;
-
+/*
 import java.util.Collection;
 import java.util.List;
 
@@ -72,3 +72,4 @@ public class RefinedStorageHandler implements ISonarInventoryHandler {
         return true;
     }
 }
+*/

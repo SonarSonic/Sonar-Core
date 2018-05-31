@@ -209,7 +209,7 @@ public class SonarHelper {
 		if (dir == EnumFacing.WEST) {
 			return EnumFacing.NORTH;
 		}
-		return null;
+		return dir; //DEFAULT
 	}
 
 	public static ArrayList<BlockCoords> getConnectedBlocks(Block block, List<EnumFacing> dirs, World w, BlockPos pos, int max) {
@@ -258,6 +258,15 @@ public class SonarHelper {
 
 	public static boolean intContains(int[] ints, int num) {
 		for (int i : ints) {
+			if (i == num) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static <T> boolean arrayContains(T[] ints, T num) {
+		for (T i : ints) {
 			if (i == num) {
 				return true;
 			}

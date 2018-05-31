@@ -3,16 +3,18 @@ package sonar.core.common.tileentity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import sonar.core.inventory.ILargeInventory;
+import sonar.core.api.inventories.ISonarInventoryTile;
 import sonar.core.inventory.SonarLargeInventory;
+import sonar.core.inventory.SonarLargeInventoryTile;
 
-public class TileEntityLargeInventory extends TileEntitySonar implements ILargeInventory {
-	public SonarLargeInventory inv;
+public class TileEntityLargeInventory extends TileEntitySonar implements ISonarInventoryTile {
+	public final SonarLargeInventoryTile inv = new SonarLargeInventoryTile(this);
 
 	public TileEntityLargeInventory() {}
 
-	public TileEntityLargeInventory(int size, int numStacks) {
-		inv = new SonarLargeInventory(size, numStacks);
+	public TileEntityLargeInventory(int size, int stackSize) {
+		inv.setSize(size);
+		inv.setStackSize(stackSize);
 		syncList.addPart(inv);
 	}
 
@@ -24,13 +26,13 @@ public class TileEntityLargeInventory extends TileEntitySonar implements ILargeI
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY == capability) {
-			return (T) inv;
+			return (T) inv.getItemHandler(facing);
 		}
 		return super.getCapability(capability, facing);
 	}
 
 	@Override
-	public SonarLargeInventory getTileInv() {
+	public SonarLargeInventory inv() {
 		return inv;
 	}
 }

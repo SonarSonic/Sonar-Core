@@ -1,5 +1,5 @@
 package sonar.core.handlers.inventories;
-
+/*
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -13,6 +13,7 @@ import sonar.core.api.asm.InventoryHandler;
 import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
+import sonar.core.inventory.handling.ItemTransferHelper;
 
 @InventoryHandler(modid = "sonarcore", priority = 1)
 public class ItemHandlerHandler implements ISonarInventoryHandler {
@@ -38,7 +39,7 @@ public class ItemHandlerHandler implements ISonarInventoryHandler {
 	@Override
 	public StorageSize getItems(List<StoredItemStack> storedStacks, TileEntity tile, EnumFacing dir) {
 		IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir);
-		return SonarAPI.getItemHelper().addItemHandlerToList(storedStacks, handler);
+		return ItemTransferHelper.addItemHandlerToList(storedStacks, handler);
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class ItemHandlerHandler implements ISonarInventoryHandler {
 			ItemStack stack = handler.insertItem(i, add.getFullStack(), action.shouldSimulate());
 			if (!stack.isEmpty() && add.stored != 0) {
 				add.remove(SonarAPI.getItemHelper().getStackToAdd(add.stored, add, new StoredItemStack(stack)));
-			} else {
+			} else if(stack.isEmpty()){
 				add.stored -= add.getFullStack().getCount();
 			}
 		}
@@ -88,3 +89,4 @@ public class ItemHandlerHandler implements ISonarInventoryHandler {
         return false; //some may be, most won't
     }
 }
+*/

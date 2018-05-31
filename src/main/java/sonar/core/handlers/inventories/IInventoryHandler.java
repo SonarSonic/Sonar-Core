@@ -1,5 +1,5 @@
 package sonar.core.handlers.inventories;
-
+/*
 import java.util.List;
 
 import net.minecraft.inventory.IInventory;
@@ -45,3 +45,4 @@ public class IInventoryHandler implements ISonarInventoryHandler {
         return false;
     }
 }
+*/

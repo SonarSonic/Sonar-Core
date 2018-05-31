@@ -3,6 +3,9 @@ package sonar.core;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import sonar.core.registries.ISonarRegistryBlock;
 import sonar.core.registries.ISonarRegistryItem;
 import sonar.core.registries.SonarRegistryBlock;
@@ -10,9 +13,6 @@ import sonar.core.registries.SonarRegistryItem;
 
 public class SonarRegister {
 
-	//public static Map<String, List<ISonarRegistryBlock>> registeredBlocks = new HashMap();
-	//public static Map<String, List<ISonarRegistryItem>> registeredItems = new HashMap();
-	
 	//// BLOCKS \\\\
 	public static <T extends Block> T addBlock(String modid, CreativeTabs tab, String name, T block) {
 		block.setCreativeTab(tab);
@@ -51,6 +51,11 @@ public class SonarRegister {
 	public static <T extends Item> T addItem(String modid, ISonarRegistryItem<T> item) {
 		setRegistryName(modid, item);
 		return SonarCore.proxy.registerItem(modid, item);
+	}
+
+	//TODO 1.3 - ADD MODID TO RESOURCE
+	public static void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String modid, String key){
+		GameRegistry.registerTileEntity(tileEntityClass, new ResourceLocation(key));
 	}
 
 	//// SET REGISTRY NAME \\\\

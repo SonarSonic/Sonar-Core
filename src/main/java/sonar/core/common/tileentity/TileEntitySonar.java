@@ -25,7 +25,7 @@ import sonar.core.api.utils.BlockCoords;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.IWailaInfo;
-import sonar.core.inventory.ISonarInventoryTile;
+import sonar.core.api.inventories.ISonarInventoryTile;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.IDirtyPart;
@@ -201,11 +201,11 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 	}
 
 	public void openFlexibleGui(EntityPlayer player, int id) {
-		SonarCore.instance.guiHandler.openBasicTile(false, this, player, world, pos, id);
+		SonarCore.instance.guiHandler.openBasicTile(false, player, world, pos, id);
 	}
 
 	public void changeFlexibleGui(EntityPlayer player, int id) {
-		SonarCore.instance.guiHandler.openBasicTile(true, this, player, world, pos, id);
+		SonarCore.instance.guiHandler.openBasicTile(true, player, world, pos, id);
 	}
 	
 	@Override

@@ -11,6 +11,7 @@ import sonar.core.api.utils.ActionType;
 /**
  * used for providing information on Inventories for the Inventory Reader to read, the Provider must be registered in the {@link SonarAPI} to be used
  */
+@Deprecated
 public interface ISonarInventoryHandler {
 
     /**

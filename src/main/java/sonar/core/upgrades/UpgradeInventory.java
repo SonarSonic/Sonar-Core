@@ -19,7 +19,6 @@ public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
     public ArrayList<String> allowed = new ArrayList<>();
     public THashMap<String, Integer> upgrades = new THashMap<>();
     public THashMap<String, Integer> maxUpgrades = new THashMap<>();
-	//public boolean markDirty = true;
 
 	public UpgradeInventory(int syncID, int max, Object... allowed) {
 		super(syncID);		

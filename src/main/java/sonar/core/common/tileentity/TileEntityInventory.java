@@ -1,15 +1,27 @@
 package sonar.core.common.tileentity;
 
-import sonar.core.inventory.ISonarInventory;
-import sonar.core.inventory.ISonarInventoryTile;
+import net.minecraft.item.ItemStack;
+import sonar.core.api.inventories.ISonarInventory;
+import sonar.core.api.inventories.ISonarInventoryTile;
+import sonar.core.inventory.SonarInventoryTile;
+
+import java.util.List;
 
 public class TileEntityInventory extends TileEntitySonar implements ISonarInventoryTile {
 
-	protected ISonarInventory inv;
+	public final SonarInventoryTile inv = new SonarInventoryTile(this);
+	{
+		syncList.addPart(inv);
+	}
 
 	public TileEntityInventory() {}
 
 	public ISonarInventory inv() {
 		return inv;
 	}
+
+	public List<ItemStack> slots(){
+		return inv.slots();
+	}
+
 }

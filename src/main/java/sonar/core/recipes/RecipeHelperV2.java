@@ -32,9 +32,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
      */
 	public ArrayList<Class<?>> adjusted = Lists.newArrayList(Item.class, Block.class);
 
-	public RecipeHelperV2() {
-		// addRecipes();
-	}
+	public RecipeHelperV2() {}
 
     @Override
 	public abstract String getRecipeID();

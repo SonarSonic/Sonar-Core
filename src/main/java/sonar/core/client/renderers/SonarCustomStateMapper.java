@@ -1,14 +1,15 @@
 package sonar.core.client.renderers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -22,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
-public class SonarCustomStateMapper extends StateMapperBase implements ICustomModelLoader {
+public class SonarCustomStateMapper extends StateMapperBase implements ICustomModelLoader, IResourceManagerReloadListener, IResourceManager {
 
 	public final ArrayList<ISonarCustomRenderer> renderers;
 	public final Map<ResourceLocation, BlockRenderer<? extends TileEntity>> customModels;
@@ -80,5 +81,20 @@ public class SonarCustomStateMapper extends StateMapperBase implements ICustomMo
 	@Override
 	public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
 
+	}
+
+	@Override
+	public Set<String> getResourceDomains() {
+		return null;
+	}
+
+	@Override
+	public IResource getResource(ResourceLocation location) throws IOException {
+		return null;
+	}
+
+	@Override
+	public List<IResource> getAllResources(ResourceLocation location) throws IOException {
+		return null;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.google.common.collect.Lists;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -13,17 +14,23 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import sonar.core.SonarCore;
 import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.helpers.SonarHelper;
+import sonar.core.inventory.handling.filters.IExtractFilter;
+import sonar.core.inventory.handling.filters.IInsertFilter;
 import sonar.core.network.PacketSonarSides;
 import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.ISyncPart;
 
-public class MachineSides extends DirtyPart implements ISyncPart {
+import javax.annotation.Nonnull;
+
+public class MachineSides extends DirtyPart implements ISyncPart, IInsertFilter, IExtractFilter {
 
 	public MachineSideConfig[] configs;
 	public ArrayList<EnumFacing> allowedDirs;
 	public ArrayList<MachineSideConfig> allowedSides;
 	public MachineSideConfig def;
 	public TileEntity tile;
+	public int[] input = new int[0], output = new int[0];
 
 	public MachineSides(MachineSideConfig def, TileEntity tile, Object... blocked) {
 		this.def = def;
@@ -176,5 +183,21 @@ public class MachineSides extends DirtyPart implements ISyncPart {
 	@Override
 	public String getTagName() {
 		return "sides";
+	}
+
+	@Override
+	public Boolean canExtract(int slot, int amount, EnumFacing face) {
+		if(getSideConfig(face).isOutput()){
+			return SonarHelper.intContains(output, slot);
+		}
+		return false;
+	}
+
+	@Override
+	public Boolean canInsert(int slot, @Nonnull ItemStack stack, EnumFacing face) {
+		if(getSideConfig(face).isInput()){
+			return SonarHelper.intContains(input, slot);
+		}
+		return false;
 	}
 }

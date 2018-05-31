@@ -87,10 +87,6 @@ public class TileSonarMultipart extends TileEntitySonar implements IMultipartTil
 		}
 	}
 
-	public final void openGui(EntityPlayer player, Object mod) {
-		player.openGui(mod, getSlotID(), getWorld(), getPos().getX(), getPos().getY(), getPos().getZ());
-	}
-
 	/** opens a GUI using {@link IFlexibleGui} */
 	public final void openFlexibleGui(EntityPlayer player, int id) {
 		SonarCore.instance.guiHandler.openBasicMultipart(false, getSlotID(), player, getWorld(), getPos(), id);

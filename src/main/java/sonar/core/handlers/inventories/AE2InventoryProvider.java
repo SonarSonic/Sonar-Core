@@ -3,6 +3,7 @@ package sonar.core.handlers.inventories;
 import java.util.List;
 
 import appeng.api.networking.security.IActionHost;
+import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.me.GridAccessException;
@@ -17,7 +18,8 @@ import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
 import sonar.core.integration.AE2Helper;
-
+import sonar.core.inventory.handling.ItemTransferHelper;
+/*
 @InventoryHandler(modid = "appliedenergistics2", priority = 0)
 public class AE2InventoryProvider implements ISonarInventoryHandler {
 
@@ -57,7 +59,7 @@ public class AE2InventoryProvider implements ISonarInventoryHandler {
 				return StorageSize.EMPTY;
 			}
 			for (IAEItemStack item : items) {
-				SonarAPI.getItemHelper().addStackToList(storedStacks, AE2Helper.convertAEItemStack(item));
+				ItemTransferHelper.addStackToList(storedStacks, AE2Helper.convertAEItemStack(item));
 				maxStorage += item.getStackSize();
 			}
 		} catch (GridAccessException e) {
@@ -85,7 +87,8 @@ public class AE2InventoryProvider implements ISonarInventoryHandler {
 	public StoredItemStack removeStack(StoredItemStack remove, TileEntity tile, EnumFacing dir, ActionType action) {
 		IGridProxyable proxy = (IGridProxyable) tile;
 		try {
-            StoredItemStack stack = SonarAPI.getItemHelper().getStackToAdd(remove.stored, remove, AE2Helper.convertAEItemStack(AE2Helper.getItemChannel(proxy.getProxy().getStorage()).extractItems(AE2Helper.convertStoredItemStack(remove), AE2Helper.getActionable(action), new MachineSource((IActionHost) tile))));
+			IMEMonitor<IAEItemStack> itemChannel = AE2Helper.getItemChannel(proxy.getProxy().getStorage());
+			StoredItemStack stack = AE2Helper.convertAEItemStack().extractItems(AE2Helper.convertStoredItemStack(remove), AE2Helper.getActionable(action), new MachineSource((IActionHost) tile)));
 			if (stack == null || stack.getStackSize() == 0) {
 				return null;
 			}
@@ -101,3 +104,4 @@ public class AE2InventoryProvider implements ISonarInventoryHandler {
         return true;
     }
 }
+*/

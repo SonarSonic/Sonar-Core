@@ -24,6 +24,13 @@ public class StoredItemStack implements ISonarStack<StoredItemStack> {
 		this.stored = stored;
 	}
 
+	public StoredItemStack createReferencedStack(ItemStack stack){
+		StoredItemStack stored = new StoredItemStack();
+		this.item = stack;
+		this.stored = stack.getCount();
+		return stored;
+	}
+
 	public void add(ItemStack stack) {
 		if (equalStack(stack)) {
 			stored += stack.getCount();

@@ -72,19 +72,7 @@ public final class SonarButtons {
 			if (this.visible) {
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 this.hovered = x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
-                /*short short1 = 219;
-				int k = 0;
-
-				if (!this.enabled) {
-					k += this.width * 2;
-				} else if (this.bool) {
-                    k += this.width;
-				} else if (this.hovered) {
-					k += this.width * 3;
-                }*/
-
 				mc.getTextureManager().bindTexture(texture);
-
                 this.drawTexturedModalRect(this.x, this.y, this.textureX, this.textureY, sizeX + 1, sizeY + 1);
 			}
 		}

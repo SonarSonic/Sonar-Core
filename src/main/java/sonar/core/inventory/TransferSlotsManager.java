@@ -9,6 +9,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import sonar.core.api.SonarAPI;
 import sonar.core.energy.DischargeValues;
+import sonar.core.inventory.containers.ContainerSonar;
 
 public class TransferSlotsManager<T extends IInventory> {
 	public static TransferSlotsManager<IInventory> DEFAULT = new TransferSlotsManager<IInventory>() {
@@ -22,13 +23,18 @@ public class TransferSlotsManager<T extends IInventory> {
 			return DischargeValues.getValueOf(stack) > 0 || SonarAPI.getEnergyHelper().canTransferEnergy(stack) != null;
 		}
 	};
-    private List<TransferSlots> slots = new ArrayList<>();
+    private List<TransferSlots<T>> slots = new ArrayList<>();
 	public int current;
 	public int playerInvStart;
 	public int playerInvEnd;
     public boolean hasPlayerInv;
 
     public TransferSlotsManager() {}
+
+    public TransferSlotsManager(int tileSize){
+    	this.addTransferSlot(new TransferSlots(TransferType.TILE_INV, tileSize));
+    	this.addPlayerInventory();
+	}
 
 	public void addTransferSlot(TransferSlots transferSlots) {
 		transferSlots.start = current;
@@ -60,7 +66,7 @@ public class TransferSlotsManager<T extends IInventory> {
 	}
 
 	public TransferSlots<T> getTransferSettings(int slotID) {
-		for (TransferSlots slot : slots) {
+		for (TransferSlots<T> slot : slots) {
 			if (slot.start <= slotID && slot.end > slotID) {
 				return slot;
 			}

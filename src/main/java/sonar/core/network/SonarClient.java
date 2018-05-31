@@ -18,7 +18,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import sonar.core.SonarCore;
 import sonar.core.client.BlockModelsCache;
-import sonar.core.client.renderers.SonarCustomStateMapper;
 import sonar.core.common.block.properties.IMetaRenderer;
 import sonar.core.registries.ISonarRegistryBlock;
 import sonar.core.registries.ISonarRegistryItem;
@@ -27,7 +26,6 @@ import sonar.core.translate.LocalisationManager;
 public class SonarClient extends SonarCommon {
 
 	private IThreadListener clientListener;
-	public static final SonarCustomStateMapper mapper = new SonarCustomStateMapper();
 	public static final LocalisationManager translator = new LocalisationManager();
 
 	public <T extends Block> T registerBlock(String modid, ISonarRegistryBlock<T> block){
@@ -76,11 +74,6 @@ public class SonarClient extends SonarCommon {
 			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(new ResourceLocation(modid, item.getUnlocalizedName().substring(5)), "inventory"));
 
 		}
-	}
-
-	@Override
-	public Object getStateMapper() {
-		return mapper;
 	}
 
 	@Override

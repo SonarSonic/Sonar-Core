@@ -31,16 +31,90 @@ import sonar.core.upgrades.UpgradeInventory;
 public abstract class GuiSonar extends GuiContainer implements IGuiOrigin {
 
 	protected List<SonarTextField> fieldList = new ArrayList<>();
-	public boolean shouldReset = false;
+	private boolean shouldReset = false;
+
+	///the gui which opened this one, generally null.
+	public Object origin;
 
 	public GuiSonar(Container container) {
 		super(container);
 	}
 
-	/** override for guis which have no entity location */
-	public void onButtonClicked(int i) {}
-
 	public abstract ResourceLocation getBackground();
+
+	//// RENDER METHODS \\\\
+
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		if (shouldReset) {
+			doReset();
+		}
+		this.drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		this.renderHoveredToolTip(mouseX, mouseY);
+	}
+
+	@Override
+	protected void drawGuiContainerForegroundLayer(int x, int y) {
+		super.drawGuiContainerForegroundLayer(x, y);
+		fieldList.forEach(SonarTextField::drawTextBox);
+	}
+
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float v, int i, int i1) {
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(this.getBackground());
+		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+	}
+
+	@Override
+	protected void renderHoveredToolTip(int x, int y) {
+		super.renderHoveredToolTip(x, y);
+		for (GuiButton guibutton : this.buttonList) {
+			if (guibutton.isMouseOver()) {
+				guibutton.drawButtonForegroundLayer(x, y);
+				break;
+			}
+		}
+	}
+
+	//// STANDARD EVENTS \\\\
+
+	@Override
+	public void mouseClicked(int i, int j, int k) throws IOException {
+		super.mouseClicked(i, j, k);
+		for (SonarTextField field : fieldList) {
+			boolean focused = field.mouseClicked(i - guiLeft, j - guiTop, k);
+			if (focused) {
+				onTextFieldFocused(field);
+			}
+		}
+	}
+
+	@Override
+	protected void keyTyped(char c, int i) throws IOException {
+		for (SonarTextField field : fieldList) {
+			if (field.isFocused()) {
+				if (c == 13 || c == 27) {
+					field.setFocused(false);
+				} else {
+					field.textboxKeyTyped(c, i);
+					onTextFieldChanged(field);
+				}
+				return;
+			}
+		}
+		if (isCloseKey(i) && origin != null) {
+			FMLCommonHandler.instance().showGuiScreen(origin);
+			return;
+		}
+		super.keyTyped(c, i);
+	}
+
+
+	public void onTextFieldChanged(SonarTextField field) {}
+
+	public void onTextFieldFocused(SonarTextField field) {}
 
 	public void reset() {
 		shouldReset = true;
@@ -57,12 +131,6 @@ public abstract class GuiSonar extends GuiContainer implements IGuiOrigin {
 		this.buttonList.clear();
 	}
 
-	// public void initGui(boolean pause) {}
-
-	public void setZLevel(float zLevel) {
-		this.zLevel = zLevel;
-	}
-
 	public SonarTextField getFocusedField() {
 		for (SonarTextField f : fieldList) {
 			if (f.isFocused()) {
@@ -70,7 +138,44 @@ public abstract class GuiSonar extends GuiContainer implements IGuiOrigin {
 			}
 		}
 		return null;
+	}
 
+	public void bindTexture(ResourceLocation resource) {
+		mc.getTextureManager().bindTexture(resource);
+	}
+
+	public void setOrigin(Object origin) {
+		this.origin = origin;
+	}
+
+
+	public void setZLevel(float zLevel) {
+		this.zLevel = zLevel;
+	}
+
+	public boolean isCloseKey(int keyCode) {
+		return keyCode == 1 || this.mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode);
+	}
+
+	@Override
+	public int getGuiLeft() {
+		return guiLeft;
+	}
+
+	@Override
+	public int getGuiTop() {
+		return guiTop;
+	}
+
+
+	//// RENDER METHODS \\\\
+
+	public void drawSonarCreativeTabHoveringText(String tabName, int mouseX, int mouseY) {
+		drawHoveringText(tabName, mouseX, mouseY);
+	}
+
+	public void drawSonarCreativeTabHoveringText(List<String> text, int mouseX, int mouseY) {
+		drawHoveringText(text, mouseX, mouseY);
 	}
 
 	public void startNormalItemStackRender() {
@@ -156,167 +261,5 @@ public abstract class GuiSonar extends GuiContainer implements IGuiOrigin {
 		sonar.core.helpers.RenderHelper.restoreBlendState();
 	}
 
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		if (shouldReset) {
-			doReset();
-		}
-		this.drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		this.renderHoveredToolTip(mouseX, mouseY);
-	}
 
-	@Override
-	protected void drawGuiContainerForegroundLayer(int x, int y) {
-		super.drawGuiContainerForegroundLayer(x, y);
-		fieldList.forEach(SonarTextField::drawTextBox);
-	}
-
-	protected void renderHoveredToolTip(int x, int y) {
-		super.renderHoveredToolTip(x, y);
-		for (GuiButton guibutton : this.buttonList) {
-			if (guibutton.isMouseOver()) {
-				guibutton.drawButtonForegroundLayer(x, y);
-				break;
-			}
-		}
-	}
-
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float v, int i, int i1) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(this.getBackground());
-		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-	}
-
-	public void bindTexture(ResourceLocation resource) {
-		mc.getTextureManager().bindTexture(resource);
-	}
-
-	public void drawSonarCreativeTabHoveringText(String tabName, int mouseX, int mouseY) {
-		drawHoveringText(tabName, mouseX, mouseY);
-		// drawCreativeTabHoveringText(tabName, mouseX, mouseY);
-	}
-
-	public Object origin;
-
-	public void setOrigin(Object origin) {
-		this.origin = origin;
-	}
-
-	@Override
-	protected void keyTyped(char c, int i) throws IOException {
-		for (SonarTextField field : fieldList) {
-			if (field.isFocused()) {
-				if (c == 13 || c == 27) {
-					field.setFocused(false);
-				} else {
-					field.textboxKeyTyped(c, i);
-					onTextFieldChanged(field);
-				}
-				return;
-			}
-		}
-		if (isCloseKey(i)) {
-			if (origin != null) {
-				FMLCommonHandler.instance().showGuiScreen(origin);
-				return;
-			}
-		}
-		super.keyTyped(c, i);
-	}
-
-	public boolean isCloseKey(int keyCode) {
-		return keyCode == 1 || this.mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode);
-	}
-
-	public void onTextFieldChanged(SonarTextField field) {}
-
-	public void onTextFieldFocused(SonarTextField field) {}
-
-	@Override
-	public void mouseClicked(int i, int j, int k) throws IOException {
-		super.mouseClicked(i, j, k);
-		for (SonarTextField field : fieldList) {
-			boolean focused = field.mouseClicked(i - guiLeft, j - guiTop, k);
-			if (focused) {
-				onTextFieldFocused(field);
-			}
-		}
-	}
-
-	@Override
-	public int getGuiLeft() {
-		return guiLeft;
-	}
-
-	@Override
-	public int getGuiTop() {
-		return guiTop;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static class PauseButton extends SonarButtons.ImageButton {
-
-		boolean paused;
-		public int id;
-		public IPausable machine;
-		public GuiSonarTile gui;
-
-		public PauseButton(GuiSonarTile gui, IPausable machine, int id, int x, int y, boolean paused) {
-			super(id, x, y, new ResourceLocation("Calculator:textures/gui/buttons/buttons.png"), paused ? 51 : 34, 0, 16, 16);
-			this.gui = gui;
-			this.paused = paused;
-			this.id = id;
-			this.machine = machine;
-		}
-
-		@Override
-		public void drawButtonForegroundLayer(int x, int y) {
-			ArrayList<String> list = new ArrayList<>();
-			list.add(TextFormatting.BLUE + "" + TextFormatting.UNDERLINE + (paused ? FontHelper.translate("buttons.resume") : FontHelper.translate("buttons.pause")));
-			if (machine instanceof IProcessMachine) {
-				list.add("Current: " + (int) ((double) ((IProcessMachine) machine).getCurrentProcessTime() / ((IProcessMachine) machine).getProcessTime() * 100) + " %");
-			}
-			gui.drawHoveringText(list, x, y, gui.fontRenderer);
-		}
-
-		@Override
-		public void onClicked() {
-			gui.onButtonClicked(id);
-			// SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) gui.entity, gui.entity.getCoords().getBlockPos(), id));
-			gui.buttonList.clear();
-			gui.initGui();
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public class CircuitButton extends SonarButtons.ImageButton {
-		public int id;
-		public UpgradeInventory upgrades;
-		public GuiSonarTile gui;
-
-		public CircuitButton(GuiSonarTile gui, UpgradeInventory upgrades, int id, int x, int y) {
-			super(id, x, y, new ResourceLocation("Calculator:textures/gui/buttons/buttons.png"), 0, 0, 16, 16);
-			this.gui = gui;
-			this.upgrades = upgrades;
-			this.id = id;
-		}
-
-		@Override
-		public void drawButtonForegroundLayer(int x, int y) {
-			ArrayList<String> list = new ArrayList<>();
-			list.add(TextFormatting.BLUE + "" + TextFormatting.UNDERLINE + FontHelper.translate("buttons.circuits"));
-			for (Entry<String, Integer> entry : upgrades.getInstalledUpgrades().entrySet()) {
-				int max = upgrades.maxUpgrades.get(entry.getKey());
-				list.add(entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().toLowerCase().substring(1) + ": " + entry.getValue() + '/' + max);
-			}
-			drawHoveringText(list, x, y, fontRenderer);
-		}
-
-		@Override
-		public void onClicked() {
-			gui.onButtonClicked(id);
-			// SonarCore.network.sendToServer(new PacketByteBuf((IByteBufTile) entity, entity.getCoords().getBlockPos(), id));
-		}
-	}
 }

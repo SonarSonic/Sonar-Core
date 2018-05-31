@@ -16,6 +16,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -36,8 +37,8 @@ import sonar.core.api.utils.BlockInteraction;
 import sonar.core.api.utils.BlockInteractionType;
 import sonar.core.common.block.properties.IBlockRotated;
 import sonar.core.common.tileentity.TileEntitySonar;
-import sonar.core.helpers.InventoryHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.api.inventories.ISonarInventoryTile;
 import sonar.core.network.PacketBlockInteraction;
 
 public abstract class SonarBlock extends Block implements IWrenchable, IInteractBlock, IBlockRotated {
@@ -56,7 +57,6 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 	}
 
 	@Override
-
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if (player != null) {
 			TileEntity target = world.getTileEntity(pos);
@@ -210,7 +210,15 @@ public abstract class SonarBlock extends Block implements IWrenchable, IInteract
 
 	@Override
 	public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
-		InventoryHelper.dropInventory(world.getTileEntity(pos), world, pos, state);
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof ISonarInventoryTile){
+			List<ItemStack> stacks = ((ISonarInventoryTile) tile).inv().getDrops();
+			for (ItemStack itemstack : stacks){
+				if (!itemstack.isEmpty()){
+					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemstack);
+				}
+			}
+		}
 		super.breakBlock(world, pos, state);
 	}
 

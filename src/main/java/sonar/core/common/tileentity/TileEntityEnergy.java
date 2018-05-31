@@ -37,7 +37,6 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 
 	public EnergyMode energyMode = EnergyMode.RECIEVE;
 	public final SyncSidedEnergyStorage storage = new SyncSidedEnergyStorage(this, 0);
-	public int maxTransfer;
 
 	public void setEnergyMode(EnergyMode mode) {
 		energyMode = mode;
@@ -63,7 +62,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	public void addEnergy(EnumFacing... faces) {
 		for (EnumFacing dir : faces) {
 			TileEntity entity = SonarHelper.getAdjacentTileEntity(this, dir);
-			SonarAPI.getEnergyHelper().transferEnergy(this, entity, dir, dir.getOpposite(), maxTransfer);
+			SonarAPI.getEnergyHelper().transferEnergy(this, entity, dir, dir.getOpposite(), storage.getMaxExtract());
 		}
 	}
 
@@ -214,7 +213,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	@Override
 	@Optional.Method(modid = "ic2")
 	public double getOfferedEnergy() {
-		return Math.min(EUHelper.getVoltage(this.getSourceTier()), this.storage.removeEnergy(maxTransfer, ActionType.getTypeForAction(true)) / 4);
+		return Math.min(EUHelper.getVoltage(this.getSourceTier()), this.storage.removeEnergy(storage.getMaxExtract(), ActionType.getTypeForAction(true)) / 4);
 	}
 
 	@Override

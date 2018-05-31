@@ -35,7 +35,6 @@ import net.minecraftforge.client.ForgeHooksClient;
 public class GuiBlockRenderer3D implements IBlockAccess {
 
 	protected static final Minecraft mc = Minecraft.getMinecraft();
-	// protected static IBlockState multipartState = MCMultiPart.multipart.getDefaultState();
 
 	public final Vector3d origin = new Vector3d();
 	public final Vector3d eye = new Vector3d();

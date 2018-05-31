@@ -16,7 +16,7 @@ import sonar.core.api.asm.InventoryHandler;
 import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.utils.ActionType;
-
+/*
 @InventoryHandler(modid = "StorageDrawers", priority = 0)
 public class DrawersInventoryHandler implements ISonarInventoryHandler {
 
@@ -73,6 +73,7 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
 	 * "https://github.com/jaquadro/StorageDrawers/blob/master/src/com/jaquadro/minecraft/storagedrawers/integration/ae2/DrawerMEInventory.java"
 	 * >Storage Drawers GitHub</a>
 	 */
+/*
 	@Override
 	public StoredItemStack addStack(StoredItemStack add, TileEntity tile, EnumFacing dir, ActionType action) {
 		IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir);
@@ -90,3 +91,4 @@ public class DrawersInventoryHandler implements ISonarInventoryHandler {
         return false;
     }
 }
+    */
