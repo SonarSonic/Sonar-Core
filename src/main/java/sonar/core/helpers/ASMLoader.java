@@ -20,11 +20,9 @@ import sonar.core.SonarCore;
 import sonar.core.api.asm.EnergyContainerHandler;
 import sonar.core.api.asm.EnergyHandler;
 import sonar.core.api.asm.FluidHandler;
-import sonar.core.api.asm.InventoryHandler;
 import sonar.core.api.energy.ISonarEnergyContainerHandler;
 import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.fluids.ISonarFluidHandler;
-import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.utils.Pair;
 import sonar.core.utils.SortingDirection;
 
@@ -37,14 +35,9 @@ public class ASMLoader {
 	}
 
 	public static void load(@Nonnull ASMDataTable asmDataTable) {
-		SonarCore.inventoryHandlers = getInventoryHandlers(SonarCore.logger, asmDataTable);
 		SonarCore.energyHandlers = getEnergyHandlers(SonarCore.logger, asmDataTable);
 		SonarCore.fluidHandlers = getFluidHandlers(SonarCore.logger, asmDataTable);
 		SonarCore.energyContainerHandlers = getEnergyContainerHandlers(SonarCore.logger, asmDataTable);
-	}
-
-	public static List<ISonarInventoryHandler> getInventoryHandlers(Logger logger, @Nonnull ASMDataTable asmDataTable) {
-		return ASMLoader.getInstances(logger, asmDataTable, InventoryHandler.class, ISonarInventoryHandler.class, true, true);
 	}
 
 	public static List<ISonarEnergyHandler> getEnergyHandlers(Logger logger, @Nonnull ASMDataTable asmDataTable) {

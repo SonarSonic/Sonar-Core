@@ -32,7 +32,6 @@ import sonar.core.api.SonarAPI;
 import sonar.core.api.energy.ISonarEnergyContainerHandler;
 import sonar.core.api.energy.ISonarEnergyHandler;
 import sonar.core.api.fluids.ISonarFluidHandler;
-import sonar.core.api.inventories.ISonarInventoryHandler;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.energy.DischargeValues;
 import sonar.core.helpers.ASMLoader;
@@ -73,7 +72,6 @@ public class SonarCore {
 	@Instance(SonarConstants.MODID)
 	public static SonarCore instance;
 
-	public static List<ISonarInventoryHandler> inventoryHandlers;
 	public static List<ISonarFluidHandler> fluidHandlers;
 	public static List<ISonarEnergyHandler> energyHandlers;
 	public static List<ISonarEnergyContainerHandler> energyContainerHandlers;
@@ -167,7 +165,6 @@ public class SonarCore {
 			logger.info("Discharge Values: " + entry.toString());
 		}
 		logger.info("Registered " + energyTypes.getObjects().size() + " Energy Types");
-		logger.info("Registered " + inventoryHandlers.size() + " Inventory Providers");
 		logger.info("Registered " + fluidHandlers.size() + " Fluid Providers");
 		logger.info("Registered " + energyHandlers.size() + " Energy Handlers");
 		logger.info("Registered " + energyContainerHandlers.size() + " Energy Container Providers");

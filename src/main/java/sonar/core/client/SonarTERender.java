@@ -1,4 +1,4 @@
-package sonar.core.renderers;
+package sonar.core.client;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;

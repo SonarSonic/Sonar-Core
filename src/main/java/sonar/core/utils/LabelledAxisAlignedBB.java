@@ -2,9 +2,7 @@ package sonar.core.utils;
 
 import net.minecraft.util.math.AxisAlignedBB;
 
-/**
- * just for identifying what axis aligned BB it is, from a ray trace.
- */
+/**just for identifying what axis aligned BB it is, from a ray trace.*/
 public class LabelledAxisAlignedBB extends AxisAlignedBB {
     public String label;
 

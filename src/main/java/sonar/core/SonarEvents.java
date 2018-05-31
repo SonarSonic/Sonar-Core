@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import sonar.core.api.blocks.IInteractBlock;
 
 public class SonarEvents {
+
 	@SubscribeEvent
 	public void playerInteracts(PlayerInteractEvent event) {
 		if (event instanceof PlayerInteractEvent.LeftClickBlock) {

@@ -1,15 +1,9 @@
 package sonar.core.utils;
 
 public enum SortingDirection {
-	
-    /**
-     * highest first
-     */
-	DOWN, 
-    /**
-     * lowest first
-     */
-	UP;
+
+	DOWN, //highest first
+	UP; //lowest first
 
 	public SortingDirection switchDir() {
 		switch (this) {

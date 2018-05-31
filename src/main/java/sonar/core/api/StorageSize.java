@@ -8,7 +8,7 @@ public class StorageSize implements INBTSyncable {
 
 	public static final StorageSize EMPTY = new StorageSize(0, 0);
 
-	private long stored, max;
+	public long stored, max;
 
 	public StorageSize(long stored, long max) {
 		this.stored = stored;
