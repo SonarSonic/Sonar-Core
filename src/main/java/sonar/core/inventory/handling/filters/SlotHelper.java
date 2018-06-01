@@ -5,6 +5,7 @@ import net.minecraft.util.EnumFacing;
 import sonar.core.api.SonarAPI;
 import sonar.core.energy.DischargeValues;
 import sonar.core.api.inventories.ISonarInventory;
+import sonar.core.handlers.energy.EnergyTransferHandler;
 import sonar.core.inventory.handling.EnumFilterType;
 
 import javax.annotation.Nonnull;
@@ -27,7 +28,7 @@ public class SlotHelper {
     }
 
     public static boolean chargeSlot(ItemStack stack){
-        return SonarAPI.getEnergyHelper().canTransferEnergy(stack) != null;
+        return EnergyTransferHandler.canAdd(stack);
     }
 
     public static IInsertFilter dischargeSlot(int slot){
@@ -35,9 +36,8 @@ public class SlotHelper {
     }
 
     public static boolean dischargeSlot(ItemStack stack){
-        return DischargeValues.getValueOf(stack) > 0 || SonarAPI.getEnergyHelper().canTransferEnergy(stack) != null;
+        return DischargeValues.getValueOf(stack) > 0 || EnergyTransferHandler.canRemove(stack);
     }
-
 
     public static boolean checkInsert(int slot, @Nonnull ItemStack stack, @Nullable EnumFacing face, EnumFilterType internal, ISonarInventory inv, boolean def){
         boolean validFilters = false;

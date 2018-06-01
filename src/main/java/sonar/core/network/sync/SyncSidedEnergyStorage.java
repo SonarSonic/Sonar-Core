@@ -1,12 +1,17 @@
 package sonar.core.network.sync;
 
 import net.minecraft.util.EnumFacing;
+import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.ISonarEnergyTile;
+import sonar.core.handlers.energy.EnergyStorageWrapper;
+import sonar.core.handlers.energy.EnergyTransferHandler;
+import sonar.core.handlers.energy.IEnergyHandler;
 
 public class SyncSidedEnergyStorage extends SyncEnergyStorage {
 
 	private ISonarEnergyTile tile;
     private EnumFacing currentFace;
+    private IEnergyHandler internalWrapper;
 
 	public SyncSidedEnergyStorage(ISonarEnergyTile tile, int capacity) {
 		this(tile, capacity, capacity, capacity);
@@ -24,6 +29,10 @@ public class SyncSidedEnergyStorage extends SyncEnergyStorage {
 	public SyncEnergyStorage setCurrentFace(EnumFacing facing) {
 		currentFace = facing;
 		return this;
+	}
+
+	public IEnergyHandler getInternalWrapper(){
+		return internalWrapper == null ? internalWrapper = EnergyTransferHandler.getWrappedStorageHandler(this, EnergyType.FE) : internalWrapper;
 	}
 
 	@Override

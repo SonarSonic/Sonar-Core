@@ -1,7 +1,6 @@
 package sonar.core.api;
 
 import net.minecraftforge.fml.common.Loader;
-import sonar.core.api.wrappers.EnergyWrapper;
 import sonar.core.api.wrappers.FluidWrapper;
 import sonar.core.api.wrappers.RegistryWrapper;
 
@@ -16,14 +15,12 @@ public final class SonarAPI {
 
 	private static RegistryWrapper registry = new RegistryWrapper();
 	private static FluidWrapper fluids = new FluidWrapper();
-	private static EnergyWrapper energy = new  EnergyWrapper();
 
 	public static void init() {
 		if (Loader.isModLoaded("SonarCore")|| Loader.isModLoaded("sonarcore")) {
 			try {
 				registry = (RegistryWrapper) Class.forName("sonar.core.SonarRegistry").newInstance();
 				fluids = (FluidWrapper) Class.forName("sonar.core.helpers.FluidHelper").newInstance();
-				energy = (EnergyWrapper) Class.forName("sonar.core.helpers.EnergyHelper").newInstance();
 			} catch (Exception exception) {
 				System.err.println(NAME + " : FAILED TO INITILISE API" + exception.getMessage());
 			}
@@ -36,9 +33,5 @@ public final class SonarAPI {
 
 	public static FluidWrapper getFluidHelper() {
 		return fluids;
-	}
-	
-	public static EnergyWrapper getEnergyHelper() {
-		return energy;
 	}
 }

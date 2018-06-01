@@ -9,6 +9,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import sonar.core.api.SonarAPI;
 import sonar.core.energy.DischargeValues;
+import sonar.core.handlers.energy.EnergyTransferHandler;
 import sonar.core.inventory.containers.ContainerSonar;
 
 public class TransferSlotsManager<T extends IInventory> {
@@ -20,7 +21,7 @@ public class TransferSlotsManager<T extends IInventory> {
 	public static TransferSlots DISCHARGE_SLOT =  new TransferSlots<IInventory>(TransferType.TILE_INV, 1) {
         @Override
 		public boolean canInsert(EntityPlayer player, IInventory inv, Slot slot, int pos, int slotID, ItemStack stack) {
-			return DischargeValues.getValueOf(stack) > 0 || SonarAPI.getEnergyHelper().canTransferEnergy(stack) != null;
+			return DischargeValues.getValueOf(stack) > 0 || EnergyTransferHandler.getItemHandler(stack) != null;
 		}
 	};
     private List<TransferSlots<T>> slots = new ArrayList<>();

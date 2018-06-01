@@ -63,11 +63,11 @@ public class EnergyType implements IRegistryObject {
 		return types[id];
 	}
 
-	public static long convert(long val, EnergyType current, EnergyType type) {
-		if(current == type){
+	public static long convert(long val, EnergyType from, EnergyType to) {
+		if(from == to){
 			return val;
 		}
-        double inRF = val / current.toRFConversion();
-		return (long) (inRF * type.toRFConversion());
+        double inRF = val / from.toRFConversion();
+		return (long) (inRF * to.toRFConversion());
 	}
 }

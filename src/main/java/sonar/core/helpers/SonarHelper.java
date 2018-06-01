@@ -36,6 +36,12 @@ import sonar.core.utils.SortingDirection;
  */
 public class SonarHelper {
 
+	private static List<EnumFacing> face_values;
+
+	public static List<EnumFacing> getEnumFacingValues(){
+		return face_values == null ? face_values = convertArray(EnumFacing.VALUES) : face_values;
+	}
+
     public static ChunkPos getChunkFromPos(int xPos, int zPos) {
         return new ChunkPos(xPos >> 4, zPos >> 4);
     }

@@ -7,11 +7,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface EnergyContainerHandler {
+public @interface ItemEnergyHandler {
 
-    /**
-     * specify the MODID required for the handler to load
-     */
 	String modid();
 
 	int priority();

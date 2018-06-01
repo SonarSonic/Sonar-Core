@@ -29,8 +29,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import sonar.core.api.SonarAPI;
-import sonar.core.api.energy.ISonarEnergyContainerHandler;
-import sonar.core.api.energy.ISonarEnergyHandler;
+import sonar.core.api.energy.IItemEnergyHandler;
+import sonar.core.api.energy.ITileEnergyHandler;
 import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.energy.DischargeValues;
@@ -73,8 +73,8 @@ public class SonarCore {
 	public static SonarCore instance;
 
 	public static List<ISonarFluidHandler> fluidHandlers;
-	public static List<ISonarEnergyHandler> energyHandlers;
-	public static List<ISonarEnergyContainerHandler> energyContainerHandlers;
+	public static List<ITileEnergyHandler> tileEnergyHandlers;
+	public static List<IItemEnergyHandler> itemEnergyHandlers;
 	public static EnergyTypeRegistry energyTypes = new EnergyTypeRegistry();
 	public static MachineUpgradeRegistry machineUpgrades = new MachineUpgradeRegistry();
 	public static SimpleNetworkWrapper network;
@@ -166,8 +166,8 @@ public class SonarCore {
 		}
 		logger.info("Registered " + energyTypes.getObjects().size() + " Energy Types");
 		logger.info("Registered " + fluidHandlers.size() + " Fluid Providers");
-		logger.info("Registered " + energyHandlers.size() + " Energy Handlers");
-		logger.info("Registered " + energyContainerHandlers.size() + " Energy Container Providers");
+		logger.info("Registered " + tileEnergyHandlers.size() + " Energy Handlers");
+		logger.info("Registered " + itemEnergyHandlers.size() + " Energy Container Providers");
 		logger.info("Registered " + machineUpgrades.getMap().size() + " Machine Upgrades");
 		proxy.postLoad(event);
 	}

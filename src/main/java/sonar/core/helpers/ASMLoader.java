@@ -17,11 +17,11 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
 import sonar.core.SonarCore;
-import sonar.core.api.asm.EnergyContainerHandler;
-import sonar.core.api.asm.EnergyHandler;
 import sonar.core.api.asm.FluidHandler;
-import sonar.core.api.energy.ISonarEnergyContainerHandler;
-import sonar.core.api.energy.ISonarEnergyHandler;
+import sonar.core.api.energy.IItemEnergyHandler;
+import sonar.core.api.energy.ITileEnergyHandler;
+import sonar.core.api.asm.ItemEnergyHandler;
+import sonar.core.api.asm.TileEnergyHandler;
 import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.utils.Pair;
 import sonar.core.utils.SortingDirection;
@@ -35,21 +35,21 @@ public class ASMLoader {
 	}
 
 	public static void load(@Nonnull ASMDataTable asmDataTable) {
-		SonarCore.energyHandlers = getEnergyHandlers(SonarCore.logger, asmDataTable);
+		SonarCore.tileEnergyHandlers = getTileEnergyHandlers(SonarCore.logger, asmDataTable);
 		SonarCore.fluidHandlers = getFluidHandlers(SonarCore.logger, asmDataTable);
-		SonarCore.energyContainerHandlers = getEnergyContainerHandlers(SonarCore.logger, asmDataTable);
+		SonarCore.itemEnergyHandlers = getItemEnergyHandlers(SonarCore.logger, asmDataTable);
 	}
 
-	public static List<ISonarEnergyHandler> getEnergyHandlers(Logger logger, @Nonnull ASMDataTable asmDataTable) {
-		return ASMLoader.getInstances(logger, asmDataTable, EnergyHandler.class, ISonarEnergyHandler.class, true, true);
+	public static List<ITileEnergyHandler> getTileEnergyHandlers(Logger logger, @Nonnull ASMDataTable asmDataTable) {
+		return ASMLoader.getInstances(logger, asmDataTable, TileEnergyHandler.class, ITileEnergyHandler.class, true, true);
 	}
 
 	public static List<ISonarFluidHandler> getFluidHandlers(Logger logger, @Nonnull ASMDataTable asmDataTable) {
 		return ASMLoader.getInstances(logger, asmDataTable, FluidHandler.class, ISonarFluidHandler.class, true, true);
 	}
 
-	public static List<ISonarEnergyContainerHandler> getEnergyContainerHandlers(Logger logger, @Nonnull ASMDataTable asmDataTable) {
-		return ASMLoader.getInstances(logger, asmDataTable, EnergyContainerHandler.class, ISonarEnergyContainerHandler.class, true, true);
+	public static List<IItemEnergyHandler> getItemEnergyHandlers(Logger logger, @Nonnull ASMDataTable asmDataTable) {
+		return ASMLoader.getInstances(logger, asmDataTable, ItemEnergyHandler.class, IItemEnergyHandler.class, true, true);
 	}
 
 	public static void log(Logger logger, ASMLog log, Class type, ASMData asm, String modid) {

@@ -21,6 +21,7 @@ import sonar.core.api.SonarAPI;
 import sonar.core.api.energy.EnergyMode;
 import sonar.core.api.energy.ISonarEnergyTile;
 import sonar.core.api.utils.ActionType;
+import sonar.core.handlers.energy.EnergyTransferHandler;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.helpers.SonarHelper;
 import sonar.core.integration.EUHelper;
@@ -60,10 +61,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	}
 
 	public void addEnergy(EnumFacing... faces) {
-		for (EnumFacing dir : faces) {
-			TileEntity entity = SonarHelper.getAdjacentTileEntity(this, dir);
-			SonarAPI.getEnergyHelper().transferEnergy(this, entity, dir, dir.getOpposite(), storage.getMaxExtract());
-		}
+		EnergyTransferHandler.transferToAdjacent(this, SonarHelper.getEnumFacingValues(), storage.getMaxExtract());
 	}
 
 	@Override
