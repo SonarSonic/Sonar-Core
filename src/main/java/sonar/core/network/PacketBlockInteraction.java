@@ -14,8 +14,7 @@ public class PacketBlockInteraction extends PacketCoords {
 
 	public BlockInteraction interact;
 
-	public PacketBlockInteraction() {
-	}
+	public PacketBlockInteraction() {}
 
 	public PacketBlockInteraction(BlockPos pos, BlockInteraction interact) {
 		super(pos);

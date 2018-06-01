@@ -31,9 +31,6 @@ public enum MachineSideConfig implements IStringSerializable {
 		}
 	}
 
-	/* public MachineSide increase() { if (isInput()) { return OUTPUT; } if (isOutput()) { return INPUT; } return NONE; }
-	 * 
-	 * public MachineSide decrease() { if (isInput()) { return OUTPUT; } if (isOutput()) { return INPUT; } return NONE; } */
 	@Override
 	public String getName() {
 		return this.name().toLowerCase();

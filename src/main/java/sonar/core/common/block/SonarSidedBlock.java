@@ -1,5 +1,6 @@
 package sonar.core.common.block;
 
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -8,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import sonar.core.common.block.properties.SonarProperties;
 import sonar.core.helpers.SonarHelper;
 import sonar.core.utils.IMachineSides;
 import sonar.core.utils.MachineSideConfig;
@@ -15,7 +17,7 @@ import sonar.core.utils.MachineSides;
 
 import javax.annotation.Nonnull;
 
-public abstract class SonarSidedBlock extends SonarMachineBlock {
+public abstract class SonarSidedBlock extends SonarBlockContainer {
 
     public static final PropertyEnum<MachineSideConfig> NORTH = PropertyEnum.create("north", MachineSideConfig.class, MachineSideConfig.INPUT, MachineSideConfig.INPUT_ANIMATE, MachineSideConfig.OUTPUT, MachineSideConfig.OUTPUT_ANIMATE);
     public static final PropertyEnum<MachineSideConfig> NORTH_NO_ANIMATE = PropertyEnum.create("north", MachineSideConfig.class, MachineSideConfig.INPUT, MachineSideConfig.OUTPUT);
@@ -25,9 +27,13 @@ public abstract class SonarSidedBlock extends SonarMachineBlock {
     public static final PropertyEnum<MachineSideConfig> UP = PropertyEnum.create("up", MachineSideConfig.class, MachineSideConfig.INPUT, MachineSideConfig.OUTPUT);
     public static final PropertyEnum<MachineSideConfig> DOWN = PropertyEnum.create("down", MachineSideConfig.class, MachineSideConfig.INPUT, MachineSideConfig.OUTPUT);
 
-	protected SonarSidedBlock(Material material, boolean orientation, boolean wrenchable) {
-		super(material, orientation, wrenchable);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(hasAnimatedFront() ? NORTH : NORTH_NO_ANIMATE, MachineSideConfig.INPUT).withProperty(EAST, MachineSideConfig.INPUT).withProperty(SOUTH, MachineSideConfig.INPUT).withProperty(WEST, MachineSideConfig.INPUT).withProperty(UP, MachineSideConfig.INPUT).withProperty(DOWN, MachineSideConfig.INPUT));
+	protected SonarSidedBlock(Material material, boolean orientation) {
+		this(material, material.getMaterialMapColor(), orientation);
+	}
+
+	protected SonarSidedBlock(Material material, MapColor color, boolean orientation) {
+		super(material, color, orientation);
+		this.setDefaultState(this.blockState.getBaseState().withProperty(SonarProperties.FACING, EnumFacing.NORTH).withProperty(hasAnimatedFront() ? NORTH : NORTH_NO_ANIMATE, MachineSideConfig.INPUT).withProperty(EAST, MachineSideConfig.INPUT).withProperty(SOUTH, MachineSideConfig.INPUT).withProperty(WEST, MachineSideConfig.INPUT).withProperty(UP, MachineSideConfig.INPUT).withProperty(DOWN, MachineSideConfig.INPUT));
 	}
 	
     @Nonnull
@@ -37,7 +43,7 @@ public abstract class SonarSidedBlock extends SonarMachineBlock {
 		if (target != null) {
 			if (target instanceof IMachineSides) {
 				MachineSides sides = ((IMachineSides) target).getSideConfigs();
-				EnumFacing front = state.getValue(FACING);
+				EnumFacing front = state.getValue(SonarProperties.FACING);
 				MachineSideConfig frontConfig = sides.getSideConfig(SonarHelper.offsetFacing(EnumFacing.NORTH, front));
                 return state.withProperty(hasAnimatedFront() ? NORTH : NORTH_NO_ANIMATE, hasAnimatedFront() && isAnimated(state, w, pos) ? frontConfig.getAnimated() : frontConfig).withProperty(SOUTH, sides.getSideConfig(SonarHelper.offsetFacing(EnumFacing.SOUTH, front))).withProperty(WEST, sides.getSideConfig(SonarHelper.offsetFacing(EnumFacing.WEST, front))).withProperty(EAST, sides.getSideConfig(SonarHelper.offsetFacing(EnumFacing.EAST, front))).withProperty(UP, sides.getSideConfig(EnumFacing.UP)).withProperty(DOWN, sides.getSideConfig(EnumFacing.DOWN));
 			}
@@ -55,6 +61,6 @@ public abstract class SonarSidedBlock extends SonarMachineBlock {
 
     @Override
 	protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING, hasAnimatedFront() ? NORTH : NORTH_NO_ANIMATE, EAST, SOUTH, WEST, UP, DOWN);
+        return new BlockStateContainer(this, SonarProperties.FACING, hasAnimatedFront() ? NORTH : NORTH_NO_ANIMATE, EAST, SOUTH, WEST, UP, DOWN);
 	}
 }

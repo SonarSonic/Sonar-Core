@@ -1,12 +1,5 @@
 package sonar.core;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +21,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sonar.core.api.SonarAPI;
 import sonar.core.api.energy.IItemEnergyHandler;
 import sonar.core.api.energy.ITileEnergyHandler;
@@ -41,26 +36,13 @@ import sonar.core.integration.SonarWailaModule;
 import sonar.core.integration.planting.FertiliserRegistry;
 import sonar.core.integration.planting.HarvesterRegistry;
 import sonar.core.integration.planting.PlanterRegistry;
-import sonar.core.network.FlexibleGuiHandler;
-import sonar.core.network.PacketBlockInteraction;
-import sonar.core.network.PacketByteBuf;
-import sonar.core.network.PacketByteBufMultipart;
-import sonar.core.network.PacketFlexibleCloseGui;
-import sonar.core.network.PacketFlexibleContainer;
-import sonar.core.network.PacketFlexibleItemStackChangeGui;
-import sonar.core.network.PacketFlexibleMultipartChangeGui;
-import sonar.core.network.PacketFlexibleOpenGui;
-import sonar.core.network.PacketInvUpdate;
-import sonar.core.network.PacketMultipartSync;
-import sonar.core.network.PacketRequestMultipartSync;
-import sonar.core.network.PacketRequestSync;
-import sonar.core.network.PacketSonarSides;
-import sonar.core.network.PacketStackUpdate;
-import sonar.core.network.PacketTileSync;
-import sonar.core.network.PacketTileSyncUpdate;
-import sonar.core.network.SonarCommon;
+import sonar.core.network.*;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.upgrades.MachineUpgradeRegistry;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @Mod(modid = SonarConstants.MODID, name = SonarConstants.NAME, version = SonarConstants.VERSION, acceptedMinecraftVersions = SonarConstants.ACCEPTED_MC_VERSION, dependencies = SonarConstants.DEPENDENCIES)
 public class SonarCore {
@@ -87,15 +69,9 @@ public class SonarCore {
 	// base blocks
 	public static Block reinforcedStoneBlock, reinforcedStoneBrick, reinforcedDirtBlock, reinforcedDirtBrick, stableGlass, clearStableGlass;
 	public static Block[] stableStone = new Block[16], stablestonerimmedBlock = new Block[16], stablestonerimmedblackBlock = new Block[16];
-	// public static Block toughenedStoneBlock, toughenedStoneBrick;
-	// public static Block toughenedDirtBlock, toughenedDirtBrick;
 	public static Block reinforcedStoneStairs, reinforcedStoneBrickStairs, reinforcedDirtStairs, reinforcedDirtBrickStairs;
 	public static Block reinforcedStoneFence, reinforcedStoneBrickFence, reinforcedDirtFence, reinforcedDirtBrickFence;
 	public static Block reinforcedStoneGate, reinforcedStoneBrickGate, reinforcedDirtGate, reinforcedDirtBrickGate;
-	public static Block reinforcedStoneSlab_half, reinforcedStoneBrickSlab_half, reinforcedDirtSlab_half, reinforcedDirtBrickSlab_half;
-	public static Block reinforcedStoneSlab_double, reinforcedStoneBrickSlab_double, reinforcedDirtSlab_double, reinforcedDirtBrickSlab_double;
-
-	public static Block black_dev_block, white_dev_block;
 
 	public static final Random rand = new Random();
 

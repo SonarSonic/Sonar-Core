@@ -1,8 +1,5 @@
 package sonar.core.api.inventories;
 
-import java.util.List;
-import java.util.Map;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -15,6 +12,8 @@ import sonar.core.network.sync.ISyncPart;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
 
 public interface ISonarInventory extends INBTSyncable, IItemHandlerModifiable, ISyncPart {
 
@@ -24,8 +23,6 @@ public interface ISonarInventory extends INBTSyncable, IItemHandlerModifiable, I
 	IItemHandlerModifiable getItemHandler(EnumFacing side);
 
 	IInventory getWrapperInventory();
-
-	//List<ItemStack> slots();
 
 	Map<IInsertFilter, EnumFilterType> getInsertFilters();
 

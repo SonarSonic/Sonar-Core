@@ -1,13 +1,14 @@
 package sonar.core.helpers;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import gnu.trove.map.hash.THashMap;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.cabling.ISonarCable;
 import sonar.core.api.utils.BlockCoords;
 
+import java.util.ArrayList;
+import java.util.Map;
+
+@Deprecated
 public abstract class CableNetworkHelper {
 
     private static Map<Integer, ArrayList<BlockCoords>> cables = new THashMap<>();

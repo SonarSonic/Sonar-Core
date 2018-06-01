@@ -30,7 +30,7 @@ public class TileEntityEnergyInventory extends TileEntityEnergy implements ISona
 
 	public void charge(int id) {
 		long maxTransfer = CHARGING_RATE != 0 ? Math.min(CHARGING_RATE, getStorage().getMaxReceive()) : getStorage().getMaxReceive();
-		long transferred = EnergyTransferHandler.INSTANCE_SC.chargeItem(Lists.newArrayList(storage.getInternalWrapper()), slots().get(id), maxTransfer);
+		EnergyTransferHandler.INSTANCE_SC.chargeItem(Lists.newArrayList(storage.getInternalWrapper()), slots().get(id), maxTransfer);
 	}
 
 	public void discharge(int id) {

@@ -33,26 +33,20 @@ public class ItemSlab extends ItemBlock {
 		this.setHasSubtypes(true);
 	}
 
-    /**
-     * Converts the given ItemStack damage value into a metadata value to be placed in the world when this Item is placed as a Block (mostly used with ItemBlocks).
-     */
+    /** Converts the given ItemStack damage value into a metadata value to be placed in the world when this Item is placed as a Block (mostly used with ItemBlocks). */
     @Override
 	public int getMetadata(int damage) {
 		return damage;
 	}
 
-    /**
-     * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have different names based on their damage or NBT.
-     */
+    /** Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have different names based on their damage or NBT. */
     @Nonnull
     @Override
 	public String getUnlocalizedName(ItemStack stack) {
 		return this.singleSlab.getUnlocalizedName(stack.getMetadata());
 	}
 
-    /**
-     * Called when a Block is right-clicked with this Item
-     */
+    /** Called when a Block is right-clicked with this Item */
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (stack.getCount() != 0 && playerIn.canPlayerEdit(pos.offset(facing), facing, stack)) {
 			Comparable<?> comparable = this.singleSlab.getTypeForItem(stack);

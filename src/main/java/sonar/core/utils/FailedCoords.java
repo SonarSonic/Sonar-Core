@@ -26,20 +26,17 @@ public class FailedCoords {
 		this.blockName = block;
 	}
 
+	/** @return if the position failed */
 	public boolean getBoolean(){
 		return this.objectBoolean;
 	}
 
-    /**
-     * @return the coordinates where the failure occurred
-     */
+    /** @return the coordinates where the failure occurred */
 	public BlockCoords getCoords(){
 		return this.coords;
 	}
 
-    /**
-     * @return name of the block which failed
-     */
+    /** @return name of the block which failed */
 	public String getBlock(){
 		return this.blockName;
 	}

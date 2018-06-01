@@ -1,26 +1,24 @@
 package sonar.core.common.block;
 
-import java.util.ArrayList;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import sonar.core.api.blocks.IConnectedBlock;
+import sonar.core.utils.ISpecialTooltip;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
-public abstract class ConnectedTile extends SonarMachineBlock implements IConnectedBlock {
+public abstract class ConnectedTile extends SonarBlock implements IConnectedBlock, ITileEntityProvider, ISpecialTooltip {
 
 	protected ConnectedTile(int target) {
-		super(SonarMaterials.machine, false, true);
+		super(SonarMaterials.machine, false);
 		this.target = target;
 	}
 
@@ -79,12 +77,6 @@ public abstract class ConnectedTile extends SonarMachineBlock implements IConnec
     @Override
 	public int getMetaFromState(IBlockState state) {
 		return 0;
-	}
-
-    @Override
-	@SideOnly(Side.CLIENT)
-	public IBlockState getStateForEntityRender(IBlockState state) {
-		return this.getDefaultState();
 	}
 
     @Override

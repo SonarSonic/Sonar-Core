@@ -1,23 +1,12 @@
 package sonar.core;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
-import sonar.core.common.block.BlockBase;
-import sonar.core.common.block.ConnectedBlock;
-import sonar.core.common.block.SonarFence;
-import sonar.core.common.block.SonarGate;
-import sonar.core.common.block.SonarStairs;
-import sonar.core.common.block.StableStone;
+import sonar.core.common.block.*;
 import sonar.core.common.block.StableStone.Variants;
 
 public class SonarBlocks extends SonarCore {
 
 	public static void registerBlocks() {
-		//white_dev_block = registerBlock("WhiteDevBlock", new BlockBase(Material.ROCK, 0.1f, 650.0f));
-		//black_dev_block = registerBlock("BlackDevBlock", new BlockBase(Material.ROCK, 0.1f, 650.0f));
-
 		reinforcedStoneBlock = SonarRegister.addBlock(SonarConstants.MODID, tab, "ReinforcedStoneBlock", new BlockBase(Material.ROCK, 2.0f, 50.0f));
 		reinforcedStoneStairs = SonarRegister.addBlock(SonarConstants.MODID, tab, "ReinforcedStoneStairs", new SonarStairs(reinforcedStoneBlock));
 		reinforcedStoneFence = SonarRegister.addBlock(SonarConstants.MODID, tab, "ReinforcedStoneFence", new SonarFence(Material.ROCK));

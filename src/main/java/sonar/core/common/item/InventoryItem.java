@@ -129,7 +129,7 @@ public class InventoryItem implements IInventory {
 
 	@Override
 	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack itemstack) {
-		return !(itemstack.getItem() instanceof InventoryContainerItem);
+		return true;
 	}
 
 	public void readFromNBT(NBTTagCompound compound) {
