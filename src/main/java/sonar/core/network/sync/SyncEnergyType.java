@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import sonar.core.SonarCore;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.helpers.SonarHelper;
 
 public class SyncEnergyType extends SyncPart {
 
@@ -29,34 +30,28 @@ public class SyncEnergyType extends SyncPart {
     }
     
     public void incrementType() {
-        int ordinal = SonarCore.energyTypes.getObjectID(type.getName()) + 1;
-        EnergyType type = SonarCore.energyTypes.getRegisteredObject(ordinal);
-        if (type == null) {
-            this.type = SonarCore.energyTypes.getRegisteredObject(0);
-        } else {
-            this.type = type;
-        }
+        SonarHelper.incrementEnum(this.type, EnergyType.values());
         this.markChanged();
     }
 
     @Override
     public void writeToBuf(ByteBuf buf) {
-        buf.writeInt(SonarCore.energyTypes.getObjectID(type.getName()));
+        buf.writeInt(type.ordinal());
     }
 
     @Override
     public void readFromBuf(ByteBuf buf) {
-        type = SonarCore.energyTypes.getRegisteredObject(buf.readInt());
+        type = EnergyType.values()[buf.readInt()];
     }
 
     @Override
     public void readData(NBTTagCompound nbt, SyncType type) {
-        this.type = SonarCore.energyTypes.getRegisteredObject(nbt.getInteger("energyType"));
+        this.type = EnergyType.readFromNBT(nbt, "energyType");
     }
 
     @Override
     public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
-        nbt.setInteger("energyType", SonarCore.energyTypes.getObjectID(this.type.getName()));
+        EnergyType.writeToNBT(this.type, nbt, "energyType");
         return nbt;
     }
 

@@ -23,6 +23,11 @@ public class ItemHandlingWrapper implements IEnergyHandler {
         this.type = handler.getEnergyType();
     }
 
+    @Override
+    public EnumEnergyWrapperType getWrapperType() {
+        return EnumEnergyWrapperType.EXTERNAL_ITEM;
+    }
+
     public EnergyType getEnergyType(){
         return type;
     }

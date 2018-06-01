@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import sonar.core.api.inventories.ISonarInventory;
 import sonar.core.api.inventories.ISonarInventoryTile;
+import sonar.core.api.utils.ActionType;
+import sonar.core.handlers.energy.DischargeValues;
 import sonar.core.handlers.energy.EnergyTransferHandler;
 import sonar.core.handlers.inventories.SonarInventoryTile;
 
@@ -28,11 +30,18 @@ public class TileEntityEnergyInventory extends TileEntityEnergy implements ISona
 
 	public void charge(int id) {
 		long maxTransfer = CHARGING_RATE != 0 ? Math.min(CHARGING_RATE, getStorage().getMaxReceive()) : getStorage().getMaxReceive();
-		EnergyTransferHandler.chargeItem(Lists.newArrayList(storage.getInternalWrapper()), slots().get(id), maxTransfer);
+		long transferred = EnergyTransferHandler.INSTANCE_SC.chargeItem(Lists.newArrayList(storage.getInternalWrapper()), slots().get(id), maxTransfer);
 	}
 
 	public void discharge(int id) {
 		long maxTransfer = CHARGING_RATE != 0 ? Math.min(CHARGING_RATE, getStorage().getMaxExtract()) : getStorage().getMaxExtract();
-		EnergyTransferHandler.dischargeItem(Lists.newArrayList(storage.getInternalWrapper()), slots().get(id), maxTransfer);
+		long transferred = EnergyTransferHandler.INSTANCE_SC.dischargeItem(Lists.newArrayList(storage.getInternalWrapper()), slots().get(id), maxTransfer);
+		if(transferred == 0){
+			long value = DischargeValues.getValueOf(slots().get(id));
+			if(value > 0 && storage.getEnergyStored() + value <= storage.getMaxEnergyStored()){
+				storage.addEnergy(value, ActionType.PERFORM);
+				slots().get(id).shrink(1);
+			}
+		}
 	}
 }

@@ -20,7 +20,7 @@ public class TransferSlotsManager<T extends IInventory> {
 	public static TransferSlots DISCHARGE_SLOT =  new TransferSlots<IInventory>(TransferType.TILE_INV, 1) {
         @Override
 		public boolean canInsert(EntityPlayer player, IInventory inv, Slot slot, int pos, int slotID, ItemStack stack) {
-			return DischargeValues.getValueOf(stack) > 0 || EnergyTransferHandler.getItemHandler(stack) != null;
+			return DischargeValues.getValueOf(stack) > 0 || EnergyTransferHandler.INSTANCE_SC.getItemHandler(stack) != null;
 		}
 	};
     private List<TransferSlots<T>> slots = new ArrayList<>();

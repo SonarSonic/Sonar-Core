@@ -26,6 +26,11 @@ public class TileHandlingWrapper implements IEnergyHandler {
         this.type = handler.getEnergyType();
     }
 
+    @Override
+    public EnumEnergyWrapperType getWrapperType() {
+        return EnumEnergyWrapperType.EXTERNAL_TILE;
+    }
+
     public EnergyType getEnergyType(){
         return type;
     }

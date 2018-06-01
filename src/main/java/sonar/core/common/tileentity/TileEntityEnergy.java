@@ -61,7 +61,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	}
 
 	public void addEnergy(EnumFacing... faces) {
-		EnergyTransferHandler.transferToAdjacent(this, SonarHelper.getEnumFacingValues(), storage.getMaxExtract());
+		EnergyTransferHandler.INSTANCE_SC.transferToAdjacent(this, SonarHelper.getEnumFacingValues(), storage.getMaxExtract());
 	}
 
 	@Override

@@ -60,7 +60,6 @@ import sonar.core.network.PacketTileSync;
 import sonar.core.network.PacketTileSyncUpdate;
 import sonar.core.network.SonarCommon;
 import sonar.core.network.utils.IByteBufTile;
-import sonar.core.registries.EnergyTypeRegistry;
 import sonar.core.upgrades.MachineUpgradeRegistry;
 
 @Mod(modid = SonarConstants.MODID, name = SonarConstants.NAME, version = SonarConstants.VERSION, acceptedMinecraftVersions = SonarConstants.ACCEPTED_MC_VERSION, dependencies = SonarConstants.DEPENDENCIES)
@@ -75,7 +74,6 @@ public class SonarCore {
 	public static List<ISonarFluidHandler> fluidHandlers;
 	public static List<ITileEnergyHandler> tileEnergyHandlers;
 	public static List<IItemEnergyHandler> itemEnergyHandlers;
-	public static EnergyTypeRegistry energyTypes = new EnergyTypeRegistry();
 	public static MachineUpgradeRegistry machineUpgrades = new MachineUpgradeRegistry();
 	public static SimpleNetworkWrapper network;
 	public FlexibleGuiHandler guiHandler = new FlexibleGuiHandler();
@@ -148,7 +146,6 @@ public class SonarCore {
 		}
 		MinecraftForge.EVENT_BUS.register(new SonarEvents());
 		logger.info("Registered Events");
-		energyTypes.register();
 		machineUpgrades.register();
 		planters.register();
 		harvesters.register();
@@ -164,7 +161,6 @@ public class SonarCore {
 		for (Map.Entry<ItemStack, Integer> entry : DischargeValues.dischargeList.entrySet()) {
 			logger.info("Discharge Values: " + entry.toString());
 		}
-		logger.info("Registered " + energyTypes.getObjects().size() + " Energy Types");
 		logger.info("Registered " + fluidHandlers.size() + " Fluid Providers");
 		logger.info("Registered " + tileEnergyHandlers.size() + " Energy Handlers");
 		logger.info("Registered " + itemEnergyHandlers.size() + " Energy Container Providers");

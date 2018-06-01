@@ -6,6 +6,8 @@ import sonar.core.api.utils.ActionType;
 /**used internally to unify ITEM/TILE addition/removal*/
 public interface IEnergyHandler {
 
+    EnumEnergyWrapperType getWrapperType();
+
     EnergyType getEnergyType();
 
     boolean canAddEnergy();

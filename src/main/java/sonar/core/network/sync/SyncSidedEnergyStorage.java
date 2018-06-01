@@ -5,6 +5,7 @@ import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.ISonarEnergyTile;
 import sonar.core.handlers.energy.EnergyStorageWrapper;
 import sonar.core.handlers.energy.EnergyTransferHandler;
+import sonar.core.handlers.energy.EnumEnergyWrapperType;
 import sonar.core.handlers.energy.IEnergyHandler;
 
 public class SyncSidedEnergyStorage extends SyncEnergyStorage {
@@ -32,7 +33,7 @@ public class SyncSidedEnergyStorage extends SyncEnergyStorage {
 	}
 
 	public IEnergyHandler getInternalWrapper(){
-		return internalWrapper == null ? internalWrapper = EnergyTransferHandler.getWrappedStorageHandler(this, EnergyType.FE) : internalWrapper;
+		return internalWrapper == null ? internalWrapper = EnergyTransferHandler.INSTANCE_SC.getWrappedStorageHandler(this, EnumEnergyWrapperType.INTERNAL_TILE_STORAGE, EnergyType.FE) : internalWrapper;
 	}
 
 	@Override

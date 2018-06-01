@@ -27,7 +27,7 @@ public class SlotHelper {
     }
 
     public static boolean chargeSlot(ItemStack stack){
-        return EnergyTransferHandler.canAdd(stack);
+        return EnergyTransferHandler.INSTANCE_SC.canAdd(stack);
     }
 
     public static IInsertFilter dischargeSlot(int slot){
@@ -35,7 +35,7 @@ public class SlotHelper {
     }
 
     public static boolean dischargeSlot(ItemStack stack){
-        return DischargeValues.getValueOf(stack) > 0 || EnergyTransferHandler.canRemove(stack);
+        return DischargeValues.getValueOf(stack) > 0 || EnergyTransferHandler.INSTANCE_SC.canRemove(stack);
     }
 
     public static boolean checkInsert(int slot, @Nonnull ItemStack stack, @Nullable EnumFacing face, EnumFilterType internal, ISonarInventory inv, boolean def){

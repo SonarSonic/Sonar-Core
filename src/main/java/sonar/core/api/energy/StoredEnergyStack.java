@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.api.ISonarStack;
 import sonar.core.api.SonarAPI;
+import sonar.core.handlers.energy.IEnergyTransferProxy;
 import sonar.core.helpers.NBTHelper.SyncType;
 
 /**
@@ -76,11 +77,12 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 
 	@Override
 	public void readData(NBTTagCompound nbt, SyncType type) {
-		energyType = SonarAPI.getRegistry().getEnergyType(nbt.getString("energytype"));
+		energyType = EnergyType.readFromNBT(nbt, "energytype");
 		hasStorage = nbt.getBoolean("hS");
 		hasInput = nbt.getBoolean("hI");
 		hasOutput = nbt.getBoolean("hO");
 		hasUsage = nbt.getBoolean("hU");
+
 		if (hasStorage) {
 			stored = nbt.getLong("s");
 			capacity = nbt.getLong("c");
@@ -98,7 +100,7 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 
 	@Override
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
-		nbt.setString("energytype", energyType.getName());
+		EnergyType.writeToNBT(energyType, nbt, "energytype");
 		nbt.setBoolean("hS", hasStorage);
 		nbt.setBoolean("hI", hasInput);
 		nbt.setBoolean("hO", hasOutput);
@@ -121,47 +123,13 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 	}
 
 	public static StoredEnergyStack readFromBuf(ByteBuf buf) {
-		StoredEnergyStack stored = new StoredEnergyStack(SonarAPI.getRegistry().getEnergyType(ByteBufUtils.readUTF8String(buf)));
-		stored.hasStorage = buf.readBoolean();
-		stored.hasInput = buf.readBoolean();
-		stored.hasOutput = buf.readBoolean();
-		stored.hasUsage = buf.readBoolean();
-		if (stored.hasStorage) {
-			stored.stored = buf.readLong();
-			stored.capacity = buf.readLong();
-		}
-		if (stored.hasInput) {
-			stored.input = buf.readLong();
-		}
-		if (stored.hasOutput) {
-			stored.output = buf.readLong();
-		}
-		if (stored.hasUsage) {
-			stored.usage = buf.readLong();
-		}
-		return stored;
+    	StoredEnergyStack energyStack = new StoredEnergyStack();
+		energyStack.readData(ByteBufUtils.readTag(buf), SyncType.SAVE);
+		return energyStack;
 	}
 
-	public static void writeToBuf(ByteBuf buf, StoredEnergyStack storedStack) {
-		ByteBufUtils.writeUTF8String(buf, storedStack.energyType.getName());
-		buf.writeBoolean(storedStack.hasStorage);
-		buf.writeBoolean(storedStack.hasInput);
-		buf.writeBoolean(storedStack.hasOutput);
-		buf.writeBoolean(storedStack.hasUsage);
-
-		if (storedStack.hasStorage) {
-			buf.writeLong(storedStack.stored);
-			buf.writeLong(storedStack.capacity);
-		}
-		if (storedStack.hasInput) {
-			buf.writeLong(storedStack.input);
-		}
-		if (storedStack.hasOutput) {
-			buf.writeLong(storedStack.output);
-		}
-		if (storedStack.hasUsage) {
-			buf.writeLong(storedStack.usage);
-		}
+	public static void writeToBuf(ByteBuf buf, StoredEnergyStack energyStack) {
+		ByteBufUtils.writeTag(buf, energyStack.writeData(new NBTTagCompound(), SyncType.SAVE));
 	}
 
 	public boolean equals(Object obj) {
@@ -238,13 +206,16 @@ public class StoredEnergyStack implements ISonarStack<StoredEnergyStack>{
 		return stored;
 	}
 
-	public StoredEnergyStack convertEnergyType(EnergyType newFormat) {
+	public StoredEnergyStack convertEnergyType(EnergyType newFormat, IEnergyTransferProxy proxy) {
 		if (energyType != newFormat) {
-			input = (long) ((long) (input / energyType.toRFConversion()) * newFormat.toRFConversion());
-			output = (long) ((long) (output / energyType.toRFConversion()) * newFormat.toRFConversion());
-			stored = (long) ((long) (stored / energyType.toRFConversion()) * newFormat.toRFConversion());
-			capacity = (long) ((long) (capacity / energyType.toRFConversion()) * newFormat.toRFConversion());
-			usage = (long) ((long) (usage / energyType.toRFConversion()) * newFormat.toRFConversion());
+			double oldRFRate = proxy.getRFConversion(energyType);
+			double newRFRate = proxy.getRFConversion(newFormat);
+
+			input = (long) ((long) (input / oldRFRate) * newRFRate);
+			output = (long) ((long) (output / oldRFRate) * newRFRate);
+			stored = (long) ((long) (stored / oldRFRate) * newRFRate);
+			capacity = (long) ((long) (capacity / oldRFRate) * newRFRate);
+			usage = (long) ((long) (usage / oldRFRate) * newRFRate);
 			energyType = newFormat;
 		}
 		return this;

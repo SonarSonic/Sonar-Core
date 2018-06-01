@@ -7,46 +7,122 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.IEnergyStorage;
+import sonar.core.SonarCore;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.IItemEnergyHandler;
 import sonar.core.api.energy.ITileEnergyHandler;
 import sonar.core.api.utils.ActionType;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.PrimitiveIterator;
 import java.util.function.Function;
 
 public class EnergyTransferHandler {
 
+    //// A SONAR CORE TRANSFER HANDLER - ALLOWS ALL TRANSFERS/CONVERSIONS \\\\
+    public static final SonarTransferProxy PROXY_SC = new SonarTransferProxy();
+    public static final EnergyTransferHandler INSTANCE_SC = new EnergyTransferHandler(PROXY_SC);
+
+    public static class SonarTransferProxy implements IEnergyTransferProxy{
+
+        @Override
+        public double getRFConversion(EnergyType type) {
+            switch(type){
+                case FE:
+                    return 1D;
+                case TESLA:
+                    return 1D;
+                case RF:
+                    return 1D;
+                case EU:
+                    return 0.25D;
+                case MJ:
+                    return 2.5D;
+                case AE:
+                    return 0.5D;
+            }
+            return 1D;
+        }
+    }
+
+    public static long convert(long val, EnergyType from, EnergyType to, IEnergyTransferProxy proxy) {
+        if(from == to){
+            return val;
+        }
+        double inRF = val / proxy.getRFConversion(from);
+        return (long) (inRF * proxy.getRFConversion(to));
+    }
+
+    //// ENERGY TRANSFER HANDLER \\\\
+
+    public IEnergyTransferProxy transferProxy;
+
+    public EnergyTransferHandler(IEnergyTransferProxy transferProxy){
+        this.transferProxy = transferProxy;
+    }
+
+    public IEnergyTransferProxy getProxy(){
+        return transferProxy;
+    }
+
+    public long convert(long val, EnergyType from, EnergyType to) {
+        return convert(val, from, to, transferProxy);
+    }
+
     @Nullable
-    public static IItemEnergyHandler getItemHandler(ItemStack stack){
+    public IItemEnergyHandler getItemHandler(ItemStack stack){
+       for(IItemEnergyHandler handler : SonarCore.itemEnergyHandlers){
+           if(transferProxy.isItemEnergyTypeEnabled(handler.getEnergyType()) && transferProxy.canConnectItem(stack)) {
+               if (handler.canAddEnergy(stack) || handler.canRemoveEnergy(stack)) {
+                   return handler;
+               }
+           }
+       }
+       return null;
+    }
+
+    @Nullable
+    public ITileEnergyHandler getTileHandler(TileEntity tile, EnumFacing face){
+        for(ITileEnergyHandler handler : SonarCore.tileEnergyHandlers){
+            if(transferProxy.isTileEnergyTypeEnabled(handler.getEnergyType()) && transferProxy.canConnectTile(tile, face)) {
+                if (handler.canAddEnergy(tile, face) || handler.canRemoveEnergy(tile, face)) {
+                    return handler;
+                }
+            }
+        }
         return null;
     }
 
     @Nullable
-    public static ITileEnergyHandler getTileHandler(TileEntity tile, EnumFacing face){
+    public IEnergyHandler getWrappedItemHandler(ItemStack stack){
+        if(stack.isEmpty()){
+            return null;
+        }
+        IItemEnergyHandler handler = getItemHandler(stack);
+        if(handler != null){
+            return new ItemHandlingWrapper(stack, handler);
+        }
         return null;
     }
 
     @Nullable
-    public static IEnergyHandler getWrappedItemHandler(ItemStack stack){
+    public IEnergyHandler getWrappedTileHandler(TileEntity tile, EnumFacing face){
+        if(tile == null){
+            return null;
+        }
+        ITileEnergyHandler handler = getTileHandler(tile, face);
+        if(handler != null){
+            return new TileHandlingWrapper(tile, face, handler);
+        }
         return null;
     }
 
-    @Nullable
-    public static IEnergyHandler getWrappedTileHandler(TileEntity tile, EnumFacing face){
-        return null;
+    public IEnergyHandler getWrappedStorageHandler(IEnergyStorage storage, EnumEnergyWrapperType wrapperType, EnergyType type){
+        return new EnergyStorageWrapper(storage, wrapperType, type);
     }
 
-    public static IEnergyHandler getWrappedStorageHandler(IEnergyStorage storage, EnergyType type){
-        return new EnergyStorageWrapper(storage, type);
-    }
-
-    public static boolean canAdd(ItemStack stack){
+    public boolean canAdd(ItemStack stack){
         if(stack.isEmpty()){
             return false;
         }
@@ -54,7 +130,7 @@ public class EnergyTransferHandler {
         return handler != null && handler.canAddEnergy(stack);
     }
 
-    public static boolean canRemove(ItemStack stack){
+    public boolean canRemove(ItemStack stack){
         if(stack.isEmpty()){
             return false;
         }
@@ -62,7 +138,7 @@ public class EnergyTransferHandler {
         return handler != null && handler.canRemoveEnergy(stack);
     }
 
-    public static boolean canRead(ItemStack stack){
+    public boolean canRead(ItemStack stack){
         if(stack.isEmpty()){
             return false;
         }
@@ -70,7 +146,7 @@ public class EnergyTransferHandler {
         return handler != null && handler.canReadEnergy(stack);
     }
 
-    public static boolean canAdd(TileEntity tile, EnumFacing face){
+    public boolean canAdd(TileEntity tile, EnumFacing face){
         if(tile == null){
             return false;
         }
@@ -78,7 +154,7 @@ public class EnergyTransferHandler {
         return handler != null && handler.canAddEnergy(tile, face);
     }
 
-    public static boolean canRemove(TileEntity tile, EnumFacing face){
+    public boolean canRemove(TileEntity tile, EnumFacing face){
         if(tile == null){
             return false;
         }
@@ -86,7 +162,7 @@ public class EnergyTransferHandler {
         return handler != null && handler.canRemoveEnergy(tile, face);
     }
 
-    public static boolean canRead(TileEntity tile, EnumFacing face){
+    public boolean canRead(TileEntity tile, EnumFacing face){
         if(tile == null){
             return false;
         }
@@ -94,20 +170,22 @@ public class EnergyTransferHandler {
         return handler != null && handler.canReadEnergy(tile, face);
     }
 
-    public static long convertedAction(long toConvert, EnergyType from, EnergyType to, Function<Long, Long> action){
-        long maxAdd = EnergyType.convert(toConvert, from, to);
+    public long convertedAction(long toConvert, EnergyType from, EnergyType to, Function<Long, Long> action){
+        long maxAdd = convert(toConvert, from, to, transferProxy);
         long added = action.apply(maxAdd);
-        return EnergyType.convert(added, to, from);
+        return convert(added, to, from, transferProxy);
     }
 
-    public static long doSimpleTransfer(Iterable<IEnergyHandler> sources, Iterable<IEnergyHandler> destinations, long maximum){
+    public long doSimpleTransfer(Iterable<IEnergyHandler> sources, Iterable<IEnergyHandler> destinations, long maximum){
         long transferred = 0;
         for(IEnergyHandler source : sources){
             if(source.canRemoveEnergy()){
                 long maxRemove = source.removeEnergy(maximum - transferred, ActionType.SIMULATE);
                 long removed = 0;
                 for(IEnergyHandler destination : destinations){
-                    removed += convertedAction(maxRemove - removed, source.getEnergyType(), destination.getEnergyType(), e -> destination.addEnergy(e, ActionType.PERFORM));
+                    if(transferProxy.canConvert(source, destination) && transferProxy.canConvert(source.getEnergyType(), destination.getEnergyType())) {
+                        removed += convertedAction(maxRemove - removed, source.getEnergyType(), destination.getEnergyType(), e -> destination.addEnergy(e, ActionType.PERFORM));
+                    }
                 }
                 transferred += source.removeEnergy(removed, ActionType.PERFORM);
             }
@@ -115,45 +193,51 @@ public class EnergyTransferHandler {
         return transferred;
     }
 
-    public static long addEnergy(IEnergyHandler handler, long charge, EnergyType energyType, ActionType actionType){
-        return convertedAction(charge, energyType, handler.getEnergyType(), e -> handler.addEnergy(e, actionType));
+    public long addEnergy(IEnergyHandler handler, long charge, EnergyType energyType, ActionType actionType){
+        if(transferProxy.canConvert(energyType, handler.getEnergyType())){
+            return convertedAction(charge, energyType, handler.getEnergyType(), e -> handler.addEnergy(e, actionType));
+        }
+        return 0;
     }
 
-    public static long removeEnergy(IEnergyHandler handler, long charge, EnergyType energyType, ActionType actionType){
-        return convertedAction(charge, energyType, handler.getEnergyType(), e -> handler.removeEnergy(e, actionType));
+    public long removeEnergy(IEnergyHandler handler, long charge, EnergyType energyType, ActionType actionType){
+        if(transferProxy.canConvert(energyType, handler.getEnergyType())) {
+            return convertedAction(charge, energyType, handler.getEnergyType(), e -> handler.removeEnergy(e, actionType));
+        }
+        return 0;
     }
 
-    public static long chargeItem(Iterable<IEnergyHandler> sources, ItemStack stack, long maximum){
+    public long chargeItem(Iterable<IEnergyHandler> sources, ItemStack stack, long maximum){
         IEnergyHandler itemHandler = getWrappedItemHandler(stack);
         return itemHandler != null && itemHandler.canAddEnergy() ? doSimpleTransfer(sources, Lists.newArrayList(itemHandler), maximum) : 0;
     }
 
-    public static long dischargeItem(Iterable<IEnergyHandler> destinations, ItemStack stack, long maximum){
+    public long dischargeItem(Iterable<IEnergyHandler> destinations, ItemStack stack, long maximum){
         IEnergyHandler itemHandler = getWrappedItemHandler(stack);
         return itemHandler != null && itemHandler.canRemoveEnergy() ? doSimpleTransfer(Lists.newArrayList(itemHandler), destinations, maximum) : 0;
     }
 
-    public static long chargeItem(ItemStack stack, long charge, EnergyType energyType, ActionType actionType){
+    public long chargeItem(ItemStack stack, long charge, EnergyType energyType, ActionType actionType){
         IEnergyHandler itemHandler = getWrappedItemHandler(stack);
         return itemHandler != null && itemHandler.canAddEnergy() ? addEnergy(itemHandler, charge, energyType, actionType) : 0;
     }
 
-    public static long dischargeItem(ItemStack stack, long discharge, EnergyType energyType, ActionType actionType){
+    public long dischargeItem(ItemStack stack, long discharge, EnergyType energyType, ActionType actionType){
         IEnergyHandler itemHandler = getWrappedItemHandler(stack);
         return itemHandler != null && itemHandler.canRemoveEnergy() ? removeEnergy(itemHandler, discharge, energyType, actionType) : 0;
     }
 
-    public static long getEnergyStored(ItemStack stack, EnergyType energyType){
+    public long getEnergyStored(ItemStack stack, EnergyType energyType){
         IItemEnergyHandler itemHandler = getItemHandler(stack);
-        return itemHandler != null && itemHandler.canReadEnergy(stack) ? EnergyType.convert(itemHandler.getStored(stack), itemHandler.getEnergyType(), energyType) : 0;
+        return itemHandler != null && itemHandler.canReadEnergy(stack) ? convert(itemHandler.getStored(stack), itemHandler.getEnergyType(), energyType, transferProxy) : 0;
     }
 
-    public static long getEnergyCapacity(ItemStack stack, EnergyType energyType){
+    public long getEnergyCapacity(ItemStack stack, EnergyType energyType){
         IItemEnergyHandler itemHandler = getItemHandler(stack);
-        return itemHandler != null && itemHandler.canReadEnergy(stack) ? EnergyType.convert(itemHandler.getCapacity(stack), itemHandler.getEnergyType(), energyType) : 0;
+        return itemHandler != null && itemHandler.canReadEnergy(stack) ? convert(itemHandler.getCapacity(stack), itemHandler.getEnergyType(), energyType, transferProxy) : 0;
     }
 
-    public static void transferToAdjacent(TileEntity tile, Iterable<EnumFacing> faces, long maximum){
+    public void transferToAdjacent(TileEntity tile, Iterable<EnumFacing> faces, long maximum){
         long transferred = 0;
         for(EnumFacing face : faces){
             IEnergyHandler handler = getWrappedTileHandler(tile, face);
@@ -165,7 +249,7 @@ public class EnergyTransferHandler {
         getAdjacentHandlers(tile.getWorld(), tile.getPos(), faces);
     }
 
-    public static List<IEnergyHandler> getAdjacentHandlers(World world, BlockPos pos, Iterable<EnumFacing> faces){
+    public List<IEnergyHandler> getAdjacentHandlers(World world, BlockPos pos, Iterable<EnumFacing> faces){
         List<IEnergyHandler> handlers = new ArrayList<>();
         for(EnumFacing face : faces){
             IEnergyHandler handler = getAdjacentHandler(world, pos, face);
@@ -177,7 +261,7 @@ public class EnergyTransferHandler {
     }
 
     @Nullable
-    public static IEnergyHandler getAdjacentHandler(World world, BlockPos pos, EnumFacing face){
+    public IEnergyHandler getAdjacentHandler(World world, BlockPos pos, EnumFacing face){
         BlockPos adj = pos.offset(face);
         TileEntity tile = world.getTileEntity(adj);
         if(tile != null){

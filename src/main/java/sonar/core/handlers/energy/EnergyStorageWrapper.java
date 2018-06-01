@@ -7,11 +7,18 @@ import sonar.core.api.utils.ActionType;
 public class EnergyStorageWrapper implements IEnergyHandler {
 
     public IEnergyStorage storage;
+    public EnumEnergyWrapperType wrapperType;
     public EnergyType type;
 
-    public EnergyStorageWrapper(IEnergyStorage storage, EnergyType type){
+    public EnergyStorageWrapper(IEnergyStorage storage, EnumEnergyWrapperType wrapperType, EnergyType type){
         this.storage = storage;
+        this.wrapperType = wrapperType;
         this.type = type;
+    }
+
+    @Override
+    public EnumEnergyWrapperType getWrapperType() {
+        return wrapperType;
     }
 
     @Override
