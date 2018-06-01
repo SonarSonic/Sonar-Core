@@ -3,7 +3,6 @@ package sonar.core.network.sync;
 import net.minecraft.util.EnumFacing;
 import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.ISonarEnergyTile;
-import sonar.core.handlers.energy.EnergyStorageWrapper;
 import sonar.core.handlers.energy.EnergyTransferHandler;
 import sonar.core.handlers.energy.EnumEnergyWrapperType;
 import sonar.core.handlers.energy.IEnergyHandler;
@@ -38,11 +37,11 @@ public class SyncSidedEnergyStorage extends SyncEnergyStorage {
 
 	@Override
 	public boolean canExtract() {
-        return currentFace != null && tile.getModeForSide(currentFace).canSend();
+        return currentFace == null || tile.getModeForSide(currentFace).canSend();
 	}
 
 	@Override
 	public boolean canReceive() {
-        return currentFace != null && tile.getModeForSide(currentFace).canRecieve();
+        return currentFace == null | tile.getModeForSide(currentFace).canRecieve();
 	}
 }
