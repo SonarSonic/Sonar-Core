@@ -2,12 +2,10 @@ package sonar.core.common.tileentity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
-import sonar.core.api.SonarAPI;
 import sonar.core.api.inventories.ISonarInventory;
 import sonar.core.api.inventories.ISonarInventoryTile;
 import sonar.core.handlers.energy.EnergyTransferHandler;
-import sonar.core.handlers.energy.IEnergyHandler;
-import sonar.core.inventory.SonarInventoryTile;
+import sonar.core.handlers.inventories.SonarInventoryTile;
 
 import java.util.List;
 

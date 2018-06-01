@@ -48,7 +48,7 @@ public class SonarClient extends SonarCommon {
 				ModelLoader.setCustomModelResourceLocation(item, stack.getItemDamage(), new ModelResourceLocation(modid + ':' + item.getUnlocalizedName().substring(5), variant));
 			}
 		} else {
-			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(modid + ':' + item.getUnlocalizedName().substring(5), "inventory"));
+			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(modid + ':' + item.getUnlocalizedName().substring(5), "inventories"));
 		}
 	}
 
@@ -71,7 +71,7 @@ public class SonarClient extends SonarCommon {
 				ModelLoader.setCustomModelResourceLocation(item, stack.getItemDamage(), new ModelResourceLocation(modid + ":" + "items/" + item.getUnlocalizedName().substring(5), variant));
 			}
 		} else {
-			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(new ResourceLocation(modid, item.getUnlocalizedName().substring(5)), "inventory"));
+			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(new ResourceLocation(modid, item.getUnlocalizedName().substring(5)), "inventories"));
 
 		}
 	}

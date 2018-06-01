@@ -33,7 +33,7 @@ import sonar.core.api.energy.IItemEnergyHandler;
 import sonar.core.api.energy.ITileEnergyHandler;
 import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.nbt.INBTSyncable;
-import sonar.core.energy.DischargeValues;
+import sonar.core.handlers.energy.DischargeValues;
 import sonar.core.helpers.ASMLoader;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.SonarLoader;

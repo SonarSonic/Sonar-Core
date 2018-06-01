@@ -144,7 +144,7 @@ public class InventoryItem implements IInventory {
 		}
 	}
 
-	/** A custom method to write our inventory to an ItemStack's NBT compound */
+	/** A custom method to write our inventories to an ItemStack's NBT compound */
 	public void writeToNBT(NBTTagCompound compound) {
 		NBTTagList items = new NBTTagList();
 

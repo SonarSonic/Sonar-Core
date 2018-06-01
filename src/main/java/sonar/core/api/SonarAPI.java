@@ -20,7 +20,7 @@ public final class SonarAPI {
 		if (Loader.isModLoaded("SonarCore")|| Loader.isModLoaded("sonarcore")) {
 			try {
 				registry = (RegistryWrapper) Class.forName("sonar.core.SonarRegistry").newInstance();
-				fluids = (FluidWrapper) Class.forName("sonar.core.helpers.FluidHelper").newInstance();
+				fluids = (FluidWrapper) Class.forName("sonar.core.handlers.fluids.FluidHelper").newInstance();
 			} catch (Exception exception) {
 				System.err.println(NAME + " : FAILED TO INITILISE API" + exception.getMessage());
 			}

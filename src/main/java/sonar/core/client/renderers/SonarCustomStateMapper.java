@@ -50,7 +50,7 @@ public class SonarCustomStateMapper extends StateMapperBase implements ICustomMo
 			ClientRegistry.bindTileEntitySpecialRenderer(((ISonarTileRenderer) renderer).getTileEntity(), instance);
 		}
 		if (renderer.doInventoryRendering()) {
-            ModelResourceLocation itemModel = new ModelResourceLocation(blockModel.getResourceDomain() + ':' + blockModel.getResourcePath(), "inventory");
+            ModelResourceLocation itemModel = new ModelResourceLocation(blockModel.getResourceDomain() + ':' + blockModel.getResourcePath(), "inventories");
 			//customModels.put(itemModel, instance);
 			ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(block), renderer);
 		}

@@ -3,7 +3,7 @@ package sonar.core.common.tileentity;
 import net.minecraft.item.ItemStack;
 import sonar.core.api.inventories.ISonarInventory;
 import sonar.core.api.inventories.ISonarInventoryTile;
-import sonar.core.inventory.SonarInventoryTile;
+import sonar.core.handlers.inventories.SonarInventoryTile;
 
 import java.util.List;
 

@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import sonar.core.SonarCore;
-import sonar.core.helpers.ItemStackHelper;
+import sonar.core.handlers.inventories.ItemStackHelper;
 
 /**
  * the new Flexible Recipe Helper, WARNING: addRecipes() needs to be called
@@ -247,7 +247,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
      * used on objects which require adjustment, typically used on objects which need to be converted to an itemstack
      */
 	public static Object adjustObject(Object obj) {
-		return ItemStackHelper.createStack(obj);
+		return ItemStackHelper.getOrCreateStack(obj);
 	}
 
     /**

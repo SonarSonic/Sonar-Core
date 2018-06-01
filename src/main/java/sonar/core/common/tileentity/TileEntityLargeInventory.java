@@ -4,8 +4,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import sonar.core.api.inventories.ISonarInventoryTile;
-import sonar.core.inventory.SonarLargeInventory;
-import sonar.core.inventory.SonarLargeInventoryTile;
+import sonar.core.handlers.inventories.SonarLargeInventory;
+import sonar.core.handlers.inventories.SonarLargeInventoryTile;
 
 public class TileEntityLargeInventory extends TileEntitySonar implements ISonarInventoryTile {
 	public final SonarLargeInventoryTile inv = new SonarLargeInventoryTile(this);

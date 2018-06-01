@@ -6,12 +6,12 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
-import sonar.core.inventory.handling.EnumFilterType;
+import sonar.core.handlers.inventories.handling.EnumFilterType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**make sure you still add the inventory to the synclist!*/
+/**make sure you still add the inventories to the synclist!*/
 public interface ISonarInventoryTile extends IInventory, ISidedInventory {
 
 	ISonarInventory inv();

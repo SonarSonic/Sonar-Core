@@ -7,7 +7,7 @@ import net.minecraft.util.EnumFacing;
 import sonar.core.api.asm.FluidHandler;
 import sonar.core.api.fluids.StoredFluidStack;
 import sonar.core.api.utils.ActionType;
-import sonar.core.helpers.FluidHelper.ITankFilter;
+import sonar.core.handlers.fluids.FluidHelper.ITankFilter;
 
 public class FluidWrapper {
 

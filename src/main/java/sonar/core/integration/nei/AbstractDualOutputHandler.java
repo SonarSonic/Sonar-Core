@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventories.GuiContainer;
 import net.minecraft.item.ItemStack;
 import sonar.core.helpers.RecipeHelper;
 

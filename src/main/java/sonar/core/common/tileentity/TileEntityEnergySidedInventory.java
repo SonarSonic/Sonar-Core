@@ -1,14 +1,10 @@
 package sonar.core.common.tileentity;
 
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import sonar.core.inventory.handling.EnumFilterType;
+import sonar.core.handlers.inventories.handling.EnumFilterType;
 import sonar.core.utils.IMachineSides;
 import sonar.core.utils.MachineSideConfig;
 import sonar.core.utils.MachineSides;
-
-import javax.annotation.Nonnull;
 
 public class TileEntityEnergySidedInventory extends TileEntityEnergyInventory implements IMachineSides, ISidedInventory {
 

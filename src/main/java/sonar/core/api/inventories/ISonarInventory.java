@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import sonar.core.api.nbt.INBTSyncable;
-import sonar.core.inventory.handling.EnumFilterType;
-import sonar.core.inventory.handling.filters.IExtractFilter;
-import sonar.core.inventory.handling.filters.IInsertFilter;
+import sonar.core.handlers.inventories.handling.EnumFilterType;
+import sonar.core.handlers.inventories.handling.filters.IExtractFilter;
+import sonar.core.handlers.inventories.handling.filters.IInsertFilter;
 import sonar.core.network.sync.ISyncPart;
 
 import javax.annotation.Nonnull;
