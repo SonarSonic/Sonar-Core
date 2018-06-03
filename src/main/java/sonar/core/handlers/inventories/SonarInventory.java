@@ -9,18 +9,19 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import sonar.core.api.inventories.ISonarInventory;
-import sonar.core.helpers.NBTHelper;
 import sonar.core.handlers.inventories.handling.EnumFilterType;
+import sonar.core.handlers.inventories.handling.IInventoryWrapper;
 import sonar.core.handlers.inventories.handling.filters.IExtractFilter;
 import sonar.core.handlers.inventories.handling.filters.IInsertFilter;
-import sonar.core.handlers.inventories.handling.IInventoryWrapper;
 import sonar.core.handlers.inventories.handling.filters.SlotHelper;
+import sonar.core.helpers.NBTHelper;
 import sonar.core.network.sync.IDirtyPart;
 import sonar.core.network.sync.ISyncPart;
 import sonar.core.network.sync.ISyncableListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,8 +115,20 @@ public class SonarInventory extends ItemStackHandler implements ISonarInventory,
     }
 
     @Override
+    public boolean checkDrop(int slot, @Nonnull ItemStack stack){
+        return true;
+    }
+
+    @Override
     public List<ItemStack> getDrops() {
-        return stacks;
+        List<ItemStack> toDrop = new ArrayList<>();
+        for(int i = 0; i < stacks.size(); i ++){
+            ItemStack drop = stacks.get(i);
+            if(!drop.isEmpty() && checkDrop(i, drop)){
+                toDrop.add(drop);
+            }
+        }
+        return toDrop;
     }
 
     @Nonnull

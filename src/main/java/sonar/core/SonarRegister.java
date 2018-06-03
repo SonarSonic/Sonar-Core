@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import sonar.core.registries.ISonarRegistryBlock;
 import sonar.core.registries.ISonarRegistryItem;
@@ -53,9 +52,10 @@ public class SonarRegister {
 		return SonarCore.proxy.registerItem(modid, item);
 	}
 
-	//TODO 1.3 - ADD MODID TO RESOURCE
+	//TODO 1.3 - ADD TILE ENTITY WITH RESOURCE LOCATION
 	public static void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String modid, String key){
-		GameRegistry.registerTileEntity(tileEntityClass, new ResourceLocation(key));
+		//GameRegistry.registerTileEntity(tileEntityClass, new ResourceLocation(key));
+		GameRegistry.registerTileEntity(tileEntityClass, key);
 	}
 
 	//// SET REGISTRY NAME \\\\

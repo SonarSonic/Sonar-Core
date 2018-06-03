@@ -26,6 +26,8 @@ public interface ISonarInventoryTile extends IInventory, ISidedInventory {
 	@Nullable
 	default Boolean checkInsert(int slot, @Nonnull ItemStack stack, @Nullable EnumFacing face, EnumFilterType type){ return null; }
 
+	default boolean checkDrop(int slot, @Nonnull ItemStack stack){ return true; }
+
 	//// IInventory \\\\
 
 

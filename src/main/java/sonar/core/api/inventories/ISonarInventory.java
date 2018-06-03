@@ -32,5 +32,7 @@ public interface ISonarInventory extends INBTSyncable, IItemHandlerModifiable, I
 
 	boolean checkExtract(int slot, int count, @Nullable EnumFacing face, EnumFilterType internal);
 
+	boolean checkDrop(int slot, @Nonnull ItemStack stack);
+
 	List<ItemStack> getDrops();
 }

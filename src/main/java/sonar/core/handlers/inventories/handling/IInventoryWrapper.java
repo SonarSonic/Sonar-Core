@@ -104,7 +104,11 @@ public class IInventoryWrapper implements IInventory {
     }
 
     @Override
-    public void clear() {}
+    public void clear() {
+        for(int i = 0; i < getSizeInventory(); i++){
+            handler.setStackInSlot(i, ItemStack.EMPTY);
+        }
+    }
 
     @Override
     public String getName() {

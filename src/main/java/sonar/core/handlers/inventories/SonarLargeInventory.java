@@ -11,12 +11,12 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import sonar.core.api.inventories.ISonarLargeInventory;
 import sonar.core.api.inventories.StoredItemStack;
 import sonar.core.api.nbt.INBTSyncable;
-import sonar.core.helpers.NBTHelper;
 import sonar.core.handlers.inventories.handling.EnumFilterType;
 import sonar.core.handlers.inventories.handling.IInventoryWrapper;
 import sonar.core.handlers.inventories.handling.filters.IExtractFilter;
 import sonar.core.handlers.inventories.handling.filters.IInsertFilter;
 import sonar.core.handlers.inventories.handling.filters.SlotHelper;
+import sonar.core.helpers.NBTHelper;
 import sonar.core.network.sync.IDirtyPart;
 import sonar.core.network.sync.ISyncableListener;
 
@@ -139,9 +139,19 @@ public class SonarLargeInventory implements ISonarLargeInventory {
     }
 
     @Override
+    public boolean checkDrop(int slot, @Nonnull ItemStack stack){
+        return true;
+    }
+
+    @Override
     public List<ItemStack> getDrops() {
         List<ItemStack> toDrop = new ArrayList<>();
-        slots.forEach(s -> toDrop.addAll(s.getDrops()));
+        for(int i = 0; i < slots.size(); i ++){
+            InventoryLargeSlot slot = slots.get(i);
+            if(!slot.getStoredStack().isEmpty() && checkDrop(i, slot.getStoredStack())){
+                toDrop.addAll(slot.getDrops());
+            }
+        }
         return toDrop;
     }
 
@@ -290,6 +300,10 @@ public class SonarLargeInventory implements ISonarLargeInventory {
 
         public StoredItemStack getLargeStack(){
             return new StoredItemStack(stored_stack, getActualStored());
+        }
+
+        public ItemStack getStoredStack(){
+            return stored_stack;
         }
 
         public ItemStack getAccessStack(){

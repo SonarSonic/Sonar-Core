@@ -64,6 +64,10 @@ minecraft {
     runDir = "run"
     replace "@VERSION@", "${mod_version}"
     replace "@MC_VERSION@", "${minecraft_version}"
+    replace "calculator@[0.0.0,)", "calculator@[" + "${calculator_version}" +",)"
+    replace "practicallogistics2@[0.0.0,)", "practicallogistics2@[" + "${practical_logistics_version}" +",)"
+    replace "fluxnetworks@[0.0.0,)", "fluxnetworks@[" + "${flux_networks_version}" +",)"
+    replace "bagelsmore@[0.0.0,)", "bagelsmore@[" + "${bagelsmore_version}" +",)"
     mappings = "snapshot_20171002"
     makeObfSourceJar = false
 }

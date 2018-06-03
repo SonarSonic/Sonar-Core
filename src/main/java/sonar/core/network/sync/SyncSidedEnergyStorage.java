@@ -42,6 +42,6 @@ public class SyncSidedEnergyStorage extends SyncEnergyStorage {
 
 	@Override
 	public boolean canReceive() {
-        return currentFace == null | tile.getModeForSide(currentFace).canRecieve();
+        return currentFace == null || tile.getModeForSide(currentFace).canRecieve();
 	}
 }

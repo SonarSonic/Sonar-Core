@@ -1,10 +1,13 @@
 package sonar.core.handlers.inventories;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import sonar.core.api.inventories.ISonarInventoryTile;
 import sonar.core.handlers.inventories.handling.EnumFilterType;
 import sonar.core.handlers.inventories.handling.IInventoryWrapper;
+
+import javax.annotation.Nonnull;
 
 public class SonarLargeInventoryTile extends SonarLargeInventory {
 
@@ -29,6 +32,11 @@ public class SonarLargeInventoryTile extends SonarLargeInventory {
 			return super.getWrapperInventory();
 		}
 		return wrapped_inv == null ? wrapped_inv = new IInventoryWrapper(this, (TileEntity) tile) : wrapped_inv;
+	}
+
+	@Override
+	public boolean checkDrop(int slot, @Nonnull ItemStack stack){
+		return tile.checkDrop(slot, stack);
 	}
 
 	@Override
