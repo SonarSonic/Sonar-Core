@@ -176,7 +176,7 @@ public class SonarBlock extends Block implements IWrenchable {
                 ((INBTSyncable) entity).readData(stack.getTagCompound(), NBTHelper.SyncType.DROP);
             }else{
                 NBTTagCompound tag = stack.getSubCompound(DROP_TAG_NAME);
-                ((INBTSyncable) entity).readData(tag, NBTHelper.SyncType.DROP);
+                if(tag != null) ((INBTSyncable) entity).readData(tag, NBTHelper.SyncType.DROP);
             }
         }
     }
