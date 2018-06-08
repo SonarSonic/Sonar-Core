@@ -59,6 +59,13 @@ compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
+version = "${config.mod_version}"
+if (hasProperty('appendBuildNumber')) {
+    version = version + "-" + appendBuildNumber.toString()
+} else {
+    version = version + "-inofficial"
+}
+
 minecraft {
     version = "${forge_version}"
     runDir = "run"
@@ -75,7 +82,7 @@ minecraft {
 task deobfJar(type: Jar) { // Generate deobfuscated
     from sourceSets.main.output
     classifier = 'deobf'
-    archiveName = "sonarcore-${minecraft_version}-${mod_version}-deobf.jar"
+    archiveName = "sonarcore-${minecraft_version}-${version}-deobf.jar"
 
 }
 tasks.build.dependsOn('deobfJar')
@@ -85,7 +92,7 @@ artifacts {
 }
 
 jar {
-    archiveName = "sonarcore-${minecraft_version}-${mod_version}.jar"
+    archiveName = "sonarcore-${minecraft_version}-${version}.jar"
 }
 
 dependencies {
@@ -125,3 +132,22 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+
+publishing {
+    tasks.publish.dependsOn 'build'
+    publications {
+        mavenJava(MavenPublication) {
+            groupId config.group_prefix
+            version config.minecraft_version + "-" + project.version
+            artifactId config.mod_id
+            artifact jar
+            artifact sourceJar
+            artifact deobfJar
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+
