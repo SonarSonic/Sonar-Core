@@ -35,10 +35,6 @@ public class SonarCommon {
         ForgeRegistries.ITEMS.register(item.getValue());
 		return item.getValue();
 	}
-	
-	public Object getStateMapper() {
-		return null;
-	}
 
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
 		return ctx.getServerHandler().player;

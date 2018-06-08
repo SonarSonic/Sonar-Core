@@ -28,14 +28,17 @@ public class ItemHandlingWrapper implements IEnergyHandler {
         return EnumEnergyWrapperType.EXTERNAL_ITEM;
     }
 
+    @Override
     public EnergyType getEnergyType(){
         return type;
     }
 
+    @Override
     public boolean canAddEnergy(){
         return canAdd;
     }
 
+    @Override
     public boolean canRemoveEnergy(){
         return canRemove;
     }
@@ -45,10 +48,12 @@ public class ItemHandlingWrapper implements IEnergyHandler {
         return canRead;
     }
 
+    @Override
     public long addEnergy(long add, ActionType actionType){
         return handler.addEnergy(add, stack, actionType);
     }
 
+    @Override
     public long removeEnergy(long remove, ActionType actionType){
         return handler.removeEnergy(remove, stack, actionType);
     }

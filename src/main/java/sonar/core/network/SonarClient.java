@@ -2,7 +2,6 @@ package sonar.core.network;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
@@ -18,7 +16,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import sonar.core.SonarCore;
 import sonar.core.client.BlockModelsCache;
-import sonar.core.common.block.properties.IMetaRenderer;
 import sonar.core.registries.ISonarRegistryBlock;
 import sonar.core.registries.ISonarRegistryItem;
 import sonar.core.translate.LocalisationManager;
@@ -30,48 +27,40 @@ public class SonarClient extends SonarCommon {
 
 	public <T extends Block> T registerBlock(String modid, ISonarRegistryBlock<T> block){
 		T theBlock = super.registerBlock(modid, block);
-		registerBlockRenderer(modid, block.getValue());
+		if(block.shouldRegisterRenderer()) {
+			registerBlockRenderer(modid, block);
+		}
 		return theBlock;
 	}
 
-	public void registerBlockRenderer(String modid, Block block) {
+	public <T extends Block> void registerBlockRenderer(String modid, ISonarRegistryBlock<T> registryBlock) {
+		Block block = registryBlock.getValue();
 		Item item = Item.getItemFromBlock(block);
 		if (item.getHasSubtypes()) {
 			NonNullList<ItemStack> stacks = NonNullList.create();
 			item.getSubItems(block.getCreativeTabToDisplayOn(), stacks);
-			for (ItemStack stack : stacks) {
-				String variant = "variant=meta" + stack.getItemDamage();
-				if (block instanceof IMetaRenderer) {
-					IMetaRenderer meta = (IMetaRenderer) block;
-					variant = "variant=" + meta.getVariant(stack.getItemDamage()).getName();
-				}
-				ModelLoader.setCustomModelResourceLocation(item, stack.getItemDamage(), new ModelResourceLocation(modid + ':' + item.getUnlocalizedName().substring(5), variant));
-			}
+			stacks.forEach(s -> ModelLoader.setCustomModelResourceLocation(item, s.getItemDamage(), registryBlock.getItemBlockMetadataRendererLocation(modid, s)));
 		} else {
-			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(modid + ':' + item.getUnlocalizedName().substring(5), "inventory"));
+			ModelLoader.setCustomModelResourceLocation(item, 0, registryBlock.getItemBlockRendererLocation(modid, item));
 		}
 	}
 
 	public <T extends Item> T registerItem(String modid, ISonarRegistryItem<T> item){
 		T theItem = super.registerItem(modid, item);
-		registerItemRenderer(modid, item.getValue());
+		if(item.shouldRegisterRenderer()) {
+			registerItemRenderer(modid, item);
+		}
 		return theItem;
 	}
 
-	public void registerItemRenderer(String modid, Item item) {
+	public <T extends Item> void registerItemRenderer(String modid, ISonarRegistryItem<T> registryItem) {
+		Item item = registryItem.getValue();
 		if (item.getHasSubtypes()) {
 			NonNullList<ItemStack> stacks = NonNullList.create();
 			item.getSubItems(item.getCreativeTab(), stacks);
-			for (ItemStack stack : stacks) {
-				String variant = "variant=meta" + stack.getItemDamage();
-				if (item instanceof IMetaRenderer) {
-					IMetaRenderer meta = (IMetaRenderer) item;
-					variant = "variant=" + meta.getVariant(stack.getItemDamage()).getName();
-				}
-				ModelLoader.setCustomModelResourceLocation(item, stack.getItemDamage(), new ModelResourceLocation(modid + ":" + "items/" + item.getUnlocalizedName().substring(5), variant));
-			}
+			stacks.forEach(s -> ModelLoader.setCustomModelResourceLocation(item, s.getItemDamage(), registryItem.getItemMetadataRendererLocation(modid, s)));
 		} else {
-			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(new ResourceLocation(modid, item.getUnlocalizedName().substring(5)), "inventory"));
+			ModelLoader.setCustomModelResourceLocation(item, 0, registryItem.getItemRendererLocation(modid, item));
 
 		}
 	}

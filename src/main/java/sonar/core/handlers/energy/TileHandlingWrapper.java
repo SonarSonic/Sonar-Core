@@ -31,14 +31,17 @@ public class TileHandlingWrapper implements IEnergyHandler {
         return EnumEnergyWrapperType.EXTERNAL_TILE;
     }
 
+    @Override
     public EnergyType getEnergyType(){
         return type;
     }
 
+    @Override
     public boolean canAddEnergy(){
         return canAdd;
     }
 
+    @Override
     public boolean canRemoveEnergy(){
         return canRemove;
     }
@@ -48,10 +51,12 @@ public class TileHandlingWrapper implements IEnergyHandler {
         return canRead;
     }
 
+    @Override
     public long addEnergy(long add, ActionType actionType){
         return handler.addEnergy(add, tile, face, actionType);
     }
 
+    @Override
     public long removeEnergy(long remove, ActionType actionType){
         return handler.removeEnergy(remove, tile, face, actionType);
     }
