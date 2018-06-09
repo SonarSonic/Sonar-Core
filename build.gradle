@@ -52,19 +52,19 @@ repositories {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "${minecraft_version}-${mod_version}"
-group= "sonar.core"
+if (hasProperty('appendBuildNumber')) {
+    version = version + "-" + appendBuildNumber.toString()
+} else {
+    version = version + "-inofficial"
+}
+group_prefix = "sonar"
+group = "sonar.core"
 archivesBaseName = "core"
 sourceCompatibility = targetCompatibility = "1.8"
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
-version = "${config.mod_version}"
-if (hasProperty('appendBuildNumber')) {
-    version = version + "-" + appendBuildNumber.toString()
-} else {
-    version = version + "-inofficial"
-}
 
 minecraft {
     version = "${forge_version}"
@@ -138,9 +138,9 @@ publishing {
     tasks.publish.dependsOn 'build'
     publications {
         mavenJava(MavenPublication) {
-            groupId config.group_prefix
-            version config.minecraft_version + "-" + project.version
-            artifactId config.mod_id
+            groupId group_prefix
+            version minecraft_version + "-" + version
+            artifactId "sonarcore"
             artifact jar
             artifact sourceJar
             artifact deobfJar
