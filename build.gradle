@@ -49,6 +49,7 @@ repositories {
     }
 }
 
+apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "${minecraft_version}-${mod_version}"
