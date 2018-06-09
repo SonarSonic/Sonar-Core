@@ -47,6 +47,17 @@ public class ContainerSync extends ContainerSonar {
 		}
 	}
 
+	@Override
+	public void addListener(IContainerListener listener){
+		super.addListener(listener);
+        if (listener instanceof EntityPlayerMP) {
+            NBTTagCompound saveData = sync.writeData(new NBTTagCompound(), SyncType.SAVE);
+            if (!saveData.hasNoTags()) {
+                SonarCore.network.sendTo(new PacketTileSync(tile.getCoords().getBlockPos(), saveData, SyncType.SAVE), (EntityPlayerMP) listener);
+            }
+        }
+	}
+
 	public final void sendPacketToListeners(IMessage packet){
 		for (IContainerListener o : listeners) {
 			if (o instanceof EntityPlayerMP) {
