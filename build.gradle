@@ -206,7 +206,7 @@ curseforge {
         }
 
         mainArtifact(jar) {
-            displayName = "Sonar-Core-${version}"
+            displayName = "Sonar-Core-${minecraft_version}-${mod_version}"
             releaseType = commit_release_type.equals('none') ? 'release' : commit_release_type //throws if not release, beta or alpha
             changelog = file("${projectDir}/change_log.html").text
             changelogType = 'html'
