@@ -166,8 +166,10 @@ publishing {
 //// DETECTING COMMIT NAME AND ACTIVATING CURSE RELEASE \\\\
 
 def commit_release_type = getCommmitReleaseType()
+
 def getCommmitReleaseType(){
     if(project.hasProperty("curseforge_key")){
+
         def stdout = new ByteArrayOutputStream()
         try {
             exec {
@@ -179,23 +181,39 @@ def getCommmitReleaseType(){
             e.printStackTrace();
             return 'none';
         }
+
         String commit = stdout.toString().trim()
 
-        if(commit.contains("Release") || commit.contains("release")){ System.out.println("FOUND NEW RELEASE - COMMIT: " + commit); return 'release' }
-        else if(commit.contains("Beta") || commit.contains("beta")){ System.out.println("FOUND NEW BETA - COMMIT: " + commit); return 'beta' }
-        else if(commit.contains("Alpha") || commit.contains("alpha")){ System.out.println("FOUND NEW ALPHA - COMMIT: " + commit); return 'alpha' }
-        else{System.out.println("SKIPPING CURSE RELEASE - COMMIT: " + commit)}
+        if(commit.startsWith("Release") || commit.startsWith("release")){
+            System.out.println("FOUND NEW RELEASE - COMMIT: " + commit);
+            return 'release'
+
+        }else if(commit.startsWith("Beta") || commit.startsWith("beta")){
+            System.out.println("FOUND NEW BETA - COMMIT: " + commit);
+            return 'beta'
+
+        }else if(commit.startsWith("Alpha") || commit.startsWith("alpha")){
+            System.out.println("FOUND NEW ALPHA - COMMIT: " + commit);
+            return 'alpha'
+        }else{
+            System.out.println("SKIPPING CURSE RELEASE - COMMIT: " + commit)
+        }
+
     }
+
     System.out.println("SKIPPING CURSE RELEASE - NO CURSE API KEY")
     return 'none';
 }
 
 tasks.curseforge.enabled = project.hasProperty("curseforge_key") && !commit_release_type.equals('none')
+
 curseforge {
+
     if(project.hasProperty("curseforge_key") && !commit_release_type.equals('none')) {
         System.out.println("ATTEMPTING CURSE RELEASE")
         apiKey = project.properties["curseforge_key"]
     }
+
     project {
         id = curse_project_id
 
@@ -207,7 +225,8 @@ curseforge {
 
         mainArtifact(jar) {
             displayName = "Sonar-Core-${minecraft_version}-${mod_version}"
-            releaseType = commit_release_type.equals('none') ? 'release' : commit_release_type //throws if not release, beta or alpha
+            //throws if not release, beta or alpha
+            releaseType = !commit_release_type.equals('none') ? commit_release_type : 'release'
             changelog = file("${projectDir}/change_log.html").text
             changelogType = 'html'
         }
