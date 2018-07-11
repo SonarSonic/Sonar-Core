@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 public class EnergyTransferHandler {
 
-    //// A SONAR CORE TRANSFER HANDLER - ALLOWS ALL TRANSFERS/CONVERSIONS \\\\
+    //// THE SONAR CORE TRANSFER HANDLER - ALLOWS ALL TRANSFERS/CONVERSIONS \\\\
     public static final SonarTransferProxy PROXY_SC = new SonarTransferProxy();
     public static final EnergyTransferHandler INSTANCE_SC = new EnergyTransferHandler(PROXY_SC);
 
@@ -72,8 +72,11 @@ public class EnergyTransferHandler {
 
     @Nullable
     public IItemEnergyHandler getItemHandler(ItemStack stack){
+        if(!transferProxy.canConnectItem(stack)){
+            return null;
+        }
        for(IItemEnergyHandler handler : SonarCore.itemEnergyHandlers){
-           if(transferProxy.isItemEnergyTypeEnabled(handler.getEnergyType()) && transferProxy.canConnectItem(stack)) {
+           if(transferProxy.isItemEnergyTypeEnabled(handler.getEnergyType())) {
                if (handler.canAddEnergy(stack) || handler.canRemoveEnergy(stack)) {
                    return handler;
                }
@@ -84,8 +87,11 @@ public class EnergyTransferHandler {
 
     @Nullable
     public ITileEnergyHandler getTileHandler(TileEntity tile, EnumFacing face){
+        if(!transferProxy.canConnectTile(tile, face)){
+            return null;
+        }
         for(ITileEnergyHandler handler : SonarCore.tileEnergyHandlers){
-            if(transferProxy.isTileEnergyTypeEnabled(handler.getEnergyType()) && transferProxy.canConnectTile(tile, face)) {
+            if(transferProxy.isTileEnergyTypeEnabled(handler.getEnergyType())) {
                 if (handler.canAddEnergy(tile, face) || handler.canRemoveEnergy(tile, face)) {
                     return handler;
                 }
@@ -168,6 +174,18 @@ public class EnergyTransferHandler {
         }
         ITileEnergyHandler handler = getTileHandler(tile, face);
         return handler != null && handler.canReadEnergy(tile, face);
+    }
+
+    public boolean canRenderConnection(TileEntity tile, EnumFacing face){
+        if(tile == null || !transferProxy.canConnectTile(tile, face)){
+            return false;
+        }
+        for(ITileEnergyHandler handler : SonarCore.tileEnergyHandlers){
+            if(transferProxy.isTileEnergyTypeEnabled(handler.getEnergyType()) && handler.canRenderConnection(tile, face)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public long convertedAction(long toConvert, EnergyType from, EnergyType to, Function<Long, Long> action){

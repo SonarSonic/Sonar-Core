@@ -1,9 +1,5 @@
 package sonar.core.network;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import mcmultipart.api.multipart.IMultipartTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -24,9 +20,11 @@ import sonar.core.api.IFlexibleGui;
 import sonar.core.integration.SonarLoader;
 import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.integration.multipart.TileSonarMultipart;
-//import sonar.core.integration.multipart.SonarMultipart;
-//import sonar.core.integration.multipart.SonarMultipartHelper;
 import sonar.core.utils.Pair;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class FlexibleGuiHandler {
 
@@ -72,6 +70,10 @@ public class FlexibleGuiHandler {
 			return new Pair(obj, obj);
 		}
 		return null;
+	}
+
+	public void openBasicTile(EntityPlayer player, TileEntity tile, int id) {
+		openBasicTile(false, player, tile.getWorld(), tile.getPos(), id);
 	}
 
 	public void openBasicTile(EntityPlayer player, World world, BlockPos pos, int id) {

@@ -42,6 +42,11 @@ public class EnergyStorageWrapper implements IEnergyHandler {
     }
 
     @Override
+    public boolean canRenderConnection() {
+        return true;
+    }
+
+    @Override
     public long addEnergy(long add, ActionType actionType) {
         return storage.receiveEnergy((int)Math.min(Integer.MAX_VALUE, add), actionType.shouldSimulate());
     }

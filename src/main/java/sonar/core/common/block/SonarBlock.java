@@ -75,21 +75,22 @@ public class SonarBlock extends Block implements IWrenchable {
     @Override
     public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         dropInventoryContents(world, pos, state);
+
+        int count = quantityDropped(state, 0, SonarCore.rand);
+        for (int i = 0; i < count; i++) {
+            Item item = getItemDropped(state, SonarCore.rand, 0);
+            if (item != Items.AIR) {
+                ItemStack stack = new ItemStack(item, 1, damageDropped(state));
+                writeDropStack(stack, state, pos, world);
+                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+            }
+        }
+
         super.breakBlock(world, pos, state);
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        int count = quantityDropped(state, fortune, SonarCore.rand);
-        for (int i = 0; i < count; i++) {
-            Item item = getItemDropped(state, SonarCore.rand, fortune);
-            if (item != Items.AIR) {
-                ItemStack stack = new ItemStack(item, 1, damageDropped(state));
-                writeDropStack(stack, state, pos, world);
-                drops.add(stack);
-            }
-        }
-    }
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
 
     @Override
     public boolean canWrench(EntityPlayer player, World world, BlockPos pos){

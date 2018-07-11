@@ -6,6 +6,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 
+@Deprecated
 public abstract class SyncTagType<T> extends SyncPart {
 
 	public static class BOOLEAN extends SyncTagType<Boolean> {

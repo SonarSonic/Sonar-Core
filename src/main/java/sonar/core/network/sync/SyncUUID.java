@@ -1,12 +1,13 @@
 package sonar.core.network.sync;
 
-import java.util.UUID;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.helpers.NBTHelper.SyncType;
 
+import java.util.UUID;
+
+@Deprecated
 public class SyncUUID extends SyncPart {
 
     public UUID current;

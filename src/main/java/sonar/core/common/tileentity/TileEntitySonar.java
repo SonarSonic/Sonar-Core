@@ -1,7 +1,5 @@
 package sonar.core.common.tileentity;
 
-import java.util.List;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,12 +18,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import sonar.core.SonarCore;
+import sonar.core.api.inventories.ISonarInventoryTile;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.helpers.NBTHelper;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.IWailaInfo;
-import sonar.core.api.inventories.ISonarInventoryTile;
 import sonar.core.network.PacketRequestSync;
 import sonar.core.network.PacketTileSync;
 import sonar.core.network.sync.IDirtyPart;
@@ -34,6 +32,7 @@ import sonar.core.network.sync.SyncableList;
 import sonar.core.utils.IWorldPosition;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class TileEntitySonar extends TileEntity implements ISyncableListener, ITickable, INBTSyncable, IWailaInfo, IWorldPosition {
 
@@ -186,14 +185,13 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 	}
 
 	public void markBlockForUpdate() {
-		if (this.isServer()) {
+		if (isServer()) {
 			markDirty();
 			SonarCore.sendFullSyncAroundWithRenderUpdate(this, 128);
 		} else {
 			getWorld().markBlockRangeForRenderUpdate(pos, pos);
 			getWorld().getChunkFromBlockCoords(getPos()).setModified(true);
 		}
-		// may need some more stuff, here to make life easier
 	}
 
 	public boolean maxRender() {
@@ -242,7 +240,7 @@ public class TileEntitySonar extends TileEntity implements ISyncableListener, IT
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, @Nonnull IBlockState oldState, @Nonnull IBlockState newState) {
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
 }

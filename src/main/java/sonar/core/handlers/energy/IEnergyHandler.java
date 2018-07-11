@@ -16,6 +16,8 @@ public interface IEnergyHandler {
 
     boolean canReadEnergy();
 
+    boolean canRenderConnection();
+
     /**returns how much energy was added*/
     long addEnergy(long add, ActionType actionType);
 

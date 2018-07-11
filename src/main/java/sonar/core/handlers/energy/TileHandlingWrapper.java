@@ -52,6 +52,11 @@ public class TileHandlingWrapper implements IEnergyHandler {
     }
 
     @Override
+    public boolean canRenderConnection() {
+        return handler.canRenderConnection(tile, face);
+    }
+
+    @Override
     public long addEnergy(long add, ActionType actionType){
         return handler.addEnergy(add, tile, face, actionType);
     }

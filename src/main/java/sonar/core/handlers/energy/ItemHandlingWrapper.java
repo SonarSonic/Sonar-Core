@@ -49,6 +49,11 @@ public class ItemHandlingWrapper implements IEnergyHandler {
     }
 
     @Override
+    public boolean canRenderConnection() {
+        return true;
+    }
+
+    @Override
     public long addEnergy(long add, ActionType actionType){
         return handler.addEnergy(add, stack, actionType);
     }
