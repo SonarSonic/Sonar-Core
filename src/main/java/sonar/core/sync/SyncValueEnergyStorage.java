@@ -98,7 +98,7 @@ public class SyncValueEnergyStorage extends EnergyStorage implements ISyncValue<
     @Override
     public final int extractEnergy(int maxExtract, boolean simulate){
         int prev_energy = energy;
-        int extracted = super.extractEnergy(maxReceive, simulate);
+        int extracted = super.extractEnergy(maxExtract, simulate);
         if(prev_energy != energy){
             setDirty(true);
             watcher.onSyncValueChanged(this);
