@@ -1,29 +1,23 @@
 package sonar.core.network.sync;
 
-import cofh.redstoneflux.api.IEnergyStorage;
 import io.netty.buffer.ByteBuf;
-import net.darkhax.tesla.api.ITeslaConsumer;
-import net.darkhax.tesla.api.ITeslaHolder;
-import net.darkhax.tesla.api.ITeslaProducer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fml.common.Optional;
 import sonar.core.api.energy.ISonarEnergyStorage;
 import sonar.core.api.utils.ActionType;
+import sonar.core.handlers.energy.InternalEnergyStorageWrapper;
 import sonar.core.helpers.NBTHelper.SyncType;
 
-@Optional.InterfaceList({
-        @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "tesla"),
-        @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "tesla"),
-        @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaProducer", modid = "tesla"),
-        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyStorage", modid = "redstoneflux")
-})
-public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage, net.minecraftforge.energy.IEnergyStorage, IEnergyStorage, ISyncPart, ITeslaConsumer, ITeslaProducer, ITeslaHolder, INBTSerializable<NBTTagCompound> {
+import javax.annotation.Nullable;
+
+public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage, INBTSerializable<NBTTagCompound>, ISyncPart {
 
 	private long energy;
 	private long capacity;
 	private long maxReceive;
 	private long maxExtract;
+	private InternalEnergyStorageWrapper[] wrappers = new InternalEnergyStorageWrapper[7];
 
 	private String tagName = "energyStorage";
 
@@ -39,6 +33,19 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 		this.capacity = capacity;
 		this.maxReceive = maxReceive;
 		this.maxExtract = maxExtract;
+	}
+
+	public InternalEnergyStorageWrapper getOrCreateWrapper(@Nullable EnumFacing face){
+		int id = face == null ? 6 : face.getIndex();
+		if(wrappers[id] != null){
+			return wrappers[id];
+		}else{
+			return wrappers[id] = new InternalEnergyStorageWrapper(this, face);
+		}
+	}
+
+	public InternalEnergyStorageWrapper getInternalWrapper(){
+		return getOrCreateWrapper(null);
 	}
 
 	public SyncEnergyStorage setCapacity(int capacity) {
@@ -77,7 +84,7 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 		return maxExtract;
 	}
 
-	public void setEnergyStored(int energy) {
+	public void setEnergyStored(long energy) {
 		this.energy = energy;
 		if (this.energy > capacity) {
 			this.energy = capacity;
@@ -87,7 +94,7 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 		this.markChanged();
 	}
 
-	public void modifyEnergyStored(int energy) {
+	public void modifyEnergyStored(long energy) {
 		this.energy += energy;
 
 		if (this.energy > capacity) {
@@ -164,7 +171,7 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 
 	///// * SONAR *//////
     @Override
-	public long addEnergy(long maxReceive, ActionType action) {
+	public long addEnergy(long maxReceive, EnumFacing face, ActionType action) {
 		long add = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
 
 		if (!action.shouldSimulate()) {
@@ -175,8 +182,7 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 	}
 
     @Override
-	public long removeEnergy(long maxExtract, ActionType action) {
-
+	public long removeEnergy(long maxExtract, EnumFacing face, ActionType action) {
 		long energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
 
 		if (!action.shouldSimulate()) {
@@ -184,6 +190,14 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 			this.markChanged();
 		}
 		return energyExtracted;
+	}
+
+	public boolean canExtract(EnumFacing face) {
+		return true;
+	}
+
+	public boolean canReceive(EnumFacing face) {
+		return true;
 	}
 
     @Override
@@ -196,44 +210,6 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 		return capacity;
 	}
 
-	///// * CoFH *//////
-	public int receiveEnergy(int maxReceive, boolean simulate) {
-		return (int) addEnergy(maxReceive, ActionType.getTypeForAction(simulate));
-	}
-
-	public int extractEnergy(int maxExtract, boolean simulate) {
-		return (int) removeEnergy(maxExtract, ActionType.getTypeForAction(simulate));
-	}
-
-	public int getEnergyStored() {
-		return (int) Math.min(getEnergyLevel(), Integer.MAX_VALUE);
-	}
-
-	public int getMaxEnergyStored() {
-		return (int) Math.min(getFullCapacity(), Integer.MAX_VALUE);
-	}
-
-	///// * TESLA *//////
-	@Override
-	public long getStoredPower() {
-		return getEnergyStored();
-	}
-
-	@Override
-	public long getCapacity() {
-		return getMaxEnergyStored();
-	}
-
-	@Override
-	public long takePower(long power, boolean simulated) {
-		return removeEnergy(Math.min(Integer.MAX_VALUE, power), ActionType.getTypeForAction(simulated));
-	}
-
-	@Override
-	public long givePower(long power, boolean simulated) {
-		return addEnergy(power, ActionType.getTypeForAction(simulated));
-	}
-
 	@Override
 	public NBTTagCompound serializeNBT() {
 		return this.writeToNBT(new NBTTagCompound());
@@ -242,15 +218,5 @@ public class SyncEnergyStorage extends DirtyPart implements ISonarEnergyStorage,
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
 		this.readData(nbt, SyncType.SAVE);
-	}
-
-	@Override
-	public boolean canExtract() {
-		return true;// may need to link to something else
-	}
-
-	@Override
-	public boolean canReceive() {
-		return true;// may need to link to something else
 	}
 }

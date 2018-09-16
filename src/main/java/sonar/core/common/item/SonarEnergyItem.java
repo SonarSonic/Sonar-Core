@@ -42,12 +42,12 @@ public class SonarEnergyItem extends SonarItem implements ISonarEnergyItem, IEne
 	/////* SONAR *//////	
 	@Override
 	public long addEnergy(ItemStack stack, long maxReceive, ActionType action) {
-		return storage.setItemStack(stack).addEnergy(maxReceive, action);
+		return storage.setItemStack(stack).getInternalWrapper().addEnergy(maxReceive, action);
 	}
 
 	@Override
 	public long removeEnergy(ItemStack stack, long maxExtract, ActionType action) {
-		return storage.setItemStack(stack).removeEnergy(maxExtract, action);
+		return storage.setItemStack(stack).getInternalWrapper().removeEnergy(maxExtract,  action);
 	}
 
 	@Override
@@ -64,25 +64,25 @@ public class SonarEnergyItem extends SonarItem implements ISonarEnergyItem, IEne
 	@Override
     @Optional.Method(modid = "redstoneflux")
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
-		return storage.setItemStack(container).receiveEnergy(maxReceive, simulate);
+		return storage.setItemStack(container).getInternalWrapper().receiveEnergy(maxReceive, simulate);
 	}
 
 	@Override
     @Optional.Method(modid = "redstoneflux")
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
-		return storage.setItemStack(container).extractEnergy(maxExtract, simulate);
+		return storage.setItemStack(container).getInternalWrapper().extractEnergy(maxExtract, simulate);
 	}
 
 	@Override
     @Optional.Method(modid = "redstoneflux")
 	public int getEnergyStored(ItemStack container) {
-		return storage.setItemStack(container).getEnergyStored();
+		return storage.setItemStack(container).getInternalWrapper().getEnergyStored();
 	}
 
 	@Override
     @Optional.Method(modid = "redstoneflux")
 	public int getMaxEnergyStored(ItemStack container) {
-		return storage.setItemStack(container).getMaxEnergyStored();
+		return storage.setItemStack(container).getInternalWrapper().getMaxEnergyStored();
 	}
 
 	@Override

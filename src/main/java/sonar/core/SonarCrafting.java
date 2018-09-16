@@ -8,12 +8,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import sonar.core.common.block.StableStone.Variants;
-import sonar.core.integration.SonarLoader;
 
 public class SonarCrafting extends SonarCore {
 	public static void registerCraftingRecipes() {
@@ -47,7 +47,7 @@ public class SonarCrafting extends SonarCore {
 			addShapeless(SonarConstants.MODID, group, new ItemStack(SonarCore.stableStone[i], 1), fromBlock(SonarCore.stablestonerimmedblackBlock[i]));
 		}
 
-		if (!SonarLoader.calculatorLoaded()) {
+		if (!Loader.isModLoaded("calculator")) {
 			addShapelessOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedStoneBlock, 1), "cobblestone", "plankWood");
 			addShapelessOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedStoneBlock, 4), "cobblestone", "logWood");
 			addShapelessOre(SonarConstants.MODID, new ItemStack(SonarCore.reinforcedDirtBlock, 1), Blocks.DIRT, "plankWood");

@@ -12,4 +12,12 @@ public enum EnumFilterType {
         return this == type;
     }
 
+    public boolean isInternal(){
+        return this == INTERNAL || this == EXTERNAL_INTERNAL;
+    }
+
+    public boolean isExternal(){
+        return this == EXTERNAL || this == EXTERNAL_INTERNAL;
+    }
+
 }

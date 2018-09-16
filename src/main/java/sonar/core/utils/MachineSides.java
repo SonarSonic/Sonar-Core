@@ -1,9 +1,6 @@
 package sonar.core.utils;
 
-import java.util.ArrayList;
-
 import com.google.common.collect.Lists;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,15 +10,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import sonar.core.SonarCore;
-import sonar.core.helpers.NBTHelper.SyncType;
-import sonar.core.helpers.SonarHelper;
 import sonar.core.handlers.inventories.handling.filters.IExtractFilter;
 import sonar.core.handlers.inventories.handling.filters.IInsertFilter;
+import sonar.core.helpers.NBTHelper.SyncType;
+import sonar.core.helpers.SonarHelper;
 import sonar.core.network.PacketSonarSides;
 import sonar.core.network.sync.DirtyPart;
 import sonar.core.network.sync.ISyncPart;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 public class MachineSides extends DirtyPart implements ISyncPart, IInsertFilter, IExtractFilter {
 
@@ -31,6 +29,8 @@ public class MachineSides extends DirtyPart implements ISyncPart, IInsertFilter,
 	public MachineSideConfig def;
 	public TileEntity tile;
 	public int[] input = new int[0], output = new int[0];
+	public Boolean default_extract = false;
+	public Boolean default_insert = false;
 
 	public MachineSides(MachineSideConfig def, TileEntity tile, Object... blocked) {
 		this.def = def;
@@ -190,7 +190,7 @@ public class MachineSides extends DirtyPart implements ISyncPart, IInsertFilter,
 		if(getSideConfig(face).isOutput()){
 			return SonarHelper.intContains(output, slot);
 		}
-		return false;
+		return default_extract;
 	}
 
 	@Override
@@ -198,6 +198,6 @@ public class MachineSides extends DirtyPart implements ISyncPart, IInsertFilter,
 		if(getSideConfig(face).isInput()){
 			return SonarHelper.intContains(input, slot);
 		}
-		return false;
+		return default_insert;
 	}
 }

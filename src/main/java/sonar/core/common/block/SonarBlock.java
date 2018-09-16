@@ -21,6 +21,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import sonar.core.SonarCore;
 import sonar.core.api.blocks.IWrenchable;
+import sonar.core.api.inventories.IAdditionalInventory;
 import sonar.core.api.inventories.ISonarInventoryTile;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.common.block.properties.SonarProperties;
@@ -152,6 +153,14 @@ public class SonarBlock extends Block implements IWrenchable {
         TileEntity tile = world.getTileEntity(pos);
         if(tile instanceof ISonarInventoryTile){
             List<ItemStack> stacks = ((ISonarInventoryTile) tile).inv().getDrops();
+            for (ItemStack itemstack : stacks){
+                if (!itemstack.isEmpty()){
+                    InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemstack);
+                }
+            }
+        }
+        if(tile instanceof IAdditionalInventory){
+            ItemStack[] stacks = ((IAdditionalInventory) tile).getAdditionalStacks();
             for (ItemStack itemstack : stacks){
                 if (!itemstack.isEmpty()){
                     InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemstack);

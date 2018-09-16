@@ -37,6 +37,7 @@ public class SonarControlledList<V> implements ISonarValue<List<V>>, SimpleObser
 
     @Override
     public boolean setValueInternal(List<V> set) {
+        value.clear();
         value.addAll(set);
         return true;
     }

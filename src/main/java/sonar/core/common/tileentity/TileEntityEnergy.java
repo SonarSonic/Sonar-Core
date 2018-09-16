@@ -4,20 +4,14 @@ import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyEmitter;
-import ic2.api.energy.tile.IEnergySink;
-import ic2.api.energy.tile.IEnergySource;
-import ic2.api.energy.tile.IEnergyTile;
+import ic2.api.energy.tile.*;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.Optional;
-import sonar.core.api.SonarAPI;
 import sonar.core.api.energy.EnergyMode;
 import sonar.core.api.energy.ISonarEnergyTile;
 import sonar.core.api.utils.ActionType;
@@ -47,7 +41,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	public void readData(NBTTagCompound nbt, SyncType type) {
 		super.readData(nbt, type);
 		if (type == SyncType.DROP) {
-			this.storage.setEnergyStored(nbt.getInteger("energy"));
+			this.storage.setEnergyStored(nbt.getLong("energy"));
 		}
 	}
 
@@ -55,7 +49,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	public NBTTagCompound writeData(NBTTagCompound nbt, SyncType type) {
 		super.writeData(nbt, type);
 		if (type == SyncType.DROP) {
-			nbt.setInteger("energy", this.storage.getEnergyStored());
+			nbt.setLong("energy", this.storage.getEnergyLevel());
 		}
 		return nbt;
 	}
@@ -81,11 +75,11 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		EnergyMode mode = getModeForSide(facing);
 		if (CapabilityEnergy.ENERGY == capability) {
-			return (T) storage.setCurrentFace(facing);
+			return (T) storage.getOrCreateWrapper(facing);
 		}
 		if (mode != null && SonarLoader.teslaLoaded && mode.canConnect()) {
 			if (capability == TeslaCapabilities.CAPABILITY_CONSUMER && mode.canRecieve() || capability == TeslaCapabilities.CAPABILITY_PRODUCER && mode.canSend() || capability == TeslaCapabilities.CAPABILITY_HOLDER)
-				return (T) storage.setCurrentFace(facing);
+				return (T) storage.getOrCreateWrapper(facing);
 		}
 		return super.getCapability(capability, facing);
 	}
@@ -118,20 +112,20 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	@Override
 	@Optional.Method(modid = "redstoneflux")
 	public int getEnergyStored(EnumFacing from) {
-		return storage.getEnergyStored();
+		return storage.getOrCreateWrapper(from).getEnergyStored();
 	}
 
 	@Override
 	@Optional.Method(modid = "redstoneflux")
 	public int getMaxEnergyStored(EnumFacing from) {
-		return storage.getMaxEnergyStored();
+		return storage.getOrCreateWrapper(from).getMaxEnergyStored();
 	}
 
 	@Override
 	@Optional.Method(modid = "redstoneflux")
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
 		if (energyMode.canSend())
-			return storage.extractEnergy(maxExtract, simulate);
+			return storage.getOrCreateWrapper(from).extractEnergy(maxExtract, simulate);
 		return 0;
 	}
 
@@ -139,7 +133,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	@Optional.Method(modid = "redstoneflux")
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 		if (energyMode.canRecieve())
-			return storage.receiveEnergy(maxReceive, simulate);
+			return storage.getOrCreateWrapper(from).receiveEnergy(maxReceive, simulate);
 		return 0;
 	}
 
@@ -179,7 +173,7 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	@Override
 	@Optional.Method(modid = "ic2")
 	public double getDemandedEnergy() {
-		return Math.min(EUHelper.getVoltage(this.getSinkTier()), this.storage.addEnergy(this.storage.getMaxReceive(), ActionType.getTypeForAction(true)) / 4);
+		return Math.min(EUHelper.getVoltage(this.getSinkTier()), this.storage.addEnergy((long)(this.storage.getMaxReceive() / 4), null, ActionType.getTypeForAction(true)));
 	}
 
 	@Override
@@ -197,8 +191,8 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	@Override
 	@Optional.Method(modid = "ic2")
 	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
-		int addRF = this.storage.receiveEnergy((int) amount * 4, true);
-		this.storage.addEnergy(addRF, ActionType.getTypeForAction(false));
+		int addRF = this.storage.getOrCreateWrapper(directionFrom).receiveEnergy((int) amount * 4, true);
+		this.storage.getOrCreateWrapper(directionFrom).addEnergy(addRF, ActionType.getTypeForAction(false));
 		return amount - addRF / 4;
 	}
 
@@ -211,13 +205,13 @@ public abstract class TileEntityEnergy extends TileEntitySonar implements IEnerg
 	@Override
 	@Optional.Method(modid = "ic2")
 	public double getOfferedEnergy() {
-		return Math.min(EUHelper.getVoltage(this.getSourceTier()), this.storage.removeEnergy(storage.getMaxExtract(), ActionType.getTypeForAction(true)) / 4);
+		return Math.min(EUHelper.getVoltage(this.getSourceTier()), this.storage.removeEnergy(storage.getMaxExtract(), null, ActionType.getTypeForAction(true)) / 4);
 	}
 
 	@Override
 	@Optional.Method(modid = "ic2")
 	public void drawEnergy(double amount) {
-		this.storage.removeEnergy((long) (amount * 4), ActionType.getTypeForAction(false));
+		this.storage.removeEnergy((long) (amount * 4), null, ActionType.getTypeForAction(false));
 	}
 
 	@Override

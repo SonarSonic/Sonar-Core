@@ -1,17 +1,11 @@
 package sonar.core.network.sync;
 
 import net.minecraft.util.EnumFacing;
-import sonar.core.api.energy.EnergyType;
 import sonar.core.api.energy.ISonarEnergyTile;
-import sonar.core.handlers.energy.EnergyTransferHandler;
-import sonar.core.handlers.energy.EnumEnergyWrapperType;
-import sonar.core.handlers.energy.IEnergyHandler;
 
 public class SyncSidedEnergyStorage extends SyncEnergyStorage {
 
 	private ISonarEnergyTile tile;
-    private EnumFacing currentFace;
-    private IEnergyHandler internalWrapper;
 
 	public SyncSidedEnergyStorage(ISonarEnergyTile tile, int capacity) {
 		this(tile, capacity, capacity, capacity);
@@ -26,22 +20,13 @@ public class SyncSidedEnergyStorage extends SyncEnergyStorage {
 		this.tile = tile;
 	}
 
-	public SyncEnergyStorage setCurrentFace(EnumFacing facing) {
-		currentFace = facing;
-		return this;
-	}
-
-	public IEnergyHandler getInternalWrapper(){
-		return internalWrapper == null ? internalWrapper = EnergyTransferHandler.INSTANCE_SC.getWrappedStorageHandler(this, EnumEnergyWrapperType.INTERNAL_TILE_STORAGE, EnergyType.FE) : internalWrapper;
+	@Override
+	public boolean canExtract(EnumFacing face) {
+        return face == null || tile.getModeForSide(face).canSend();
 	}
 
 	@Override
-	public boolean canExtract() {
-        return currentFace == null || tile.getModeForSide(currentFace).canSend();
-	}
-
-	@Override
-	public boolean canReceive() {
-        return currentFace == null || tile.getModeForSide(currentFace).canRecieve();
+	public boolean canReceive(EnumFacing face) {
+        return face == null || tile.getModeForSide(face).canRecieve();
 	}
 }
