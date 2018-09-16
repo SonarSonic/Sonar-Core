@@ -176,10 +176,10 @@ def getCommmitReleaseType(){
                 commandLine 'git', 'log', '-1', '--pretty=tformat:%s'
                 standardOutput = stdout
             }
-        }catch(Exception e){
+        } catch(Exception e) {
             System.print("SKIPPING CURSE RELEASE - FAILED TO RETRIEVE LAST COMMIT")
-            e.printStackTrace();
-            return 'none';
+            e.printStackTrace()
+            return 'none'
         }
 
         String commit = stdout.toString().trim()
@@ -197,12 +197,13 @@ def getCommmitReleaseType(){
             return 'alpha'
         }else{
             System.out.println("SKIPPING CURSE RELEASE - COMMIT: " + commit)
+            return 'none'
         }
 
     }
 
     System.out.println("SKIPPING CURSE RELEASE - NO CURSE API KEY")
-    return 'none';
+    return 'none'
 }
 
 tasks.curseforge.enabled = project.hasProperty("curseforge_key") && !commit_release_type.equals('none')
@@ -218,15 +219,14 @@ curseforge {
         id = curse_project_id
 
         relations {
-            optionalLibrary 'calculator'
-            optionalLibrary 'flux-networks'
-            optionalLibrary 'practical-logistics-2'
+            optionalDependency 'calculator'
+            optionalDependency 'flux-networks'
+            optionalDependency 'practical-logistics-2'
         }
 
         mainArtifact(jar) {
             displayName = "Sonar-Core-${minecraft_version}-${mod_version}"
-            //throws if not release, beta or alpha
-            releaseType = !commit_release_type.equals('none') ? commit_release_type : 'release'
+            releaseType = commit_release_type
             changelog = file("${projectDir}/change_log.html").text
             changelogType = 'html'
         }
