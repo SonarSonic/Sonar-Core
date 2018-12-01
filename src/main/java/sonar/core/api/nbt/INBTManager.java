@@ -2,6 +2,7 @@ package sonar.core.api.nbt;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+@Deprecated
 public interface INBTManager<T extends INBTObject> {
     T readFromNBT(NBTTagCompound tag);
 

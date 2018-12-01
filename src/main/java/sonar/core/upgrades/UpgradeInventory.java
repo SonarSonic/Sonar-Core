@@ -1,8 +1,5 @@
 package sonar.core.upgrades;
 
-import java.util.ArrayList;
-import java.util.Map.Entry;
-
 import gnu.trove.map.hash.THashMap;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
@@ -13,6 +10,9 @@ import sonar.core.SonarCore;
 import sonar.core.api.upgrades.IUpgradeInventory;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.network.sync.SyncPart;
+
+import java.util.ArrayList;
+import java.util.Map.Entry;
 
 public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
 
@@ -50,7 +50,7 @@ public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
     @Override
 	public boolean addUpgrade(ItemStack stack) {
 		if (!stack.isEmpty()) {
-			String upgrade = SonarCore.machineUpgrades.getSecondaryObject(stack.getItem());
+			String upgrade = MachineUpgradeRegistry.instance().getKey(stack.getItem());
 			if (upgrade != null) {
 				if (allowed.contains(upgrade) && maxUpgrades.get(upgrade).intValue() != upgrades.get(upgrade).intValue()) {
                     upgrades.put(upgrade, upgrades.get(upgrade) + 1);
@@ -68,7 +68,7 @@ public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
 			int stored = upgrades.get(type);
 			if (stored != 0) {
 				int remove = Math.min(amount, stored);
-				Item item = SonarCore.machineUpgrades.getPrimaryObject(type);
+				Item item = MachineUpgradeRegistry.instance().getValue(type);
 				if (item != null) {
 					upgrades.put(type, stored - remove);
 					return new ItemStack(item, remove);
@@ -90,7 +90,7 @@ public class UpgradeInventory extends SyncPart implements IUpgradeInventory {
 	public ArrayList<ItemStack> getDrops() {
         ArrayList<ItemStack> drops = new ArrayList<>();
 		for (Entry<String, Integer> entry : upgrades.entrySet()) {
-			Item item = SonarCore.machineUpgrades.getPrimaryObject(entry.getKey());
+			Item item = MachineUpgradeRegistry.instance().getValue(entry.getKey());
 			if (item != null && entry.getValue() != 0) {
 				drops.add(new ItemStack(item, entry.getValue()));
 				upgrades.put(entry.getKey(), 0);

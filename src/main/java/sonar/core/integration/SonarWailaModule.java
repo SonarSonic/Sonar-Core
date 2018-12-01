@@ -1,13 +1,6 @@
 package sonar.core.integration;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
-import mcp.mobius.waila.api.IWailaFMPAccessor;
-import mcp.mobius.waila.api.IWailaFMPProvider;
+import mcp.mobius.waila.api.*;
 import mcp.mobius.waila.api.impl.ModuleRegistrar;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -18,6 +11,8 @@ import net.minecraft.world.World;
 import sonar.core.common.tileentity.TileEntitySonar;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Integrations with WAILA - Registers all HUDs
@@ -48,13 +43,6 @@ public class SonarWailaModule {
 			TileEntity te = accessor.getTileEntity();
 			if (te == null)
 				return currenttip;
-			/*
-			TileHandler handler = OLDMultipartHelper.getHandler(te);
-			if (handler != null && handler instanceof IWailaInfo) {
-				IWailaInfo tile = (IWailaInfo) handler;
-				tile.getWailaInfo(currenttip, accessor.getBlockState());
-			}
-			*/
 			if (te instanceof IWailaInfo) {
 				IWailaInfo tile = (IWailaInfo) te;
 				tile.getWailaInfo(currenttip, accessor.getBlockState());

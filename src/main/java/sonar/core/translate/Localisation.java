@@ -10,16 +10,12 @@ public class Localisation {
         this.original = original;
     }
 
-    /**
-     * gets the translation
-     */
+    /** gets the translation */
     public String t() {
         return toDisplay;
     }
 
-    /**
-     * gets the original
-     */
+    /** gets the original */
     public String o() {
         return original;
     }

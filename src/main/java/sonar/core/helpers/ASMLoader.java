@@ -1,5 +1,23 @@
 package sonar.core.helpers;
 
+import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
+import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
+import org.apache.logging.log4j.Logger;
+import sonar.core.SonarCore;
+import sonar.core.api.asm.*;
+import sonar.core.api.energy.IItemEnergyHandler;
+import sonar.core.api.energy.ITileEnergyHandler;
+import sonar.core.api.fluids.ISonarFluidHandler;
+import sonar.core.api.planting.ISonarFertiliser;
+import sonar.core.api.planting.ISonarHarvester;
+import sonar.core.api.planting.ISonarPlanter;
+import sonar.core.handlers.planting.PlantingHandler;
+import sonar.core.utils.Pair;
+import sonar.core.utils.SortingDirection;
+
+import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -7,24 +25,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-
-import javax.annotation.Nonnull;
-
-import org.apache.logging.log4j.Logger;
-
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.discovery.ASMDataTable;
-import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
-import sonar.core.SonarCore;
-import sonar.core.api.asm.FluidHandler;
-import sonar.core.api.energy.IItemEnergyHandler;
-import sonar.core.api.energy.ITileEnergyHandler;
-import sonar.core.api.asm.ItemEnergyHandler;
-import sonar.core.api.asm.TileEnergyHandler;
-import sonar.core.api.fluids.ISonarFluidHandler;
-import sonar.core.utils.Pair;
-import sonar.core.utils.SortingDirection;
 
 public class ASMLoader {
 
@@ -38,6 +38,9 @@ public class ASMLoader {
 		SonarCore.tileEnergyHandlers = getTileEnergyHandlers(SonarCore.logger, asmDataTable);
 		SonarCore.fluidHandlers = getFluidHandlers(SonarCore.logger, asmDataTable);
 		SonarCore.itemEnergyHandlers = getItemEnergyHandlers(SonarCore.logger, asmDataTable);
+		PlantingHandler.instance().planters = getPlanters(SonarCore.logger, asmDataTable);
+		PlantingHandler.instance().harvesters = getHarvesters(SonarCore.logger, asmDataTable);
+		PlantingHandler.instance().fertilisers = getFertilisers(SonarCore.logger, asmDataTable);
 	}
 
 	public static List<ITileEnergyHandler> getTileEnergyHandlers(Logger logger, @Nonnull ASMDataTable asmDataTable) {
@@ -51,6 +54,19 @@ public class ASMLoader {
 	public static List<IItemEnergyHandler> getItemEnergyHandlers(Logger logger, @Nonnull ASMDataTable asmDataTable) {
 		return ASMLoader.getInstances(logger, asmDataTable, ItemEnergyHandler.class, IItemEnergyHandler.class, true, true);
 	}
+
+	public static List<ISonarPlanter> getPlanters(Logger logger, @Nonnull ASMDataTable asmDataTable) {
+		return ASMLoader.getInstances(logger, asmDataTable, ASMPlanter.class, ISonarPlanter.class, true, true);
+	}
+
+	public static List<ISonarHarvester> getHarvesters(Logger logger, @Nonnull ASMDataTable asmDataTable) {
+		return ASMLoader.getInstances(logger, asmDataTable, ASMHarvester.class, ISonarHarvester.class, true, true);
+	}
+
+	public static List<ISonarFertiliser> getFertilisers(Logger logger, @Nonnull ASMDataTable asmDataTable) {
+		return ASMLoader.getInstances(logger, asmDataTable, ASMFertiliser.class, ISonarFertiliser.class, true, true);
+	}
+
 
 	public static void log(Logger logger, ASMLog log, Class type, ASMData asm, String modid) {
 		switch (log) {

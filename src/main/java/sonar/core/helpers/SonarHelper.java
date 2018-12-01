@@ -1,23 +1,12 @@
 package sonar.core.helpers;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -30,6 +19,13 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import sonar.core.api.utils.BlockCoords;
 import sonar.core.utils.IWorldPosition;
 import sonar.core.utils.SortingDirection;
+
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * helps with getting tiles, adding energy and checking stacks
@@ -58,24 +54,22 @@ public class SonarHelper {
 		return world.getBlockState(pos.offset(side)).getBlock();
 	}
 
-	/*
-	public static void dropTile(EntityPlayer player, Block block, World world, BlockPos pos) {
-		ItemStack stack = player.getHeldItemMainhand();
-		TileEntity te = world.getTileEntity(pos);
-		if (SonarLoader.calculatorLoaded() && block == Calculator.conductormastBlock) {
-			if (world.getBlockState(pos.offset(EnumFacing.DOWN, 1)).getBlock() == GameRegistry.findBlock("calculator", "ConductorMast")) {
-				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 1), world.getBlockState(pos.offset(EnumFacing.DOWN, 1)), te, stack);
-			} else if (world.getBlockState(pos.offset(EnumFacing.DOWN, 2)).getBlock() == GameRegistry.findBlock("calculator", "ConductorMast")) {
-				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 2), world.getBlockState(pos.offset(EnumFacing.DOWN, 3)), te, stack);
-			} else if (world.getBlockState(pos.offset(EnumFacing.DOWN, 3)).getBlock() == GameRegistry.findBlock("calculator", "ConductorMast")) {
-
-				block.harvestBlock(world, player, pos.offset(EnumFacing.DOWN, 3), world.getBlockState(pos.offset(EnumFacing.DOWN, 3)), te, stack);
-			}
-		} else {
-			block.harvestBlock(world, player, pos, world.getBlockState(pos), te, stack);
+	public static <TILE> TILE getTile(World world, BlockPos pos, Class<TILE> type){
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile != null && type.isAssignableFrom(tile.getClass())) {
+			return (TILE) tile;
 		}
+		return null;
 	}
-	*/
+
+	public static <BLOCK> BLOCK getBlock(World world, BlockPos pos, Class<BLOCK> type){
+		Block block = world.getBlockState(pos).getBlock();
+		if(type.isAssignableFrom(block.getClass())) {
+			return (BLOCK) block;
+		}
+		return null;
+	}
+
 	public static Entity getEntity(Class entityClass, IWorldPosition tile, int range, boolean nearest) {
 		BlockCoords coords = tile.getCoords();
 
@@ -166,19 +160,6 @@ public class SonarHelper {
 		default:
 			return -1;
 		}
-	}
-
-	public static ItemStack createStackedBlock(Block block, int meta) {
-		if (block == null) {
-			return ItemStack.EMPTY;
-		}
-		Item item = Item.getItemFromBlock(block);
-        int j = 0;
-		if (item.getHasSubtypes()) {
-			j = meta;
-		}
-
-		return new ItemStack(item, 1, j);
 	}
 
 	public static EnumFacing offsetFacing(EnumFacing facing, EnumFacing front) {

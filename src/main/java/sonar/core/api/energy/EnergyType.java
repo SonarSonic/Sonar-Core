@@ -2,7 +2,7 @@ package sonar.core.api.energy;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-/** used for the various energy types created by different mods You can create one yourself for custom energy systems and register it with {@link RegistryWrapper} NOTE: this may not accommodate for all energy systems as some have far more to them*/
+/** used for the various energy types created by different mods You can create one yourself for custom energy systems NOTE: this may not accommodate for all energy systems as some have far more to them*/
 public enum EnergyType {
 
 	FE("Forge Energy", "FE", "FE/T"),

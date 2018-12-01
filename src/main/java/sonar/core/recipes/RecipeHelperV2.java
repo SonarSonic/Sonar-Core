@@ -1,19 +1,17 @@
 package sonar.core.recipes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import sonar.core.SonarCore;
 import sonar.core.handlers.inventories.ItemStackHelper;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * the new Flexible Recipe Helper, WARNING: addRecipes() needs to be called
@@ -211,7 +209,7 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
     /**
      * builds a recipe with the given inputs and outputs, this recipe can be overridden and customised,
      */
-	public T buildRecipe(ArrayList<ISonarRecipeObject> recipeInputs, ArrayList<ISonarRecipeObject> recipeOutputs, List additionals, boolean shapeless) {
+	public T buildRecipe(List<ISonarRecipeObject> recipeInputs, List<ISonarRecipeObject> recipeOutputs, List additionals, boolean shapeless) {
 		return (T) new DefaultSonarRecipe(recipeInputs, recipeOutputs, shapeless);
 	}
 
@@ -297,8 +295,8 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 	 * @param objs the current available ingredients
      * @return if all ingredients had matching objects or not
      */
-	public static boolean matchingIngredients(RecipeObjectType type, ArrayList<ISonarRecipeObject> ingredients, boolean shapeless, Object[] objs) {
-		ArrayList<ISonarRecipeObject> matches = (ArrayList<ISonarRecipeObject>) ingredients.clone();
+	public static boolean matchingIngredients(RecipeObjectType type, List<ISonarRecipeObject> ingredients, boolean shapeless, Object[] objs) {
+		List<ISonarRecipeObject> matches = Lists.newArrayList(ingredients);
 		if (ingredients.size() != objs.length) {
 			return false;
 		}
@@ -325,9 +323,9 @@ public abstract class RecipeHelperV2<T extends ISonarRecipe> implements IRecipeH
 		return true;
 	}
 
-	public static boolean matchingIngredient(Object obj, int pos, RecipeObjectType type, ArrayList<ISonarRecipeObject> matches, ArrayList<ISonarRecipeObject> ingredients, boolean shapeless) {
+	public static boolean matchingIngredient(Object obj, int pos, RecipeObjectType type, List<ISonarRecipeObject> matches, List<ISonarRecipeObject> ingredients, boolean shapeless) {
 		if (shapeless) {
-			for (ISonarRecipeObject ingredient : (ArrayList<ISonarRecipeObject>) matches.clone()) {
+			for (ISonarRecipeObject ingredient : Lists.newArrayList(matches)) {
 				if (ingredient.matches(obj, type)) {
 					matches.remove(ingredient);
 					return true;

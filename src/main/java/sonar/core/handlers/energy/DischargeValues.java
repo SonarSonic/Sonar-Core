@@ -1,63 +1,32 @@
 package sonar.core.handlers.energy;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import sonar.core.helpers.IRecipeHelper;
-import sonar.core.handlers.inventories.ItemStackHelper;
+import sonar.core.SonarCore;
+import sonar.core.helpers.SimpleRegistry;
 
-public class DischargeValues implements IRecipeHelper {
+public class DischargeValues extends SimpleRegistry<Item, Integer> {
 
-    public static Map<ItemStack, Integer> dischargeList = new HashMap<>();
-
-	public static void addValues() {
-		addValue(Items.REDSTONE, 1000);
-		addValue(Items.COAL, 500);
-		addValue(Blocks.COAL_BLOCK, 4500);
-		addValue(Blocks.REDSTONE_BLOCK, 9000);
+	public static DischargeValues instance(){
+		return SonarCore.instance.dischargeValues;
 	}
 
-	private static void clearList() {
-		dischargeList.clear();
+	public void register() {
+		register(Items.REDSTONE, 1000);
+		register(Items.COAL, 500);
+		register(Blocks.COAL_BLOCK, 4500);
+		register(Blocks.REDSTONE_BLOCK, 9000);
 	}
 
-	public static void addValue(Object object, int power) {
-		if (object != null) {
-			ItemStack stack = ItemStackHelper.getOrCreateStack(object);
-			if (!stack.isEmpty())
-				dischargeList.put(stack, power);
-		}
+	public int getValue(ItemStack stack){
+		Integer value = getValue(stack.getItem());
+		return value != null ? value : 0;
 	}
 
-	public static int getValueOf(ItemStack stack) {
-        Iterator<Map.Entry<ItemStack, Integer>> iterator = dischargeList.entrySet().iterator();
-
-        Map.Entry<ItemStack, Integer> entry;
-        if (!iterator.hasNext()) {
-            return 0;
-        }
-        entry = iterator.next();
-        while (!ItemStackHelper.equalStacksRegular(stack, entry.getKey())) {
-			if (!iterator.hasNext()) {
-				return 0;
-			}
-            entry = iterator.next();
-        }
-
-        return entry.getValue();
-	}
-
-	@Override
-	public String getRecipeID() {
-		return "Discharge";
-	}
-
-	@Override
-	public Map<ItemStack, Integer> getRecipes() {
-		return dischargeList;
+	public void register(Block block, Integer value){
+		super.register(Item.getItemFromBlock(block), value);
 	}
 }

@@ -1,9 +1,6 @@
 package sonar.core.api.energy;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import sonar.core.api.energy.EnergyType;
 import sonar.core.api.utils.ActionType;
 
 /**the handler Flux Networks uses to transfer energy*/

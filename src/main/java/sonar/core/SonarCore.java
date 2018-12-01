@@ -8,7 +8,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -29,13 +28,11 @@ import sonar.core.api.energy.ITileEnergyHandler;
 import sonar.core.api.fluids.ISonarFluidHandler;
 import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.handlers.energy.DischargeValues;
+import sonar.core.handlers.planting.PlantingHandler;
 import sonar.core.helpers.ASMLoader;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.SonarLoader;
 import sonar.core.integration.SonarWailaModule;
-import sonar.core.integration.planting.FertiliserRegistry;
-import sonar.core.integration.planting.HarvesterRegistry;
-import sonar.core.integration.planting.PlanterRegistry;
 import sonar.core.network.*;
 import sonar.core.network.utils.IByteBufTile;
 import sonar.core.upgrades.MachineUpgradeRegistry;
@@ -56,13 +53,11 @@ public class SonarCore {
 	public static List<ISonarFluidHandler> fluidHandlers;
 	public static List<ITileEnergyHandler> tileEnergyHandlers;
 	public static List<IItemEnergyHandler> itemEnergyHandlers;
-	public static MachineUpgradeRegistry machineUpgrades = new MachineUpgradeRegistry();
 	public static SimpleNetworkWrapper network;
 	public FlexibleGuiHandler guiHandler = new FlexibleGuiHandler();
-
-	public static PlanterRegistry planters = new PlanterRegistry();
-	public static HarvesterRegistry harvesters = new HarvesterRegistry();
-	public static FertiliserRegistry fertilisers = new FertiliserRegistry();
+	public MachineUpgradeRegistry machine_upgrades = new MachineUpgradeRegistry();
+	public PlantingHandler planting_handler = new PlantingHandler();
+	public DischargeValues dischargeValues = new DischargeValues();
 
 	public static Logger logger = (Logger) LogManager.getLogger(SonarConstants.MODID);
 
@@ -120,56 +115,51 @@ public class SonarCore {
 		} else {
 			logger.warn("'WAILA' - unavailable or disabled in config");
 		}
-		MinecraftForge.EVENT_BUS.register(new SonarEvents());
 		logger.info("Registered Events");
-		machineUpgrades.register();
-		planters.register();
-		harvesters.register();
-		fertilisers.register();
 		proxy.load(event);
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		logger.info("Adding Discharge Values");
-		DischargeValues.addValues();
-		logger.info("Added " + DischargeValues.dischargeList.size() + " Discharge Values");
-		for (Map.Entry<ItemStack, Integer> entry : DischargeValues.dischargeList.entrySet()) {
+		dischargeValues.register();
+		logger.info("Added " + dischargeValues.getRegisterCount() + " Discharge Values");
+		for (Map.Entry<Item, Integer> entry : dischargeValues.registry_ni.entrySet()) {
 			logger.info("Discharge Values: " + entry.toString());
 		}
 		logger.info("Registered " + fluidHandlers.size() + " Fluid Providers");
 		logger.info("Registered " + tileEnergyHandlers.size() + " Energy Handlers");
 		logger.info("Registered " + itemEnergyHandlers.size() + " Energy Container Providers");
-		logger.info("Registered " + machineUpgrades.getMap().size() + " Machine Upgrades");
+		//logger.info("Registered " + machineUpgrades.getMap().size() + " Machine Upgrades");
 		proxy.postLoad(event);
 	}
 
 	private void registerPackets() {
+		int id = 0;
 		if (network == null) {
 			network = NetworkRegistry.INSTANCE.newSimpleChannel("Sonar-Packets");
-			network.registerMessage(PacketTileSync.Handler.class, PacketTileSync.class, 0, Side.CLIENT);
-			network.registerMessage(PacketSonarSides.Handler.class, PacketSonarSides.class, 1, Side.CLIENT);
-			network.registerMessage(PacketRequestSync.Handler.class, PacketRequestSync.class, 2, Side.SERVER);
-			network.registerMessage(PacketByteBuf.Handler.class, PacketByteBuf.class, 4, Side.CLIENT);
-			network.registerMessage(PacketByteBuf.Handler.class, PacketByteBuf.class, 5, Side.SERVER);
-			network.registerMessage(PacketBlockInteraction.Handler.class, PacketBlockInteraction.class, 6, Side.SERVER);
-			network.registerMessage(PacketStackUpdate.Handler.class, PacketStackUpdate.class, 7, Side.CLIENT);
-			network.registerMessage(PacketInvUpdate.Handler.class, PacketInvUpdate.class, 8, Side.CLIENT);
-			network.registerMessage(PacketTileSyncUpdate.Handler.class, PacketTileSyncUpdate.class, 9, Side.CLIENT);
+			network.registerMessage(PacketTileSync.Handler.class, PacketTileSync.class, id++, Side.CLIENT);
+			network.registerMessage(PacketSonarSides.Handler.class, PacketSonarSides.class, id++, Side.CLIENT);
+			network.registerMessage(PacketRequestSync.Handler.class, PacketRequestSync.class, id++, Side.SERVER);
+			network.registerMessage(PacketByteBuf.Handler.class, PacketByteBuf.class, id++, Side.CLIENT);
+			network.registerMessage(PacketByteBuf.Handler.class, PacketByteBuf.class, id++, Side.SERVER);
+			network.registerMessage(PacketStackUpdate.Handler.class, PacketStackUpdate.class, id++, Side.CLIENT);
+			network.registerMessage(PacketInvUpdate.Handler.class, PacketInvUpdate.class, id++, Side.CLIENT);
+			network.registerMessage(PacketTileSyncUpdate.Handler.class, PacketTileSyncUpdate.class, id++, Side.CLIENT);
 
 			if (SonarLoader.mcmultipartLoaded) {
-				network.registerMessage(PacketMultipartSync.Handler.class, PacketMultipartSync.class, 10, Side.CLIENT);
-				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 11, Side.CLIENT);
-				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, 12, Side.SERVER);
-				network.registerMessage(PacketRequestMultipartSync.Handler.class, PacketRequestMultipartSync.class, 13, Side.SERVER);
+				network.registerMessage(PacketMultipartSync.Handler.class, PacketMultipartSync.class, id++, Side.CLIENT);
+				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, id++, Side.CLIENT);
+				network.registerMessage(PacketByteBufMultipart.Handler.class, PacketByteBufMultipart.class, id++, Side.SERVER);
+				network.registerMessage(PacketRequestMultipartSync.Handler.class, PacketRequestMultipartSync.class, id++, Side.SERVER);
 			}
-			network.registerMessage(PacketFlexibleOpenGui.Handler.class, PacketFlexibleOpenGui.class, 14, Side.CLIENT);
-			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 15, Side.CLIENT);
-			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, 16, Side.SERVER);
-			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 17, Side.CLIENT);
-			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, 18, Side.SERVER);
-			network.registerMessage(PacketFlexibleMultipartChangeGui.Handler.class, PacketFlexibleMultipartChangeGui.class, 19, Side.SERVER);
-			network.registerMessage(PacketFlexibleItemStackChangeGui.Handler.class, PacketFlexibleItemStackChangeGui.class, 20, Side.SERVER);
+			network.registerMessage(PacketFlexibleOpenGui.Handler.class, PacketFlexibleOpenGui.class, id++, Side.CLIENT);
+			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, id++, Side.CLIENT);
+			network.registerMessage(PacketFlexibleContainer.Handler.class, PacketFlexibleContainer.class, id++, Side.SERVER);
+			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, id++, Side.CLIENT);
+			network.registerMessage(PacketFlexibleCloseGui.Handler.class, PacketFlexibleCloseGui.class, id++, Side.SERVER);
+			network.registerMessage(PacketFlexibleMultipartChangeGui.Handler.class, PacketFlexibleMultipartChangeGui.class, id++, Side.SERVER);
+			network.registerMessage(PacketFlexibleItemStackChangeGui.Handler.class, PacketFlexibleItemStackChangeGui.class, id++, Side.SERVER);
 		}
 	}
 

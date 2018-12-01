@@ -1,10 +1,5 @@
 package sonar.core.api.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -16,6 +11,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import sonar.core.SonarCore;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * an object with a blocks x, y and z coordinates
@@ -70,12 +70,8 @@ public class BlockCoords {
 
 	public BlockCoords(TileEntity tile) {
 		this.pos = tile.getPos();
-		if (tile.getWorld() == null) {
-			this.hasDimension = false;
-		} else {
-			this.hasDimension = true;
-			this.dimension = tile.getWorld().provider.getDimension();
-		}
+		this.hasDimension = true;
+		this.dimension = tile.getWorld().provider.getDimension();
     }
 
 	public BlockCoords(TileEntity tile, int dimension) {
@@ -301,7 +297,7 @@ public class BlockCoords {
 	}
 
 	public static boolean equalCoords(BlockCoords coords1, BlockCoords coords2) {
-        return coords1 == null && coords2 == null || coords1 == null || coords2 != null && (coords2 == null || coords1.pos.getX() == coords2.pos.getX() && coords1.pos.getY() == coords2.pos.getY() && coords1.pos.getZ() == coords2.pos.getZ() && coords1.dimension == coords2.dimension);
+        return coords1 == null && coords2 == null || coords1 == null || coords2 != null && (coords1.pos.getX() == coords2.pos.getX() && coords1.pos.getY() == coords2.pos.getY() && coords1.pos.getZ() == coords2.pos.getZ() && coords1.dimension == coords2.dimension);
 	}
 
 	public static boolean equalCoordArrays(BlockCoords[] coords1, BlockCoords[] coords2) {

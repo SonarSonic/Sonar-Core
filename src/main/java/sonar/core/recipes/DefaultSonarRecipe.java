@@ -1,16 +1,15 @@
 package sonar.core.recipes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 
+import java.util.List;
+
 public class DefaultSonarRecipe implements ISonarRecipe {
-	public ArrayList<ISonarRecipeObject> recipeInputs;
-	public ArrayList<ISonarRecipeObject> recipeOutputs;
+	public List<ISonarRecipeObject> recipeInputs;
+	public List<ISonarRecipeObject> recipeOutputs;
 	public boolean shapeless;
 
-	public DefaultSonarRecipe(ArrayList<ISonarRecipeObject> inputs, ArrayList<ISonarRecipeObject> outputs, boolean shapeless) {
+	public DefaultSonarRecipe(List<ISonarRecipeObject> inputs, List<ISonarRecipeObject> outputs, boolean shapeless) {
 		this.recipeInputs = inputs;
 		this.recipeOutputs = outputs;
 		this.shapeless = shapeless;
@@ -45,7 +44,7 @@ public class DefaultSonarRecipe implements ISonarRecipe {
 
 		public int value;
 
-		public Value(ArrayList<ISonarRecipeObject> inputs, ArrayList<ISonarRecipeObject> outputs, boolean shapeless, int value) {
+		public Value(List<ISonarRecipeObject> inputs, List<ISonarRecipeObject> outputs, boolean shapeless, int value) {
 			super(inputs, outputs, shapeless);
 			this.value = value;
 		}

@@ -1,8 +1,5 @@
 package sonar.core.integration.multipart;
 
-import java.util.Optional;
-import java.util.function.Function;
-
 import mcmultipart.api.container.IMultipartContainer;
 import mcmultipart.api.multipart.IMultipart;
 import mcmultipart.api.multipart.IMultipartTile;
@@ -19,15 +16,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import sonar.core.SonarCore;
-import sonar.core.api.nbt.INBTSyncable;
 import sonar.core.helpers.NBTHelper.SyncType;
 import sonar.core.integration.SonarLoader;
-import sonar.core.network.PacketByteBuf;
-import sonar.core.network.PacketByteBufMultipart;
-import sonar.core.network.PacketMultipartSync;
-import sonar.core.network.PacketTileSync;
-import sonar.core.network.PacketTileSyncUpdate;
+import sonar.core.network.*;
 import sonar.core.network.utils.IByteBufTile;
+
+import java.util.Optional;
+import java.util.function.Function;
 
 public class SonarMultipartHelper {
 

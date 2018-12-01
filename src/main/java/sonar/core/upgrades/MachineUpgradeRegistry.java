@@ -1,17 +1,17 @@
 package sonar.core.upgrades;
 
 import net.minecraft.item.Item;
-import sonar.core.helpers.LinkedRegistryHelper;
+import sonar.core.SonarCore;
+import sonar.core.helpers.SimpleRegistry;
 
-public class MachineUpgradeRegistry extends LinkedRegistryHelper<String, Item> {
+public class MachineUpgradeRegistry extends SimpleRegistry<String, Item> {
 
-	@Override
-	public void register() {
-		//registered in Calculator.
-	}
+    public static MachineUpgradeRegistry instance(){
+        return SonarCore.instance.machine_upgrades;
+    }
 
-	@Override
-	public String registeryType() {
-		return "Machine Upgrade";
-	}
+    public void log(String name, Item item){
+        SonarCore.logger.info("Machine Upgrade: " + name + " = " + item);
+    }
+
 }

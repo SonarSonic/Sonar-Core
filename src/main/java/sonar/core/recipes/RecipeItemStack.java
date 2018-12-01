@@ -1,11 +1,10 @@
 package sonar.core.recipes;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.item.ItemStack;
 import sonar.core.api.inventories.StoredItemStack;
+
+import java.util.List;
 
 /**
  * works for matching StoredItemStacks
@@ -39,6 +38,10 @@ public class RecipeItemStack implements ISonarRecipeObject, ISonarRecipeItem {
 		if (object instanceof StoredItemStack) {
 			StoredItemStack stack2 = (StoredItemStack) object;
             return stack2.equalStack(stack) && type.checkStackSize(stack.getCount(), (int) stack2.stored);
+		}
+		if(object instanceof RecipeItemStack){
+			RecipeItemStack stack2 = (RecipeItemStack) object;
+			return stack2.stack.isItemEqual(stack) && (ignoreNBT || ItemStack.areItemStackTagsEqual(stack2.stack, stack) && type.checkStackSize(stack.getCount(), stack2.stack.getCount()));
 		}
 		return false;
 	}

@@ -36,7 +36,7 @@ public class TileEntityEnergyInventory extends TileEntityEnergy implements ISona
 		long maxTransfer = CHARGING_RATE != 0 ? Math.min(CHARGING_RATE, getStorage().getMaxExtract()) : getStorage().getMaxExtract();
 		long transferred = EnergyTransferHandler.INSTANCE_SC.dischargeItem(Lists.newArrayList(storage.getInternalWrapper()), slots().get(id), maxTransfer);
 		if(transferred == 0){ //if no energy is stored, check if the item is a dischargeable item (e.g. redstone, coal)
-			int value = DischargeValues.getValueOf(slots().get(id));
+			int value = DischargeValues.instance().getValue(slots().get(id));
 			if(value > 0 && storage.getEnergyLevel() + value <= storage.getFullCapacity()){
 				storage.setEnergyStored(value + storage.getEnergyLevel());
 				slots().get(id).shrink(1);

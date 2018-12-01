@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sonar.core.api.ISonarStack;
-import sonar.core.api.SonarAPI;
 import sonar.core.handlers.energy.IEnergyTransferProxy;
 import sonar.core.helpers.NBTHelper.SyncType;
 

@@ -1,10 +1,12 @@
 package sonar.core.utils;
 
+import com.google.common.collect.Lists;
 import sonar.core.helpers.ListHelper;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 public class SimpleObservableList<T> extends ArrayList<T> {
@@ -19,6 +21,17 @@ public class SimpleObservableList<T> extends ArrayList<T> {
 
     public void removeWatcher(IListWatcher<T> watcher){
         watchers.remove(watcher);
+    }
+
+    public void updateList(List<T> updatedList){
+        List<T> newElements = Lists.newArrayList(updatedList);
+        List<T> currentElements = Lists.newArrayList(this);
+        currentElements.remove(newElements);
+
+        Iterator<T> it = newElements.iterator();
+        while(it.hasNext()){
+
+        }
     }
 
     @Override

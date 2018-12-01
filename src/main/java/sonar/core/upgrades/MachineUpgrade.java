@@ -8,7 +8,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import sonar.core.SonarCore;
 import sonar.core.api.upgrades.IUpgradableTile;
 import sonar.core.api.upgrades.IUpgradeInventory;
 import sonar.core.common.item.SonarItem;
@@ -30,7 +29,7 @@ public class MachineUpgrade extends SonarItem {
 					stack.shrink(1);
                     FontHelper.sendMessage(String.valueOf(upgrades.getInstalledUpgrades()), world, player);
 				} else {
-					if (upgrades.getAllowedUpgrades().contains(SonarCore.machineUpgrades.getSecondaryObject(stack.getItem()))) {
+					if (upgrades.getAllowedUpgrades().contains(MachineUpgradeRegistry.instance().getKey(stack.getItem()))) {
 						FontHelper.sendMessage(FontHelper.translate("upgrade.maximum"), world, player);
 					} else {
 						FontHelper.sendMessage(FontHelper.translate("upgrade.incompatible"), world, player);
