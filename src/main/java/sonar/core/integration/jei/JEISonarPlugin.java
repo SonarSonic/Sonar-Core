@@ -22,8 +22,11 @@ public abstract class JEISonarPlugin implements IModPlugin {
         return provider;
     }
 
+    public abstract void registerProviders();
+
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
+        registerProviders();
         IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
         providers.forEach(p -> registry.addRecipeCategories(p.categoryFactory.create(guiHelper, p)));
     }
