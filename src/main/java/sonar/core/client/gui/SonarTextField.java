@@ -5,9 +5,9 @@ import net.minecraft.client.gui.GuiTextField;
 
 public class SonarTextField extends GuiTextField {
 
-	private String defString = "";
-    private boolean digitsOnly;
-	private int outlineColour = -6250336, boxColour = -16777216;
+	protected String defString = "";
+	protected boolean digitsOnly;
+	protected int outlineColour = -6250336, boxColour = -16777216;
 	
 	public SonarTextField(int id, FontRenderer renderer, int x, int y, int width, int height) {
 		super(id, renderer, x, y, width, height);
@@ -72,6 +72,11 @@ public class SonarTextField extends GuiTextField {
 		return Long.valueOf(getText().isEmpty() ? "0" : getText());
 	}
 
+	//only for FluxTextField to override the drawTextBox method
+	public void superDrawTextBox(){
+		super.drawTextBox();
+	}
+
     @Override
 	public void drawTextBox() {
 		this.setEnableBackgroundDrawing(true);
@@ -83,9 +88,9 @@ public class SonarTextField extends GuiTextField {
 		}
 		this.setEnableBackgroundDrawing(false);
         x += 4;
-        this.y += (this.height - 8) / 2;
-		super.drawTextBox();
+        y += (this.height - 8) / 2;
+		superDrawTextBox();
         x -= 4;
-        this.y -= (this.height - 8) / 2;
+        y -= (this.height - 8) / 2;
 	}
 }
